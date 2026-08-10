@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { signIn } from "@/lib/api/auth.api";
 import { SignInDto, signInSchema } from "@/lib/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -18,8 +19,9 @@ export function SignInForm() {
     },
   });
 
-  function onSubmit(data: SignInDto) {
-    console.log(data);
+  async function onSubmit(data: SignInDto) {
+    const res = await signIn(data);
+    console.log(res)
   }
 
   return (
