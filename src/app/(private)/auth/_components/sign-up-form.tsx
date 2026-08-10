@@ -1,10 +1,28 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { SignUpDto, signUpSchema } from "@/lib/schemas/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { Controller, useForm } from "react-hook-form";
 
 export function SignUpForm() {
+  const form = useForm<SignUpDto>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  function onSubmit(data: SignUpDto) {
+    console.log(data);
+  }
+
   return (
     <Card className="w-xs">
       <CardHeader>
@@ -12,28 +30,61 @@ export function SignUpForm() {
         <CardDescription>Enter your information below to create your account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <FieldGroup>
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                  <Input
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    required
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="email"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <Input
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="password"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <Input {...field} aria-invalid={fieldState.invalid} id="password" type="password" required />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
             <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input id="name" type="text" placeholder="John Doe" required />
+              <Button type="submit">Create Account</Button>
+              <FieldDescription className="text-center">
+                Already have an account? <Link href="/auth/sign-in">Sign in</Link>
+              </FieldDescription>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" placeholder="m@example.com" required />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
-            </Field>
-            <FieldGroup>
-              <Field>
-                <Button type="submit">Create Account</Button>
-                <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link href="/auth/sign-in">Sign in</Link>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
           </FieldGroup>
         </form>
       </CardContent>
