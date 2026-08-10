@@ -1,5 +1,20 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+interface ValidationErrorResponse {
+  message: string;
+  errors?: { field: string; message: string }[];
+}
+
 // Este cliente se usa desde el navegador, asi que las cookies viajan solas con credentials: "include"
 export async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
@@ -12,8 +27,11 @@ export async function request<T>(path: string, options: RequestInit = {}): Promi
   });
 
   if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    throw new Error(body?.message ?? res.statusText);
+    const body = (await res.json().catch(() => null)) as ValidationErrorResponse | null;
+    const message = body?.errors?.length
+      ? body.errors.map((e) => e.message).join(" ")
+      : (body?.message ?? "Something went wrong");
+    throw new ApiError(message, res.status);
   }
 
   if (res.status === 204) {

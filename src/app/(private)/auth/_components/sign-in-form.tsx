@@ -4,13 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/toast";
 import { signIn } from "@/lib/api/auth.api";
+import { ApiError } from "@/lib/api/client";
 import { SignInDto, signInSchema } from "@/lib/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 
 export function SignInForm() {
+  const router = useRouter();
+
   const form = useForm<SignInDto>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -20,8 +25,17 @@ export function SignInForm() {
   });
 
   async function onSubmit(data: SignInDto) {
-    const res = await signIn(data);
-    console.log(res)
+    try {
+      await signIn(data);
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : "Something went wrong",
+        priority: "high",
+      });
+    }
   }
 
   return (
