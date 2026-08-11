@@ -8,14 +8,17 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
-import AppSidebarFooter from "./app-sidebar-footer";
+import AppSidebarFooter from "@/components/app-sidebar-footer";
+import AppSidebarHeader from "@/components/app-sidebar-header";
 
 export function AppSidebar() {
   const { isMobile } = useSidebar();
 
   return (
     <Sidebar>
-      <SidebarHeader />
+      <SidebarHeader>
+        <AppSidebarHeader isMobile={isMobile} />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
         <SidebarGroup />

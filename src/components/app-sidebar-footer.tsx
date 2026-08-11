@@ -19,15 +19,7 @@ import { signOut } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/api/client";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
+import { getInitials } from "@/lib/utils";
 
 export default function AppSidebarFooter({ isMobile }: { isMobile: boolean }) {
   const router = useRouter();
