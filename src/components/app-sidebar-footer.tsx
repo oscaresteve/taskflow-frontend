@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { ChevronsUpDown, LogOut } from "lucide-react";
 import {
   DropdownMenu,
@@ -31,6 +33,7 @@ export default function AppSidebarFooter({ isMobile }: { isMobile: boolean }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: user, isLoading } = useQuery(meQuery);
+  const [logOutOpen, setLogOutOpen] = useState(false);
 
   async function handleLogOut() {
     try {
@@ -99,7 +102,7 @@ export default function AppSidebarFooter({ isMobile }: { isMobile: boolean }) {
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogOut}>
+              <DropdownMenuItem onClick={() => setLogOutOpen(true)}>
                 <LogOut />
                 Log out
               </DropdownMenuItem>
@@ -107,6 +110,16 @@ export default function AppSidebarFooter({ isMobile }: { isMobile: boolean }) {
           </DropdownMenu>
         )}
       </SidebarMenuItem>
+      <ConfirmDialog
+        open={logOutOpen}
+        onOpenChange={setLogOutOpen}
+        title="Log out"
+        description="Are you sure you want to log out? You'll need to sign in again to access your account."
+        confirmLabel="Log out"
+        variant="destructive"
+        onConfirm={handleLogOut}
+        Icon={LogOut}
+      />
     </SidebarMenu>
   );
 }
