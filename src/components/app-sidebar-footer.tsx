@@ -10,9 +10,13 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useQuery } from "@tanstack/react-query";
+import { toast } from "@/components/ui/toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { meQuery } from "@/lib/queries/auth.queries";
+import { signOut } from "@/lib/api/auth.api";
+import { ApiError } from "@/lib/api/client";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
 
 function getInitials(name: string) {
   return name
@@ -24,7 +28,25 @@ function getInitials(name: string) {
 }
 
 export default function AppSidebarFooter({ isMobile }: { isMobile: boolean }) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: user, isLoading } = useQuery(meQuery);
+
+  async function handleLogOut() {
+    try {
+      await signOut();
+      queryClient.clear();
+      router.push("/auth/sign-in");
+      router.refresh();
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : "Something went wrong",
+        priority: "high",
+      });
+    }
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -77,7 +99,7 @@ export default function AppSidebarFooter({ isMobile }: { isMobile: boolean }) {
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogOut}>
                 <LogOut />
                 Log out
               </DropdownMenuItem>

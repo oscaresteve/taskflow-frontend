@@ -21,3 +21,9 @@ export function getMe() {
     method: "GET",
   });
 }
+
+export function signOut() {
+  return request<void>("/auth/sign-out", {
+    method: "POST",
+  });
+}
