@@ -1,14 +1,17 @@
+import AppHeader from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default async function PublicLayout({ children }: LayoutProps<"/">) {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        {children}
-      </main>
-    </SidebarProvider>
+    <main className="[--header-height:calc(--spacing(12))]">
+      <SidebarProvider className="flex flex-col">
+        <AppHeader />
+        <div className="flex flex-1">
+          <AppSidebar />
+          <SidebarInset>{children}</SidebarInset>
+        </div>
+      </SidebarProvider>
+    </main>
   );
 }

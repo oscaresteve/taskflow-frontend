@@ -6,6 +6,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
 import AppSidebarFooter from "@/components/app-sidebar-footer";
@@ -15,7 +16,7 @@ export function AppSidebar() {
   const { isMobile } = useSidebar();
 
   return (
-    <Sidebar>
+    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
       <SidebarHeader>
         <AppSidebarHeader isMobile={isMobile} />
       </SidebarHeader>
@@ -26,6 +27,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <AppSidebarFooter isMobile={isMobile} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
