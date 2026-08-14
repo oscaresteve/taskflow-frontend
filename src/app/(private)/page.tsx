@@ -1,12 +1,10 @@
 import { redirect } from "next/navigation";
-import { getWorkspacesServer } from "@/lib/api/workspaces.server";
+import { hasWorkspaces } from "@/lib/api/workspaces.server";
 
 export default async function Resolver() {
-  const workspaces = await getWorkspacesServer();
-
-  if (!workspaces || workspaces.data.length === 0) {
-    redirect("/onboarding");
+  if (await hasWorkspaces()) {
+    redirect("/home");
   }
 
-  redirect(`/home`);
+  redirect("/onboarding");
 }
