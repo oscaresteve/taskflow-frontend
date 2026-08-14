@@ -1,4 +1,4 @@
-import { serverRequest } from "@/lib/api/server-client";
+import { serverRequest } from "@/lib/http/server-client";
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 

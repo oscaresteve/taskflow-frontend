@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getCurrentUser } from "@/lib/api/session";
+import { getCurrentUser } from "@/lib/api/auth.server";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

@@ -1,4 +1,4 @@
-import { request } from "@/lib/api/client";
+import { request } from "@/lib/http/client";
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 

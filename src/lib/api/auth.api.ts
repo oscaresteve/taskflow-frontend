@@ -1,6 +1,6 @@
 import { AuthResponseDto, UserResponseDto } from "../dtos/auth.dto";
 import { SignInDto, SignUpDto } from "../schemas/auth.schema";
-import { request } from "./client";
+import { request } from "@/lib/http/client";
 
 export function signIn(input: SignInDto) {
   return request<AuthResponseDto>("/auth/sign-in", {

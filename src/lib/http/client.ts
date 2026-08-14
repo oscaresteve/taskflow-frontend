@@ -1,14 +1,6 @@
+import { ApiError } from "@/lib/http/api-error";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
-
-export class ApiError extends Error {
-  status: number;
-
-  constructor(message: string, status: number) {
-    super(message);
-    this.name = "ApiError";
-    this.status = status;
-  }
-}
 
 interface ValidationErrorResponse {
   message: string;

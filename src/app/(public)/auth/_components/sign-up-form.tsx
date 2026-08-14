@@ -6,7 +6,7 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/c
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 import { signUp } from "@/lib/api/auth.api";
-import { ApiError } from "@/lib/api/client";
+import { ApiError } from "@/lib/http/api-error";
 import { SignUpDto, signUpSchema } from "@/lib/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";

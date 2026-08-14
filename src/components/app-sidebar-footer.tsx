@@ -16,7 +16,7 @@ import { toast } from "@/components/ui/toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { meQuery } from "@/lib/queries/auth.queries";
 import { signOut } from "@/lib/api/auth.api";
-import { ApiError } from "@/lib/api/client";
+import { ApiError } from "@/lib/http/api-error";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { getInitials } from "@/lib/utils";
