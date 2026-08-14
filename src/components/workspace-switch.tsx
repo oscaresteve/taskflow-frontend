@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import { SidebarMenuButton } from "./ui/sidebar";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
 export default function WorkspaceSwitch({
   isMobile,
@@ -22,8 +22,9 @@ export default function WorkspaceSwitch({
   isMobile: boolean;
   workspaces: WorkspaceResponseDto[];
 }) {
-  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
-  const activeWorkspace = workspaces.find((workspace) => workspace.id === activeWorkspaceId) ?? workspaces[0];
+  const router = useRouter();
+  const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
+  const activeWorkspace = workspaces.find((workspace) => workspace.slug === workspaceSlug) ?? workspaces[0];
 
   return (
     <DropdownMenu>
@@ -56,7 +57,7 @@ export default function WorkspaceSwitch({
           {workspaces.map((workspace: WorkspaceResponseDto) => (
             <DropdownMenuItem
               key={workspace.id}
-              onClick={() => setActiveWorkspaceId(workspace.id)}
+              onClick={() => router.push(`/${workspace.slug}`)}
               className="gap-2 p-2"
             >
               <Avatar className="h-6 w-6 rounded-md">

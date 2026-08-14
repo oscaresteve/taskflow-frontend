@@ -2,7 +2,7 @@ import AppHeader from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export default async function PublicLayout({ children }: LayoutProps<"/">) {
+export default async function WorkspaceLayout({ children }: LayoutProps<"/[workspaceSlug]">) {
   return (
     <main className="[--header-height:calc(--spacing(12))]">
       <SidebarProvider className="flex flex-col">
