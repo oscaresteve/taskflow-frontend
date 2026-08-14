@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ConfirmDialog } from "@/components/confirm-dialog";
@@ -17,12 +19,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { meQuery } from "@/lib/queries/auth.queries";
 import { signOut } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { getInitials } from "@/lib/utils";
 
-export default function AppSidebarFooter({ isMobile }: { isMobile: boolean }) {
+export default function UserNav() {
   const router = useRouter();
+  const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
   const { data: user, isLoading } = useQuery(meQuery);
   const [logOutOpen, setLogOutOpen] = useState(false);

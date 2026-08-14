@@ -1,8 +1,11 @@
 "use client";
 
-import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
+import { useParams, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { workspacesQuery } from "@/lib/queries/workspaces.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronsUpDown } from "lucide-react";
 import {
   DropdownMenu,
@@ -11,64 +14,80 @@ import {
   DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuItem,
-} from "./ui/dropdown-menu";
-import { SidebarMenuButton } from "./ui/sidebar";
-import { useParams, useRouter } from "next/navigation";
+} from "@/components/ui/dropdown-menu";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 
-export default function WorkspaceSwitch({
-  isMobile,
-  workspaces,
-}: {
-  isMobile: boolean;
-  workspaces: WorkspaceResponseDto[];
-}) {
+export default function WorkspaceSwitch() {
   const router = useRouter();
+  const { isMobile } = useSidebar();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const activeWorkspace = workspaces.find((workspace) => workspace.slug === workspaceSlug) ?? workspaces[0];
+  const { data: workspaces, isLoading } = useQuery(workspacesQuery);
+
+  if (isLoading || !workspaces) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" disabled className="cursor-default">
+            <Skeleton className="h-8 w-8 shrink-0 rounded-lg" />
+            <div className="grid flex-1 gap-1">
+              <Skeleton className="h-3.5 w-24" />
+              <Skeleton className="h-3 w-32" />
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
+  const activeWorkspace = workspaces.data.find((workspace) => workspace.slug === workspaceSlug) ?? workspaces.data[0];
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <SidebarMenuButton
-            size="lg"
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-          />
-        }
-      >
-        <Avatar className="h-8 w-8 rounded-lg">
-          <AvatarImage src={activeWorkspace.logoUrl ?? undefined} alt={activeWorkspace.name} />
-          <AvatarFallback className="rounded-lg">{getInitials(activeWorkspace.name)}</AvatarFallback>
-        </Avatar>
-        <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-medium">{activeWorkspace.name}</span>
-          <span className="truncate text-xs">{activeWorkspace.slug}</span>
-        </div>
-        <ChevronsUpDown className="ml-auto size-4" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-        align="start"
-        side={isMobile ? "bottom" : "right"}
-        sideOffset={4}
-      >
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-xs text-muted-foreground">Workspaces</DropdownMenuLabel>
-          {workspaces.map((workspace: WorkspaceResponseDto) => (
-            <DropdownMenuItem
-              key={workspace.id}
-              onClick={() => router.push(`/${workspace.slug}`)}
-              className="gap-2 p-2"
-            >
-              <Avatar className="h-6 w-6 rounded-md">
-                <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-                <AvatarFallback className="rounded-md text-xs">{getInitials(workspace.name)}</AvatarFallback>
-              </Avatar>
-              {workspace.name}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              />
+            }
+          >
+            <Avatar className="h-8 w-8 rounded-lg">
+              <AvatarImage src={activeWorkspace.logoUrl ?? undefined} alt={activeWorkspace.name} />
+              <AvatarFallback className="rounded-lg">{getInitials(activeWorkspace.name)}</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{activeWorkspace.name}</span>
+              <span className="truncate text-xs">{activeWorkspace.slug}</span>
+            </div>
+            <ChevronsUpDown className="ml-auto size-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            align="start"
+            side={isMobile ? "bottom" : "right"}
+            sideOffset={4}
+          >
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-xs text-muted-foreground">Workspaces</DropdownMenuLabel>
+              {workspaces.data.map((workspace) => (
+                <DropdownMenuItem
+                  key={workspace.id}
+                  onClick={() => router.push(`/workspaces/${workspace.slug}`)}
+                  className="gap-2 p-2"
+                >
+                  <Avatar className="h-6 w-6 rounded-md">
+                    <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+                    <AvatarFallback className="rounded-md text-xs">{getInitials(workspace.name)}</AvatarFallback>
+                  </Avatar>
+                  {workspace.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }
