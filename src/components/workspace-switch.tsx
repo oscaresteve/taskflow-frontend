@@ -53,9 +53,9 @@ export default function WorkspaceSwitch() {
               />
             }
           >
-            <Avatar className="h-8 w-8 rounded-lg">
+            <Avatar>
               <AvatarImage src={activeWorkspace.logoUrl ?? undefined} alt={activeWorkspace.name} />
-              <AvatarFallback className="rounded-lg">{getInitials(activeWorkspace.name)}</AvatarFallback>
+              <AvatarFallback>{getInitials(activeWorkspace.name)}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{activeWorkspace.name}</span>
@@ -77,9 +77,9 @@ export default function WorkspaceSwitch() {
                   onClick={() => router.push(`/workspaces/${workspace.slug}`)}
                   className="gap-2 p-2"
                 >
-                  <Avatar className="h-6 w-6 rounded-md">
+                  <Avatar size="sm">
                     <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-                    <AvatarFallback className="rounded-md text-xs">{getInitials(workspace.name)}</AvatarFallback>
+                    <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
                   </Avatar>
                   {workspace.name}
                 </DropdownMenuItem>

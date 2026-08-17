@@ -42,9 +42,9 @@ export function WorkspacesNav() {
                 : workspaces.data.map((workspace) => (
                     <SidebarMenuItem key={workspace.id}>
                       <SidebarMenuButton render={<Link href={`/workspaces/${workspace.slug}`} />}>
-                        <Avatar className="h-5 w-5 rounded-md">
+                        <Avatar size="sm"> 
                           <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-                          <AvatarFallback className="rounded-md text-[10px]">
+                          <AvatarFallback>
                             {getInitials(workspace.name)}
                           </AvatarFallback>
                         </Avatar>
