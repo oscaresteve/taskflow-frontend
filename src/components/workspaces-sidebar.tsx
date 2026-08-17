@@ -1,6 +1,7 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
 import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
+import GlobalNav from "./global-nav";
 
 export function WorkspacesSidebar() {
   return (
@@ -8,7 +9,9 @@ export function WorkspacesSidebar() {
       <SidebarHeader>
         <WorkspaceSwitch />
       </SidebarHeader>
-      <SidebarContent></SidebarContent>
+      <SidebarContent>
+        <GlobalNav />
+      </SidebarContent>
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
