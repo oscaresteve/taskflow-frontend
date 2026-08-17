@@ -1,13 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ChevronDown } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { workspacesQuery } from "@/lib/queries/workspaces.queries";
-import { getInitials } from "@/lib/utils";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -15,16 +7,27 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "./ui/sidebar";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
+import { ChevronDown } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { projectsQuery } from "@/lib/queries/projects.queries";
+import { Skeleton } from "./ui/skeleton";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
-export function WorkspacesNav() {
-  const { data: workspaces, isLoading, isError } = useQuery(workspacesQuery);
-
+export default function ProjectsNav() {
+  const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
+  const {
+    data: projects,
+    isLoading,
+    isError,
+  } = useQuery(projectsQuery(workspaceSlug));
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
         <CollapsibleTrigger nativeButton={false} render={<SidebarGroupLabel className="cursor-pointer" />}>
-          Workspaces
+          Projects
           <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent>
@@ -33,29 +36,24 @@ export function WorkspacesNav() {
               {isError ? (
                 <SidebarMenuItem>
                   <div className="flex h-8 items-center px-2 text-muted-foreground text-sm">
-                    Failed to load workspaces
+                    Failed to load projects
                   </div>
                 </SidebarMenuItem>
-              ) : isLoading || !workspaces ? (
+              ) : isLoading || !projects ? (
                 Array.from({ length: 3 }).map((_, index) => (
                   <SidebarMenuItem key={index}>
                     <div className="flex h-8 items-center gap-2 rounded-md px-2">
-                      <Skeleton className="size-4 rounded-md" />
                       <Skeleton className="h-4 w-24" />
                     </div>
                   </SidebarMenuItem>
                 ))
               ) : (
-                workspaces.data.map((workspace) => (
-                  <SidebarMenuItem key={workspace.id}>
-                    <SidebarMenuButton render={<Link href={`/workspaces/${workspace.slug}`} />}>
-                      <Avatar size="sm">
-                        <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-                        <AvatarFallback>
-                          {getInitials(workspace.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      {workspace.name}
+                projects.data.map((project) => (
+                  <SidebarMenuItem key={project.id}>
+                    <SidebarMenuButton
+                      render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}
+                    >
+                      {project.name}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))

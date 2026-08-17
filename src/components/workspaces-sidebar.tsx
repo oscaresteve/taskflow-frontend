@@ -2,6 +2,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } fr
 import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
 import GlobalNav from "./global-nav";
+import ProjectsNav from "./projects-nav";
 
 export function WorkspacesSidebar() {
   return (
@@ -11,6 +12,7 @@ export function WorkspacesSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <GlobalNav />
+        <ProjectsNav />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
