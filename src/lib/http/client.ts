@@ -1,6 +1,5 @@
 import { ApiError } from "@/lib/http/api-error";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+import { env } from "@/lib/config/env";
 
 interface ValidationErrorResponse {
   message: string;
@@ -9,7 +8,7 @@ interface ValidationErrorResponse {
 
 // Este cliente se usa desde el navegador, asi que las cookies viajan solas con credentials: "include"
 export async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(`${env.NEXT_PUBLIC_API_URL}${path}`, {
     ...options,
     credentials: "include",
     headers: {

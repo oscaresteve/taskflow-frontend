@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+import { env } from "@/lib/config/env";
 
 // Se usa desde el servidor, por lo tanto hay que enviar las cookies manualmente
 export async function serverRequest<T>(path: string): Promise<T | null> {
@@ -11,14 +10,18 @@ export async function serverRequest<T>(path: string): Promise<T | null> {
     return null;
   }
 
-  const res = await fetch(`${API_URL}${path}`, {
-    headers: { Cookie: cookieHeader },
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${env.NEXT_PUBLIC_API_URL}${path}`, {
+      headers: { Cookie: cookieHeader },
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
+    if (!res.ok) {
+      return null;
+    }
+
+    return (await res.json()) as T;
+  } catch {
     return null;
   }
-
-  return res.json() as Promise<T>;
 }
