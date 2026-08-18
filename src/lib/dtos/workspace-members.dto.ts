@@ -1,16 +1,8 @@
 import { UserResponseDto } from "./auth.dto";
 
-export type WorkspaceRole = {
-  OWNER: "OWNER";
-  ADMIN: "ADMIN";
-  MEMBER: "MEMBER";
-};
+export type WorkspaceRole = "OWNER" | "ADMIN" | "MEMBER";
 
-export type WorkspaceMemberStatus = {
-  PENDING: "PENDING";
-  ACTIVE: "ACTIVE";
-  REMOVED: "REMOVED";
-};
+export type WorkspaceMemberStatus = "PENDING" | "ACTIVE" | "REMOVED";
 
 export type WorkspaceMemberResponseDto = {
   id: string;
