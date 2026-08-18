@@ -1,3 +1,6 @@
+import { ProjectResponseDto } from "./projects.dto";
+import { WorkspaceMemberWithUserResponseDto } from "./workspace-members.dto";
+
 export type WorkspaceResponseDto = {
   id: string;
 
@@ -11,4 +14,9 @@ export type WorkspaceResponseDto = {
 
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type WorkspaceDetailResponseDto = WorkspaceResponseDto & {
+  projects: ProjectResponseDto[];
+  members: WorkspaceMemberWithUserResponseDto[];
 };
