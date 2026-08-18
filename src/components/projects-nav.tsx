@@ -17,12 +17,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 export default function ProjectsNav() {
-  const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const {
-    data: projects,
-    isLoading,
-    isError,
-  } = useQuery(getProjectsQuery(workspaceSlug));
+  const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
+  const { data: projects, isLoading, isError } = useQuery(getProjectsQuery(workspaceSlug));
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
@@ -48,15 +44,19 @@ export default function ProjectsNav() {
                   </SidebarMenuItem>
                 ))
               ) : (
-                projects.data.map((project) => (
-                  <SidebarMenuItem key={project.id}>
-                    <SidebarMenuButton
-                      render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}
-                    >
-                      {project.name}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))
+                projects.data.map((project) => {
+                  const isActive = project.slug === projectSlug;
+                  return (
+                    <SidebarMenuItem key={project.id}>
+                      <SidebarMenuButton
+                        isActive={isActive}
+                        render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}
+                      >
+                        {project.name}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })
               )}
             </SidebarMenu>
           </SidebarGroupContent>
