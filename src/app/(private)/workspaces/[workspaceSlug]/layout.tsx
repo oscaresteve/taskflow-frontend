@@ -1,23 +1,18 @@
-import { redirect } from "next/navigation";
-import AppHeader from "@/components/app-header";
+import { notFound } from "next/navigation";
+import { AppShell } from "@/components/app-shell";
 import { WorkspacesSidebar } from "@/components/workspaces-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { hasWorkspaces } from "@/lib/api/workspaces.server";
+import { getWorkspaceServer, requireWorkspaces } from "@/lib/api/workspaces.server";
 
-export default async function WorkspaceLayout({ children }: LayoutProps<"/workspaces/[workspaceSlug]">) {
-  if (!(await hasWorkspaces())) {
-    redirect("/onboarding");
+// Routing rule: anything scoped to a single workspace (projects, settings, members, tasks)
+// nests under /workspaces/[workspaceSlug]/...; cross-workspace pages live under (global).
+export default async function WorkspaceLayout({ children, params }: LayoutProps<"/workspaces/[workspaceSlug]">) {
+  await requireWorkspaces();
+
+  const { workspaceSlug } = await params;
+  const workspace = await getWorkspaceServer(workspaceSlug);
+  if (!workspace) {
+    notFound();
   }
 
-  return (
-    <main className="[--header-height:calc(--spacing(12))]">
-      <SidebarProvider className="flex flex-col">
-        <AppHeader />
-        <div className="flex flex-1">
-          <WorkspacesSidebar />
-          <SidebarInset>{children}</SidebarInset>
-        </div>
-      </SidebarProvider>
-    </main>
-  );
+  return <AppShell sidebar={<WorkspacesSidebar />}>{children}</AppShell>;
 }

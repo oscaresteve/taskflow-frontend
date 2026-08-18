@@ -39,6 +39,7 @@ export default function WorkspaceSwitch() {
     );
   }
 
+  // The layout already guarantees workspaceSlug is valid (404s otherwise), so this lookup can't miss.
   const activeWorkspace = workspaces.data.find((workspace) => workspace.slug === workspaceSlug) ?? workspaces.data[0];
 
   return (
