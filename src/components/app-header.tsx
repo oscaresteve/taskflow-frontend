@@ -1,5 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { Workflow } from "lucide-react";
 
 export default function AppHeader() {
@@ -13,6 +14,8 @@ export default function AppHeader() {
         </div>
         <span className="font-semibold text-lg">TaskFlow</span>
       </div>
+      <Separator orientation="vertical" className="h-8 my-auto" />
+      <BreadcrumbNav />
     </header>
   );
 }
