@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { workspacesQuery } from "@/lib/queries/workspaces.queries";
+import { getWorkspacesQuery } from "@/lib/queries/workspaces.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 
 export function WorkspacesNav() {
-  const { data: workspaces, isLoading, isError } = useQuery(workspacesQuery);
+  const { data: workspaces, isLoading, isError } = useQuery(getWorkspacesQuery);
 
   return (
     <Collapsible defaultOpen className="group/collapsible">

@@ -11,7 +11,7 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { projectsQuery } from "@/lib/queries/projects.queries";
+import { getProjectsQuery } from "@/lib/queries/projects.queries";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -22,7 +22,7 @@ export default function ProjectsNav() {
     data: projects,
     isLoading,
     isError,
-  } = useQuery(projectsQuery(workspaceSlug));
+  } = useQuery(getProjectsQuery(workspaceSlug));
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>

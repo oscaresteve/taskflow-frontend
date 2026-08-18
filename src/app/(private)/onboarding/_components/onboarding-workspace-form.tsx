@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 import { createWorkspace } from "@/lib/api/workspaces.api";
 import { ApiError } from "@/lib/http/api-error";
-import { workspacesQuery } from "@/lib/queries/workspaces.queries";
+import { getWorkspacesQuery } from "@/lib/queries/workspaces.queries";
 import { CreateWorkspaceDto, createWorkspaceSchema } from "@/lib/schemas/workspace.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
@@ -29,7 +29,7 @@ export function OnboardingWorkspaceForm() {
   async function onSubmit(data: CreateWorkspaceDto) {
     try {
       await createWorkspace(data);
-      await queryClient.invalidateQueries({ queryKey: workspacesQuery.queryKey });
+      await queryClient.invalidateQueries({ queryKey: getWorkspacesQuery.queryKey });
       router.push("/");
       router.refresh();
     } catch (error) {

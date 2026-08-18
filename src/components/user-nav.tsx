@@ -16,7 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/components/ui/toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { meQuery } from "@/lib/queries/auth.queries";
+import { getMeQuery } from "@/lib/queries/auth.queries";
 import { signOut } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
@@ -27,7 +27,7 @@ export default function UserNav() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
-  const { data: user, isLoading } = useQuery(meQuery);
+  const { data: user, isLoading } = useQuery(getMeQuery);
   const [logOutOpen, setLogOutOpen] = useState(false);
 
   async function handleLogOut() {
