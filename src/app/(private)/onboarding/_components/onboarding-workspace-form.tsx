@@ -26,9 +26,8 @@ export function OnboardingWorkspaceForm() {
 
   async function onSubmit(data: CreateWorkspaceDto) {
     try {
-      await createWorkspace.mutateAsync(data);
-      router.push("/");
-      router.refresh();
+      const workspace = await createWorkspace.mutateAsync(data);
+      router.push(`/workspaces/${workspace.slug}`);
     } catch (error) {
       toast.add({
         type: "error",
