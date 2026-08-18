@@ -1,10 +1,44 @@
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
+"use client";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  SidebarSeparator,
+} from "@/components/ui/sidebar";
 import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
 import GlobalNav from "./global-nav";
 import ProjectsNav from "./projects-nav";
+import { LucideIcon, Plus } from "lucide-react";
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
+import { isNavActive } from "@/lib/nav";
+
+type NavigationItem = {
+  name: string;
+  icon: LucideIcon;
+  href: string;
+};
+
+const workspaceNavigation: NavigationItem[] = [
+  {
+    name: "New project",
+    icon: Plus,
+    href: "new-project",
+  },
+];
 
 export function WorkspacesSidebar() {
+  const pathname = usePathname();
+  const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
       <SidebarHeader>
@@ -12,7 +46,27 @@ export function WorkspacesSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <GlobalNav />
+        <SidebarSeparator />
         <ProjectsNav />
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {workspaceNavigation.map((nav) => {
+                const Icon = nav.icon;
+                const href = `/workspaces/${workspaceSlug}/${nav.href}`;
+                const isActive = isNavActive(pathname, href);
+                return (
+                  <SidebarMenuItem key={nav.href}>
+                    <SidebarMenuButton render={<Link href={href} />} isActive={isActive}>
+                      <Icon />
+                      {nav.name}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

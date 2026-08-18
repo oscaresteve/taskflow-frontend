@@ -3,6 +3,7 @@ import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, Side
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, LucideIcon } from "lucide-react";
+import { isNavActive } from "@/lib/nav";
 
 type NavigationItem = {
   name: string;
@@ -26,7 +27,7 @@ export default function GlobalNav() {
         <SidebarMenu>
           {globalNavigation.map((nav) => {
             const Icon = nav.icon;
-            const isActive = pathname === nav.href;
+            const isActive = isNavActive(pathname, nav.href);
             return (
               <SidebarMenuItem key={nav.href}>
                 <SidebarMenuButton render={<Link href={nav.href} />} isActive={isActive}>

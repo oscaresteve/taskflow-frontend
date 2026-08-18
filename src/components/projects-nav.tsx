@@ -14,10 +14,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import { isNavActive } from "@/lib/nav";
 
 export default function ProjectsNav() {
-  const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
+  const pathname = usePathname();
+  const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: projects, isLoading, isError } = useQuery(getProjectsQuery(workspaceSlug));
   return (
     <Collapsible defaultOpen className="group/collapsible">
@@ -45,13 +47,10 @@ export default function ProjectsNav() {
                 ))
               ) : (
                 projects.data.map((project) => {
-                  const isActive = project.slug === projectSlug;
+                  const href = `/workspaces/${workspaceSlug}/projects/${project.slug}`;
                   return (
                     <SidebarMenuItem key={project.id}>
-                      <SidebarMenuButton
-                        isActive={isActive}
-                        render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}
-                      >
+                      <SidebarMenuButton isActive={isNavActive(pathname, href)} render={<Link href={href} />}>
                         {project.name}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
