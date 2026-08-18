@@ -11,7 +11,7 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getProjectsQuery } from "@/lib/queries/projects.queries";
+import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
 import { useParams } from "next/navigation";

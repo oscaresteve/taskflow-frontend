@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { FolderKanban, Users } from "lucide-react";
-import { getWorkspaceQuery } from "@/lib/queries/workspaces.queries";
+import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

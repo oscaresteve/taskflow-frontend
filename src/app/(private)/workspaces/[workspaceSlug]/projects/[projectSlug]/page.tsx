@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { CheckSquare, Users } from "lucide-react";
-import { getProjectQuery } from "@/lib/queries/projects.queries";
+import { getProjectQuery } from "@/lib/queries/project.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

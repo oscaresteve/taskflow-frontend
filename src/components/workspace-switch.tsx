@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getWorkspacesQuery } from "@/lib/queries/workspaces.queries";
+import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,7 +21,7 @@ export default function WorkspaceSwitch() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: workspaces, isLoading } = useQuery(getWorkspacesQuery);
+  const { data: workspaces, isLoading } = useQuery(getWorkspacesQuery());
 
   if (isLoading || !workspaces) {
     return (

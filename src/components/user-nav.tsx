@@ -27,7 +27,7 @@ export default function UserNav() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
-  const { data: user, isLoading } = useQuery(getMeQuery);
+  const { data: user, isLoading } = useQuery(getMeQuery());
   const [logOutOpen, setLogOutOpen] = useState(false);
 
   async function handleLogOut() {
