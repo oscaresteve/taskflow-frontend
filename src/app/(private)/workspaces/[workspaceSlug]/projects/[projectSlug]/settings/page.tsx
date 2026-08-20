@@ -1,3 +1,4 @@
+import { ArchiveProjectSection } from "./_components/archive-project-section";
 import { EditProjectForm } from "./_components/edit-project-form";
 
 export default function ProjectSettingsPage() {
@@ -9,6 +10,10 @@ export default function ProjectSettingsPage() {
       </div>
       <div className="max-w-sm">
         <EditProjectForm />
+      </div>
+      <div className="grid gap-1">
+        <h2 className="text-sm font-semibold">Danger zone</h2>
+        <ArchiveProjectSection />
       </div>
     </div>
   );
