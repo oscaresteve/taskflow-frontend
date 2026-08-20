@@ -1,3 +1,4 @@
+import { DeactivateWorkspaceSection } from "./_components/deactivate-workspace-section";
 import { EditWorkspaceForm } from "./_components/edit-workspace-form";
 
 export default function WorkspaceSettingsPage() {
@@ -9,6 +10,10 @@ export default function WorkspaceSettingsPage() {
       </div>
       <div className="max-w-sm">
         <EditWorkspaceForm />
+      </div>
+      <div className="grid gap-1">
+        <h2 className="text-sm font-semibold">Danger zone</h2>
+        <DeactivateWorkspaceSection />
       </div>
     </div>
   );
