@@ -28,3 +28,9 @@ export function updateProject(workspaceSlug: string, projectSlug: string, data: 
     body: JSON.stringify(data),
   });
 }
+
+export function archiveProject(workspaceSlug: string, projectSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/archive`, {
+    method: "PATCH",
+  });
+}
