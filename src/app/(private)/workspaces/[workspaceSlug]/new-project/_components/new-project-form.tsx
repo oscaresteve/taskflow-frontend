@@ -39,7 +39,7 @@ export function NewProjectForm() {
   }
 
   return (
-    <form className="max-w-sm" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+    <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <FieldGroup>
         <Controller
           name="name"
