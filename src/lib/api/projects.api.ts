@@ -1,10 +1,18 @@
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
 import { ProjectDetailResponseDto, ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { request } from "@/lib/http/client";
+import { CreateProjectDto } from "@/lib/schemas/project.schema";
 
 export function getProjects(workspaceSlug: string) {
   return request<PaginatedResponseDto<ProjectResponseDto>>(`/workspaces/${workspaceSlug}/projects`, {
     method: "GET",
+  });
+}
+
+export function createProject(workspaceSlug: string, data: CreateProjectDto) {
+  return request<ProjectResponseDto>(`/workspaces/${workspaceSlug}/projects`, {
+    method: "POST",
+    body: JSON.stringify(data),
   });
 }
 
