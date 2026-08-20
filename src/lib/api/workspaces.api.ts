@@ -28,3 +28,9 @@ export function updateWorkspace(workspaceSlug: string, data: UpdateWorkspaceDto)
     body: JSON.stringify(data),
   });
 }
+
+export function deactivateWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/deactivate`, {
+    method: "PATCH",
+  });
+}
