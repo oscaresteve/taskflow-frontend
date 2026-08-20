@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { CheckSquare, Users } from "lucide-react";
+import { CheckSquare, Settings, Users } from "lucide-react";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
@@ -66,6 +68,15 @@ export default function ProjectPage() {
           {project.description ? <p className="text-sm text-muted-foreground">{project.description}</p> : null}
           <p className="text-xs text-muted-foreground">{project.workspace.name}</p>
         </div>
+        <Button
+          variant="outline"
+          size="icon"
+          className="ml-auto"
+          nativeButton={false}
+          render={<Link href={`/workspaces/${workspaceSlug}/projects/${projectSlug}/settings`} />}
+        >
+          <Settings />
+        </Button>
       </div>
 
       <Card>
