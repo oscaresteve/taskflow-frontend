@@ -17,7 +17,7 @@ import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
 import GlobalNav from "./global-nav";
 import ProjectsNav from "./projects-nav";
-import { LucideIcon, Plus } from "lucide-react";
+import { LayoutDashboard, LucideIcon, Plus } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
@@ -39,6 +39,8 @@ const workspaceNavigation: NavigationItem[] = [
 export function WorkspacesSidebar() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
+  const overviewHref = `/workspaces/${workspaceSlug}`;
+
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
       <SidebarHeader>
@@ -47,6 +49,20 @@ export function WorkspacesSidebar() {
       <SidebarContent>
         <GlobalNav />
         <SidebarSeparator />
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                {/* Exact match, not isNavActive: every workspace subpage's pathname starts
+                    with overviewHref, so a prefix match would keep this active everywhere. */}
+                <SidebarMenuButton render={<Link href={overviewHref} />} isActive={pathname === overviewHref}>
+                  <LayoutDashboard />
+                  Overview
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
         <ProjectsNav />
         <SidebarGroup>
           <SidebarGroupContent>
