@@ -1,7 +1,7 @@
 import { request } from "@/lib/http/client";
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
 import { WorkspaceDetailResponseDto, WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
-import { CreateWorkspaceDto } from "../schemas/workspace.schema";
+import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../schemas/workspace.schema";
 
 export function getWorkspaces() {
   return request<PaginatedResponseDto<WorkspaceResponseDto>>("/workspaces", {
@@ -19,5 +19,12 @@ export function createWorkspace(data: CreateWorkspaceDto) {
 export function getWorkspace(workspaceSlug: string) {
   return request<WorkspaceDetailResponseDto>(`/workspaces/${workspaceSlug}`, {
     method: "GET",
+  });
+}
+
+export function updateWorkspace(workspaceSlug: string, data: UpdateWorkspaceDto) {
+  return request<WorkspaceResponseDto>(`/workspaces/${workspaceSlug}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
   });
 }
