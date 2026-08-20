@@ -17,7 +17,7 @@ import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
 import GlobalNav from "./global-nav";
 import ProjectsNav from "./projects-nav";
-import { LayoutDashboard, LucideIcon, Plus } from "lucide-react";
+import { LayoutDashboard, LucideIcon, Plus, Settings } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
@@ -33,6 +33,11 @@ const workspaceNavigation: NavigationItem[] = [
     name: "New project",
     icon: Plus,
     href: "new-project",
+  },
+  {
+    name: "Settings",
+    icon: Settings,
+    href: "settings",
   },
 ];
 

@@ -8,9 +8,13 @@ export function useUpdateWorkspace(workspaceSlug: string) {
 
   return useMutation({
     mutationFn: (data: UpdateWorkspaceDto) => updateWorkspace(workspaceSlug, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.detail(workspaceSlug) });
-      queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+    // Awaited so callers that navigate on success (e.g. slug changed after a
+    // rename) land on a page whose query cache is already fresh, not stale.
+    onSuccess: async (updatedWorkspace) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: workspaceKeys.detail(updatedWorkspace.slug) }),
+        queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() }),
+      ]);
     },
   });
 }
