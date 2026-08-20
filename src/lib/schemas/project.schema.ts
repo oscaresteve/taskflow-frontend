@@ -18,4 +18,19 @@ export const createProjectSchema = z.object({
   color: z.string().optional(),
 });
 
+export const updateProjectSchema = z
+  .object({
+    name: z
+      .string()
+      .trim()
+      .min(2, "Name must be at least 2 characters long")
+      .max(100, "Name cannot exceed 100 characters")
+      .optional(),
+    description: descriptionSchema.nullable(),
+    icon: z.string("Icon must be a string").optional().nullable(),
+    color: z.string("Color must be a string").optional().nullable(),
+  })
+  .refine((data) => Object.keys(data).length > 0, "At least one field must be provided");
+
 export type CreateProjectDto = z.infer<typeof createProjectSchema>;
+export type UpdateProjectDto = z.infer<typeof updateProjectSchema>;
