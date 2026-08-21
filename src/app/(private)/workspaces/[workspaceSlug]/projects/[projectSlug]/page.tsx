@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { CheckSquare, Settings, Users } from "lucide-react";
+import { CheckSquare, Plus, Settings, Users } from "lucide-react";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
 import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
@@ -86,6 +86,17 @@ export default function ProjectPage() {
             Tasks
             <Badge variant="secondary">{project.tasks.length}</Badge>
           </CardTitle>
+          <CardAction>
+            <Button
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              render={<Link href={`/workspaces/${workspaceSlug}/projects/${projectSlug}/new-task`} />}
+            >
+              <Plus />
+              New task
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           {project.tasks.length === 0 ? (
