@@ -13,9 +13,9 @@ import {
 import UserNav from "@/components/user-nav";
 import { WorkspacesNav } from "@/components/workspaces-nav";
 import GlobalNav from "./global-nav";
-import { Workflow } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "./ui/separator";
+import TaskflowLogo from "./taskflow-logo";
 
 export function GlobalSidebar() {
   return (
@@ -24,10 +24,7 @@ export function GlobalSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" render={<Link href="/home" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Workflow className="size-4" />
-              </div>
-              <span className="truncate font-semibold text-base">TaskFlow</span>
+              <TaskflowLogo />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
