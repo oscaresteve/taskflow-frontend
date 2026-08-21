@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Archive } from "lucide-react";
@@ -12,6 +12,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { getTaskQuery } from "@/lib/queries/task.queries";
 
 export function ArchiveTaskSection() {
+  const router = useRouter();
   const { workspaceSlug, projectSlug, taskNumber } = useParams<{
     workspaceSlug: string;
     projectSlug: string;
@@ -24,7 +25,7 @@ export function ArchiveTaskSection() {
   async function handleArchive() {
     try {
       await archiveTask.mutateAsync();
-      setArchiveOpen(false);
+      router.push(`/workspaces/${workspaceSlug}/projects/${projectSlug}`);
     } catch (error) {
       toast.add({
         type: "error",
