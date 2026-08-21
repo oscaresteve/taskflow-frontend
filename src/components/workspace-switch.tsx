@@ -24,7 +24,7 @@ export default function WorkspaceSwitch() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspaces, isLoading } = useQuery(getWorkspacesQuery());
 
-  if (isLoading || !workspaces) {
+  if (isLoading || !workspaces || workspaces.data.length === 0) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
