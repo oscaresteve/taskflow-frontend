@@ -41,3 +41,9 @@ export function updateTask(
     body: JSON.stringify(data),
   });
 }
+
+export function archiveTask(workspaceSlug: string, projectSlug: string, taskNumber: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/archive`, {
+    method: "PATCH",
+  });
+}
