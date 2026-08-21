@@ -48,6 +48,7 @@ export function ArchiveProjectSection() {
         confirmLabel="Archive"
         variant="destructive"
         onConfirm={handleArchive}
+        pending={archiveProject.isPending}
         Icon={Archive}
       />
     </div>

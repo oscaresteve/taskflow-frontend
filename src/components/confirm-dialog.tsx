@@ -11,7 +11,7 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { LucideIcon, Info } from "lucide-react";
+import { LucideIcon, Info, Loader2Icon } from "lucide-react";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -23,6 +23,7 @@ interface ConfirmDialogProps {
   onConfirm: () => void;
   variant?: "default" | "destructive";
   Icon?: LucideIcon;
+  pending?: boolean;
 }
 
 export function ConfirmDialog({
@@ -35,9 +36,10 @@ export function ConfirmDialog({
   onConfirm,
   variant = "default",
   Icon = Info,
+  pending = false,
 }: ConfirmDialogProps) {
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={(next) => !pending && onOpenChange(next)}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogMedia>
@@ -47,8 +49,9 @@ export function ConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
-          <AlertDialogAction variant={variant} onClick={onConfirm}>
+          <AlertDialogCancel disabled={pending}>{cancelLabel}</AlertDialogCancel>
+          <AlertDialogAction variant={variant} onClick={onConfirm} disabled={pending}>
+            {pending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             {confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>

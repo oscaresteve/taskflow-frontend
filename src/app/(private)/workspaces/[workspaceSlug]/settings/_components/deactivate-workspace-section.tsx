@@ -49,6 +49,7 @@ export function DeactivateWorkspaceSection() {
         confirmLabel="Deactivate"
         variant="destructive"
         onConfirm={handleDeactivate}
+        pending={deactivateWorkspace.isPending}
         Icon={ShieldMinus}
       />
     </div>

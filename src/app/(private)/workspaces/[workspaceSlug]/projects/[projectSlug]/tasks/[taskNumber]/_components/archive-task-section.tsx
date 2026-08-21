@@ -56,6 +56,7 @@ export function ArchiveTaskSection() {
         confirmLabel="Archive"
         variant="destructive"
         onConfirm={handleArchive}
+        pending={archiveTask.isPending}
         Icon={Archive}
       />
     </div>

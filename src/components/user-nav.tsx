@@ -29,14 +29,17 @@ export default function UserNav() {
   const queryClient = useQueryClient();
   const { data: user, isLoading } = useQuery(getMeQuery());
   const [logOutOpen, setLogOutOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   async function handleLogOut() {
+    setLoggingOut(true);
     try {
       await signOut();
       queryClient.clear();
       router.push("/auth/sign-in");
       router.refresh();
     } catch (error) {
+      setLoggingOut(false);
       toast.add({
         type: "error",
         description: error instanceof ApiError ? error.message : "Something went wrong",
@@ -113,6 +116,7 @@ export default function UserNav() {
         confirmLabel="Log out"
         variant="destructive"
         onConfirm={handleLogOut}
+        pending={loggingOut}
         Icon={LogOut}
       />
     </SidebarMenu>
