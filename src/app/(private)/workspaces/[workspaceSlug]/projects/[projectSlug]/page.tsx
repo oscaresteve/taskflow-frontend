@@ -5,31 +5,23 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { CheckSquare, Plus, Settings, Users } from "lucide-react";
 import { getProjectQuery } from "@/lib/queries/project.queries";
+import { getTasksQuery } from "@/lib/queries/task.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
-import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
-
-const statusLabel: Record<TaskStatus, string> = {
-  TODO: "To do",
-  IN_PROGRESS: "In progress",
-  IN_REVIEW: "In review",
-  DONE: "Done",
-};
-
-const priorityVariant: Record<TaskPriority, "outline" | "secondary" | "destructive"> = {
-  LOW: "outline",
-  MEDIUM: "outline",
-  HIGH: "secondary",
-  URGENT: "destructive",
-};
+import { priorityVariant, statusLabel } from "@/lib/task-labels";
 
 export default function ProjectPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
+  const {
+    data: tasks,
+    isLoading: isTasksLoading,
+    isError: isTasksError,
+  } = useQuery(getTasksQuery(workspaceSlug, projectSlug));
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load project.</p>;
@@ -84,7 +76,7 @@ export default function ProjectPage() {
           <CardTitle className="flex items-center gap-2">
             <CheckSquare className="size-4" />
             Tasks
-            <Badge variant="secondary">{project.tasks.length}</Badge>
+            <Badge variant="secondary">{tasks?.pagination.total ?? 0}</Badge>
           </CardTitle>
           <CardAction>
             <Button
@@ -99,13 +91,24 @@ export default function ProjectPage() {
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
-          {project.tasks.length === 0 ? (
+          {isTasksError ? (
+            <p className="text-sm text-muted-foreground">Failed to load tasks.</p>
+          ) : isTasksLoading || !tasks ? (
+            <>
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </>
+          ) : tasks.data.length === 0 ? (
             <p className="text-sm text-muted-foreground">No tasks yet.</p>
           ) : (
-            project.tasks.map((task) => {
+            tasks.data.map((task) => {
               const assignee = task.assigneeId ? usersById.get(task.assigneeId) : undefined;
               return (
-                <div key={task.id} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
+                <Link
+                  key={task.id}
+                  href={`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${task.taskNumber}`}
+                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
+                >
                   <span className="text-xs text-muted-foreground">
                     {project.key}-{task.taskNumber}
                   </span>
@@ -118,7 +121,7 @@ export default function ProjectPage() {
                       <AvatarFallback>{getInitials(assignee.name)}</AvatarFallback>
                     </Avatar>
                   ) : null}
-                </div>
+                </Link>
               );
             })
           )}
