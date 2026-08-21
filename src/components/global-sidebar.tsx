@@ -4,45 +4,38 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import UserNav from "@/components/user-nav";
 import { WorkspacesNav } from "@/components/workspaces-nav";
 import GlobalNav from "./global-nav";
-import { Plus } from "lucide-react";
+import { Workflow } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { isNavActive } from "@/lib/nav";
+import { Separator } from "./ui/separator";
 
 export function GlobalSidebar() {
-  const pathname = usePathname();
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" render={<Link href="/home" />}>
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <Workflow className="size-4" />
+              </div>
+              <span className="truncate font-semibold text-base">TaskFlow</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
         <GlobalNav />
-        <SidebarSeparator />
+        <Separator />
         <WorkspacesNav />
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  render={<Link href="/new-workspace" />}
-                  isActive={isNavActive(pathname, "/new-workspace")}
-                >
-                  <Plus />
-                  New workspace
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <UserNav />

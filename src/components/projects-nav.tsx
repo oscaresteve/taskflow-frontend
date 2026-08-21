@@ -2,6 +2,7 @@
 
 import {
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
@@ -9,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { Skeleton } from "./ui/skeleton";
@@ -24,10 +25,23 @@ export default function ProjectsNav() {
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
-        <CollapsibleTrigger nativeButton={false} render={<SidebarGroupLabel className="cursor-pointer" />}>
-          Projects
-          <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
-        </CollapsibleTrigger>
+        <div className="flex items-center">
+          <CollapsibleTrigger
+            nativeButton={false}
+            render={<SidebarGroupLabel className="flex-1 cursor-pointer" />}
+          >
+            Projects
+            <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
+          </CollapsibleTrigger>
+          <SidebarGroupAction
+            render={<Link href={`/workspaces/${workspaceSlug}/new-project`} />}
+            title="New project"
+            className="static top-auto right-auto"
+          >
+            <Plus />
+            <span className="sr-only">New project</span>
+          </SidebarGroupAction>
+        </div>
         <CollapsibleContent>
           <SidebarGroupContent>
             <SidebarMenu>

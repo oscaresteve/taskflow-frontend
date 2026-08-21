@@ -17,29 +17,11 @@ import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
 import GlobalNav from "./global-nav";
 import ProjectsNav from "./projects-nav";
-import { LayoutDashboard, LucideIcon, Plus, Settings } from "lucide-react";
+import { LayoutDashboard, Settings } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
-
-type NavigationItem = {
-  name: string;
-  icon: LucideIcon;
-  href: string;
-};
-
-const workspaceNavigation: NavigationItem[] = [
-  {
-    name: "New project",
-    icon: Plus,
-    href: "new-project",
-  },
-  {
-    name: "Settings",
-    icon: Settings,
-    href: "settings",
-  },
-];
+import { Separator } from "./ui/separator";
 
 export function WorkspacesSidebar() {
   const pathname = usePathname();
@@ -53,7 +35,7 @@ export function WorkspacesSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <GlobalNav />
-        <SidebarSeparator />
+        <Separator />
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -72,19 +54,15 @@ export function WorkspacesSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {workspaceNavigation.map((nav) => {
-                const Icon = nav.icon;
-                const href = `/workspaces/${workspaceSlug}/${nav.href}`;
-                const isActive = isNavActive(pathname, href);
-                return (
-                  <SidebarMenuItem key={nav.href}>
-                    <SidebarMenuButton render={<Link href={href} />} isActive={isActive}>
-                      <Icon />
-                      {nav.name}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}
+                  isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
+                >
+                  <Settings />
+                  Settings
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

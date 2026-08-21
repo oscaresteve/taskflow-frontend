@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
@@ -23,10 +24,23 @@ export function WorkspacesNav() {
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
-        <CollapsibleTrigger nativeButton={false} render={<SidebarGroupLabel className="cursor-pointer" />}>
-          Workspaces
-          <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
-        </CollapsibleTrigger>
+        <div className="flex items-center">
+          <CollapsibleTrigger
+            nativeButton={false}
+            render={<SidebarGroupLabel className="flex-1 cursor-pointer" />}
+          >
+            Workspaces
+            <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
+          </CollapsibleTrigger>
+          <SidebarGroupAction
+            render={<Link href="/new-workspace" />}
+            title="New workspace"
+            className="static top-auto right-auto"
+          >
+            <Plus />
+            <span className="sr-only">New workspace</span>
+          </SidebarGroupAction>
+        </div>
         <CollapsibleContent>
           <SidebarGroupContent>
             <SidebarMenu>
