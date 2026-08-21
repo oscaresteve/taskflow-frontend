@@ -8,6 +8,7 @@ import { getTaskQuery } from "@/lib/queries/task.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ArchiveTaskSection } from "./_components/archive-task-section";
 import { EditTaskForm } from "./_components/edit-task-form";
 
 export default function TaskPage() {
@@ -51,6 +52,11 @@ export default function TaskPage() {
 
       <div className="max-w-sm">
         <EditTaskForm />
+      </div>
+
+      <div className="grid gap-1">
+        <h2 className="text-sm font-semibold">Danger zone</h2>
+        <ArchiveTaskSection />
       </div>
     </div>
   );
