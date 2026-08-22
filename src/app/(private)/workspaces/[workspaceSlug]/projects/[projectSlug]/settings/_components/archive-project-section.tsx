@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Archive } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { toast } from "@/components/ui/toast";
 import { useArchiveProject } from "@/hooks/use-archive-project";
@@ -32,14 +33,23 @@ export function ArchiveProjectSection() {
   }
 
   return (
-    <div className="flex max-w-sm items-center justify-between gap-4 rounded-lg border border-destructive/30 p-4">
-      <div className="grid gap-1">
-        <p className="text-sm font-medium">Archive project</p>
-        <p className="text-sm text-muted-foreground">This project will no longer be accessible to members.</p>
-      </div>
-      <Button variant="destructive" onClick={() => setArchiveOpen(true)}>
-        Archive
-      </Button>
+    <Card className="ring-destructive/30">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-destructive">
+          <Archive className="size-4" />
+          Danger zone
+        </CardTitle>
+        <CardDescription>Irreversible and destructive actions.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex items-center justify-between gap-4">
+        <div className="grid gap-1">
+          <p className="text-sm font-medium">Archive project</p>
+          <p className="text-sm text-muted-foreground">This project will no longer be accessible to members.</p>
+        </div>
+        <Button variant="destructive" onClick={() => setArchiveOpen(true)}>
+          Archive
+        </Button>
+      </CardContent>
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
@@ -51,6 +61,6 @@ export function ArchiveProjectSection() {
         pending={archiveProject.isPending}
         Icon={Archive}
       />
-    </div>
+    </Card>
   );
 }

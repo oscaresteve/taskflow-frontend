@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
 import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
 import { ApiError } from "@/lib/http/api-error";
@@ -32,14 +33,23 @@ export function DeactivateWorkspaceSection() {
   }
 
   return (
-    <div className="flex max-w-sm items-center justify-between gap-4 rounded-lg border border-destructive/30 p-4">
-      <div className="grid gap-1">
-        <p className="text-sm font-medium">Deactivate workspace</p>
-        <p className="text-sm text-muted-foreground">This workspace will no longer be accessible to members.</p>
-      </div>
-      <Button variant="destructive" onClick={() => setDeactivateOpen(true)}>
-        Deactivate
-      </Button>
+    <Card className="ring-destructive/30">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-destructive">
+          <ShieldMinus className="size-4" />
+          Danger zone
+        </CardTitle>
+        <CardDescription>Irreversible and destructive actions.</CardDescription>
+      </CardHeader>
+      <CardContent className="flex items-center justify-between gap-4">
+        <div className="grid gap-1">
+          <p className="text-sm font-medium">Deactivate workspace</p>
+          <p className="text-sm text-muted-foreground">This workspace will no longer be accessible to members.</p>
+        </div>
+        <Button variant="destructive" onClick={() => setDeactivateOpen(true)}>
+          Deactivate
+        </Button>
+      </CardContent>
       <ConfirmDialog
         open={deactivateOpen}
         onOpenChange={setDeactivateOpen}
@@ -52,6 +62,6 @@ export function DeactivateWorkspaceSection() {
         pending={deactivateWorkspace.isPending}
         Icon={ShieldMinus}
       />
-    </div>
+    </Card>
   );
 }

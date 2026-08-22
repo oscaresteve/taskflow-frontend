@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,9 +16,9 @@ import { useUpdateProject } from "@/hooks/use-update-project";
 import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { UpdateProjectDto, updateProjectSchema } from "@/lib/schemas/project.schema";
+import { Loader2Icon } from "lucide-react";
 
 export function EditProjectForm() {
-  const router = useRouter();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
@@ -41,8 +42,7 @@ export function EditProjectForm() {
 
   async function onSubmit(data: UpdateProjectDto) {
     try {
-      const updatedProject = await updateProject.mutateAsync(data);
-      router.push(`/workspaces/${workspaceSlug}/projects/${updatedProject.slug}`);
+      await updateProject.mutateAsync(data);
     } catch (error) {
       toast.add({
         type: "error",
@@ -58,56 +58,75 @@ export function EditProjectForm() {
 
   if (isLoading || !project) {
     return (
-      <FieldGroup>
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="h-16 w-full" />
-      </FieldGroup>
+      <Card>
+        <CardHeader>
+          <CardTitle>General</CardTitle>
+          <CardDescription>Update your project&apos;s name and description.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup>
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+          </FieldGroup>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
-      <FieldGroup>
-        <Controller
-          name="name"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="name">Name</FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                id="name"
-                type="text"
-                placeholder="Website Redesign"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name="description"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Textarea
-                {...field}
-                value={field.value ?? ""}
-                aria-invalid={fieldState.invalid}
-                id="description"
-                placeholder="Redesign of the marketing site"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Field>
+      <Card>
+        <CardHeader>
+          <CardTitle>General</CardTitle>
+          <CardDescription>Update your project&apos;s name and description.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup>
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <Input
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    disabled={updateProject.isPending}
+                    id="name"
+                    type="text"
+                    placeholder="Website Redesign"
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="description"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="description">Description</FieldLabel>
+                  <Textarea
+                    {...field}
+                    value={field.value ?? ""}
+                    aria-invalid={fieldState.invalid}
+                    disabled={updateProject.isPending}
+                    id="description"
+                    placeholder="Redesign of the marketing site"
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </CardContent>
+        <CardFooter className="justify-end">
           <Button type="submit" disabled={updateProject.isPending}>
+            {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             Save changes
           </Button>
-        </Field>
-      </FieldGroup>
+        </CardFooter>
+      </Card>
     </form>
   );
 }
