@@ -29,12 +29,14 @@ export function BreadcrumbNav() {
   }
 
   const isNewProject = !projectSlug && pathname.endsWith("/new-project");
+  const isSettings = pathname.endsWith("/settings");
+  const hasMoreCrumbs = isNewProject || isSettings || Boolean(projectSlug);
 
   return (
     <Breadcrumb className="mx-4">
       <BreadcrumbList className="flex-nowrap">
         <BreadcrumbItem>
-          {projectSlug || isNewProject ? (
+          {hasMoreCrumbs ? (
             <BreadcrumbLink render={<Link href={`/workspaces/${workspaceSlug}`} />}>
               {workspace?.name ?? workspaceSlug}
             </BreadcrumbLink>
@@ -54,7 +56,21 @@ export function BreadcrumbNav() {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{project?.name ?? projectSlug}</BreadcrumbPage>
+              {isSettings ? (
+                <BreadcrumbLink render={<Link href={`/workspaces/${workspaceSlug}/projects/${projectSlug}`} />}>
+                  {project?.name ?? projectSlug}
+                </BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage>{project?.name ?? projectSlug}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+          </>
+        )}
+        {isSettings && (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Settings</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
