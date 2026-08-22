@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   SidebarGroup,
   SidebarGroupAction,
@@ -17,11 +18,13 @@ import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
+import { CreateProjectDialog } from "@/components/create-project-dialog";
 
 export default function ProjectsNav() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: projects, isLoading, isError } = useQuery(getProjectsQuery(workspaceSlug));
+  const [createOpen, setCreateOpen] = useState(false);
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <SidebarGroup>
@@ -34,7 +37,7 @@ export default function ProjectsNav() {
             <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
           </CollapsibleTrigger>
           <SidebarGroupAction
-            render={<Link href={`/workspaces/${workspaceSlug}/new-project`} />}
+            onClick={() => setCreateOpen(true)}
             title="New project"
             className="static top-auto right-auto"
           >
@@ -75,6 +78,7 @@ export default function ProjectsNav() {
           </SidebarGroupContent>
         </CollapsibleContent>
       </SidebarGroup>
+      <CreateProjectDialog workspaceSlug={workspaceSlug} open={createOpen} onOpenChange={setCreateOpen} />
     </Collapsible>
   );
 }
