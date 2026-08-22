@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -13,6 +14,7 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/componen
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
 import { priorityVariant, statusLabel } from "@/lib/task-labels";
+import { CreateTaskDialog } from "@/components/create-task-dialog";
 
 export default function ProjectPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
@@ -22,6 +24,7 @@ export default function ProjectPage() {
     isLoading: isTasksLoading,
     isError: isTasksError,
   } = useQuery(getTasksQuery(workspaceSlug, projectSlug));
+  const [createTaskOpen, setCreateTaskOpen] = useState(false);
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load project.</p>;
@@ -79,12 +82,7 @@ export default function ProjectPage() {
             <Badge variant="secondary">{tasks?.pagination.total ?? 0}</Badge>
           </CardTitle>
           <CardAction>
-            <Button
-              variant="outline"
-              size="sm"
-              nativeButton={false}
-              render={<Link href={`/workspaces/${workspaceSlug}/projects/${projectSlug}/new-task`} />}
-            >
+            <Button variant="outline" size="sm" onClick={() => setCreateTaskOpen(true)}>
               <Plus />
               New task
             </Button>
@@ -153,6 +151,7 @@ export default function ProjectPage() {
           )}
         </CardContent>
       </Card>
+      <CreateTaskDialog project={project} open={createTaskOpen} onOpenChange={setCreateTaskOpen} />
     </div>
   );
 }
