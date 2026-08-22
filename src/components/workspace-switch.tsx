@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CreateWorkspaceDialog } from "@/components/create-workspace-dialog";
 import { ChevronsUpDown, Plus } from "lucide-react";
 import {
   DropdownMenu,
@@ -23,6 +25,7 @@ export default function WorkspaceSwitch() {
   const { isMobile } = useSidebar();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspaces, isLoading } = useQuery(getWorkspacesQuery());
+  const [createOpen, setCreateOpen] = useState(false);
 
   if (isLoading || !workspaces || workspaces.data.length === 0) {
     return (
@@ -88,7 +91,7 @@ export default function WorkspaceSwitch() {
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/new-workspace")} className="gap-2 p-2">
+            <DropdownMenuItem onClick={() => setCreateOpen(true)} className="gap-2 p-2">
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
@@ -97,6 +100,7 @@ export default function WorkspaceSwitch() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+      <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
     </SidebarMenu>
   );
 }

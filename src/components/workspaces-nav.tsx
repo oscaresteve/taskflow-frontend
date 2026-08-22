@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +9,7 @@ import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { CreateWorkspaceDialog } from "@/components/create-workspace-dialog";
 import {
   SidebarGroup,
   SidebarGroupAction,
@@ -20,6 +22,7 @@ import {
 
 export function WorkspacesNav() {
   const { data: workspaces, isLoading, isError } = useQuery(getWorkspacesQuery());
+  const [createOpen, setCreateOpen] = useState(false);
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
@@ -33,7 +36,7 @@ export function WorkspacesNav() {
             <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
           </CollapsibleTrigger>
           <SidebarGroupAction
-            render={<Link href="/new-workspace" />}
+            onClick={() => setCreateOpen(true)}
             title="New workspace"
             className="static top-auto right-auto"
           >
@@ -78,6 +81,7 @@ export function WorkspacesNav() {
           </SidebarGroupContent>
         </CollapsibleContent>
       </SidebarGroup>
+      <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
     </Collapsible>
   );
 }
