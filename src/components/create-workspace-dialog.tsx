@@ -9,6 +9,7 @@ import { Building2 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/form-dialog";
 import { useCreateWorkspace } from "@/hooks/use-create-workspace";
@@ -103,11 +104,10 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="workspace-description">Description</FieldLabel>
-                <Input
+                <Textarea
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="workspace-description"
-                  type="text"
                   placeholder="Acme Inc's main workspace"
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

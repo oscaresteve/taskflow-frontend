@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from "@/components/ui/badge";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/form-dialog";
 import { useCreateProject } from "@/hooks/use-create-project";
@@ -112,11 +113,10 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="project-description">Description</FieldLabel>
-                <Input
+                <Textarea
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="project-description"
-                  type="text"
                   placeholder="Redesign of the marketing site"
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

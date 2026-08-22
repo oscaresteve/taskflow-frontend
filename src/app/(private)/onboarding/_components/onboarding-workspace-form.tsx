@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { useCreateWorkspace } from "@/hooks/use-create-workspace";
@@ -75,13 +76,12 @@ export function OnboardingWorkspaceForm() {
               >
                 Description
               </FieldLabel>
-              <Input
+              <Textarea
                 {...field}
                 aria-invalid={fieldState.invalid}
                 id="description"
-                type="text"
                 placeholder="Acme Inc's main workspace"
-                className={`h-10 ${underlineInputClassName}`}
+                className={`min-h-10 ${underlineInputClassName}`}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

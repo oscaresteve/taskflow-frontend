@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useUpdateWorkspace } from "@/hooks/use-update-workspace";
 import { ApiError } from "@/lib/http/api-error";
@@ -84,12 +85,11 @@ export function EditWorkspaceForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Input
+              <Textarea
                 {...field}
                 value={field.value ?? ""}
                 aria-invalid={fieldState.invalid}
                 id="description"
-                type="text"
                 placeholder="Acme Inc's main workspace"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

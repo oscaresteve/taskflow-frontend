@@ -10,6 +10,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { ApiError } from "@/lib/http/api-error";
@@ -100,12 +101,11 @@ export function EditTaskForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Input
+              <Textarea
                 {...field}
                 value={field.value ?? ""}
                 aria-invalid={fieldState.invalid}
                 id="description"
-                type="text"
                 placeholder="Optional"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

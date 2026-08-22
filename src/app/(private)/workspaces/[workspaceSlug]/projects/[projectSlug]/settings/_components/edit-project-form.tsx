@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useUpdateProject } from "@/hooks/use-update-project";
 import { ApiError } from "@/lib/http/api-error";
@@ -90,12 +91,11 @@ export function EditProjectForm() {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Input
+              <Textarea
                 {...field}
                 value={field.value ?? ""}
                 aria-invalid={fieldState.invalid}
                 id="description"
-                type="text"
                 placeholder="Redesign of the marketing site"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

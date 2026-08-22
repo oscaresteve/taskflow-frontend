@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/form-dialog";
 import { useCreateTask } from "@/hooks/use-create-task";
@@ -101,11 +102,10 @@ export function CreateTaskDialog({ project, open, onOpenChange }: CreateTaskDial
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="task-description">Description</FieldLabel>
-                <Input
+                <Textarea
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="task-description"
-                  type="text"
                   placeholder="Optional"
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
