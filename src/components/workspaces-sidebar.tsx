@@ -17,7 +17,7 @@ import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
 import GlobalNav from "./global-nav";
 import ProjectsNav from "./projects-nav";
-import { LayoutDashboard, Settings } from "lucide-react";
+import { LayoutDashboard, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
@@ -54,6 +54,15 @@ export function WorkspacesSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={<Link href={`/workspaces/${workspaceSlug}/members`} />}
+                  isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/members`)}
+                >
+                  <Users />
+                  Members
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}

@@ -30,7 +30,8 @@ export function BreadcrumbNav() {
 
   const isNewProject = !projectSlug && pathname.endsWith("/new-project");
   const isSettings = pathname.endsWith("/settings");
-  const hasMoreCrumbs = isNewProject || isSettings || Boolean(projectSlug);
+  const isMembers = !projectSlug && pathname.endsWith("/members");
+  const hasMoreCrumbs = isNewProject || isSettings || isMembers || Boolean(projectSlug);
 
   return (
     <Breadcrumb className="mx-4">
@@ -71,6 +72,14 @@ export function BreadcrumbNav() {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage>Settings</BreadcrumbPage>
+            </BreadcrumbItem>
+          </>
+        )}
+        {isMembers && (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Members</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
