@@ -30,7 +30,7 @@ export function BreadcrumbNav() {
 
   const isNewProject = !projectSlug && pathname.endsWith("/new-project");
   const isSettings = pathname.endsWith("/settings");
-  const isMembers = !projectSlug && pathname.endsWith("/members");
+  const isMembers = pathname.endsWith("/members");
   const hasMoreCrumbs = isNewProject || isSettings || isMembers || Boolean(projectSlug);
 
   return (
@@ -57,7 +57,7 @@ export function BreadcrumbNav() {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              {isSettings ? (
+              {isSettings || isMembers ? (
                 <BreadcrumbLink render={<Link href={`/workspaces/${workspaceSlug}/projects/${projectSlug}`} />}>
                   {project?.name ?? projectSlug}
                 </BreadcrumbLink>

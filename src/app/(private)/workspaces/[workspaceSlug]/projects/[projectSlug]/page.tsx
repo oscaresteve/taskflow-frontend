@@ -133,6 +133,16 @@ export default function ProjectPage() {
             Members
             <Badge variant="secondary">{project.members.length}</Badge>
           </CardTitle>
+          <CardAction>
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link href={`/workspaces/${workspaceSlug}/projects/${projectSlug}/members`} />}
+            >
+              View all
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           {project.members.length === 0 ? (
