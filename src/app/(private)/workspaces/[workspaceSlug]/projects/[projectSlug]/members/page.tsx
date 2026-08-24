@@ -1,19 +1,26 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Users } from "lucide-react";
+import { UserPlus, Users } from "lucide-react";
 import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getMeQuery } from "@/lib/queries/auth.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageContainer } from "@/components/page-container";
+import { AddProjectMemberDialog } from "@/components/add-project-member-dialog";
+import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { getInitials } from "@/lib/utils";
 
 export default function ProjectMembersPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data, isLoading, isError } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
+  const { data: me } = useQuery(getMeQuery());
+  const [addMemberOpen, setAddMemberOpen] = useState(false);
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
@@ -31,6 +38,7 @@ export default function ProjectMembersPage() {
   }
 
   const members = data.data;
+  const myRole = members.find((member) => member.userId === me?.id)?.role;
 
   return (
     <PageContainer>
@@ -41,6 +49,14 @@ export default function ProjectMembersPage() {
             Members
             <Badge variant="secondary">{data.pagination.total}</Badge>
           </CardTitle>
+          {isProjectManager(myRole) ? (
+            <CardAction>
+              <Button size="sm" onClick={() => setAddMemberOpen(true)}>
+                <UserPlus />
+                Add member
+              </Button>
+            </CardAction>
+          ) : null}
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           {members.length === 0 ? (
@@ -63,6 +79,12 @@ export default function ProjectMembersPage() {
           )}
         </CardContent>
       </Card>
+      <AddProjectMemberDialog
+        workspaceSlug={workspaceSlug}
+        projectSlug={projectSlug}
+        open={addMemberOpen}
+        onOpenChange={setAddMemberOpen}
+      />
     </PageContainer>
   );
 }
