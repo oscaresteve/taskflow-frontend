@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Clock, MoreHorizontal, UserCheck, UserPlus, Users } from "lucide-react";
+import { Clock, MoreHorizontal, UserCheck, UserPlus, UserX, Users } from "lucide-react";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,13 +25,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { getInitials } from "@/lib/utils";
 import { AddMemberDialog } from "@/components/add-member-dialog";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-member";
 import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
+import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
 import { ApiError } from "@/lib/http/api-error";
 import { WorkspaceMemberWithUserResponseDto, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import {
   assignableWorkspaceRoles,
   canActivateWorkspaceMember,
+  canRemoveWorkspaceMember,
   canUpdateWorkspaceMemberRole,
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
@@ -42,18 +45,26 @@ function MemberRow({
   myRole,
   onActivate,
   onChangeRole,
+  onRequestRemove,
 }: {
   member: WorkspaceMemberWithUserResponseDto;
   myUserId: string | undefined;
   myRole: WorkspaceRole | undefined;
   onActivate: (member: WorkspaceMemberWithUserResponseDto) => void;
   onChangeRole: (member: WorkspaceMemberWithUserResponseDto, role: WorkspaceRole) => void;
+  onRequestRemove: (member: WorkspaceMemberWithUserResponseDto) => void;
 }) {
   const user = member.user;
 
   const activatable =
     member.status === "PENDING" && canActivateWorkspaceMember({ actorRole: myRole, targetRole: member.role });
   const roleChangeable = canUpdateWorkspaceMemberRole({
+    actorUserId: myUserId,
+    actorRole: myRole,
+    targetUserId: member.userId,
+    targetRole: member.role,
+  });
+  const removable = canRemoveWorkspaceMember({
     actorUserId: myUserId,
     actorRole: myRole,
     targetUserId: member.userId,
@@ -74,7 +85,9 @@ function MemberRow({
       <Badge variant="outline">{member.role}</Badge>
       <DropdownMenu>
         <DropdownMenuTrigger
-          render={<Button variant="ghost" size="icon-sm" disabled={!activatable && !roleChangeable} />}
+          render={
+            <Button variant="ghost" size="icon-sm" disabled={!activatable && !roleChangeable && !removable} />
+          }
         >
           <MoreHorizontal />
         </DropdownMenuTrigger>
@@ -100,7 +113,8 @@ function MemberRow({
               </DropdownMenuRadioGroup>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
-          <DropdownMenuItem variant="destructive" disabled>
+          <DropdownMenuItem variant="destructive" disabled={!removable} onClick={() => onRequestRemove(member)}>
+            <UserX />
             Remove member
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -115,7 +129,10 @@ export default function WorkspaceMembersPage() {
   const { data: me } = useQuery(getMeQuery());
   const activateWorkspaceMember = useActivateWorkspaceMember(workspaceSlug);
   const updateWorkspaceMember = useUpdateWorkspaceMember(workspaceSlug);
+  const removeWorkspaceMember = useRemoveWorkspaceMember(workspaceSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
+  const [memberToRemove, setMemberToRemove] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
@@ -146,6 +163,19 @@ export default function WorkspaceMembersPage() {
 
   function handleActivate(member: WorkspaceMemberWithUserResponseDto) {
     activateWorkspaceMember.mutate(member.userId, { onError: reportError });
+  }
+
+  function handleRequestRemove(member: WorkspaceMemberWithUserResponseDto) {
+    setMemberToRemove(member);
+    setRemoveDialogOpen(true);
+  }
+
+  function handleConfirmRemove() {
+    if (!memberToRemove) return;
+    removeWorkspaceMember.mutate(memberToRemove.userId, {
+      onSuccess: () => setRemoveDialogOpen(false),
+      onError: reportError,
+    });
   }
 
   function handleChangeRole(member: WorkspaceMemberWithUserResponseDto, role: WorkspaceRole) {
@@ -183,6 +213,7 @@ export default function WorkspaceMembersPage() {
                 myRole={myRole}
                 onActivate={handleActivate}
                 onChangeRole={handleChangeRole}
+                onRequestRemove={handleRequestRemove}
               />
             ))
           )}
@@ -207,6 +238,7 @@ export default function WorkspaceMembersPage() {
                 myRole={myRole}
                 onActivate={handleActivate}
                 onChangeRole={handleChangeRole}
+                onRequestRemove={handleRequestRemove}
               />
             ))}
           </CardContent>
@@ -214,6 +246,17 @@ export default function WorkspaceMembersPage() {
       ) : null}
 
       <AddMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
+      <ConfirmDialog
+        open={removeDialogOpen}
+        onOpenChange={setRemoveDialogOpen}
+        title="Remove member"
+        description={`Remove ${memberToRemove?.user.name} from this workspace? They'll lose access immediately.`}
+        confirmLabel="Remove"
+        variant="destructive"
+        onConfirm={handleConfirmRemove}
+        pending={removeWorkspaceMember.isPending}
+        Icon={UserX}
+      />
     </div>
   );
 }
