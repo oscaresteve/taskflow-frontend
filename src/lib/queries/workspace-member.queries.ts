@@ -10,3 +10,14 @@ export const getWorkspaceMembersQuery = (workspaceSlug: string) =>
     queryFn: () => getWorkspaceMembers(workspaceSlug, ["ACTIVE", "PENDING", "REMOVED"]),
     enabled: !!workspaceSlug,
   });
+
+// Only ACTIVE members — used to pick candidates for project membership, since the backend
+// requires a user to be an active workspace member before they can be added to a project.
+// excludeProjectSlug filters out anyone who already has a project-member row there (any
+// isActive value), so someone previously removed from the project doesn't show up as pickable.
+export const getActiveWorkspaceMembersQuery = (workspaceSlug: string, excludeProjectSlug?: string) =>
+  queryOptions({
+    queryKey: workspaceMemberKeys.activeList(workspaceSlug, excludeProjectSlug),
+    queryFn: () => getWorkspaceMembers(workspaceSlug, ["ACTIVE"], excludeProjectSlug),
+    enabled: !!workspaceSlug,
+  });

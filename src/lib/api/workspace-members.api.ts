@@ -7,9 +7,12 @@ import {
 } from "@/lib/dtos/workspace-members.dto";
 import { CreateWorkspaceMemberDto, UpdateWorkspaceMemberDto } from "../schemas/workspace-member.schema";
 
-export function getWorkspaceMembers(workspaceSlug: string, status?: WorkspaceMemberStatus[]) {
+export function getWorkspaceMembers(workspaceSlug: string, status?: WorkspaceMemberStatus[], excludeProjectSlug?: string) {
   const params = new URLSearchParams();
   status?.forEach((s) => params.append("status", s));
+  if (excludeProjectSlug) {
+    params.set("excludeProjectSlug", excludeProjectSlug);
+  }
   const queryString = params.toString();
 
   return request<PaginatedResponseDto<WorkspaceMemberWithUserResponseDto>>(
