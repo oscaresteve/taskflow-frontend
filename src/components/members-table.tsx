@@ -1,0 +1,84 @@
+"use client";
+
+import { ReactNode } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { MemberRole } from "@/lib/member-role-filter";
+import { getInitials } from "@/lib/utils";
+
+interface MemberLike {
+  id: string;
+  role: MemberRole;
+  user: { name: string; email: string; avatarUrl: string | null };
+}
+
+export function MembersTable<TMember extends MemberLike>({
+  members,
+  assignableRoles,
+  roleChangeable,
+  onChangeRole,
+  renderActions,
+  emptyMessage,
+}: {
+  members: TMember[];
+  assignableRoles: MemberRole[];
+  roleChangeable: (member: TMember) => boolean;
+  onChangeRole: (member: TMember, role: MemberRole) => void;
+  renderActions: (member: TMember) => ReactNode;
+  emptyMessage: string;
+}) {
+  if (members.length === 0) {
+    return <p className="px-1 py-6 text-center text-sm text-muted-foreground">{emptyMessage}</p>;
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Role</TableHead>
+          <TableHead>Action</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {members.map((member) => (
+          <TableRow key={member.id}>
+            <TableCell>
+              <div className="flex items-center gap-2">
+                <Avatar size="sm">
+                  <AvatarImage src={member.user.avatarUrl ?? undefined} alt={member.user.name} />
+                  <AvatarFallback>{getInitials(member.user.name)}</AvatarFallback>
+                </Avatar>
+                <span className="truncate font-medium">{member.user.name}</span>
+              </div>
+            </TableCell>
+            <TableCell className="text-muted-foreground">{member.user.email}</TableCell>
+            <TableCell>
+              {roleChangeable(member) ? (
+                <Select value={member.role} onValueChange={(role) => onChangeRole(member, role as MemberRole)}>
+                  <SelectTrigger size="sm" className="h-auto border-transparent bg-transparent px-1 py-0.5 shadow-none">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {assignableRoles.map((role) => (
+                      <SelectItem key={role} value={role}>
+                        {role}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <span className="px-1 text-sm">{member.role}</span>
+              )}
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center gap-3">{renderActions(member)}</div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}

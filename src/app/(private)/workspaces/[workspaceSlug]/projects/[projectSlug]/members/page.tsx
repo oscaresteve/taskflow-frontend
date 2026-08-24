@@ -3,30 +3,30 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { UserPlus, UserX, Users } from "lucide-react";
+import { UserPlus, UserX } from "lucide-react";
 import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
-import { PageContainer } from "@/components/page-container";
 import { AddProjectMemberDialog } from "@/components/add-project-member-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
+import { MembersFilterBar } from "@/components/members-filter-bar";
+import { MembersTable } from "@/components/members-table";
+import { PageContainer } from "@/components/page-container";
 import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
 import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
 import { ApiError } from "@/lib/http/api-error";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
+import { RoleFilter, matchesMemberFilters } from "@/lib/member-role-filter";
 import {
   assignableProjectRoles,
   canDeactivateProjectMember,
   canUpdateProjectMemberRole,
   isProjectManager,
 } from "@/lib/permissions/project-member-permissions";
-import { getInitials } from "@/lib/utils";
 
 export default function ProjectMembersPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
@@ -37,6 +37,8 @@ export default function ProjectMembersPage() {
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
   const [memberToDeactivate, setMemberToDeactivate] = useState<ProjectMemberWithUserResponseDto | null>(null);
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
@@ -45,8 +47,8 @@ export default function ProjectMembersPage() {
   if (isLoading || !data) {
     return (
       <PageContainer className="flex flex-col gap-3">
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-14 w-full" />
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-9 w-full" />
         <Skeleton className="h-14 w-full" />
         <Skeleton className="h-14 w-full" />
       </PageContainer>
@@ -56,6 +58,9 @@ export default function ProjectMembersPage() {
   const members = data.data;
   const myRole = members.find((member) => member.userId === me?.id)?.role;
   const assignableRoles = assignableProjectRoles(myRole);
+  const filtered = members.filter((member) => matchesMemberFilters(member, search, roleFilter));
+  const activeMembers = filtered.filter((member) => member.isActive);
+  const inactiveMembers = filtered.filter((member) => !member.isActive);
 
   function reportError(error: unknown) {
     toast.add({
@@ -83,89 +88,90 @@ export default function ProjectMembersPage() {
     });
   }
 
-  return (
-    <PageContainer>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="size-4" />
-            Members
-            <Badge variant="secondary">{data.pagination.total}</Badge>
-          </CardTitle>
-          {isProjectManager(myRole) ? (
-            <CardAction>
-              <Button size="sm" onClick={() => setAddMemberOpen(true)}>
-                <UserPlus />
-                Add member
-              </Button>
-            </CardAction>
-          ) : null}
-        </CardHeader>
-        <CardContent className="flex flex-col gap-1">
-          {members.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No members yet.</p>
-          ) : (
-            members.map((member) => {
-              const roleChangeable = canUpdateProjectMemberRole({
-                actorUserId: me?.id,
-                actorRole: myRole,
-                targetUserId: member.userId,
-                targetRole: member.role,
-                targetIsActive: member.isActive,
-              });
-              const deactivatable = canDeactivateProjectMember({
-                actorUserId: me?.id,
-                actorRole: myRole,
-                targetUserId: member.userId,
-                targetRole: member.role,
-                targetIsActive: member.isActive,
-              });
+  function roleChangeable(member: ProjectMemberWithUserResponseDto) {
+    return canUpdateProjectMemberRole({
+      actorUserId: me?.id,
+      actorRole: myRole,
+      targetUserId: member.userId,
+      targetRole: member.role,
+      targetIsActive: member.isActive,
+    });
+  }
 
-              return (
-                <div key={member.id} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
-                  <Avatar size="sm">
-                    <AvatarImage src={member.user.avatarUrl ?? undefined} alt={member.user.name} />
-                    <AvatarFallback>{getInitials(member.user.name)}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-1 flex-col truncate">
-                    <span className="truncate">{member.user.name}</span>
-                    <span className="truncate text-xs text-muted-foreground">{member.user.email}</span>
-                  </div>
-                  {!member.isActive ? <Badge variant="secondary">Inactive</Badge> : null}
-                  {roleChangeable ? (
-                    <Select
-                      value={member.role}
-                      onValueChange={(role) => handleChangeRole(member, role as ProjectRole)}
-                    >
-                      <SelectTrigger size="sm" className="h-auto border-transparent bg-transparent px-1 py-0.5 shadow-none">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {assignableRoles.map((role) => (
-                          <SelectItem key={role} value={role}>
-                            {role}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <span className="px-1 text-sm">{member.role}</span>
-                  )}
-                  {deactivatable ? (
-                    <Button
-                      variant="link"
-                      className="h-auto p-0 text-sm text-destructive"
-                      onClick={() => handleRequestDeactivate(member)}
-                    >
-                      Deactivate
-                    </Button>
-                  ) : null}
-                </div>
-              );
-            })
-          )}
-        </CardContent>
-      </Card>
+  function renderActions(member: ProjectMemberWithUserResponseDto) {
+    const deactivatable = canDeactivateProjectMember({
+      actorUserId: me?.id,
+      actorRole: myRole,
+      targetUserId: member.userId,
+      targetRole: member.role,
+      targetIsActive: member.isActive,
+    });
+
+    return deactivatable ? (
+      <Button
+        variant="link"
+        className="h-auto p-0 text-sm text-destructive"
+        onClick={() => handleRequestDeactivate(member)}
+      >
+        Deactivate
+      </Button>
+    ) : null;
+  }
+
+  return (
+    <PageContainer className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="text-xl font-semibold">Members</h1>
+        {isProjectManager(myRole) ? (
+          <Button size="sm" onClick={() => setAddMemberOpen(true)}>
+            <UserPlus />
+            Add member
+          </Button>
+        ) : null}
+      </div>
+
+      <Tabs defaultValue="active">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <TabsList>
+            <TabsTrigger value="active">
+              Current members
+              <Badge variant="secondary">{activeMembers.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="inactive">
+              Inactive
+              <Badge variant="secondary">{inactiveMembers.length}</Badge>
+            </TabsTrigger>
+          </TabsList>
+          <MembersFilterBar
+            search={search}
+            onSearchChange={setSearch}
+            roleFilter={roleFilter}
+            onRoleFilterChange={setRoleFilter}
+          />
+        </div>
+
+        <TabsContent value="active">
+          <MembersTable
+            members={activeMembers}
+            assignableRoles={assignableRoles}
+            roleChangeable={roleChangeable}
+            onChangeRole={handleChangeRole}
+            renderActions={renderActions}
+            emptyMessage="No members found."
+          />
+        </TabsContent>
+        <TabsContent value="inactive">
+          <MembersTable
+            members={inactiveMembers}
+            assignableRoles={assignableRoles}
+            roleChangeable={roleChangeable}
+            onChangeRole={handleChangeRole}
+            renderActions={renderActions}
+            emptyMessage="No inactive members."
+          />
+        </TabsContent>
+      </Tabs>
+
       <AddProjectMemberDialog
         workspaceSlug={workspaceSlug}
         projectSlug={projectSlug}
