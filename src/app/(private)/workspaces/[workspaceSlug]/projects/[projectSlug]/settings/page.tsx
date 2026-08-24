@@ -4,7 +4,7 @@ import { PageContainer } from "@/components/page-container";
 
 export default function ProjectSettingsPage() {
   return (
-    <PageContainer className="flex flex-col gap-6 p-6 pb-20">
+    <PageContainer className="flex flex-col gap-6 pb-20">
       <EditProjectForm />
       <ArchiveProjectSection />
     </PageContainer>

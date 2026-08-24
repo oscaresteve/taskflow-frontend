@@ -18,8 +18,8 @@ export default async function ProjectLayout({
 
   return (
     <div className="flex flex-col">
-      <div className="border-b px-6 pt-6">
-        <PageContainer className="flex flex-col gap-4">
+      <div className="border-b">
+        <PageContainer className="flex flex-col gap-4 pb-0">
           <div className="flex items-center gap-4">
             <Avatar size="lg">
               <AvatarFallback style={project.color ? { backgroundColor: project.color, color: "#fff" } : undefined}>

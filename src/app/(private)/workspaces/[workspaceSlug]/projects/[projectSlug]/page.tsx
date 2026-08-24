@@ -33,7 +33,7 @@ export default function ProjectPage() {
 
   if (isLoading || !project) {
     return (
-      <PageContainer className="flex flex-col gap-3 p-6">
+      <PageContainer className="flex flex-col gap-3">
         <Skeleton className="h-8 w-full" />
         <Skeleton className="h-8 w-full" />
         <Skeleton className="h-8 w-full" />
@@ -44,7 +44,7 @@ export default function ProjectPage() {
   const usersById = new Map(project.members.map((member) => [member.userId, member.user]));
 
   return (
-    <PageContainer className="p-6">
+    <PageContainer>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

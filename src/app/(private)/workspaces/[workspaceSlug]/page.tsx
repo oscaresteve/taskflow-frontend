@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
+import { PageContainer } from "@/components/page-container";
 
 export default function WorkspacePage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
@@ -34,7 +35,7 @@ export default function WorkspacePage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <PageContainer className="flex flex-col gap-6">
       <div className="flex items-center gap-4">
         <Avatar size="lg">
           <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
@@ -102,6 +103,6 @@ export default function WorkspacePage() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   );
 }

@@ -21,7 +21,7 @@ export default function ProjectMembersPage() {
 
   if (isLoading || !data) {
     return (
-      <PageContainer className="flex flex-col gap-3 p-6">
+      <PageContainer className="flex flex-col gap-3">
         <Skeleton className="h-6 w-32" />
         <Skeleton className="h-14 w-full" />
         <Skeleton className="h-14 w-full" />
@@ -33,7 +33,7 @@ export default function ProjectMembersPage() {
   const members = data.data;
 
   return (
-    <PageContainer className="p-6">
+    <PageContainer>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

@@ -203,7 +203,7 @@ export default function WorkspaceMembersPage() {
 
   if (isLoading || !workspaceMembers) {
     return (
-      <PageContainer className="flex flex-col gap-3 p-6">
+      <PageContainer className="flex flex-col gap-3">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-9 w-full" />
         <Skeleton className="h-14 w-full" />
@@ -249,7 +249,7 @@ export default function WorkspaceMembersPage() {
   }
 
   return (
-    <PageContainer className="flex flex-col gap-4 p-6">
+    <PageContainer className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
         <h1 className="text-xl font-semibold">Members</h1>
         {isWorkspaceManager(myRole) ? (
