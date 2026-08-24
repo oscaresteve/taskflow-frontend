@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Clock, MoreHorizontal, UserCheck, UserPlus, UserX, Users } from "lucide-react";
+import { Clock, MoreHorizontal, UserCheck, UserMinus, UserPlus, UserX, Users } from "lucide-react";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -63,12 +63,14 @@ function MemberRow({
     actorRole: myRole,
     targetUserId: member.userId,
     targetRole: member.role,
+    targetStatus: member.status,
   });
   const removable = canRemoveWorkspaceMember({
     actorUserId: myUserId,
     actorRole: myRole,
     targetUserId: member.userId,
     targetRole: member.role,
+    targetStatus: member.status,
   });
   const assignableRoles = assignableWorkspaceRoles(myRole);
 
@@ -152,6 +154,7 @@ export default function WorkspaceMembersPage() {
   const myRole = workspaceMembers.data.find((member) => member.userId === me?.id)?.role;
   const activeMembers = workspaceMembers.data.filter((member) => member.status === "ACTIVE");
   const pendingMembers = workspaceMembers.data.filter((member) => member.status === "PENDING");
+  const removedMembers = workspaceMembers.data.filter((member) => member.status === "REMOVED");
 
   function reportError(error: unknown) {
     toast.add({
@@ -231,6 +234,31 @@ export default function WorkspaceMembersPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-1">
             {pendingMembers.map((member) => (
+              <MemberRow
+                key={member.id}
+                member={member}
+                myUserId={me?.id}
+                myRole={myRole}
+                onActivate={handleActivate}
+                onChangeRole={handleChangeRole}
+                onRequestRemove={handleRequestRemove}
+              />
+            ))}
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {removedMembers.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserMinus className="size-4" />
+              Removed
+              <Badge variant="secondary">{removedMembers.length}</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-1">
+            {removedMembers.map((member) => (
               <MemberRow
                 key={member.id}
                 member={member}

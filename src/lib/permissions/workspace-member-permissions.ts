@@ -1,4 +1,4 @@
-import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
+import { WorkspaceMemberStatus, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 
 // Mirrors the workspace-member rules enforced server-side in taskflow-backend's
 // shared/auth/permissions.ts (requireWorkspaceManager, requireCanManageWorkspaceMember,
@@ -57,34 +57,40 @@ export function canActivateWorkspaceMember({
   return canManageWorkspaceMember({ actorRole, targetRole });
 }
 
-// Un manager no puede cambiar su propio rol.
+// Un manager no puede cambiar su propio rol, ni el de un miembro ya eliminado.
 export function canUpdateWorkspaceMemberRole({
   actorUserId,
   actorRole,
   targetUserId,
   targetRole,
+  targetStatus,
 }: {
   actorUserId: string | undefined;
   actorRole: WorkspaceRole | undefined;
   targetUserId: string;
   targetRole: WorkspaceRole;
+  targetStatus: WorkspaceMemberStatus;
 }): boolean {
   if (!actorUserId || actorUserId === targetUserId) return false;
+  if (targetStatus === "REMOVED") return false;
   return canManageWorkspaceMember({ actorRole, targetRole });
 }
 
-// Un manager no puede eliminarse a si mismo.
+// Un manager no puede eliminarse a si mismo, ni eliminar a alguien ya eliminado.
 export function canRemoveWorkspaceMember({
   actorUserId,
   actorRole,
   targetUserId,
   targetRole,
+  targetStatus,
 }: {
   actorUserId: string | undefined;
   actorRole: WorkspaceRole | undefined;
   targetUserId: string;
   targetRole: WorkspaceRole;
+  targetStatus: WorkspaceMemberStatus;
 }): boolean {
   if (!actorUserId || actorUserId === targetUserId) return false;
+  if (targetStatus === "REMOVED") return false;
   return canManageWorkspaceMember({ actorRole, targetRole });
 }
