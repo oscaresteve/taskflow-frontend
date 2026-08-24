@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { MoreHorizontal, UserPlus, Users } from "lucide-react";
@@ -16,10 +17,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
+import { AddMemberDialog } from "@/components/add-member-dialog";
 
 export default function WorkspaceMembersPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspaceMembers, isLoading, isError } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
+  const [addMemberOpen, setAddMemberOpen] = useState(false);
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
@@ -46,9 +49,9 @@ export default function WorkspaceMembersPage() {
             <Badge variant="secondary">{workspaceMembers.pagination.total}</Badge>
           </CardTitle>
           <CardAction>
-            <Button variant="outline" size="sm" disabled>
+            <Button variant="outline" size="sm" onClick={() => setAddMemberOpen(true)}>
               <UserPlus />
-              Invite member
+              Add member
             </Button>
           </CardAction>
         </CardHeader>
@@ -85,6 +88,7 @@ export default function WorkspaceMembersPage() {
           )}
         </CardContent>
       </Card>
+      <AddMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
     </div>
   );
 }
