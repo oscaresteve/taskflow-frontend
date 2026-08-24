@@ -3,9 +3,21 @@ import { ProjectMemberResponseDto, ProjectMemberWithUserResponseDto } from "../d
 import { request } from "../http/client";
 import { CreateProjectMemberDto, UpdateProjectMemberDto } from "../schemas/project-member.schema";
 
-export function getProjectMembers({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
+export function getProjectMembers({
+  workspaceSlug,
+  projectSlug,
+  isActive,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  isActive?: boolean[];
+}) {
+  const params = new URLSearchParams();
+  isActive?.forEach((value) => params.append("isActive", String(value)));
+  const queryString = params.toString();
+
   return request<PaginatedResponseDto<ProjectMemberWithUserResponseDto>>(
-    `/workspaces/${workspaceSlug}/projects/${projectSlug}/members`,
+    `/workspaces/${workspaceSlug}/projects/${projectSlug}/members${queryString ? `?${queryString}` : ""}`,
     { method: "GET" },
   );
 }
