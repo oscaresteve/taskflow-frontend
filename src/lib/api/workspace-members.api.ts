@@ -5,7 +5,7 @@ import {
   WorkspaceMemberStatus,
   WorkspaceMemberWithUserResponseDto,
 } from "@/lib/dtos/workspace-members.dto";
-import { CreateWorkspaceMemberDto } from "../schemas/workspace-member.schema";
+import { CreateWorkspaceMemberDto, UpdateWorkspaceMemberDto } from "../schemas/workspace-member.schema";
 
 export function getWorkspaceMembers(workspaceSlug: string, status?: WorkspaceMemberStatus[]) {
   const params = new URLSearchParams();
@@ -34,5 +34,20 @@ export function createWorkspaceMember({
 export function activateWorkspaceMember({ workspaceSlug, userId }: { workspaceSlug: string; userId: string }) {
   return request<void>(`/workspaces/${workspaceSlug}/members/${userId}/activate`, {
     method: "PATCH",
+  });
+}
+
+export function updateWorkspaceMember({
+  workspaceSlug,
+  userId,
+  data,
+}: {
+  workspaceSlug: string;
+  userId: string;
+  data: UpdateWorkspaceMemberDto;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/members/${userId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
   });
 }
