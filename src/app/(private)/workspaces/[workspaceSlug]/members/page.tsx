@@ -3,25 +3,17 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Clock, MoreHorizontal, UserCheck, UserMinus, UserPlus, UserX, Users } from "lucide-react";
+import { SearchIcon, UserPlus, UserX } from "lucide-react";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
 import { getInitials } from "@/lib/utils";
 import { AddMemberDialog } from "@/components/add-member-dialog";
@@ -39,7 +31,24 @@ import {
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
 
-function MemberRow({
+const roleFilters = ["ALL", "OWNER", "ADMIN", "MEMBER"] as const;
+type RoleFilter = (typeof roleFilters)[number];
+
+const roleFilterLabels: Record<RoleFilter, string> = {
+  ALL: "All roles",
+  OWNER: "Owner",
+  ADMIN: "Admin",
+  MEMBER: "Member",
+};
+
+function matchesFilters(member: WorkspaceMemberWithUserResponseDto, search: string, roleFilter: RoleFilter) {
+  if (roleFilter !== "ALL" && member.role !== roleFilter) return false;
+  if (!search) return true;
+  const query = search.toLowerCase();
+  return member.user.name.toLowerCase().includes(query) || member.user.email.toLowerCase().includes(query);
+}
+
+function MemberTableRow({
   member,
   myUserId,
   myRole,
@@ -75,53 +84,102 @@ function MemberRow({
   const assignableRoles = assignableWorkspaceRoles(myRole);
 
   return (
-    <div className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
-      <Avatar size="sm">
-        <AvatarImage src={user.avatarUrl ?? undefined} alt={user.name} />
-        <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
-      </Avatar>
-      <div className="flex flex-1 flex-col truncate">
-        <span className="truncate">{user.name}</span>
-        <span className="truncate text-xs text-muted-foreground">{user.email}</span>
-      </div>
-      <Badge variant="outline">{member.role}</Badge>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button variant="ghost" size="icon-sm" disabled={!activatable && !roleChangeable && !removable} />
-          }
-        >
-          <MoreHorizontal />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {member.status === "PENDING" ? (
-            <DropdownMenuItem disabled={!activatable} onClick={() => onActivate(member)}>
-              <UserCheck />
+    <TableRow>
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <Avatar size="sm">
+            <AvatarImage src={user.avatarUrl ?? undefined} alt={user.name} />
+            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+          </Avatar>
+          <span className="truncate font-medium">{user.name}</span>
+        </div>
+      </TableCell>
+      <TableCell className="text-muted-foreground">{user.email}</TableCell>
+      <TableCell>
+        {roleChangeable ? (
+          <Select value={member.role} onValueChange={(role) => onChangeRole(member, role as WorkspaceRole)}>
+            <SelectTrigger size="sm" className="h-auto border-transparent bg-transparent px-1 py-0.5 shadow-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {assignableRoles.map((role) => (
+                <SelectItem key={role} value={role}>
+                  {role}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          <span className="px-1 text-sm">{member.role}</span>
+        )}
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center gap-3">
+          {activatable ? (
+            <Button variant="link" className="h-auto p-0 text-sm" onClick={() => onActivate(member)}>
               Activate
-            </DropdownMenuItem>
+            </Button>
           ) : null}
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger disabled={!roleChangeable}>Change role</DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuRadioGroup
-                value={member.role}
-                onValueChange={(role) => onChangeRole(member, role as WorkspaceRole)}
-              >
-                {assignableRoles.map((role) => (
-                  <DropdownMenuRadioItem key={role} value={role}>
-                    {role}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-          <DropdownMenuItem variant="destructive" disabled={!removable} onClick={() => onRequestRemove(member)}>
-            <UserX />
-            Remove member
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+          {removable ? (
+            <Button
+              variant="link"
+              className="h-auto p-0 text-sm text-destructive"
+              onClick={() => onRequestRemove(member)}
+            >
+              Remove
+            </Button>
+          ) : null}
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function MembersTable({
+  members,
+  myUserId,
+  myRole,
+  onActivate,
+  onChangeRole,
+  onRequestRemove,
+  emptyMessage,
+}: {
+  members: WorkspaceMemberWithUserResponseDto[];
+  myUserId: string | undefined;
+  myRole: WorkspaceRole | undefined;
+  onActivate: (member: WorkspaceMemberWithUserResponseDto) => void;
+  onChangeRole: (member: WorkspaceMemberWithUserResponseDto, role: WorkspaceRole) => void;
+  onRequestRemove: (member: WorkspaceMemberWithUserResponseDto) => void;
+  emptyMessage: string;
+}) {
+  if (members.length === 0) {
+    return <p className="px-1 py-6 text-center text-sm text-muted-foreground">{emptyMessage}</p>;
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Role</TableHead>
+          <TableHead>Action</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {members.map((member) => (
+          <MemberTableRow
+            key={member.id}
+            member={member}
+            myUserId={myUserId}
+            myRole={myRole}
+            onActivate={onActivate}
+            onChangeRole={onChangeRole}
+            onRequestRemove={onRequestRemove}
+          />
+        ))}
+      </TableBody>
+    </Table>
   );
 }
 
@@ -135,6 +193,8 @@ export default function WorkspaceMembersPage() {
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
@@ -143,8 +203,8 @@ export default function WorkspaceMembersPage() {
   if (isLoading || !workspaceMembers) {
     return (
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-3 p-6">
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-14 w-full" />
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-9 w-full" />
         <Skeleton className="h-14 w-full" />
         <Skeleton className="h-14 w-full" />
       </div>
@@ -152,9 +212,10 @@ export default function WorkspaceMembersPage() {
   }
 
   const myRole = workspaceMembers.data.find((member) => member.userId === me?.id)?.role;
-  const activeMembers = workspaceMembers.data.filter((member) => member.status === "ACTIVE");
-  const pendingMembers = workspaceMembers.data.filter((member) => member.status === "PENDING");
-  const removedMembers = workspaceMembers.data.filter((member) => member.status === "REMOVED");
+  const filtered = workspaceMembers.data.filter((member) => matchesFilters(member, search, roleFilter));
+  const activeMembers = filtered.filter((member) => member.status === "ACTIVE");
+  const pendingMembers = filtered.filter((member) => member.status === "PENDING");
+  const removedMembers = filtered.filter((member) => member.status === "REMOVED");
 
   function reportError(error: unknown) {
     toast.add({
@@ -187,91 +248,93 @@ export default function WorkspaceMembersPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="size-4" />
-            Members
-            <Badge variant="secondary">{activeMembers.length}</Badge>
-          </CardTitle>
-          {isWorkspaceManager(myRole) ? (
-            <CardAction>
-              <Button variant="outline" size="sm" onClick={() => setAddMemberOpen(true)}>
-                <UserPlus />
-                Add member
-              </Button>
-            </CardAction>
-          ) : null}
-        </CardHeader>
-        <CardContent className="flex flex-col gap-1">
-          {activeMembers.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No members yet.</p>
-          ) : (
-            activeMembers.map((member) => (
-              <MemberRow
-                key={member.id}
-                member={member}
-                myUserId={me?.id}
-                myRole={myRole}
-                onActivate={handleActivate}
-                onChangeRole={handleChangeRole}
-                onRequestRemove={handleRequestRemove}
-              />
-            ))
-          )}
-        </CardContent>
-      </Card>
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 p-6">
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="text-xl font-semibold">Members</h1>
+        {isWorkspaceManager(myRole) ? (
+          <Button size="sm" onClick={() => setAddMemberOpen(true)}>
+            <UserPlus />
+            Add member
+          </Button>
+        ) : null}
+      </div>
 
-      {pendingMembers.length > 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="size-4" />
+      <Tabs defaultValue="active">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <TabsList>
+            <TabsTrigger value="active">
+              Current members
+              <Badge variant="secondary">{activeMembers.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="pending">
               Pending
               <Badge variant="secondary">{pendingMembers.length}</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-1">
-            {pendingMembers.map((member) => (
-              <MemberRow
-                key={member.id}
-                member={member}
-                myUserId={me?.id}
-                myRole={myRole}
-                onActivate={handleActivate}
-                onChangeRole={handleChangeRole}
-                onRequestRemove={handleRequestRemove}
-              />
-            ))}
-          </CardContent>
-        </Card>
-      ) : null}
-
-      {removedMembers.length > 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserMinus className="size-4" />
+            </TabsTrigger>
+            <TabsTrigger value="removed">
               Removed
               <Badge variant="secondary">{removedMembers.length}</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-1">
-            {removedMembers.map((member) => (
-              <MemberRow
-                key={member.id}
-                member={member}
-                myUserId={me?.id}
-                myRole={myRole}
-                onActivate={handleActivate}
-                onChangeRole={handleChangeRole}
-                onRequestRemove={handleRequestRemove}
+            </TabsTrigger>
+          </TabsList>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search members"
+                className="w-48 pl-8"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-            ))}
-          </CardContent>
-        </Card>
-      ) : null}
+            </div>
+            <Select value={roleFilter} onValueChange={(value) => setRoleFilter(value as RoleFilter)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {roleFilters.map((role) => (
+                  <SelectItem key={role} value={role}>
+                    {roleFilterLabels[role]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <TabsContent value="active">
+          <MembersTable
+            members={activeMembers}
+            myUserId={me?.id}
+            myRole={myRole}
+            onActivate={handleActivate}
+            onChangeRole={handleChangeRole}
+            onRequestRemove={handleRequestRemove}
+            emptyMessage="No members found."
+          />
+        </TabsContent>
+        <TabsContent value="pending">
+          <MembersTable
+            members={pendingMembers}
+            myUserId={me?.id}
+            myRole={myRole}
+            onActivate={handleActivate}
+            onChangeRole={handleChangeRole}
+            onRequestRemove={handleRequestRemove}
+            emptyMessage="No pending members."
+          />
+        </TabsContent>
+        <TabsContent value="removed">
+          <MembersTable
+            members={removedMembers}
+            myUserId={me?.id}
+            myRole={myRole}
+            onActivate={handleActivate}
+            onChangeRole={handleChangeRole}
+            onRequestRemove={handleRequestRemove}
+            emptyMessage="No removed members."
+          />
+        </TabsContent>
+      </Tabs>
 
       <AddMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
       <ConfirmDialog
