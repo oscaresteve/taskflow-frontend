@@ -51,3 +51,9 @@ export function updateWorkspaceMember({
     body: JSON.stringify(data),
   });
 }
+
+export function removeWorkspaceMember({ workspaceSlug, userId }: { workspaceSlug: string; userId: string }) {
+  return request<void>(`/workspaces/${workspaceSlug}/members/${userId}/remove`, {
+    method: "PATCH",
+  });
+}
