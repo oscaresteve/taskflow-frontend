@@ -33,3 +33,35 @@ export function assignableProjectRoles(actorRole: ProjectRole | undefined): Proj
   if (!actorRole) return [];
   return ASSIGNABLE_ROLES_BY_ROLE[actorRole];
 }
+
+// ADMIN no puede administrar un OWNER.
+export function canManageProjectMember({
+  actorRole,
+  targetRole,
+}: {
+  actorRole: ProjectRole | undefined;
+  targetRole: ProjectRole;
+}): boolean {
+  if (!isProjectManager(actorRole)) return false;
+  if (actorRole === "ADMIN" && targetRole === "OWNER") return false;
+  return true;
+}
+
+// Un manager no puede cambiar su propio rol, ni el de un miembro inactivo.
+export function canUpdateProjectMemberRole({
+  actorUserId,
+  actorRole,
+  targetUserId,
+  targetRole,
+  targetIsActive,
+}: {
+  actorUserId: string | undefined;
+  actorRole: ProjectRole | undefined;
+  targetUserId: string;
+  targetRole: ProjectRole;
+  targetIsActive: boolean;
+}): boolean {
+  if (!actorUserId || actorUserId === targetUserId) return false;
+  if (!targetIsActive) return false;
+  return canManageProjectMember({ actorRole, targetRole });
+}
