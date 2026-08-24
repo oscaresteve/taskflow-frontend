@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { UserPlus, Users } from "lucide-react";
+import { UserPlus, UserX, Users } from "lucide-react";
 import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,11 +15,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { PageContainer } from "@/components/page-container";
 import { AddProjectMemberDialog } from "@/components/add-project-member-dialog";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
+import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
 import { ApiError } from "@/lib/http/api-error";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
 import {
   assignableProjectRoles,
+  canDeactivateProjectMember,
   canUpdateProjectMemberRole,
   isProjectManager,
 } from "@/lib/permissions/project-member-permissions";
@@ -30,7 +33,10 @@ export default function ProjectMembersPage() {
   const { data, isLoading, isError } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
   const { data: me } = useQuery(getMeQuery());
   const updateProjectMember = useUpdateProjectMember(workspaceSlug, projectSlug);
+  const deactivateProjectMember = useDeactivateProjectMember(workspaceSlug, projectSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
+  const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
+  const [memberToDeactivate, setMemberToDeactivate] = useState<ProjectMemberWithUserResponseDto | null>(null);
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
@@ -51,20 +57,30 @@ export default function ProjectMembersPage() {
   const myRole = members.find((member) => member.userId === me?.id)?.role;
   const assignableRoles = assignableProjectRoles(myRole);
 
+  function reportError(error: unknown) {
+    toast.add({
+      type: "error",
+      description: error instanceof ApiError ? error.message : "Something went wrong",
+      priority: "high",
+    });
+  }
+
   function handleChangeRole(member: ProjectMemberWithUserResponseDto, role: ProjectRole) {
     if (role === member.role) return;
-    updateProjectMember.mutate(
-      { userId: member.userId, data: { role } },
-      {
-        onError: (error) => {
-          toast.add({
-            type: "error",
-            description: error instanceof ApiError ? error.message : "Something went wrong",
-            priority: "high",
-          });
-        },
-      },
-    );
+    updateProjectMember.mutate({ userId: member.userId, data: { role } }, { onError: reportError });
+  }
+
+  function handleRequestDeactivate(member: ProjectMemberWithUserResponseDto) {
+    setMemberToDeactivate(member);
+    setDeactivateDialogOpen(true);
+  }
+
+  function handleConfirmDeactivate() {
+    if (!memberToDeactivate) return;
+    deactivateProjectMember.mutate(memberToDeactivate.userId, {
+      onSuccess: () => setDeactivateDialogOpen(false),
+      onError: reportError,
+    });
   }
 
   return (
@@ -91,6 +107,13 @@ export default function ProjectMembersPage() {
           ) : (
             members.map((member) => {
               const roleChangeable = canUpdateProjectMemberRole({
+                actorUserId: me?.id,
+                actorRole: myRole,
+                targetUserId: member.userId,
+                targetRole: member.role,
+                targetIsActive: member.isActive,
+              });
+              const deactivatable = canDeactivateProjectMember({
                 actorUserId: me?.id,
                 actorRole: myRole,
                 targetUserId: member.userId,
@@ -128,6 +151,15 @@ export default function ProjectMembersPage() {
                   ) : (
                     <span className="px-1 text-sm">{member.role}</span>
                   )}
+                  {deactivatable ? (
+                    <Button
+                      variant="link"
+                      className="h-auto p-0 text-sm text-destructive"
+                      onClick={() => handleRequestDeactivate(member)}
+                    >
+                      Deactivate
+                    </Button>
+                  ) : null}
                 </div>
               );
             })
@@ -139,6 +171,17 @@ export default function ProjectMembersPage() {
         projectSlug={projectSlug}
         open={addMemberOpen}
         onOpenChange={setAddMemberOpen}
+      />
+      <ConfirmDialog
+        open={deactivateDialogOpen}
+        onOpenChange={setDeactivateDialogOpen}
+        title="Deactivate member"
+        description={`Deactivate ${memberToDeactivate?.user.name} on this project? They'll lose access to it immediately.`}
+        confirmLabel="Deactivate"
+        variant="destructive"
+        onConfirm={handleConfirmDeactivate}
+        pending={deactivateProjectMember.isPending}
+        Icon={UserX}
       />
     </PageContainer>
   );

@@ -65,3 +65,22 @@ export function canUpdateProjectMemberRole({
   if (!targetIsActive) return false;
   return canManageProjectMember({ actorRole, targetRole });
 }
+
+// Un manager no puede desactivarse a si mismo, ni desactivar a alguien ya inactivo.
+export function canDeactivateProjectMember({
+  actorUserId,
+  actorRole,
+  targetUserId,
+  targetRole,
+  targetIsActive,
+}: {
+  actorUserId: string | undefined;
+  actorRole: ProjectRole | undefined;
+  targetUserId: string;
+  targetRole: ProjectRole;
+  targetIsActive: boolean;
+}): boolean {
+  if (!actorUserId || actorUserId === targetUserId) return false;
+  if (!targetIsActive) return false;
+  return canManageProjectMember({ actorRole, targetRole });
+}

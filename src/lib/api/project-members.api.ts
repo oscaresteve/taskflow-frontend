@@ -41,3 +41,17 @@ export function updateProjectMember({
     body: JSON.stringify(data),
   });
 }
+
+export function deactivateProjectMember({
+  workspaceSlug,
+  projectSlug,
+  userId,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  userId: string;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/members/${userId}/deactivate`, {
+    method: "PATCH",
+  });
+}
