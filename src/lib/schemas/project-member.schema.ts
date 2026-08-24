@@ -8,4 +8,9 @@ export const createProjectMemberSchema = z.object({
   role: z.enum(projectRoles),
 });
 
+export const updateProjectMemberSchema = z.object({
+  role: z.enum(projectRoles),
+});
+
 export type CreateProjectMemberDto = z.infer<typeof createProjectMemberSchema>;
+export type UpdateProjectMemberDto = z.infer<typeof updateProjectMemberSchema>;

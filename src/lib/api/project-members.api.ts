@@ -1,7 +1,7 @@
 import { PaginatedResponseDto } from "../dtos/pagination.dto";
 import { ProjectMemberResponseDto, ProjectMemberWithUserResponseDto } from "../dtos/project-members.dto";
 import { request } from "../http/client";
-import { CreateProjectMemberDto } from "../schemas/project-member.schema";
+import { CreateProjectMemberDto, UpdateProjectMemberDto } from "../schemas/project-member.schema";
 
 export function getProjectMembers({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
   return request<PaginatedResponseDto<ProjectMemberWithUserResponseDto>>(
@@ -21,6 +21,23 @@ export function createProjectMember({
 }) {
   return request<ProjectMemberResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/members`, {
     method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateProjectMember({
+  workspaceSlug,
+  projectSlug,
+  userId,
+  data,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  userId: string;
+  data: UpdateProjectMemberDto;
+}) {
+  return request<ProjectMemberResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/members/${userId}`, {
+    method: "PATCH",
     body: JSON.stringify(data),
   });
 }
