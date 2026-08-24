@@ -18,6 +18,7 @@ import { toast } from "@/components/ui/toast";
 import { getInitials } from "@/lib/utils";
 import { AddMemberDialog } from "@/components/add-member-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
+import { PageContainer } from "@/components/page-container";
 import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-member";
 import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
 import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
@@ -202,12 +203,12 @@ export default function WorkspaceMembersPage() {
 
   if (isLoading || !workspaceMembers) {
     return (
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-3 p-6">
+      <PageContainer className="flex flex-col gap-3 p-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-9 w-full" />
         <Skeleton className="h-14 w-full" />
         <Skeleton className="h-14 w-full" />
-      </div>
+      </PageContainer>
     );
   }
 
@@ -248,7 +249,7 @@ export default function WorkspaceMembersPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 p-6">
+    <PageContainer className="flex flex-col gap-4 p-6">
       <div className="flex items-center justify-between gap-2">
         <h1 className="text-xl font-semibold">Members</h1>
         {isWorkspaceManager(myRole) ? (
@@ -348,6 +349,6 @@ export default function WorkspaceMembersPage() {
         pending={removeWorkspaceMember.isPending}
         Icon={UserX}
       />
-    </div>
+    </PageContainer>
   );
 }

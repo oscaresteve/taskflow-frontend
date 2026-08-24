@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PageContainer } from "@/components/page-container";
 import { getInitials } from "@/lib/utils";
 
 export default function ProjectMembersPage() {
@@ -20,19 +21,19 @@ export default function ProjectMembersPage() {
 
   if (isLoading || !data) {
     return (
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-3 p-6">
+      <PageContainer className="flex flex-col gap-3 p-6">
         <Skeleton className="h-6 w-32" />
         <Skeleton className="h-14 w-full" />
         <Skeleton className="h-14 w-full" />
         <Skeleton className="h-14 w-full" />
-      </div>
+      </PageContainer>
     );
   }
 
   const members = data.data;
 
   return (
-    <div className="mx-auto w-full max-w-4xl p-6">
+    <PageContainer className="p-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -62,6 +63,6 @@ export default function ProjectMembersPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   );
 }
