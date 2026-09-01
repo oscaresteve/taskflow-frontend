@@ -11,16 +11,22 @@ export function getWorkspaceMembers({
   workspaceSlug,
   status,
   excludeProjectSlug,
+  page,
+  limit,
 }: {
   workspaceSlug: string;
   status?: WorkspaceMemberStatus[];
   excludeProjectSlug?: string;
+  page?: number;
+  limit?: number;
 }) {
   const params = new URLSearchParams();
   status?.forEach((s) => params.append("status", s));
   if (excludeProjectSlug) {
     params.set("excludeProjectSlug", excludeProjectSlug);
   }
+  if (page) params.set("page", String(page));
+  if (limit) params.set("limit", String(limit));
   const queryString = params.toString();
 
   return request<PaginatedResponseDto<WorkspaceMemberWithUserResponseDto>>(

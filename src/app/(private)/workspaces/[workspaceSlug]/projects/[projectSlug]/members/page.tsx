@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { UserPlus, UserX } from "lucide-react";
-import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getProjectMembersPageQuery, getProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PageSizeSelect } from "@/components/page-size-select";
+import { PaginationControls } from "@/components/pagination-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
@@ -28,10 +30,14 @@ import {
   isProjectManager,
 } from "@/lib/permissions/project-member-permissions";
 
+const PAGE_SIZE_OPTIONS = [5, 10, 15];
+
 export default function ProjectMembersPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
-  const { data, isLoading, isError } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
   const { data: me } = useQuery(getMeQuery());
+  // Unpaginated lookup, kept separate from the tables below so that permission checks (myRole)
+  // don't depend on which page of which tab happens to be loaded.
+  const { data: allMembers } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
   const updateProjectMember = useUpdateProjectMember(workspaceSlug, projectSlug);
   const deactivateProjectMember = useDeactivateProjectMember(workspaceSlug, projectSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
@@ -39,12 +45,28 @@ export default function ProjectMembersPage() {
   const [memberToDeactivate, setMemberToDeactivate] = useState<ProjectMemberWithUserResponseDto | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
+  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
+  const [activePage, setActivePage] = useState(1);
+  const [inactivePage, setInactivePage] = useState(1);
 
-  if (isError) {
+  const activeQuery = useQuery(
+    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [true], page: activePage, limit }),
+  );
+  const inactiveQuery = useQuery(
+    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [false], page: inactivePage, limit }),
+  );
+
+  function handleLimitChange(value: number) {
+    setLimit(value);
+    setActivePage(1);
+    setInactivePage(1);
+  }
+
+  if (activeQuery.isError || inactiveQuery.isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
   }
 
-  if (isLoading || !data) {
+  if (!activeQuery.data || !inactiveQuery.data) {
     return (
       <PageContainer className="flex flex-col gap-3">
         <Skeleton className="h-8 w-64" />
@@ -55,12 +77,13 @@ export default function ProjectMembersPage() {
     );
   }
 
-  const members = data.data;
-  const myRole = members.find((member) => member.userId === me?.id)?.role;
+  const myRole = allMembers?.data.find((member) => member.userId === me?.id)?.role;
   const assignableRoles = assignableProjectRoles(myRole);
-  const filtered = members.filter((member) => matchesMemberFilters(member, search, roleFilter));
-  const activeMembers = filtered.filter((member) => member.isActive);
-  const inactiveMembers = filtered.filter((member) => !member.isActive);
+
+  const activeMembers = activeQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
+  const inactiveMembers = inactiveQuery.data.data.filter((member) =>
+    matchesMemberFilters(member, search, roleFilter),
+  );
 
   function reportError(error: unknown) {
     toast.add({
@@ -135,22 +158,25 @@ export default function ProjectMembersPage() {
           <TabsList>
             <TabsTrigger value="active">
               Current members
-              <Badge variant="secondary">{activeMembers.length}</Badge>
+              <Badge variant="secondary">{activeQuery.data.pagination.total}</Badge>
             </TabsTrigger>
             <TabsTrigger value="inactive">
               Inactive
-              <Badge variant="secondary">{inactiveMembers.length}</Badge>
+              <Badge variant="secondary">{inactiveQuery.data.pagination.total}</Badge>
             </TabsTrigger>
           </TabsList>
-          <MembersFilterBar
-            search={search}
-            onSearchChange={setSearch}
-            roleFilter={roleFilter}
-            onRoleFilterChange={setRoleFilter}
-          />
+          <div className="flex items-center gap-2">
+            <MembersFilterBar
+              search={search}
+              onSearchChange={setSearch}
+              roleFilter={roleFilter}
+              onRoleFilterChange={setRoleFilter}
+            />
+            <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+          </div>
         </div>
 
-        <TabsContent value="active">
+        <TabsContent value="active" className="flex flex-col gap-4">
           <MembersTable
             members={activeMembers}
             assignableRoles={assignableRoles}
@@ -159,8 +185,13 @@ export default function ProjectMembersPage() {
             renderActions={renderActions}
             emptyMessage="No members found."
           />
+          <PaginationControls
+            page={activePage}
+            totalPages={activeQuery.data.pagination.pages}
+            onPageChange={setActivePage}
+          />
         </TabsContent>
-        <TabsContent value="inactive">
+        <TabsContent value="inactive" className="flex flex-col gap-4">
           <MembersTable
             members={inactiveMembers}
             assignableRoles={assignableRoles}
@@ -168,6 +199,11 @@ export default function ProjectMembersPage() {
             onChangeRole={handleChangeRole}
             renderActions={renderActions}
             emptyMessage="No inactive members."
+          />
+          <PaginationControls
+            page={inactivePage}
+            totalPages={inactiveQuery.data.pagination.pages}
+            onPageChange={setInactivePage}
           />
         </TabsContent>
       </Tabs>

@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { UserPlus, UserX } from "lucide-react";
-import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
+import { getWorkspaceMembersPageQuery, getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PageSizeSelect } from "@/components/page-size-select";
+import { PaginationControls } from "@/components/pagination-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
@@ -30,10 +32,14 @@ import {
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
 
+const PAGE_SIZE_OPTIONS = [5, 10, 15];
+
 export default function WorkspaceMembersPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: workspaceMembers, isLoading, isError } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
   const { data: me } = useQuery(getMeQuery());
+  // Unpaginated lookup, kept separate from the tables below so that permission checks (myRole)
+  // don't depend on which page of which tab happens to be loaded.
+  const { data: allMembers } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
   const activateWorkspaceMember = useActivateWorkspaceMember(workspaceSlug);
   const updateWorkspaceMember = useUpdateWorkspaceMember(workspaceSlug);
   const removeWorkspaceMember = useRemoveWorkspaceMember(workspaceSlug);
@@ -42,12 +48,33 @@ export default function WorkspaceMembersPage() {
   const [memberToRemove, setMemberToRemove] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
+  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
+  const [activePage, setActivePage] = useState(1);
+  const [pendingPage, setPendingPage] = useState(1);
+  const [removedPage, setRemovedPage] = useState(1);
 
-  if (isError) {
+  const activeQuery = useQuery(
+    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["ACTIVE"], page: activePage, limit }),
+  );
+  const pendingQuery = useQuery(
+    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["PENDING"], page: pendingPage, limit }),
+  );
+  const removedQuery = useQuery(
+    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["REMOVED"], page: removedPage, limit }),
+  );
+
+  function handleLimitChange(value: number) {
+    setLimit(value);
+    setActivePage(1);
+    setPendingPage(1);
+    setRemovedPage(1);
+  }
+
+  if (activeQuery.isError || pendingQuery.isError || removedQuery.isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
   }
 
-  if (isLoading || !workspaceMembers) {
+  if (!activeQuery.data || !pendingQuery.data || !removedQuery.data) {
     return (
       <PageContainer className="flex flex-col gap-3">
         <Skeleton className="h-8 w-64" />
@@ -58,12 +85,12 @@ export default function WorkspaceMembersPage() {
     );
   }
 
-  const myRole = workspaceMembers.data.find((member) => member.userId === me?.id)?.role;
+  const myRole = allMembers?.data.find((member) => member.userId === me?.id)?.role;
   const assignableRoles = assignableWorkspaceRoles(myRole);
-  const filtered = workspaceMembers.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
-  const activeMembers = filtered.filter((member) => member.status === "ACTIVE");
-  const pendingMembers = filtered.filter((member) => member.status === "PENDING");
-  const removedMembers = filtered.filter((member) => member.status === "REMOVED");
+
+  const activeMembers = activeQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
+  const pendingMembers = pendingQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
+  const removedMembers = removedQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
 
   function reportError(error: unknown) {
     toast.add({
@@ -153,26 +180,29 @@ export default function WorkspaceMembersPage() {
           <TabsList>
             <TabsTrigger value="active">
               Current members
-              <Badge variant="secondary">{activeMembers.length}</Badge>
+              <Badge variant="secondary">{activeQuery.data.pagination.total}</Badge>
             </TabsTrigger>
             <TabsTrigger value="pending">
               Pending
-              <Badge variant="secondary">{pendingMembers.length}</Badge>
+              <Badge variant="secondary">{pendingQuery.data.pagination.total}</Badge>
             </TabsTrigger>
             <TabsTrigger value="removed">
               Removed
-              <Badge variant="secondary">{removedMembers.length}</Badge>
+              <Badge variant="secondary">{removedQuery.data.pagination.total}</Badge>
             </TabsTrigger>
           </TabsList>
-          <MembersFilterBar
-            search={search}
-            onSearchChange={setSearch}
-            roleFilter={roleFilter}
-            onRoleFilterChange={setRoleFilter}
-          />
+          <div className="flex items-center gap-2">
+            <MembersFilterBar
+              search={search}
+              onSearchChange={setSearch}
+              roleFilter={roleFilter}
+              onRoleFilterChange={setRoleFilter}
+            />
+            <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+          </div>
         </div>
 
-        <TabsContent value="active">
+        <TabsContent value="active" className="flex flex-col gap-4">
           <MembersTable
             members={activeMembers}
             assignableRoles={assignableRoles}
@@ -181,8 +211,13 @@ export default function WorkspaceMembersPage() {
             renderActions={renderActions}
             emptyMessage="No members found."
           />
+          <PaginationControls
+            page={activePage}
+            totalPages={activeQuery.data.pagination.pages}
+            onPageChange={setActivePage}
+          />
         </TabsContent>
-        <TabsContent value="pending">
+        <TabsContent value="pending" className="flex flex-col gap-4">
           <MembersTable
             members={pendingMembers}
             assignableRoles={assignableRoles}
@@ -191,8 +226,13 @@ export default function WorkspaceMembersPage() {
             renderActions={renderActions}
             emptyMessage="No pending members."
           />
+          <PaginationControls
+            page={pendingPage}
+            totalPages={pendingQuery.data.pagination.pages}
+            onPageChange={setPendingPage}
+          />
         </TabsContent>
-        <TabsContent value="removed">
+        <TabsContent value="removed" className="flex flex-col gap-4">
           <MembersTable
             members={removedMembers}
             assignableRoles={assignableRoles}
@@ -200,6 +240,11 @@ export default function WorkspaceMembersPage() {
             onChangeRole={handleChangeRole}
             renderActions={renderActions}
             emptyMessage="No removed members."
+          />
+          <PaginationControls
+            page={removedPage}
+            totalPages={removedQuery.data.pagination.pages}
+            onPageChange={setRemovedPage}
           />
         </TabsContent>
       </Tabs>

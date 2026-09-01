@@ -7,13 +7,19 @@ export function getProjectMembers({
   workspaceSlug,
   projectSlug,
   isActive,
+  page,
+  limit,
 }: {
   workspaceSlug: string;
   projectSlug: string;
   isActive?: boolean[];
+  page?: number;
+  limit?: number;
 }) {
   const params = new URLSearchParams();
   isActive?.forEach((value) => params.append("isActive", String(value)));
+  if (page) params.set("page", String(page));
+  if (limit) params.set("limit", String(limit));
   const queryString = params.toString();
 
   return request<PaginatedResponseDto<ProjectMemberWithUserResponseDto>>(
