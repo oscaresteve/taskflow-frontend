@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ExternalLink, MoreHorizontal, Plus, SearchIcon, Settings, ShieldMinus, Users } from "lucide-react";
 import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
@@ -12,6 +12,8 @@ import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissio
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageSizeSelect } from "@/components/page-size-select";
+import { PaginationControls } from "@/components/pagination-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -30,12 +32,7 @@ import { getInitials } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 
 const MAX_VISIBLE_OWNERS = 4;
-
-function matchesSearch(workspace: WorkspaceResponseDto, search: string) {
-  if (!search) return true;
-  const query = search.toLowerCase();
-  return workspace.name.toLowerCase().includes(query) || workspace.slug.toLowerCase().includes(query);
-}
+const PAGE_SIZE_OPTIONS = [5, 10, 15];
 
 function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceResponseDto; canManage: boolean }) {
   const [deactivateOpen, setDeactivateOpen] = useState(false);
@@ -151,10 +148,29 @@ function WorkspaceRow({ workspace, currentUserId }: { workspace: WorkspaceRespon
 }
 
 export default function WorkspacesPage() {
-  const { data: workspaces, isLoading, isError } = useQuery(getActiveWorkspacesQuery());
-  const { data: me } = useQuery(getMeQuery());
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
+  const {
+    data: workspaces,
+    isLoading,
+    isError,
+  } = useQuery({
+    ...getActiveWorkspacesQuery({ page, search: search || undefined, limit }),
+    placeholderData: keepPreviousData,
+  });
+  const { data: me } = useQuery(getMeQuery());
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
+
+  function handleLimitChange(value: number) {
+    setLimit(value);
+    setPage(1);
+  }
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load workspaces.</p>;
@@ -171,7 +187,7 @@ export default function WorkspacesPage() {
     );
   }
 
-  const filtered = workspaces.data.filter((workspace) => matchesSearch(workspace, search));
+  const { pages: totalPages } = workspaces.pagination;
 
   return (
     <PageContainer className="flex flex-col gap-4">
@@ -183,7 +199,7 @@ export default function WorkspacesPage() {
         </Button>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end gap-2">
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -191,12 +207,13 @@ export default function WorkspacesPage() {
             placeholder="Search workspaces"
             className="w-48 pl-8"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
+        <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
       </div>
 
-      {filtered.length === 0 ? (
+      {workspaces.data.length === 0 ? (
         <p className="px-1 py-6 text-center text-sm text-muted-foreground">No workspaces found.</p>
       ) : (
         <Table>
@@ -209,12 +226,14 @@ export default function WorkspacesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.map((workspace) => (
+            {workspaces.data.map((workspace) => (
               <WorkspaceRow key={workspace.id} workspace={workspace} currentUserId={me?.id} />
             ))}
           </TableBody>
         </Table>
       )}
+
+      <PaginationControls page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
     </PageContainer>

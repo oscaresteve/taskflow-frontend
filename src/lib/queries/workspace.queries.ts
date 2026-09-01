@@ -7,10 +7,14 @@ import { workspaceKeys } from "@/lib/query-keys/workspace.keys";
 // and the "manage workspaces" page. Inactive workspaces 404 on every workspace-scoped endpoint (the
 // backend treats isActive as a soft delete), so nothing in the frontend surfaces them until a
 // reactivate flow exists.
-export const getActiveWorkspacesQuery = () =>
+export const getActiveWorkspacesQuery = ({
+  page,
+  search,
+  limit,
+}: { page?: number; search?: string; limit?: number } = {}) =>
   queryOptions({
-    queryKey: workspaceKeys.lists(),
-    queryFn: () => getWorkspaces(),
+    queryKey: workspaceKeys.lists(page, search, limit),
+    queryFn: () => getWorkspaces({ page, search, limit }),
   });
 
 export const getWorkspaceQuery = (workspaceSlug: string) =>
