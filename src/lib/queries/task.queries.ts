@@ -5,7 +5,7 @@ import { taskKeys } from "@/lib/query-keys/task.keys";
 export const getTasksQuery = (workspaceSlug: string, projectSlug: string) =>
   queryOptions({
     queryKey: taskKeys.lists(workspaceSlug, projectSlug),
-    queryFn: () => getTasks(workspaceSlug, projectSlug),
+    queryFn: () => getTasks({ workspaceSlug, projectSlug }),
     enabled: !!workspaceSlug && !!projectSlug,
   });
 

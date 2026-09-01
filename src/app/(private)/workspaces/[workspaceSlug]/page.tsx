@@ -81,7 +81,6 @@ export default function WorkspacePage() {
                 />
                 <span className="flex-1 truncate">{project.name}</span>
                 <span className="text-xs text-muted-foreground">{project.key}</span>
-                {project.isArchived ? <Badge variant="outline">Archived</Badge> : null}
               </Link>
             ))
           )}

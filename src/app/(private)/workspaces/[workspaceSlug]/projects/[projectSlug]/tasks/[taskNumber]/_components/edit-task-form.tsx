@@ -29,7 +29,7 @@ export function EditTaskForm() {
   }>();
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
   const { data: projectMembers } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
-  const activeMembers = projectMembers?.data.filter((member) => member.isActive) ?? [];
+  const members = projectMembers?.data.filter((member) => member.isActive) ?? [];
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
 
   const form = useForm<UpdateTaskDto>({
@@ -173,7 +173,7 @@ export function EditTaskForm() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
-                  {activeMembers.map((member) => (
+                  {members.map((member) => (
                     <SelectItem key={member.userId} value={member.userId}>
                       {member.user.name}
                     </SelectItem>

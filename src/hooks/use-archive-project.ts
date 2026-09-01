@@ -6,7 +6,7 @@ export function useArchiveProject(workspaceSlug: string, projectSlug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => archiveProject(workspaceSlug, projectSlug),
+    mutationFn: () => archiveProject({ workspaceSlug, projectSlug }),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: projectKeys.detail(workspaceSlug, projectSlug) }),

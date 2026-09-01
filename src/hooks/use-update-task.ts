@@ -7,7 +7,7 @@ export function useUpdateTask(workspaceSlug: string, projectSlug: string, taskNu
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateTaskDto) => updateTask(workspaceSlug, projectSlug, taskNumber, data),
+    mutationFn: (data: UpdateTaskDto) => updateTask({ workspaceSlug, projectSlug, taskNumber, data }),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: taskKeys.detail(workspaceSlug, projectSlug, taskNumber) }),

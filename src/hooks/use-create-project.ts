@@ -7,7 +7,7 @@ export function useCreateProject(workspaceSlug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateProjectDto) => createProject(workspaceSlug, data),
+    mutationFn: (data: CreateProjectDto) => createProject({ workspaceSlug, data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: projectKeys.lists(workspaceSlug) });
     },

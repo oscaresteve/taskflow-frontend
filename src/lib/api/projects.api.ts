@@ -9,7 +9,7 @@ export function getProjects(workspaceSlug: string) {
   });
 }
 
-export function createProject(workspaceSlug: string, data: CreateProjectDto) {
+export function createProject({ workspaceSlug, data }: { workspaceSlug: string; data: CreateProjectDto }) {
   return request<ProjectResponseDto>(`/workspaces/${workspaceSlug}/projects`, {
     method: "POST",
     body: JSON.stringify(data),
@@ -22,14 +22,22 @@ export function getProject({ workspaceSlug, projectSlug }: { workspaceSlug: stri
   });
 }
 
-export function updateProject(workspaceSlug: string, projectSlug: string, data: UpdateProjectDto) {
+export function updateProject({
+  workspaceSlug,
+  projectSlug,
+  data,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  data: UpdateProjectDto;
+}) {
   return request<ProjectResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}`, {
     method: "PATCH",
     body: JSON.stringify(data),
   });
 }
 
-export function archiveProject(workspaceSlug: string, projectSlug: string) {
+export function archiveProject({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
   return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/archive`, {
     method: "PATCH",
   });

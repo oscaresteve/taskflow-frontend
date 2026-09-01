@@ -28,7 +28,7 @@ export default function ProjectPage() {
     isError: isTasksError,
   } = useQuery(getTasksQuery(workspaceSlug, projectSlug));
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
-  const activeMembers = projectMembers?.data.filter((member) => member.isActive) ?? [];
+  const members = projectMembers?.data.filter((member) => member.isActive) ?? [];
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load project.</p>;
@@ -44,7 +44,7 @@ export default function ProjectPage() {
     );
   }
 
-  const usersById = new Map(activeMembers.map((member) => [member.userId, member.user]));
+  const usersById = new Map(members.map((member) => [member.userId, member.user]));
 
   return (
     <PageContainer>
@@ -102,7 +102,7 @@ export default function ProjectPage() {
       <CreateTaskDialog
         workspaceSlug={workspaceSlug}
         project={project}
-        members={activeMembers}
+        members={members}
         open={createTaskOpen}
         onOpenChange={setCreateTaskOpen}
       />

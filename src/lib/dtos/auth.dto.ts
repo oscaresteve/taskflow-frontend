@@ -6,10 +6,10 @@ export interface UserResponseDto {
   id: string;
   avatarUrl: string | null;
   isActive: boolean;
-  emailVerifiedAt: Date | null;
-  lastLoginAt: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
+  emailVerifiedAt: string | null;
+  lastLoginAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthResponseDto {

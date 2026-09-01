@@ -9,6 +9,6 @@ export type WorkspaceResponseDto = {
 
   isActive: boolean;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };

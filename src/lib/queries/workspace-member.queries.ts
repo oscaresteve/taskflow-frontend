@@ -7,7 +7,7 @@ import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 export const getWorkspaceMembersQuery = (workspaceSlug: string) =>
   queryOptions({
     queryKey: workspaceMemberKeys.lists(workspaceSlug),
-    queryFn: () => getWorkspaceMembers(workspaceSlug, ["ACTIVE", "PENDING", "REMOVED"]),
+    queryFn: () => getWorkspaceMembers({ workspaceSlug, status: ["ACTIVE", "PENDING", "REMOVED"] }),
     enabled: !!workspaceSlug,
   });
 
@@ -18,6 +18,6 @@ export const getWorkspaceMembersQuery = (workspaceSlug: string) =>
 export const getActiveWorkspaceMembersQuery = (workspaceSlug: string, excludeProjectSlug?: string) =>
   queryOptions({
     queryKey: workspaceMemberKeys.activeList(workspaceSlug, excludeProjectSlug),
-    queryFn: () => getWorkspaceMembers(workspaceSlug, ["ACTIVE"], excludeProjectSlug),
+    queryFn: () => getWorkspaceMembers({ workspaceSlug, status: ["ACTIVE"], excludeProjectSlug }),
     enabled: !!workspaceSlug,
   });

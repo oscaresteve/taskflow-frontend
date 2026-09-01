@@ -7,7 +7,7 @@ export function useUpdateWorkspace(workspaceSlug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateWorkspaceDto) => updateWorkspace(workspaceSlug, data),
+    mutationFn: (data: UpdateWorkspaceDto) => updateWorkspace({ workspaceSlug, data }),
     // Awaited so callers that navigate on success (e.g. slug changed after a
     // rename) land on a page whose query cache is already fresh, not stale.
     onSuccess: async () => {

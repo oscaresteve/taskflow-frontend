@@ -11,7 +11,7 @@ export default async function ProjectLayout({
   params,
 }: LayoutProps<"/workspaces/[workspaceSlug]/projects/[projectSlug]">) {
   const { workspaceSlug, projectSlug } = await params;
-  const project = await getProjectServer(workspaceSlug, projectSlug);
+  const project = await getProjectServer({ workspaceSlug, projectSlug });
   if (!project) {
     notFound();
   }
@@ -30,7 +30,6 @@ export default async function ProjectLayout({
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-semibold">{project.name}</h1>
                 <Badge variant="secondary">{project.key}</Badge>
-                {project.isArchived ? <Badge variant="outline">Archived</Badge> : null}
               </div>
               {project.description ? <p className="text-sm text-muted-foreground">{project.description}</p> : null}
             </div>

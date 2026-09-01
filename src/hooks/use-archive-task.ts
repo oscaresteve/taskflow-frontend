@@ -6,7 +6,7 @@ export function useArchiveTask(workspaceSlug: string, projectSlug: string, taskN
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => archiveTask(workspaceSlug, projectSlug, taskNumber),
+    mutationFn: () => archiveTask({ workspaceSlug, projectSlug, taskNumber }),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: taskKeys.detail(workspaceSlug, projectSlug, taskNumber) }),

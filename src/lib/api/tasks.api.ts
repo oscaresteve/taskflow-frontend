@@ -3,14 +3,22 @@ import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { CreateTaskDto, UpdateTaskDto } from "@/lib/schemas/task.schema";
 
-export function createTask(workspaceSlug: string, projectSlug: string, data: CreateTaskDto) {
+export function createTask({
+  workspaceSlug,
+  projectSlug,
+  data,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  data: CreateTaskDto;
+}) {
   return request<TaskResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks`, {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
-export function getTasks(workspaceSlug: string, projectSlug: string) {
+export function getTasks({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
   return request<PaginatedResponseDto<TaskResponseDto>>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks`, {
     method: "GET",
   });
@@ -30,19 +38,32 @@ export function getTask({
   });
 }
 
-export function updateTask(
-  workspaceSlug: string,
-  projectSlug: string,
-  taskNumber: string,
-  data: UpdateTaskDto,
-) {
+export function updateTask({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+  data,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+  data: UpdateTaskDto;
+}) {
   return request<TaskResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}`, {
     method: "PATCH",
     body: JSON.stringify(data),
   });
 }
 
-export function archiveTask(workspaceSlug: string, projectSlug: string, taskNumber: string) {
+export function archiveTask({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+}) {
   return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/archive`, {
     method: "PATCH",
   });
