@@ -10,7 +10,7 @@ export function useCreateWorkspaceMember(workspaceSlug: string) {
   return useMutation({
     mutationFn: (data: CreateWorkspaceMemberDto) => createWorkspaceMember({ workspaceSlug, data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.lists(workspaceSlug) });
+      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.all });
       // The added user should no longer show up in workspace-scoped user search results.
       queryClient.invalidateQueries({ queryKey: userKeys.all });
     },

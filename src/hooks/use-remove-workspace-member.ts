@@ -8,7 +8,7 @@ export function useRemoveWorkspaceMember(workspaceSlug: string) {
   return useMutation({
     mutationFn: (userId: string) => removeWorkspaceMember({ workspaceSlug, userId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.lists(workspaceSlug) });
+      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.all });
     },
   });
 }

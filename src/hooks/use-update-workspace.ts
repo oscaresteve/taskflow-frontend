@@ -10,11 +10,8 @@ export function useUpdateWorkspace(workspaceSlug: string) {
     mutationFn: (data: UpdateWorkspaceDto) => updateWorkspace(workspaceSlug, data),
     // Awaited so callers that navigate on success (e.g. slug changed after a
     // rename) land on a page whose query cache is already fresh, not stale.
-    onSuccess: async (updatedWorkspace) => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: workspaceKeys.detail(updatedWorkspace.slug) }),
-        queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() }),
-      ]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: workspaceKeys.all });
     },
   });
 }

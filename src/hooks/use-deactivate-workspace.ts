@@ -8,10 +8,7 @@ export function useDeactivateWorkspace(workspaceSlug: string) {
   return useMutation({
     mutationFn: () => deactivateWorkspace(workspaceSlug),
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: workspaceKeys.detail(workspaceSlug) }),
-        queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() }),
-      ]);
+      await queryClient.invalidateQueries({ queryKey: workspaceKeys.all });
     },
   });
 }

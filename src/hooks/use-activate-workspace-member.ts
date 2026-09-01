@@ -8,7 +8,7 @@ export function useActivateWorkspaceMember(workspaceSlug: string) {
   return useMutation({
     mutationFn: (userId: string) => activateWorkspaceMember({ workspaceSlug, userId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.lists(workspaceSlug) });
+      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.all });
     },
   });
 }

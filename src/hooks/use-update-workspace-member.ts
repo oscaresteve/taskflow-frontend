@@ -10,7 +10,7 @@ export function useUpdateWorkspaceMember(workspaceSlug: string) {
     mutationFn: ({ userId, data }: { userId: string; data: UpdateWorkspaceMemberDto }) =>
       updateWorkspaceMember({ workspaceSlug, userId, data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.lists(workspaceSlug) });
+      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.all });
     },
   });
 }
