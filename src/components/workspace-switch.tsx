@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
+import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreateWorkspaceDialog } from "@/components/create-workspace-dialog";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronsUpDown, Plus, Settings } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -19,15 +19,17 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export default function WorkspaceSwitch() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: workspaces, isLoading } = useQuery(getWorkspacesQuery());
+  const { data: workspaces, isLoading } = useQuery(getActiveWorkspacesQuery());
   const [createOpen, setCreateOpen] = useState(false);
+  const activeWorkspaces = workspaces?.data ?? [];
 
-  if (isLoading || !workspaces || workspaces.data.length === 0) {
+  if (isLoading || activeWorkspaces.length === 0) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -44,7 +46,7 @@ export default function WorkspaceSwitch() {
   }
 
   // The layout already guarantees workspaceSlug is valid (404s otherwise), so this lookup can't miss.
-  const activeWorkspace = workspaces.data.find((workspace) => workspace.slug === workspaceSlug) ?? workspaces.data[0];
+  const activeWorkspace = activeWorkspaces.find((workspace) => workspace.slug === workspaceSlug) ?? activeWorkspaces[0];
 
   return (
     <SidebarMenu>
@@ -76,7 +78,7 @@ export default function WorkspaceSwitch() {
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel className="text-xs text-muted-foreground">Workspaces</DropdownMenuLabel>
-              {workspaces.data.map((workspace) => (
+              {activeWorkspaces.map((workspace) => (
                 <DropdownMenuItem
                   key={workspace.id}
                   onClick={() => router.push(`/workspaces/${workspace.slug}`)}
@@ -96,6 +98,12 @@ export default function WorkspaceSwitch() {
                 <Plus className="size-4" />
               </div>
               Create workspace
+            </DropdownMenuItem>
+            <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2 p-2">
+              <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                <Settings className="size-4" />
+              </div>
+              Manage workspaces
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

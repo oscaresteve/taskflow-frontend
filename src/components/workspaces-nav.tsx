@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown, MoreVertical, Orbit, Plus, Settings } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
+import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,10 +19,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuGroup,
+} from "./ui/dropdown-menu";
 
 export function WorkspacesNav() {
-  const { data: workspaces, isLoading, isError } = useQuery(getWorkspacesQuery());
+  const { data: workspaces, isLoading, isError } = useQuery(getActiveWorkspacesQuery());
   const [createOpen, setCreateOpen] = useState(false);
+  const activeWorkspaces = workspaces?.data ?? [];
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
@@ -30,19 +39,45 @@ export function WorkspacesNav() {
         <div className="flex items-center">
           <CollapsibleTrigger
             nativeButton={false}
-            render={<SidebarGroupLabel className="flex-1 cursor-pointer" />}
+            render={<SidebarGroupLabel className="group/orbit flex-1 gap-2 cursor-pointer" />}
           >
+            <span className="relative size-4 shrink-0">
+              <Orbit className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/orbit:opacity-0" />
+              <ChevronDown className="absolute inset-0 size-4 opacity-0 transition-all group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180" />
+            </span>
             Workspaces
-            <ChevronDown className="ml-auto transition-transform group-data-open/collapsible:rotate-180" />
           </CollapsibleTrigger>
-          <SidebarGroupAction
-            onClick={() => setCreateOpen(true)}
-            title="New workspace"
-            className="static top-auto right-auto"
-          >
-            <Plus />
-            <span className="sr-only">New workspace</span>
-          </SidebarGroupAction>
+
+          <div className="flex items-center gap-0.5">
+            <SidebarGroupAction
+              onClick={() => setCreateOpen(true)}
+              title="New workspace"
+              className="static top-auto right-auto"
+            >
+              <Plus />
+              <span className="sr-only">New workspace</span>
+            </SidebarGroupAction>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <SidebarGroupAction title="More options" className="static top-auto right-auto">
+                    <MoreVertical />
+                    <span className="sr-only">More options</span>
+                  </SidebarGroupAction>
+                }
+              />
+              <DropdownMenuContent align="start" className="min-w-56">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
+                  <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2">
+                    <Settings />
+                    Manage workspaces
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <CollapsibleContent>
           <SidebarGroupContent>
@@ -63,14 +98,12 @@ export function WorkspacesNav() {
                   </SidebarMenuItem>
                 ))
               ) : (
-                workspaces.data.map((workspace) => (
+                activeWorkspaces.map((workspace) => (
                   <SidebarMenuItem key={workspace.id}>
                     <SidebarMenuButton render={<Link href={`/workspaces/${workspace.slug}`} />}>
                       <Avatar size="sm">
                         <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-                        <AvatarFallback>
-                          {getInitials(workspace.name)}
-                        </AvatarFallback>
+                        <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
                       </Avatar>
                       {workspace.name}
                     </SidebarMenuButton>
