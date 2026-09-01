@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { FolderKanban, Users } from "lucide-react";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
+import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
+import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +17,9 @@ import { PageContainer } from "@/components/page-container";
 export default function WorkspacePage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
+  const { data: projects, isLoading: isProjectsLoading } = useQuery(getProjectsQuery(workspaceSlug));
+  const { data: members, isLoading: isMembersLoading } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
+  const activeMembers = members?.data.filter((member) => member.status === "ACTIVE") ?? [];
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load workspace.</p>;
@@ -52,14 +57,19 @@ export default function WorkspacePage() {
           <CardTitle className="flex items-center gap-2">
             <FolderKanban className="size-4" />
             Projects
-            <Badge variant="secondary">{workspace.projects.length}</Badge>
+            <Badge variant="secondary">{projects?.data.length ?? 0}</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
-          {workspace.projects.length === 0 ? (
+          {isProjectsLoading || !projects ? (
+            <>
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </>
+          ) : projects.data.length === 0 ? (
             <p className="text-sm text-muted-foreground">No projects yet.</p>
           ) : (
-            workspace.projects.map((project) => (
+            projects.data.map((project) => (
               <Link
                 key={project.id}
                 href={`/workspaces/${workspaceSlug}/projects/${project.slug}`}
@@ -83,14 +93,19 @@ export default function WorkspacePage() {
           <CardTitle className="flex items-center gap-2">
             <Users className="size-4" />
             Members
-            <Badge variant="secondary">{workspace.members.length}</Badge>
+            <Badge variant="secondary">{activeMembers.length}</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
-          {workspace.members.length === 0 ? (
+          {isMembersLoading ? (
+            <>
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </>
+          ) : activeMembers.length === 0 ? (
             <p className="text-sm text-muted-foreground">No members yet.</p>
           ) : (
-            workspace.members.map((member) => (
+            activeMembers.map((member) => (
               <div key={member.id} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
                 <Avatar size="sm">
                   <AvatarImage src={member.user.avatarUrl ?? undefined} alt={member.user.name} />
