@@ -1,5 +1,5 @@
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
-import { ProjectDetailResponseDto, ProjectResponseDto } from "@/lib/dtos/projects.dto";
+import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { request } from "@/lib/http/client";
 import { CreateProjectDto, UpdateProjectDto } from "@/lib/schemas/project.schema";
 
@@ -17,7 +17,7 @@ export function createProject(workspaceSlug: string, data: CreateProjectDto) {
 }
 
 export function getProject({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
-  return request<ProjectDetailResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}`, {
+  return request<ProjectResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}`, {
     method: "GET",
   });
 }

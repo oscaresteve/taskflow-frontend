@@ -1,6 +1,6 @@
 import { serverRequest } from "@/lib/http/server-client";
-import { ProjectDetailResponseDto } from "@/lib/dtos/projects.dto";
+import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 
 export function getProjectServer(workspaceSlug: string, projectSlug: string) {
-  return serverRequest<ProjectDetailResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}`);
+  return serverRequest<ProjectResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}`);
 }

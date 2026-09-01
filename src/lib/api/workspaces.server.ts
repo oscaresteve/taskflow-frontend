@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 import { serverRequest } from "@/lib/http/server-client";
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
-import { WorkspaceDetailResponseDto, WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
+import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 
 export function getWorkspacesServer() {
   return serverRequest<PaginatedResponseDto<WorkspaceResponseDto>>("/workspaces");
 }
 
 export function getWorkspaceServer(workspaceSlug: string) {
-  return serverRequest<WorkspaceDetailResponseDto>(`/workspaces/${workspaceSlug}`);
+  return serverRequest<WorkspaceResponseDto>(`/workspaces/${workspaceSlug}`);
 }
 
 export async function hasWorkspaces() {
