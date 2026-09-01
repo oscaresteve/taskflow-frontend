@@ -14,21 +14,23 @@ import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/form-dialog";
 import { useCreateTask } from "@/hooks/use-create-task";
 import { ApiError } from "@/lib/http/api-error";
-import { ProjectDetailResponseDto } from "@/lib/dtos/projects.dto";
+import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
+import { ProjectMemberWithUserResponseDto } from "@/lib/dtos/project-members.dto";
 import { CreateTaskDto, createTaskSchema, taskPriorities } from "@/lib/schemas/task.schema";
 import { priorityVariant } from "@/lib/task-labels";
 
 const UNASSIGNED = "unassigned";
 
 interface CreateTaskDialogProps {
-  project: ProjectDetailResponseDto;
+  workspaceSlug: string;
+  project: ProjectResponseDto;
+  members: ProjectMemberWithUserResponseDto[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateTaskDialog({ project, open, onOpenChange }: CreateTaskDialogProps) {
+export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpenChange }: CreateTaskDialogProps) {
   const router = useRouter();
-  const workspaceSlug = project.workspace.slug;
   const createTask = useCreateTask(workspaceSlug, project.slug);
 
   const form = useForm<CreateTaskDto>({
@@ -150,7 +152,7 @@ export function CreateTaskDialog({ project, open, onOpenChange }: CreateTaskDial
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
-                    {project.members.map((member) => (
+                    {members.map((member) => (
                       <SelectItem key={member.userId} value={member.userId}>
                         {member.user.name}
                       </SelectItem>

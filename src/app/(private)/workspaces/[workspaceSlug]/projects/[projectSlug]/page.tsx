@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { CheckSquare, Plus } from "lucide-react";
 import { getProjectQuery } from "@/lib/queries/project.queries";
+import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getTasksQuery } from "@/lib/queries/task.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -20,12 +21,14 @@ import { PageContainer } from "@/components/page-container";
 export default function ProjectPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
+  const { data: projectMembers } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
   const {
     data: tasks,
     isLoading: isTasksLoading,
     isError: isTasksError,
   } = useQuery(getTasksQuery(workspaceSlug, projectSlug));
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
+  const activeMembers = projectMembers?.data.filter((member) => member.isActive) ?? [];
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load project.</p>;
@@ -41,7 +44,7 @@ export default function ProjectPage() {
     );
   }
 
-  const usersById = new Map(project.members.map((member) => [member.userId, member.user]));
+  const usersById = new Map(activeMembers.map((member) => [member.userId, member.user]));
 
   return (
     <PageContainer>
@@ -96,7 +99,13 @@ export default function ProjectPage() {
           )}
         </CardContent>
       </Card>
-      <CreateTaskDialog project={project} open={createTaskOpen} onOpenChange={setCreateTaskOpen} />
+      <CreateTaskDialog
+        workspaceSlug={workspaceSlug}
+        project={project}
+        members={activeMembers}
+        open={createTaskOpen}
+        onOpenChange={setCreateTaskOpen}
+      />
     </PageContainer>
   );
 }
