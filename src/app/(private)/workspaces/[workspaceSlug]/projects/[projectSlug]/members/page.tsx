@@ -7,12 +7,12 @@ import { UserPlus, UserX } from "lucide-react";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useProjectRole } from "@/hooks/use-project-role";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageSizeSelect } from "@/components/page-size-select";
 import { PaginationControls } from "@/components/pagination-controls";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SortControls } from "@/components/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
 import { AddProjectMemberDialog } from "@/components/add-project-member-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
@@ -22,8 +22,9 @@ import { PageContainer } from "@/components/page-container";
 import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
 import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
 import { ApiError } from "@/lib/http/api-error";
+import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
-import { RoleFilter, matchesMemberFilters } from "@/lib/member-role-filter";
+import { RoleFilter } from "@/lib/member-role-filter";
 import {
   assignableProjectRoles,
   canDeactivateProjectMember,
@@ -32,6 +33,29 @@ import {
 } from "@/lib/permissions/project-member-permissions";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
+
+type MemberSortField = "joinedAt" | "createdAt" | "updatedAt";
+
+const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
+  { value: "joinedAt", label: "Joined" },
+  { value: "createdAt", label: "Created" },
+  { value: "updatedAt", label: "Updated" },
+];
+
+type StatusFilter = "ALL" | "ACTIVE" | "INACTIVE";
+
+const STATUS_FILTERS: StatusFilter[] = ["ALL", "ACTIVE", "INACTIVE"];
+
+const STATUS_FILTER_LABELS: Record<StatusFilter, string> = {
+  ALL: "All statuses",
+  ACTIVE: "Active",
+  INACTIVE: "Inactive",
+};
+
+function isActiveParam(statusFilter: StatusFilter): boolean[] {
+  if (statusFilter === "ALL") return [true, false];
+  return statusFilter === "ACTIVE" ? [true] : [false];
+}
 
 export default function ProjectMembersPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
@@ -44,28 +68,64 @@ export default function ProjectMembersPage() {
   const [memberToDeactivate, setMemberToDeactivate] = useState<ProjectMemberWithUserResponseDto | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ACTIVE");
+  const [sort, setSort] = useState<MemberSortField>("joinedAt");
+  const [order, setOrder] = useState<SortOrder>("asc");
   const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
-  const [activePage, setActivePage] = useState(1);
-  const [inactivePage, setInactivePage] = useState(1);
+  const [page, setPage] = useState(1);
 
-  const activeQuery = useQuery(
-    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [true], page: activePage, limit }),
+  const role = roleFilter === "ALL" ? undefined : roleFilter;
+  const searchParam = search || undefined;
+
+  const membersQuery = useQuery(
+    getProjectMembersPageQuery({
+      workspaceSlug,
+      projectSlug,
+      isActive: isActiveParam(statusFilter),
+      role,
+      search: searchParam,
+      sort,
+      order,
+      page,
+      limit,
+    }),
   );
-  const inactiveQuery = useQuery(
-    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [false], page: inactivePage, limit }),
-  );
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
+
+  function handleRoleFilterChange(value: RoleFilter) {
+    setRoleFilter(value);
+    setPage(1);
+  }
+
+  function handleStatusFilterChange(value: StatusFilter) {
+    setStatusFilter(value);
+    setPage(1);
+  }
+
+  function handleSortFieldChange(value: MemberSortField) {
+    setSort(value);
+    setPage(1);
+  }
+
+  function handleSortOrderChange(value: SortOrder) {
+    setOrder(value);
+    setPage(1);
+  }
 
   function handleLimitChange(value: number) {
     setLimit(value);
-    setActivePage(1);
-    setInactivePage(1);
+    setPage(1);
   }
 
-  if (activeQuery.isError || inactiveQuery.isError) {
+  if (membersQuery.isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
   }
 
-  if (!activeQuery.data || !inactiveQuery.data) {
+  if (!membersQuery.data) {
     return (
       <PageContainer className="flex flex-col gap-3">
         <Skeleton className="h-8 w-64" />
@@ -77,11 +137,7 @@ export default function ProjectMembersPage() {
   }
 
   const assignableRoles = assignableProjectRoles(myRole);
-
-  const activeMembers = activeQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
-  const inactiveMembers = inactiveQuery.data.data.filter((member) =>
-    matchesMemberFilters(member, search, roleFilter),
-  );
+  const members = membersQuery.data.data;
 
   function reportError(error: unknown) {
     toast.add({
@@ -151,60 +207,44 @@ export default function ProjectMembersPage() {
         ) : null}
       </div>
 
-      <Tabs defaultValue="active">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <TabsList>
-            <TabsTrigger value="active">
-              Current members
-              <Badge variant="secondary">{activeQuery.data.pagination.total}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="inactive">
-              Inactive
-              <Badge variant="secondary">{inactiveQuery.data.pagination.total}</Badge>
-            </TabsTrigger>
-          </TabsList>
-          <div className="flex items-center gap-2">
-            <MembersFilterBar
-              search={search}
-              onSearchChange={setSearch}
-              roleFilter={roleFilter}
-              onRoleFilterChange={setRoleFilter}
-            />
-            <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
-          </div>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        <MembersFilterBar
+          search={search}
+          onSearchChange={handleSearchChange}
+          roleFilter={roleFilter}
+          onRoleFilterChange={handleRoleFilterChange}
+        />
+        <Select value={statusFilter} onValueChange={(value) => value && handleStatusFilterChange(value as StatusFilter)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {STATUS_FILTERS.map((status) => (
+              <SelectItem key={status} value={status}>
+                {STATUS_FILTER_LABELS[status]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <SortControls
+          field={sort}
+          order={order}
+          options={SORT_OPTIONS}
+          onFieldChange={handleSortFieldChange}
+          onOrderChange={handleSortOrderChange}
+        />
+        <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+      </div>
 
-        <TabsContent value="active" className="flex flex-col gap-4">
-          <MembersTable
-            members={activeMembers}
-            assignableRoles={assignableRoles}
-            roleChangeable={roleChangeable}
-            onChangeRole={handleChangeRole}
-            renderActions={renderActions}
-            emptyMessage="No members found."
-          />
-          <PaginationControls
-            page={activePage}
-            totalPages={activeQuery.data.pagination.pages}
-            onPageChange={setActivePage}
-          />
-        </TabsContent>
-        <TabsContent value="inactive" className="flex flex-col gap-4">
-          <MembersTable
-            members={inactiveMembers}
-            assignableRoles={assignableRoles}
-            roleChangeable={roleChangeable}
-            onChangeRole={handleChangeRole}
-            renderActions={renderActions}
-            emptyMessage="No inactive members."
-          />
-          <PaginationControls
-            page={inactivePage}
-            totalPages={inactiveQuery.data.pagination.pages}
-            onPageChange={setInactivePage}
-          />
-        </TabsContent>
-      </Tabs>
+      <MembersTable
+        members={members}
+        assignableRoles={assignableRoles}
+        roleChangeable={roleChangeable}
+        onChangeRole={handleChangeRole}
+        renderActions={renderActions}
+        emptyMessage="No members found."
+      />
+      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />
 
       <AddProjectMemberDialog
         workspaceSlug={workspaceSlug}

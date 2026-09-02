@@ -9,14 +9,3 @@ export const roleFilterLabels: Record<RoleFilter, string> = {
   ADMIN: "Admin",
   MEMBER: "Member",
 };
-
-export function matchesMemberFilters(
-  member: { role: MemberRole; user: { name: string; email: string } },
-  search: string,
-  roleFilter: RoleFilter,
-) {
-  if (roleFilter !== "ALL" && member.role !== roleFilter) return false;
-  if (!search) return true;
-  const query = search.toLowerCase();
-  return member.user.name.toLowerCase().includes(query) || member.user.email.toLowerCase().includes(query);
-}

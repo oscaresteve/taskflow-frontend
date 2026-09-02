@@ -7,12 +7,12 @@ import { UserPlus, UserX } from "lucide-react";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageSizeSelect } from "@/components/page-size-select";
 import { PaginationControls } from "@/components/pagination-controls";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SortControls } from "@/components/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/toast";
 import { AddMemberDialog } from "@/components/add-member-dialog";
 import { ConfirmDialog } from "@/components/confirm-dialog";
@@ -23,8 +23,9 @@ import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-membe
 import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
 import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
 import { ApiError } from "@/lib/http/api-error";
-import { WorkspaceMemberWithUserResponseDto, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
-import { RoleFilter, matchesMemberFilters } from "@/lib/member-role-filter";
+import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { WorkspaceMemberStatus, WorkspaceMemberWithUserResponseDto, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
+import { RoleFilter } from "@/lib/member-role-filter";
 import {
   assignableWorkspaceRoles,
   canActivateWorkspaceMember,
@@ -34,6 +35,25 @@ import {
 } from "@/lib/permissions/workspace-member-permissions";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
+
+type MemberSortField = "joinedAt" | "createdAt" | "updatedAt";
+
+const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
+  { value: "joinedAt", label: "Joined" },
+  { value: "createdAt", label: "Created" },
+  { value: "updatedAt", label: "Updated" },
+];
+
+type StatusFilter = "ALL" | WorkspaceMemberStatus;
+
+const STATUS_FILTERS: StatusFilter[] = ["ALL", "ACTIVE", "PENDING", "REMOVED"];
+
+const STATUS_FILTER_LABELS: Record<StatusFilter, string> = {
+  ALL: "All statuses",
+  ACTIVE: "Active",
+  PENDING: "Pending",
+  REMOVED: "Removed",
+};
 
 export default function WorkspaceMembersPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
@@ -47,33 +67,55 @@ export default function WorkspaceMembersPage() {
   const [memberToRemove, setMemberToRemove] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ACTIVE");
+  const [sort, setSort] = useState<MemberSortField>("joinedAt");
+  const [order, setOrder] = useState<SortOrder>("asc");
   const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
-  const [activePage, setActivePage] = useState(1);
-  const [pendingPage, setPendingPage] = useState(1);
-  const [removedPage, setRemovedPage] = useState(1);
+  const [page, setPage] = useState(1);
 
-  const activeQuery = useQuery(
-    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["ACTIVE"], page: activePage, limit }),
+  const role = roleFilter === "ALL" ? undefined : roleFilter;
+  const status = statusFilter === "ALL" ? (["ACTIVE", "PENDING", "REMOVED"] as WorkspaceMemberStatus[]) : [statusFilter];
+  const searchParam = search || undefined;
+
+  const membersQuery = useQuery(
+    getWorkspaceMembersPageQuery({ workspaceSlug, status, role, search: searchParam, sort, order, page, limit }),
   );
-  const pendingQuery = useQuery(
-    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["PENDING"], page: pendingPage, limit }),
-  );
-  const removedQuery = useQuery(
-    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["REMOVED"], page: removedPage, limit }),
-  );
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
+
+  function handleRoleFilterChange(value: RoleFilter) {
+    setRoleFilter(value);
+    setPage(1);
+  }
+
+  function handleStatusFilterChange(value: StatusFilter) {
+    setStatusFilter(value);
+    setPage(1);
+  }
+
+  function handleSortFieldChange(value: MemberSortField) {
+    setSort(value);
+    setPage(1);
+  }
+
+  function handleSortOrderChange(value: SortOrder) {
+    setOrder(value);
+    setPage(1);
+  }
 
   function handleLimitChange(value: number) {
     setLimit(value);
-    setActivePage(1);
-    setPendingPage(1);
-    setRemovedPage(1);
+    setPage(1);
   }
 
-  if (activeQuery.isError || pendingQuery.isError || removedQuery.isError) {
+  if (membersQuery.isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
   }
 
-  if (!activeQuery.data || !pendingQuery.data || !removedQuery.data) {
+  if (!membersQuery.data) {
     return (
       <PageContainer className="flex flex-col gap-3">
         <Skeleton className="h-8 w-64" />
@@ -85,10 +127,7 @@ export default function WorkspaceMembersPage() {
   }
 
   const assignableRoles = assignableWorkspaceRoles(myRole);
-
-  const activeMembers = activeQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
-  const pendingMembers = pendingQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
-  const removedMembers = removedQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
+  const members = membersQuery.data.data;
 
   function reportError(error: unknown) {
     toast.add({
@@ -173,79 +212,44 @@ export default function WorkspaceMembersPage() {
         ) : null}
       </div>
 
-      <Tabs defaultValue="active">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <TabsList>
-            <TabsTrigger value="active">
-              Current members
-              <Badge variant="secondary">{activeQuery.data.pagination.total}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="pending">
-              Pending
-              <Badge variant="secondary">{pendingQuery.data.pagination.total}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="removed">
-              Removed
-              <Badge variant="secondary">{removedQuery.data.pagination.total}</Badge>
-            </TabsTrigger>
-          </TabsList>
-          <div className="flex items-center gap-2">
-            <MembersFilterBar
-              search={search}
-              onSearchChange={setSearch}
-              roleFilter={roleFilter}
-              onRoleFilterChange={setRoleFilter}
-            />
-            <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
-          </div>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        <MembersFilterBar
+          search={search}
+          onSearchChange={handleSearchChange}
+          roleFilter={roleFilter}
+          onRoleFilterChange={handleRoleFilterChange}
+        />
+        <Select value={statusFilter} onValueChange={(value) => value && handleStatusFilterChange(value as StatusFilter)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {STATUS_FILTERS.map((status) => (
+              <SelectItem key={status} value={status}>
+                {STATUS_FILTER_LABELS[status]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <SortControls
+          field={sort}
+          order={order}
+          options={SORT_OPTIONS}
+          onFieldChange={handleSortFieldChange}
+          onOrderChange={handleSortOrderChange}
+        />
+        <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+      </div>
 
-        <TabsContent value="active" className="flex flex-col gap-4">
-          <MembersTable
-            members={activeMembers}
-            assignableRoles={assignableRoles}
-            roleChangeable={roleChangeable}
-            onChangeRole={handleChangeRole}
-            renderActions={renderActions}
-            emptyMessage="No members found."
-          />
-          <PaginationControls
-            page={activePage}
-            totalPages={activeQuery.data.pagination.pages}
-            onPageChange={setActivePage}
-          />
-        </TabsContent>
-        <TabsContent value="pending" className="flex flex-col gap-4">
-          <MembersTable
-            members={pendingMembers}
-            assignableRoles={assignableRoles}
-            roleChangeable={roleChangeable}
-            onChangeRole={handleChangeRole}
-            renderActions={renderActions}
-            emptyMessage="No pending members."
-          />
-          <PaginationControls
-            page={pendingPage}
-            totalPages={pendingQuery.data.pagination.pages}
-            onPageChange={setPendingPage}
-          />
-        </TabsContent>
-        <TabsContent value="removed" className="flex flex-col gap-4">
-          <MembersTable
-            members={removedMembers}
-            assignableRoles={assignableRoles}
-            roleChangeable={roleChangeable}
-            onChangeRole={handleChangeRole}
-            renderActions={renderActions}
-            emptyMessage="No removed members."
-          />
-          <PaginationControls
-            page={removedPage}
-            totalPages={removedQuery.data.pagination.pages}
-            onPageChange={setRemovedPage}
-          />
-        </TabsContent>
-      </Tabs>
+      <MembersTable
+        members={members}
+        assignableRoles={assignableRoles}
+        roleChangeable={roleChangeable}
+        onChangeRole={handleChangeRole}
+        renderActions={renderActions}
+        emptyMessage="No members found."
+      />
+      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />
 
       <AddMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
       <ConfirmDialog

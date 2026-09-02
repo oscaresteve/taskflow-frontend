@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageSizeSelect } from "@/components/page-size-select";
 import { PaginationControls } from "@/components/pagination-controls";
+import { SortControls } from "@/components/sort-controls";
+import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -33,6 +35,14 @@ import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 
 const MAX_VISIBLE_OWNERS = 4;
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
+
+type WorkspaceSortField = "name" | "createdAt" | "updatedAt";
+
+const SORT_OPTIONS: { value: WorkspaceSortField; label: string }[] = [
+  { value: "name", label: "Name" },
+  { value: "createdAt", label: "Created" },
+  { value: "updatedAt", label: "Updated" },
+];
 
 function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceResponseDto; canManage: boolean }) {
   const [deactivateOpen, setDeactivateOpen] = useState(false);
@@ -150,6 +160,8 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
 export default function WorkspacesPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<WorkspaceSortField>("name");
+  const [order, setOrder] = useState<SortOrder>("asc");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
   const {
@@ -157,12 +169,22 @@ export default function WorkspacesPage() {
     isLoading,
     isError,
   } = useQuery({
-    ...getActiveWorkspacesQuery({ page, search: search || undefined, limit }),
+    ...getActiveWorkspacesQuery({ page, search: search || undefined, limit, sort, order }),
     placeholderData: keepPreviousData,
   });
 
   function handleSearchChange(value: string) {
     setSearch(value);
+    setPage(1);
+  }
+
+  function handleSortFieldChange(value: WorkspaceSortField) {
+    setSort(value);
+    setPage(1);
+  }
+
+  function handleSortOrderChange(value: SortOrder) {
+    setOrder(value);
     setPage(1);
   }
 
@@ -209,6 +231,13 @@ export default function WorkspacesPage() {
             onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
+        <SortControls
+          field={sort}
+          order={order}
+          options={SORT_OPTIONS}
+          onFieldChange={handleSortFieldChange}
+          onOrderChange={handleSortOrderChange}
+        />
         <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
       </div>
 
