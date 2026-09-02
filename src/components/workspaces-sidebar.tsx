@@ -11,7 +11,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import NavUser from "@/components/user-nav";
 import WorkspaceSwitch from "@/components/workspace-switch";
@@ -22,11 +21,14 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
 import { Separator } from "./ui/separator";
+import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 
 export function WorkspacesSidebar() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const overviewHref = `/workspaces/${workspaceSlug}`;
+  const { role: myRole } = useWorkspaceRole(workspaceSlug);
 
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
@@ -63,15 +65,17 @@ export function WorkspacesSidebar() {
                   Members
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}
-                  isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
-                >
-                  <Settings />
-                  Settings
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {isWorkspaceManager(myRole) && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}
+                    isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
+                  >
+                    <Settings />
+                    Settings
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

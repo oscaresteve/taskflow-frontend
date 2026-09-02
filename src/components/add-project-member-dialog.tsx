@@ -15,9 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/form-dialog";
 import { useCreateProjectMember } from "@/hooks/use-create-project-member";
+import { useProjectRole } from "@/hooks/use-project-role";
 import { getActiveWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
-import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
-import { getMeQuery } from "@/lib/queries/auth.queries";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectMemberDto, createProjectMemberSchema } from "@/lib/schemas/project-member.schema";
 import { WorkspaceMemberWithUserResponseDto } from "@/lib/dtos/workspace-members.dto";
@@ -38,13 +37,11 @@ export function AddProjectMemberDialog({
   onOpenChange,
 }: AddProjectMemberDialogProps) {
   const createProjectMember = useCreateProjectMember(workspaceSlug, projectSlug);
-  const { data: me } = useQuery(getMeQuery());
-  const { data: projectMembers } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
   const { data: workspaceMembers, isLoading: isCandidatesLoading } = useQuery(
     getActiveWorkspaceMembersQuery(workspaceSlug, projectSlug),
   );
 
-  const myRole = projectMembers?.data.find((member) => member.userId === me?.id)?.role;
+  const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
   const assignableRoles = assignableProjectRoles(myRole);
 
   const candidates = workspaceMembers?.data ?? [];

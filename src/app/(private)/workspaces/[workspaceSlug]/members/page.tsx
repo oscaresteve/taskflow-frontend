@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { UserPlus, UserX } from "lucide-react";
-import { getWorkspaceMembersPageQuery, getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
+import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageSizeSelect } from "@/components/page-size-select";
@@ -37,9 +38,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 15];
 export default function WorkspaceMembersPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
-  // Unpaginated lookup, kept separate from the tables below so that permission checks (myRole)
-  // don't depend on which page of which tab happens to be loaded.
-  const { data: allMembers } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
+  const { role: myRole } = useWorkspaceRole(workspaceSlug);
   const activateWorkspaceMember = useActivateWorkspaceMember(workspaceSlug);
   const updateWorkspaceMember = useUpdateWorkspaceMember(workspaceSlug);
   const removeWorkspaceMember = useRemoveWorkspaceMember(workspaceSlug);
@@ -85,7 +84,6 @@ export default function WorkspaceMembersPage() {
     );
   }
 
-  const myRole = allMembers?.data.find((member) => member.userId === me?.id)?.role;
   const assignableRoles = assignableWorkspaceRoles(myRole);
 
   const activeMembers = activeQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { LayoutDashboard, Settings, Users } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useProjectRole } from "@/hooks/use-project-role";
+import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 
 const projectTabs = [
   { label: "Overview", segment: "", Icon: LayoutDashboard },
@@ -14,14 +16,16 @@ const projectTabs = [
 export function ProjectNavTabs() {
   const pathname = usePathname();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
+  const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
   const base = `/workspaces/${workspaceSlug}/projects/${projectSlug}`;
 
-  const activeTab = [...projectTabs].reverse().find((tab) => pathname.startsWith(`${base}${tab.segment}`))?.segment;
+  const tabs = isProjectManager(myRole) ? projectTabs : projectTabs.filter((tab) => tab.segment !== "/settings");
+  const activeTab = [...tabs].reverse().find((tab) => pathname.startsWith(`${base}${tab.segment}`))?.segment;
 
   return (
     <Tabs value={activeTab}>
       <TabsList variant="line">
-        {projectTabs.map((tab) => {
+        {tabs.map((tab) => {
           const href = `${base}${tab.segment}`;
           return (
             <TabsTrigger key={tab.segment} value={tab.segment} nativeButton={false} render={<Link href={href} />}>

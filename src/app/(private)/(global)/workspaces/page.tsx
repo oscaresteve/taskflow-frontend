@@ -6,8 +6,8 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ExternalLink, MoreHorizontal, Plus, SearchIcon, Settings, ShieldMinus, Users } from "lucide-react";
 import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
-import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -99,14 +99,14 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
   );
 }
 
-function WorkspaceRow({ workspace, currentUserId }: { workspace: WorkspaceResponseDto; currentUserId?: string }) {
+function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
   const { data: members, isLoading, isError } = useQuery(getWorkspaceMembersQuery(workspace.slug));
+  const { role: myRole } = useWorkspaceRole(workspace.slug);
 
   const owners = members?.data.filter((member) => member.role === "OWNER" && member.status === "ACTIVE") ?? [];
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
   const remainingOwners = owners.length - visibleOwners.length;
 
-  const myRole = members?.data.find((member) => member.userId === currentUserId)?.role;
   const canManage = isWorkspaceManager(myRole);
 
   return (
@@ -160,7 +160,6 @@ export default function WorkspacesPage() {
     ...getActiveWorkspacesQuery({ page, search: search || undefined, limit }),
     placeholderData: keepPreviousData,
   });
-  const { data: me } = useQuery(getMeQuery());
 
   function handleSearchChange(value: string) {
     setSearch(value);
@@ -227,7 +226,7 @@ export default function WorkspacesPage() {
           </TableHeader>
           <TableBody>
             {workspaces.data.map((workspace) => (
-              <WorkspaceRow key={workspace.id} workspace={workspace} currentUserId={me?.id} />
+              <WorkspaceRow key={workspace.id} workspace={workspace} />
             ))}
           </TableBody>
         </Table>

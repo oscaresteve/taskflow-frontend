@@ -15,9 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/form-dialog";
 import { useCreateWorkspaceMember } from "@/hooks/use-create-workspace-member";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { getUsersQuery } from "@/lib/queries/user.queries";
-import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
-import { getMeQuery } from "@/lib/queries/auth.queries";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateWorkspaceMemberDto, createWorkspaceMemberSchema } from "@/lib/schemas/workspace-member.schema";
 import { UserResponseDto } from "@/lib/dtos/auth.dto";
@@ -32,9 +31,7 @@ interface AddMemberDialogProps {
 
 export function AddMemberDialog({ workspaceSlug, open, onOpenChange }: AddMemberDialogProps) {
   const createWorkspaceMember = useCreateWorkspaceMember(workspaceSlug);
-  const { data: me } = useQuery(getMeQuery());
-  const { data: workspaceMembers } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
-  const myRole = workspaceMembers?.data.find((member) => member.userId === me?.id)?.role;
+  const { role: myRole } = useWorkspaceRole(workspaceSlug);
   const assignableRoles = assignableWorkspaceRoles(myRole);
 
   const [search, setSearch] = useState("");

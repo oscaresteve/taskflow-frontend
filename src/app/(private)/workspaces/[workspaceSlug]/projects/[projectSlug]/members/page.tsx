@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { UserPlus, UserX } from "lucide-react";
-import { getProjectMembersPageQuery, getProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
+import { useProjectRole } from "@/hooks/use-project-role";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageSizeSelect } from "@/components/page-size-select";
@@ -35,9 +36,7 @@ const PAGE_SIZE_OPTIONS = [5, 10, 15];
 export default function ProjectMembersPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
-  // Unpaginated lookup, kept separate from the tables below so that permission checks (myRole)
-  // don't depend on which page of which tab happens to be loaded.
-  const { data: allMembers } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
+  const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
   const updateProjectMember = useUpdateProjectMember(workspaceSlug, projectSlug);
   const deactivateProjectMember = useDeactivateProjectMember(workspaceSlug, projectSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
@@ -77,7 +76,6 @@ export default function ProjectMembersPage() {
     );
   }
 
-  const myRole = allMembers?.data.find((member) => member.userId === me?.id)?.role;
   const assignableRoles = assignableProjectRoles(myRole);
 
   const activeMembers = activeQuery.data.data.filter((member) => matchesMemberFilters(member, search, roleFilter));
