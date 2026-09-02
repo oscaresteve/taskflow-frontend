@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getWorkspace, getWorkspaces } from "@/lib/api/workspaces.api";
 import { workspaceKeys } from "@/lib/query-keys/workspace.keys";
+import { SortOrder } from "@/lib/dtos/pagination.dto";
 
 // Active only. Omitting `isActive` relies on the backend's own default filter (active-only) rather
 // than fetching everything and filtering client-side — used by the sidebar nav, workspace switcher,
@@ -9,12 +10,20 @@ import { workspaceKeys } from "@/lib/query-keys/workspace.keys";
 // reactivate flow exists.
 export const getActiveWorkspacesQuery = ({
   page,
-  search,
   limit,
-}: { page?: number; search?: string; limit?: number } = {}) =>
+  search,
+  sort,
+  order,
+}: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: "name" | "createdAt" | "updatedAt";
+  order?: SortOrder;
+} = {}) =>
   queryOptions({
-    queryKey: workspaceKeys.lists(page, search, limit),
-    queryFn: () => getWorkspaces({ page, search, limit }),
+    queryKey: workspaceKeys.lists({ page, limit, search, sort, order }),
+    queryFn: () => getWorkspaces({ page, limit, search, sort, order }),
   });
 
 export const getWorkspaceQuery = (workspaceSlug: string) =>
