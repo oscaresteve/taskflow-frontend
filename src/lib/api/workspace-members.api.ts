@@ -1,36 +1,39 @@
 import { request } from "@/lib/http/client";
-import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
+import { buildQueryString } from "@/lib/http/query-string";
+import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
 import {
   WorkspaceMemberResponseDto,
   WorkspaceMemberStatus,
   WorkspaceMemberWithUserResponseDto,
+  WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
 import { CreateWorkspaceMemberDto, UpdateWorkspaceMemberDto } from "../schemas/workspace-member.schema";
 
 export function getWorkspaceMembers({
   workspaceSlug,
-  status,
-  excludeProjectSlug,
   page,
   limit,
+  role,
+  status,
+  search,
+  excludeProjectSlug,
+  sort,
+  order,
 }: {
   workspaceSlug: string;
-  status?: WorkspaceMemberStatus[];
-  excludeProjectSlug?: string;
   page?: number;
   limit?: number;
+  role?: WorkspaceRole;
+  status?: WorkspaceMemberStatus | WorkspaceMemberStatus[];
+  search?: string;
+  excludeProjectSlug?: string;
+  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  order?: SortOrder;
 }) {
-  const params = new URLSearchParams();
-  status?.forEach((s) => params.append("status", s));
-  if (excludeProjectSlug) {
-    params.set("excludeProjectSlug", excludeProjectSlug);
-  }
-  if (page) params.set("page", String(page));
-  if (limit) params.set("limit", String(limit));
-  const queryString = params.toString();
+  const queryString = buildQueryString({ page, limit, role, status, search, excludeProjectSlug, sort, order });
 
   return request<PaginatedResponseDto<WorkspaceMemberWithUserResponseDto>>(
-    `/workspaces/${workspaceSlug}/members${queryString ? `?${queryString}` : ""}`,
+    `/workspaces/${workspaceSlug}/members${queryString}`,
     { method: "GET" },
   );
 }

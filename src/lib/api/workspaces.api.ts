@@ -1,20 +1,27 @@
 import { request } from "@/lib/http/client";
-import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
+import { buildQueryString } from "@/lib/http/query-string";
+import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../schemas/workspace.schema";
 
 export function getWorkspaces({
   page,
   limit,
+  isActive,
   search,
-}: { page?: number; limit?: number; search?: string } = {}) {
-  const params = new URLSearchParams();
-  if (page) params.set("page", String(page));
-  if (limit) params.set("limit", String(limit));
-  if (search) params.set("search", search);
-  const queryString = params.toString();
+  sort,
+  order,
+}: {
+  page?: number;
+  limit?: number;
+  isActive?: boolean | boolean[];
+  search?: string;
+  sort?: "name" | "createdAt" | "updatedAt";
+  order?: SortOrder;
+} = {}) {
+  const queryString = buildQueryString({ page, limit, isActive, search, sort, order });
 
-  return request<PaginatedResponseDto<WorkspaceResponseDto>>(`/workspaces${queryString ? `?${queryString}` : ""}`, {
+  return request<PaginatedResponseDto<WorkspaceResponseDto>>(`/workspaces${queryString}`, {
     method: "GET",
   });
 }

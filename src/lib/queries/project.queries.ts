@@ -5,7 +5,7 @@ import { projectKeys } from "@/lib/query-keys/project.keys";
 export const getProjectsQuery = (workspaceSlug: string) =>
   queryOptions({
     queryKey: projectKeys.lists(workspaceSlug),
-    queryFn: () => getProjects(workspaceSlug),
+    queryFn: () => getProjects({ workspaceSlug }),
     enabled: !!workspaceSlug,
   });
 

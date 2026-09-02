@@ -1,29 +1,34 @@
-import { PaginatedResponseDto } from "../dtos/pagination.dto";
-import { ProjectMemberResponseDto, ProjectMemberWithUserResponseDto } from "../dtos/project-members.dto";
+import { PaginatedResponseDto, SortOrder } from "../dtos/pagination.dto";
+import { ProjectMemberResponseDto, ProjectMemberWithUserResponseDto, ProjectRole } from "../dtos/project-members.dto";
 import { request } from "../http/client";
+import { buildQueryString } from "../http/query-string";
 import { CreateProjectMemberDto, UpdateProjectMemberDto } from "../schemas/project-member.schema";
 
 export function getProjectMembers({
   workspaceSlug,
   projectSlug,
-  isActive,
   page,
   limit,
+  isActive,
+  role,
+  search,
+  sort,
+  order,
 }: {
   workspaceSlug: string;
   projectSlug: string;
-  isActive?: boolean[];
   page?: number;
   limit?: number;
+  isActive?: boolean | boolean[];
+  role?: ProjectRole;
+  search?: string;
+  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  order?: SortOrder;
 }) {
-  const params = new URLSearchParams();
-  isActive?.forEach((value) => params.append("isActive", String(value)));
-  if (page) params.set("page", String(page));
-  if (limit) params.set("limit", String(limit));
-  const queryString = params.toString();
+  const queryString = buildQueryString({ page, limit, isActive, role, search, sort, order });
 
   return request<PaginatedResponseDto<ProjectMemberWithUserResponseDto>>(
-    `/workspaces/${workspaceSlug}/projects/${projectSlug}/members${queryString ? `?${queryString}` : ""}`,
+    `/workspaces/${workspaceSlug}/projects/${projectSlug}/members${queryString}`,
     { method: "GET" },
   );
 }

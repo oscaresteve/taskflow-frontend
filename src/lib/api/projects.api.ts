@@ -1,10 +1,29 @@
-import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
+import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { request } from "@/lib/http/client";
+import { buildQueryString } from "@/lib/http/query-string";
 import { CreateProjectDto, UpdateProjectDto } from "@/lib/schemas/project.schema";
 
-export function getProjects(workspaceSlug: string) {
-  return request<PaginatedResponseDto<ProjectResponseDto>>(`/workspaces/${workspaceSlug}/projects`, {
+export function getProjects({
+  workspaceSlug,
+  page,
+  limit,
+  isArchived,
+  search,
+  sort,
+  order,
+}: {
+  workspaceSlug: string;
+  page?: number;
+  limit?: number;
+  isArchived?: boolean;
+  search?: string;
+  sort?: "name" | "createdAt" | "updatedAt";
+  order?: SortOrder;
+}) {
+  const queryString = buildQueryString({ page, limit, isArchived, search, sort, order });
+
+  return request<PaginatedResponseDto<ProjectResponseDto>>(`/workspaces/${workspaceSlug}/projects${queryString}`, {
     method: "GET",
   });
 }

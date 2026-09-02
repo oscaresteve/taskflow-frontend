@@ -1,3 +1,5 @@
+export type SortOrder = "asc" | "desc";
+
 export interface PaginationDto {
   page: number;
   limit: number;
