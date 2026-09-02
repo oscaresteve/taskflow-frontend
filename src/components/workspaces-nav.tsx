@@ -90,6 +90,10 @@ export function WorkspacesNav() {
                     </div>
                   </SidebarMenuSubItem>
                 ))
+              ) : activeWorkspaces.length === 0 ? (
+                <SidebarMenuSubItem>
+                  <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">No workspaces yet</div>
+                </SidebarMenuSubItem>
               ) : (
                 activeWorkspaces.map((workspace) => (
                   <SidebarMenuSubItem key={workspace.id}>

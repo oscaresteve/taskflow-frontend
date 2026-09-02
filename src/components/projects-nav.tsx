@@ -88,6 +88,10 @@ export default function ProjectsNav() {
                     </div>
                   </SidebarMenuSubItem>
                 ))
+              ) : projects.data.length === 0 ? (
+                <SidebarMenuSubItem>
+                  <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">No projects yet</div>
+                </SidebarMenuSubItem>
               ) : (
                 projects.data.map((project) => {
                   const href = `/workspaces/${workspaceSlug}/projects/${project.slug}`;
