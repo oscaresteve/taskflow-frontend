@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ExternalLink, MoreHorizontal, Plus, SearchIcon, Settings, ShieldMinus, Users } from "lucide-react";
+import { ExternalLink, MoreHorizontal, Plus, SearchIcon, Settings, ShieldMinus, Users, XIcon } from "lucide-react";
 import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
@@ -220,25 +220,37 @@ export default function WorkspacesPage() {
         </Button>
       </div>
 
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center justify-between gap-2">
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search workspaces"
-            className="w-48 pl-8"
+            className="w-48 pl-8 pr-7"
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
           />
+          {search ? (
+            <button
+              type="button"
+              aria-label="Clear search"
+              className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              onClick={() => handleSearchChange("")}
+            >
+              <XIcon className="size-3.5" />
+            </button>
+          ) : null}
         </div>
-        <SortControls
-          field={sort}
-          order={order}
-          options={SORT_OPTIONS}
-          onFieldChange={handleSortFieldChange}
-          onOrderChange={handleSortOrderChange}
-        />
-        <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+        <div className="flex items-center gap-1">
+          <SortControls
+            field={sort}
+            order={order}
+            options={SORT_OPTIONS}
+            onFieldChange={handleSortFieldChange}
+            onOrderChange={handleSortOrderChange}
+          />
+          <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+        </div>
       </div>
 
       {workspaces.data.length === 0 ? (

@@ -10,7 +10,6 @@ import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { Button } from "@/components/ui/button";
 import { PageSizeSelect } from "@/components/page-size-select";
 import { PaginationControls } from "@/components/pagination-controls";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SortControls } from "@/components/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
@@ -46,14 +45,12 @@ const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
 
 type StatusFilter = "ALL" | WorkspaceMemberStatus;
 
-const STATUS_FILTERS: StatusFilter[] = ["ALL", "ACTIVE", "PENDING", "REMOVED"];
-
-const STATUS_FILTER_LABELS: Record<StatusFilter, string> = {
-  ALL: "All statuses",
-  ACTIVE: "Active",
-  PENDING: "Pending",
-  REMOVED: "Removed",
-};
+const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
+  { value: "ALL", label: "All statuses" },
+  { value: "ACTIVE", label: "Active" },
+  { value: "PENDING", label: "Pending" },
+  { value: "REMOVED", label: "Removed" },
+];
 
 export default function WorkspaceMembersPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
@@ -212,33 +209,26 @@ export default function WorkspaceMembersPage() {
         ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center justify-end gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <MembersFilterBar
           search={search}
           onSearchChange={handleSearchChange}
           roleFilter={roleFilter}
           onRoleFilterChange={handleRoleFilterChange}
+          statusFilter={statusFilter}
+          onStatusFilterChange={handleStatusFilterChange}
+          statusOptions={STATUS_OPTIONS}
         />
-        <Select value={statusFilter} onValueChange={(value) => value && handleStatusFilterChange(value as StatusFilter)}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {STATUS_FILTERS.map((status) => (
-              <SelectItem key={status} value={status}>
-                {STATUS_FILTER_LABELS[status]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <SortControls
-          field={sort}
-          order={order}
-          options={SORT_OPTIONS}
-          onFieldChange={handleSortFieldChange}
-          onOrderChange={handleSortOrderChange}
-        />
-        <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+        <div className="flex items-center gap-2">
+          <SortControls
+            field={sort}
+            order={order}
+            options={SORT_OPTIONS}
+            onFieldChange={handleSortFieldChange}
+            onOrderChange={handleSortOrderChange}
+          />
+          <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+        </div>
       </div>
 
       <MembersTable

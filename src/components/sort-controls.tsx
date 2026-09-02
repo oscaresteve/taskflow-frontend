@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownAZ, ArrowUpAZ } from "lucide-react";
+import { ListSortAscending, ListSortDescending } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
@@ -22,7 +22,7 @@ export function SortControls<TField extends string>({
     <div className="flex items-center gap-1">
       <Select value={field} onValueChange={(value) => value && onFieldChange(value as TField)}>
         <SelectTrigger className="w-32">
-          <SelectValue />
+          <SelectValue>{(selected: TField) => options.find((option) => option.value === selected)?.label}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
@@ -39,7 +39,7 @@ export function SortControls<TField extends string>({
         aria-label={order === "asc" ? "Sort ascending" : "Sort descending"}
         onClick={() => onOrderChange(order === "asc" ? "desc" : "asc")}
       >
-        {order === "asc" ? <ArrowUpAZ /> : <ArrowDownAZ />}
+        {order === "asc" ? <ListSortAscending /> : <ListSortDescending />}
       </Button>
     </div>
   );

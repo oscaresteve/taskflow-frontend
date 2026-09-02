@@ -21,7 +21,7 @@ export function PageSizeSelect({
       }}
     >
       <SelectTrigger className={className ?? "w-32"}>
-        <SelectValue />
+        <SelectValue>{(selected: string) => `${selected} / page`}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         {options.map((size) => (
