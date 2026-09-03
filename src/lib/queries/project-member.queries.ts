@@ -1,8 +1,15 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { projectMemberKeys } from "../query-keys/project-member.keys";
-import { getProjectMembers } from "../api/project-members.api";
+import { getMyProjectMember, getProjectMembers } from "../api/project-members.api";
 import { ProjectRole } from "../dtos/project-members.dto";
 import { SortOrder } from "../dtos/pagination.dto";
+
+export const getMyProjectMemberQuery = (workspaceSlug: string, projectSlug: string) =>
+  queryOptions({
+    queryKey: projectMemberKeys.me(workspaceSlug, projectSlug),
+    queryFn: () => getMyProjectMember({ workspaceSlug, projectSlug }),
+    enabled: !!workspaceSlug && !!projectSlug,
+  });
 
 // Includes both isActive values so the members page can surface active and inactive members,
 // not just the active roster.
@@ -52,8 +59,7 @@ export const getProjectMembersPageQuery = ({
       page,
       limit,
     }),
-    queryFn: () =>
-      getProjectMembers({ workspaceSlug, projectSlug, isActive, role, search, sort, order, page, limit }),
+    queryFn: () => getProjectMembers({ workspaceSlug, projectSlug, isActive, role, search, sort, order, page, limit }),
     enabled: !!workspaceSlug && !!projectSlug,
     placeholderData: keepPreviousData,
   });

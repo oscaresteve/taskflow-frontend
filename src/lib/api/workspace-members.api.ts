@@ -38,6 +38,12 @@ export function getWorkspaceMembers({
   );
 }
 
+export function getMyWorkspaceMember({ workspaceSlug }: { workspaceSlug: string }) {
+  return request<WorkspaceMemberResponseDto>(`/workspaces/${workspaceSlug}/members/me`, {
+    method: "GET",
+  });
+}
+
 export function createWorkspaceMember({
   workspaceSlug,
   data,

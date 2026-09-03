@@ -33,6 +33,12 @@ export function getProjectMembers({
   );
 }
 
+export function getMyProjectMember({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
+  return request<ProjectMemberResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/members/me`, {
+    method: "GET",
+  });
+}
+
 export function createProjectMember({
   workspaceSlug,
   projectSlug,

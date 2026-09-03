@@ -13,6 +13,8 @@ type ProjectMemberListParams = {
 
 export const projectMemberKeys = {
   all: ["project-members"] as const,
+  me: (workspaceSlug: string, projectSlug: string) =>
+    [...projectMemberKeys.all, "me", workspaceSlug, projectSlug] as const,
   lists: (workspaceSlug: string, projectSlug: string) =>
     [...projectMemberKeys.all, "list", workspaceSlug, projectSlug] as const,
   paginatedList: (workspaceSlug: string, projectSlug: string, params: ProjectMemberListParams = {}) =>
