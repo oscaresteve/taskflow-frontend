@@ -2,7 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { ArchiveProjectSection } from "./_components/archive-project-section";
-import { EditProjectForm } from "./_components/edit-project-form";
+import { ProjectNameSection } from "./_components/project-name-section";
+import { ProjectDescriptionSection } from "./_components/project-description-section";
 import { PageContainer } from "@/components/common/page-container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProjectRole } from "@/hooks/use-project-role";
@@ -27,7 +28,8 @@ export default function ProjectSettingsPage() {
 
   return (
     <PageContainer className="flex flex-col gap-6 pb-20">
-      <EditProjectForm />
+      <ProjectNameSection />
+      <ProjectDescriptionSection />
       <ArchiveProjectSection />
     </PageContainer>
   );

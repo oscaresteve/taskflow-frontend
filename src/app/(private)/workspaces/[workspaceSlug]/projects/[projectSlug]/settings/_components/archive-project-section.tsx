@@ -4,9 +4,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Archive } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { DangerSettingCard } from "@/components/common/danger-setting-card";
 import { toast } from "@/components/ui/toast";
 import { useArchiveProject } from "@/hooks/use-archive-project";
 import { ApiError } from "@/lib/http/api-error";
@@ -33,23 +32,15 @@ export function ArchiveProjectSection() {
   }
 
   return (
-    <Card className="ring-destructive/30">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-destructive">
-          <Archive className="size-4" />
-          Danger zone
-        </CardTitle>
-        <CardDescription>Irreversible and destructive actions.</CardDescription>
-      </CardHeader>
-      <CardContent className="flex items-center justify-between gap-4">
-        <div className="grid gap-1">
-          <p className="text-sm font-medium">Archive project</p>
-          <p className="text-sm text-muted-foreground">This project will no longer be accessible to members.</p>
-        </div>
-        <Button variant="destructive" onClick={() => setArchiveOpen(true)}>
-          Archive
-        </Button>
-      </CardContent>
+    <>
+      <DangerSettingCard
+        Icon={Archive}
+        title="Archive project"
+        description="This project will no longer be accessible to members."
+        actionLabel="Archive"
+        onAction={() => setArchiveOpen(true)}
+        pending={archiveProject.isPending}
+      />
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
@@ -61,6 +52,6 @@ export function ArchiveProjectSection() {
         pending={archiveProject.isPending}
         Icon={Archive}
       />
-    </Card>
+    </>
   );
 }
