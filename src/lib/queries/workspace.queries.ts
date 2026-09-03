@@ -8,7 +8,7 @@ import { SortOrder } from "@/lib/dtos/pagination.dto";
 // getNextPageParam helper can back any other list that outgrows a "load more" button later.
 export const getWorkspacesInfiniteQuery = (limit: number) =>
   infiniteQueryOptions({
-    queryKey: workspaceKeys.infiniteList(limit),
+    queryKey: workspaceKeys.infiniteList({ limit }),
     queryFn: ({ pageParam }) => getWorkspaces({ page: pageParam, limit, sort: "name", order: "asc" }),
     initialPageParam: 1,
     getNextPageParam,

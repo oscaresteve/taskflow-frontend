@@ -14,7 +14,10 @@ export function useUpdateWorkspace(workspaceSlug: string) {
     // cache is already fresh, not stale.
     onSuccess: async (updatedWorkspace) => {
       queryClient.setQueryData(workspaceKeys.detail(updatedWorkspace.slug), updatedWorkspace);
-      await queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() }),
+        queryClient.invalidateQueries({ queryKey: workspaceKeys.infiniteList() }),
+      ]);
     },
   });
 }

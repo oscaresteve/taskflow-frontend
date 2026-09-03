@@ -8,8 +8,6 @@ export function useCreateProject(workspaceSlug: string) {
 
   return useMutation({
     mutationFn: (data: CreateProjectDto) => createProject({ workspaceSlug, data }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: projectKeys.lists(workspaceSlug) });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: projectKeys.all }),
   });
 }

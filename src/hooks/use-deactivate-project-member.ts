@@ -8,7 +8,7 @@ export function useDeactivateProjectMember(workspaceSlug: string, projectSlug: s
   return useMutation({
     mutationFn: (userId: string) => deactivateProjectMember({ workspaceSlug, projectSlug, userId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: projectMemberKeys.lists(workspaceSlug, projectSlug) });
+      queryClient.invalidateQueries({ queryKey: projectMemberKeys.all });
     },
   });
 }

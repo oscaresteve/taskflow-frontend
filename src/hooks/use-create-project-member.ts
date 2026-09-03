@@ -10,7 +10,7 @@ export function useCreateProjectMember(workspaceSlug: string, projectSlug: strin
   return useMutation({
     mutationFn: (data: CreateProjectMemberDto) => createProjectMember({ workspaceSlug, projectSlug, data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: projectMemberKeys.lists(workspaceSlug, projectSlug) });
+      queryClient.invalidateQueries({ queryKey: projectMemberKeys.all });
       // The added user should no longer show up as an addable candidate for this project.
       queryClient.invalidateQueries({
         queryKey: workspaceMemberKeys.activeInfiniteList(workspaceSlug, { excludeProjectSlug: projectSlug }),

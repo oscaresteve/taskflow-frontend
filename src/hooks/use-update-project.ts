@@ -14,7 +14,10 @@ export function useUpdateProject(workspaceSlug: string, projectSlug: string) {
     // cache is already fresh, not stale.
     onSuccess: async (updatedProject) => {
       queryClient.setQueryData(projectKeys.detail(workspaceSlug, updatedProject.slug), updatedProject);
-      await queryClient.invalidateQueries({ queryKey: projectKeys.lists(workspaceSlug) });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: projectKeys.lists(workspaceSlug) }),
+        queryClient.invalidateQueries({ queryKey: projectKeys.infiniteList(workspaceSlug) }),
+      ]);
     },
   });
 }

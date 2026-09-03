@@ -10,7 +10,7 @@ export function useUpdateProjectMember(workspaceSlug: string, projectSlug: strin
     mutationFn: ({ userId, data }: { userId: string; data: UpdateProjectMemberDto }) =>
       updateProjectMember({ workspaceSlug, projectSlug, userId, data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: projectMemberKeys.lists(workspaceSlug, projectSlug) });
+      queryClient.invalidateQueries({ queryKey: projectMemberKeys.all });
     },
   });
 }
