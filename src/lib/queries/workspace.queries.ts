@@ -1,7 +1,18 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { getWorkspace, getWorkspaces } from "@/lib/api/workspaces.api";
 import { workspaceKeys } from "@/lib/query-keys/workspace.keys";
+import { getNextPageParam } from "@/lib/queries/pagination";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+
+// "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
+// getNextPageParam helper can back any other list that outgrows a "load more" button later.
+export const getWorkspacesInfiniteQuery = (limit: number) =>
+  infiniteQueryOptions({
+    queryKey: workspaceKeys.infiniteList(limit),
+    queryFn: ({ pageParam }) => getWorkspaces({ page: pageParam, limit, sort: "name", order: "asc" }),
+    initialPageParam: 1,
+    getNextPageParam,
+  });
 
 // Active only. Omitting `isActive` relies on the backend's own default filter (active-only) rather
 // than fetching everything and filtering client-side — used by the sidebar nav, workspace switcher,

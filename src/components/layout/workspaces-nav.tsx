@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, MoreVertical, Orbit, Plus, Settings } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,10 +29,20 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 
+const NAV_PAGE_SIZE = 5;
+
 export function WorkspacesNav() {
-  const { data: workspaces, isLoading, isError } = useQuery(getWorkspacesQuery());
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(getWorkspacesInfiniteQuery(NAV_PAGE_SIZE));
   const [createOpen, setCreateOpen] = useState(false);
-  const activeWorkspaces = workspaces?.data ?? [];
+  const activeWorkspaces = data?.pages.flatMap((page) => page.data) ?? [];
+  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - activeWorkspaces.length : 0;
 
   return (
     <SidebarGroup>
@@ -81,7 +91,7 @@ export function WorkspacesNav() {
                     Failed to load workspaces
                   </div>
                 </SidebarMenuSubItem>
-              ) : isLoading || !workspaces ? (
+              ) : isLoading ? (
                 Array.from({ length: 3 }).map((_, index) => (
                   <SidebarMenuSubItem key={index}>
                     <div className="flex h-7 items-center gap-2 rounded-md px-2">
@@ -95,17 +105,30 @@ export function WorkspacesNav() {
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">No workspaces yet</div>
                 </SidebarMenuSubItem>
               ) : (
-                activeWorkspaces.map((workspace) => (
-                  <SidebarMenuSubItem key={workspace.id}>
-                    <SidebarMenuSubButton render={<Link href={`/workspaces/${workspace.slug}`} />}>
-                      <Avatar size="sm">
-                        <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-                        <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-                      </Avatar>
-                      {workspace.name}
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
-                ))
+                <>
+                  {activeWorkspaces.map((workspace) => (
+                    <SidebarMenuSubItem key={workspace.id}>
+                      <SidebarMenuSubButton render={<Link href={`/workspaces/${workspace.slug}`} />}>
+                        <Avatar size="sm">
+                          <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+                          <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
+                        </Avatar>
+                        {workspace.name}
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                  {hasNextPage && (
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        onClick={() => !isFetchingNextPage && fetchNextPage()}
+                        aria-disabled={isFetchingNextPage}
+                        className="text-muted-foreground cursor-pointer"
+                      >
+                        {isFetchingNextPage ? "Loading…" : `${remaining} more`}
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )}
+                </>
               )}
             </SidebarMenuSub>
           </CollapsibleContent>

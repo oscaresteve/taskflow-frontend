@@ -1,7 +1,19 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { getProject, getProjects } from "@/lib/api/projects.api";
 import { projectKeys } from "@/lib/query-keys/project.keys";
+import { getNextPageParam } from "@/lib/queries/pagination";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+
+// "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
+// getNextPageParam helper can back any other list that outgrows a "load more" button later.
+export const getProjectsInfiniteQuery = (workspaceSlug: string, limit: number) =>
+  infiniteQueryOptions({
+    queryKey: projectKeys.infiniteList(workspaceSlug, limit),
+    queryFn: ({ pageParam }) => getProjects({ workspaceSlug, page: pageParam, limit, sort: "name", order: "asc" }),
+    initialPageParam: 1,
+    getNextPageParam,
+    enabled: !!workspaceSlug,
+  });
 
 export const getProjectsQuery = (
   workspaceSlug: string,

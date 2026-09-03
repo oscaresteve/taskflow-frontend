@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { ChevronDown, FolderKanban, MoreVertical, Plus, Settings } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { getProjectsQuery } from "@/lib/queries/project.queries";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getProjectsInfiniteQuery } from "@/lib/queries/project.queries";
 import { isNavActive } from "@/lib/nav";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -30,11 +30,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColorDot } from "../ui/color-dot";
 
+const NAV_PAGE_SIZE = 5;
+
 export default function ProjectsNav() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: projects, isLoading, isError } = useQuery(getProjectsQuery(workspaceSlug));
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(getProjectsInfiniteQuery(workspaceSlug, NAV_PAGE_SIZE));
   const [createOpen, setCreateOpen] = useState(false);
+  const projects = data?.pages.flatMap((page) => page.data) ?? [];
+  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - projects.length : 0;
 
   return (
     <SidebarGroup>
@@ -81,7 +92,7 @@ export default function ProjectsNav() {
                     Failed to load projects
                   </div>
                 </SidebarMenuSubItem>
-              ) : isLoading || !projects ? (
+              ) : isLoading ? (
                 Array.from({ length: 3 }).map((_, index) => (
                   <SidebarMenuSubItem key={index}>
                     <div className="flex h-7 items-center gap-2 rounded-md px-2">
@@ -89,22 +100,35 @@ export default function ProjectsNav() {
                     </div>
                   </SidebarMenuSubItem>
                 ))
-              ) : projects.data.length === 0 ? (
+              ) : projects.length === 0 ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">No projects yet</div>
                 </SidebarMenuSubItem>
               ) : (
-                projects.data.map((project) => {
-                  const href = `/workspaces/${workspaceSlug}/projects/${project.slug}`;
-                  return (
-                    <SidebarMenuSubItem key={project.id}>
-                      <SidebarMenuSubButton isActive={isNavActive(pathname, href)} render={<Link href={href} />}>
-                        <ColorDot color={project.color}></ColorDot>
-                        {project.name}
+                <>
+                  {projects.map((project) => {
+                    const href = `/workspaces/${workspaceSlug}/projects/${project.slug}`;
+                    return (
+                      <SidebarMenuSubItem key={project.id}>
+                        <SidebarMenuSubButton isActive={isNavActive(pathname, href)} render={<Link href={href} />}>
+                          <ColorDot color={project.color}></ColorDot>
+                          {project.name}
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    );
+                  })}
+                  {hasNextPage && (
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        onClick={() => !isFetchingNextPage && fetchNextPage()}
+                        aria-disabled={isFetchingNextPage}
+                        className="text-muted-foreground cursor-pointer"
+                      >
+                        {isFetchingNextPage ? "Loading…" : `${remaining} more`}
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
-                  );
-                })
+                  )}
+                </>
               )}
             </SidebarMenuSub>
           </CollapsibleContent>
