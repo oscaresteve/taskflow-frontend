@@ -161,7 +161,10 @@ export default function ProjectMembersPage() {
     updateProjectMember.mutate(
       { userId: member.userId, data: { role } },
       {
-        onSuccess: () => setRoleChangeDialogOpen(false),
+        onSuccess: () => {
+          setRoleChangeDialogOpen(false);
+          toast.add({ type: "success", description: `${member.user.name}'s role changed to ${role}.` });
+        },
         onError: reportError,
       },
     );
@@ -175,7 +178,10 @@ export default function ProjectMembersPage() {
   function handleConfirmDeactivate() {
     if (!memberToDeactivate) return;
     deactivateProjectMember.mutate(memberToDeactivate.userId, {
-      onSuccess: () => setDeactivateDialogOpen(false),
+      onSuccess: () => {
+        setDeactivateDialogOpen(false);
+        toast.add({ type: "success", description: `${memberToDeactivate.user.name} deactivated on this project.` });
+      },
       onError: reportError,
     });
   }

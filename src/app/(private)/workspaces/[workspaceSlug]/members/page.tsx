@@ -23,7 +23,11 @@ import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
 import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
 import { ApiError } from "@/lib/http/api-error";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
-import { WorkspaceMemberStatus, WorkspaceMemberWithUserResponseDto, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
+import {
+  WorkspaceMemberStatus,
+  WorkspaceMemberWithUserResponseDto,
+  WorkspaceRole,
+} from "@/lib/dtos/workspace-members.dto";
 import { RoleFilter } from "@/lib/member-role-filter";
 import {
   assignableWorkspaceRoles,
@@ -78,7 +82,8 @@ export default function WorkspaceMembersPage() {
   const [page, setPage] = useState(1);
 
   const role = roleFilter === "ALL" ? undefined : roleFilter;
-  const status = statusFilter === "ALL" ? (["ACTIVE", "PENDING", "REMOVED"] as WorkspaceMemberStatus[]) : [statusFilter];
+  const status =
+    statusFilter === "ALL" ? (["ACTIVE", "PENDING", "REMOVED"] as WorkspaceMemberStatus[]) : [statusFilter];
   const searchParam = search || undefined;
 
   const membersQuery = useQuery(
@@ -149,7 +154,10 @@ export default function WorkspaceMembersPage() {
   function handleConfirmActivate() {
     if (!memberToActivate) return;
     activateWorkspaceMember.mutate(memberToActivate.userId, {
-      onSuccess: () => setActivateDialogOpen(false),
+      onSuccess: () => {
+        setActivateDialogOpen(false);
+        toast.add({ type: "success", description: `${memberToActivate.user.name} activated.` });
+      },
       onError: reportError,
     });
   }
@@ -162,7 +170,10 @@ export default function WorkspaceMembersPage() {
   function handleConfirmRemove() {
     if (!memberToRemove) return;
     removeWorkspaceMember.mutate(memberToRemove.userId, {
-      onSuccess: () => setRemoveDialogOpen(false),
+      onSuccess: () => {
+        setRemoveDialogOpen(false);
+        toast.add({ type: "success", description: `${memberToRemove.user.name} removed from the workspace.` });
+      },
       onError: reportError,
     });
   }
@@ -179,7 +190,10 @@ export default function WorkspaceMembersPage() {
     updateWorkspaceMember.mutate(
       { userId: member.userId, data: { role } },
       {
-        onSuccess: () => setRoleChangeDialogOpen(false),
+        onSuccess: () => {
+          setRoleChangeDialogOpen(false);
+          toast.add({ type: "success", description: `${member.user.name}'s role changed to ${role}.` });
+        },
         onError: reportError,
       },
     );
