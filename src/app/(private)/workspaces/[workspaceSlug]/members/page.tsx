@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { AddWorkspaceMemberDialog } from "@/components/members/add-workspace-member-dialog";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { MembersFilterBar } from "@/components/members/members-filter-bar";
 import { MembersTable } from "@/components/members/members-table";
 import { PageContainer } from "@/components/common/page-container";
@@ -220,22 +221,23 @@ export default function WorkspaceMembersPage() {
       targetStatus: member.status,
     });
 
+    if (!activatable && !removable) return null;
+
     return (
       <>
-        {activatable ? (
-          <Button variant="link" className="h-auto p-0 text-sm" onClick={() => handleRequestActivate(member)}>
+        {activatable && (
+          <DropdownMenuItem onClick={() => handleRequestActivate(member)}>
+            <UserCheck />
             Activate
-          </Button>
-        ) : null}
-        {removable ? (
-          <Button
-            variant="link"
-            className="h-auto p-0 text-sm text-destructive"
-            onClick={() => handleRequestRemove(member)}
-          >
+          </DropdownMenuItem>
+        )}
+        {activatable && removable && <DropdownMenuSeparator />}
+        {removable && (
+          <DropdownMenuItem variant="destructive" onClick={() => handleRequestRemove(member)}>
+            <UserX />
             Remove
-          </Button>
-        ) : null}
+          </DropdownMenuItem>
+        )}
       </>
     );
   }
