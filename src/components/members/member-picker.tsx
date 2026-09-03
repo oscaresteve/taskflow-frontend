@@ -1,12 +1,12 @@
 "use client";
 
-import { SearchIcon, UserIcon, XIcon } from "lucide-react";
+import { UserIcon, XIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SearchInput } from "@/components/common/search-input";
 import { getInitials } from "@/lib/utils";
 
 export interface MemberCandidate {
@@ -63,18 +63,13 @@ export function MemberPicker({
         </div>
       ) : (
         <>
-          <div className="relative">
-            <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              id={`${id}-search`}
-              type="text"
-              placeholder="Search by name or email"
-              className="pl-8"
-              value={search}
-              onChange={(e) => onSearchChange(e.target.value)}
-              autoFocus
-            />
-          </div>
+          <SearchInput
+            id={`${id}-search`}
+            value={search}
+            onChange={onSearchChange}
+            placeholder="Search by name or email"
+            autoFocus
+          />
           <div className="flex max-h-48 flex-col gap-1 overflow-y-auto">
             {isLoading ? (
               <>
