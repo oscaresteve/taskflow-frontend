@@ -5,11 +5,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MemberRole } from "@/lib/member-role-filter";
-import { getInitials } from "@/lib/utils";
+import { formatDate, getInitials } from "@/lib/utils";
 
 interface MemberLike {
   id: string;
   role: MemberRole;
+  joinedAt: string | null;
   user: { name: string; email: string; avatarUrl: string | null };
 }
 
@@ -38,6 +39,7 @@ export function MembersTable<TMember extends MemberLike>({
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
+          <TableHead>Joined</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Action</TableHead>
         </TableRow>
@@ -55,6 +57,9 @@ export function MembersTable<TMember extends MemberLike>({
               </div>
             </TableCell>
             <TableCell className="text-muted-foreground">{member.user.email}</TableCell>
+            <TableCell className="text-muted-foreground">
+              {member.joinedAt ? formatDate(member.joinedAt) : "—"}
+            </TableCell>
             <TableCell>
               {roleChangeable(member) ? (
                 <Select value={member.role} onValueChange={(role) => onChangeRole(member, role as MemberRole)}>
