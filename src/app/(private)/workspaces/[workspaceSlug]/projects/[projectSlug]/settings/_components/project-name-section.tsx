@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -15,17 +14,8 @@ import { toast } from "@/components/ui/toast";
 import { useUpdateProject } from "@/hooks/use-update-project";
 import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
+import { UpdateProjectNameDto, updateProjectNameSchema } from "@/lib/schemas/project.schema";
 import { Loader2Icon } from "lucide-react";
-
-const projectNameSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Name must be at least 2 characters long")
-    .max(100, "Name cannot exceed 100 characters"),
-});
-
-type ProjectNameFormValues = z.infer<typeof projectNameSchema>;
 
 export function ProjectNameSection() {
   const router = useRouter();
@@ -33,8 +23,8 @@ export function ProjectNameSection() {
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
 
-  const form = useForm<ProjectNameFormValues>({
-    resolver: zodResolver(projectNameSchema),
+  const form = useForm<UpdateProjectNameDto>({
+    resolver: zodResolver(updateProjectNameSchema),
     defaultValues: { name: "" },
   });
 
@@ -44,7 +34,7 @@ export function ProjectNameSection() {
     }
   }, [project, form]);
 
-  async function onSubmit(data: ProjectNameFormValues) {
+  async function onSubmit(data: UpdateProjectNameDto) {
     try {
       const updatedProject = await updateProject.mutateAsync(data);
       toast.add({ type: "success", description: "Project name updated." });

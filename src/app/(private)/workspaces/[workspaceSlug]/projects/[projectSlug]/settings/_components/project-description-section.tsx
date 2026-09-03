@@ -14,23 +14,16 @@ import { toast } from "@/components/ui/toast";
 import { useUpdateProject } from "@/hooks/use-update-project";
 import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
+import { UpdateProjectDescriptionDto, updateProjectDescriptionSchema } from "@/lib/schemas/project.schema";
 import { Loader2Icon } from "lucide-react";
-import { descriptionSchema } from "@/lib/schemas/common.schema";
-import z from "zod";
-
-const projectDescriptionSchema = z.object({
-  description: descriptionSchema.nullable(),
-});
-
-type ProjectDescriptionFormValues = z.infer<typeof projectDescriptionSchema>;
 
 export function ProjectDescriptionSection() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
 
-  const form = useForm<ProjectDescriptionFormValues>({
-    resolver: zodResolver(projectDescriptionSchema),
+  const form = useForm<UpdateProjectDescriptionDto>({
+    resolver: zodResolver(updateProjectDescriptionSchema),
     defaultValues: { description: "" },
   });
 
@@ -40,7 +33,7 @@ export function ProjectDescriptionSection() {
     }
   }, [project, form]);
 
-  async function onSubmit(data: ProjectDescriptionFormValues) {
+  async function onSubmit(data: UpdateProjectDescriptionDto) {
     try {
       await updateProject.mutateAsync(data);
       toast.add({ type: "success", description: "Project description updated." });

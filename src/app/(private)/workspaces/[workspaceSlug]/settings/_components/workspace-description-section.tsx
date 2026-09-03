@@ -14,23 +14,16 @@ import { toast } from "@/components/ui/toast";
 import { useUpdateWorkspace } from "@/hooks/use-update-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
+import { UpdateWorkspaceDescriptionDto, updateWorkspaceDescriptionSchema } from "@/lib/schemas/workspace.schema";
 import { Loader2Icon } from "lucide-react";
-import { descriptionSchema } from "@/lib/schemas/common.schema";
-import z from "zod";
-
-const workspaceDescriptionSchema = z.object({
-  description: descriptionSchema.nullable(),
-});
-
-type WorkspaceDescriptionFormValues = z.infer<typeof workspaceDescriptionSchema>;
 
 export function WorkspaceDescriptionSection() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
   const updateWorkspace = useUpdateWorkspace(workspaceSlug);
 
-  const form = useForm<WorkspaceDescriptionFormValues>({
-    resolver: zodResolver(workspaceDescriptionSchema),
+  const form = useForm<UpdateWorkspaceDescriptionDto>({
+    resolver: zodResolver(updateWorkspaceDescriptionSchema),
     defaultValues: { description: "" },
   });
 
@@ -40,7 +33,7 @@ export function WorkspaceDescriptionSection() {
     }
   }, [workspace, form]);
 
-  async function onSubmit(data: WorkspaceDescriptionFormValues) {
+  async function onSubmit(data: UpdateWorkspaceDescriptionDto) {
     try {
       await updateWorkspace.mutateAsync(data);
       toast.add({ type: "success", description: "Workspace description updated." });

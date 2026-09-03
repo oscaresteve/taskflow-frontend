@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -15,17 +14,8 @@ import { toast } from "@/components/ui/toast";
 import { useUpdateWorkspace } from "@/hooks/use-update-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
+import { UpdateWorkspaceNameDto, updateWorkspaceNameSchema } from "@/lib/schemas/workspace.schema";
 import { Loader2Icon } from "lucide-react";
-
-const workspaceNameSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Name must be at least 2 characters long")
-    .max(100, "Name cannot exceed 100 characters"),
-});
-
-type WorkspaceNameFormValues = z.infer<typeof workspaceNameSchema>;
 
 export function WorkspaceNameSection() {
   const router = useRouter();
@@ -33,8 +23,8 @@ export function WorkspaceNameSection() {
   const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
   const updateWorkspace = useUpdateWorkspace(workspaceSlug);
 
-  const form = useForm<WorkspaceNameFormValues>({
-    resolver: zodResolver(workspaceNameSchema),
+  const form = useForm<UpdateWorkspaceNameDto>({
+    resolver: zodResolver(updateWorkspaceNameSchema),
     defaultValues: { name: "" },
   });
 
@@ -44,7 +34,7 @@ export function WorkspaceNameSection() {
     }
   }, [workspace, form]);
 
-  async function onSubmit(data: WorkspaceNameFormValues) {
+  async function onSubmit(data: UpdateWorkspaceNameDto) {
     try {
       const updatedWorkspace = await updateWorkspace.mutateAsync(data);
       toast.add({ type: "success", description: "Workspace name updated." });

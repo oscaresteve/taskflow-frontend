@@ -25,5 +25,19 @@ export const updateWorkspaceSchema = z
   })
   .refine((data) => Object.keys(data).length > 0, "At least one field must be provided");
 
+export const updateWorkspaceNameSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters long")
+    .max(100, "Name cannot exceed 100 characters"),
+});
+
+export const updateWorkspaceDescriptionSchema = z.object({
+  description: descriptionSchema.nullable(),
+});
+
 export type CreateWorkspaceDto = z.infer<typeof createWorkspaceSchema>;
 export type UpdateWorkspaceDto = z.infer<typeof updateWorkspaceSchema>;
+export type UpdateWorkspaceNameDto = z.infer<typeof updateWorkspaceNameSchema>;
+export type UpdateWorkspaceDescriptionDto = z.infer<typeof updateWorkspaceDescriptionSchema>;

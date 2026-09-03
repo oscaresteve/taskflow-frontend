@@ -32,5 +32,19 @@ export const updateProjectSchema = z
   })
   .refine((data) => Object.keys(data).length > 0, "At least one field must be provided");
 
+export const updateProjectNameSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters long")
+    .max(100, "Name cannot exceed 100 characters"),
+});
+
+export const updateProjectDescriptionSchema = z.object({
+  description: descriptionSchema.nullable(),
+});
+
 export type CreateProjectDto = z.infer<typeof createProjectSchema>;
 export type UpdateProjectDto = z.infer<typeof updateProjectSchema>;
+export type UpdateProjectNameDto = z.infer<typeof updateProjectNameSchema>;
+export type UpdateProjectDescriptionDto = z.infer<typeof updateProjectDescriptionSchema>;
