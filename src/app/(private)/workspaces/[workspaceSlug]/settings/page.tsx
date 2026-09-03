@@ -2,7 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { DeactivateWorkspaceSection } from "./_components/deactivate-workspace-section";
-import { EditWorkspaceForm } from "./_components/edit-workspace-form";
+import { WorkspaceNameSection } from "./_components/workspace-name-section";
+import { WorkspaceDescriptionSection } from "./_components/workspace-description-section";
 import { PageContainer } from "@/components/common/page-container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -27,7 +28,8 @@ export default function WorkspaceSettingsPage() {
 
   return (
     <PageContainer className="flex flex-col gap-6 pb-20">
-      <EditWorkspaceForm />
+      <WorkspaceNameSection />
+      <WorkspaceDescriptionSection />
       <DeactivateWorkspaceSection />
     </PageContainer>
   );
