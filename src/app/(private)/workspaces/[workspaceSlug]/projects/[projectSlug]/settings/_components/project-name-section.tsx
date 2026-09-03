@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +28,7 @@ const projectNameSchema = z.object({
 type ProjectNameFormValues = z.infer<typeof projectNameSchema>;
 
 export function ProjectNameSection() {
+  const router = useRouter();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
@@ -45,8 +46,11 @@ export function ProjectNameSection() {
 
   async function onSubmit(data: ProjectNameFormValues) {
     try {
-      await updateProject.mutateAsync(data);
+      const updatedProject = await updateProject.mutateAsync(data);
       toast.add({ type: "success", description: "Project name updated." });
+      if (updatedProject.slug !== projectSlug) {
+        router.replace(`/workspaces/${workspaceSlug}/projects/${updatedProject.slug}/settings`);
+      }
     } catch (error) {
       toast.add({
         type: "error",

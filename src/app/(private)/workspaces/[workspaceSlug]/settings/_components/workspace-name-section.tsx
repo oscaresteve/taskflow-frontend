@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +28,7 @@ const workspaceNameSchema = z.object({
 type WorkspaceNameFormValues = z.infer<typeof workspaceNameSchema>;
 
 export function WorkspaceNameSection() {
+  const router = useRouter();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
   const updateWorkspace = useUpdateWorkspace(workspaceSlug);
@@ -45,8 +46,11 @@ export function WorkspaceNameSection() {
 
   async function onSubmit(data: WorkspaceNameFormValues) {
     try {
-      await updateWorkspace.mutateAsync(data);
+      const updatedWorkspace = await updateWorkspace.mutateAsync(data);
       toast.add({ type: "success", description: "Workspace name updated." });
+      if (updatedWorkspace.slug !== workspaceSlug) {
+        router.replace(`/workspaces/${updatedWorkspace.slug}/settings`);
+      }
     } catch (error) {
       toast.add({
         type: "error",
