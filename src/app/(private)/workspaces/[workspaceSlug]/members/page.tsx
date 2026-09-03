@@ -13,7 +13,7 @@ import { PaginationControls } from "@/components/common/pagination-controls";
 import { SortControls } from "@/components/common/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
-import { AddMemberDialog } from "@/components/members/add-member-dialog";
+import { AddWorkspaceMemberDialog } from "@/components/members/add-workspace-member-dialog";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { MembersFilterBar } from "@/components/members/members-filter-bar";
 import { MembersTable } from "@/components/members/members-table";
@@ -241,7 +241,7 @@ export default function WorkspaceMembersPage() {
       />
       <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />
 
-      <AddMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
+      <AddWorkspaceMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
       <ConfirmDialog
         open={removeDialogOpen}
         onOpenChange={setRemoveDialogOpen}
