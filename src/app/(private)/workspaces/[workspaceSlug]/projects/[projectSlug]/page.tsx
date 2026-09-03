@@ -15,8 +15,8 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/componen
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
 import { priorityVariant, statusLabel } from "@/lib/task-labels";
-import { CreateTaskDialog } from "@/components/create-task-dialog";
-import { PageContainer } from "@/components/page-container";
+import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
+import { PageContainer } from "@/components/common/page-container";
 
 export default function ProjectPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();

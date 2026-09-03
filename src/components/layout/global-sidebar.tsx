@@ -10,11 +10,11 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import UserNav from "@/components/user-nav";
-import { WorkspacesNav } from "@/components/workspaces-nav";
+import UserNav from "@/components/layout/user-nav";
+import { WorkspacesNav } from "@/components/layout/workspaces-nav";
 import GlobalNav from "./global-nav";
 import Link from "next/link";
-import { Separator } from "./ui/separator";
+import { Separator } from "@/components/ui/separator";
 import TaskflowLogo from "./taskflow-logo";
 
 export function GlobalSidebar() {

@@ -12,15 +12,15 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import NavUser from "@/components/user-nav";
-import WorkspaceSwitch from "@/components/workspace-switch";
+import NavUser from "@/components/layout/user-nav";
+import WorkspaceSwitch from "@/components/layout/workspace-switch";
 import GlobalNav from "./global-nav";
-import ProjectsNav from "./projects-nav";
+import ProjectsNav from "@/components/projects/projects-nav";
 import { LayoutDashboard, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
-import { Separator } from "./ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 

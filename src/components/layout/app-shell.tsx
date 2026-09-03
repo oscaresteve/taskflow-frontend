@@ -1,4 +1,4 @@
-import AppHeader from "@/components/app-header";
+import AppHeader from "@/components/layout/app-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export function AppShell({ sidebar, children }: { sidebar: React.ReactNode; children: React.ReactNode }) {

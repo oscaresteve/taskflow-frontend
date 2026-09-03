@@ -9,7 +9,7 @@ import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { CreateWorkspaceDialog } from "@/components/create-workspace-dialog";
+import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
 import {
   SidebarGroup,
   SidebarMenuAction,
@@ -27,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuGroup,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 export function WorkspacesNav() {
   const { data: workspaces, isLoading, isError } = useQuery(getActiveWorkspacesQuery());

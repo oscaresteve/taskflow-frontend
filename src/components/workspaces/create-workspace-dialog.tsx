@@ -11,7 +11,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
-import { FormDialog } from "@/components/form-dialog";
+import { FormDialog } from "@/components/common/form-dialog";
 import { useCreateWorkspace } from "@/hooks/use-create-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateWorkspaceDto, createWorkspaceSchema } from "@/lib/schemas/workspace.schema";

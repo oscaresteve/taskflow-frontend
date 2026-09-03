@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
-import { FormDialog } from "@/components/form-dialog";
+import { FormDialog } from "@/components/common/form-dialog";
 import { useCreateTask } from "@/hooks/use-create-task";
 import { ApiError } from "@/lib/http/api-error";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";

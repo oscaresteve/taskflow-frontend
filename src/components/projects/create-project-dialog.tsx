@@ -10,7 +10,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
-import { FormDialog } from "@/components/form-dialog";
+import { FormDialog } from "@/components/common/form-dialog";
 import { useCreateProject } from "@/hooks/use-create-project";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectDto, createProjectSchema } from "@/lib/schemas/project.schema";

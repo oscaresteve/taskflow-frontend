@@ -2,7 +2,7 @@ import { hasWorkspaces } from "@/lib/api/workspaces.server";
 import { redirect } from "next/navigation";
 import { OnboardingWorkspaceForm } from "./_components/onboarding-workspace-form";
 import { OnboardingLogoutButton } from "./_components/onboarding-logout-button";
-import TaskflowLogo from "@/components/taskflow-logo";
+import TaskflowLogo from "@/components/layout/taskflow-logo";
 
 export default async function OnboardingPage() {
   if (await hasWorkspaces()) {

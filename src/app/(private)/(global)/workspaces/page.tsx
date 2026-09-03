@@ -12,9 +12,9 @@ import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissio
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PageSizeSelect } from "@/components/page-size-select";
-import { PaginationControls } from "@/components/pagination-controls";
-import { SortControls } from "@/components/sort-controls";
+import { PageSizeSelect } from "@/components/common/page-size-select";
+import { PaginationControls } from "@/components/common/pagination-controls";
+import { SortControls } from "@/components/common/sort-controls";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -25,9 +25,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CreateWorkspaceDialog } from "@/components/create-workspace-dialog";
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { PageContainer } from "@/components/page-container";
+import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
+import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { PageContainer } from "@/components/common/page-container";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { getInitials } from "@/lib/utils";

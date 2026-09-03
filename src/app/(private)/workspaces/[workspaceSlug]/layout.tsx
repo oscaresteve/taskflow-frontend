@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { AppShell } from "@/components/app-shell";
-import { WorkspacesSidebar } from "@/components/workspaces-sidebar";
+import { AppShell } from "@/components/layout/app-shell";
+import { WorkspacesSidebar } from "@/components/layout/workspaces-sidebar";
 import { getWorkspaceServer, requireWorkspaces } from "@/lib/api/workspaces.server";
 
 // Routing rule: anything scoped to a single workspace (projects, settings, members, tasks)

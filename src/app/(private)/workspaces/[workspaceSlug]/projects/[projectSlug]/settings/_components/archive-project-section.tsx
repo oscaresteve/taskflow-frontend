@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Archive } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ConfirmDialog } from "@/components/confirm-dialog";
+import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { toast } from "@/components/ui/toast";
 import { useArchiveProject } from "@/hooks/use-archive-project";
 import { ApiError } from "@/lib/http/api-error";

@@ -7,7 +7,7 @@ import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CreateWorkspaceDialog } from "@/components/create-workspace-dialog";
+import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
 import { ChevronsUpDown, Plus, Settings } from "lucide-react";
 import {
   DropdownMenu,

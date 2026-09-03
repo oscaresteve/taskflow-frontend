@@ -8,7 +8,7 @@ import { toast } from "@/components/ui/toast";
 import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
-import { ConfirmDialog } from "@/components/confirm-dialog";
+import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { ShieldMinus } from "lucide-react";
 import { useState } from "react";
 

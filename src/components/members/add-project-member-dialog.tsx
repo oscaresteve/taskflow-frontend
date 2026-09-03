@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
-import { FormDialog } from "@/components/form-dialog";
+import { FormDialog } from "@/components/common/form-dialog";
 import { useCreateProjectMember } from "@/hooks/use-create-project-member";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { getActiveWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";

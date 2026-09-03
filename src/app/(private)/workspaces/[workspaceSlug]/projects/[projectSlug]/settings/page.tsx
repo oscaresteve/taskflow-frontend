@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { ArchiveProjectSection } from "./_components/archive-project-section";
 import { EditProjectForm } from "./_components/edit-project-form";
-import { PageContainer } from "@/components/page-container";
+import { PageContainer } from "@/components/common/page-container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";

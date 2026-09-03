@@ -1,6 +1,6 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { BreadcrumbNav } from "@/components/layout/breadcrumb-nav";
 
 export default function AppHeader() {
   return (

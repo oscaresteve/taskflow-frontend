@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getProjectServer } from "@/lib/api/projects.server";
-import { ProjectNavTabs } from "@/components/project-nav-tabs";
-import { PageContainer } from "@/components/page-container";
+import { ProjectNavTabs } from "@/components/layout/project-nav-tabs";
+import { PageContainer } from "@/components/common/page-container";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { getInitials } from "@/lib/utils";

@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Archive } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ConfirmDialog } from "@/components/confirm-dialog";
+import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { toast } from "@/components/ui/toast";
 import { useArchiveTask } from "@/hooks/use-archive-task";
 import { ApiError } from "@/lib/http/api-error";

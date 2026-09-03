@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { DeactivateWorkspaceSection } from "./_components/deactivate-workspace-section";
 import { EditWorkspaceForm } from "./_components/edit-workspace-form";
-import { PageContainer } from "@/components/page-container";
+import { PageContainer } from "@/components/common/page-container";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";

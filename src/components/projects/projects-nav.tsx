@@ -7,9 +7,9 @@ import { ChevronDown, FolderKanban, MoreVertical, Plus, Settings } from "lucide-
 import { useQuery } from "@tanstack/react-query";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { isNavActive } from "@/lib/nav";
-import { Skeleton } from "./ui/skeleton";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
-import { CreateProjectDialog } from "@/components/create-project-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import {
   SidebarGroup,
   SidebarMenuAction,
@@ -19,7 +19,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "./ui/sidebar";
+} from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -27,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuGroup,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 export default function ProjectsNav() {
   const pathname = usePathname();
