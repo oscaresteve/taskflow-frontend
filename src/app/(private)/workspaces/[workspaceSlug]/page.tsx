@@ -9,6 +9,7 @@ import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { ColorDot } from "@/components/ui/color-dot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInitials } from "@/lib/utils";
@@ -75,10 +76,7 @@ export default function WorkspacePage() {
                 href={`/workspaces/${workspaceSlug}/projects/${project.slug}`}
                 className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
               >
-                <span
-                  className="size-2 shrink-0 rounded-full bg-muted-foreground"
-                  style={project.color ? { backgroundColor: project.color } : undefined}
-                />
+                <ColorDot color={project.color} />
                 <span className="flex-1 truncate">{project.name}</span>
                 <span className="text-xs text-muted-foreground">{project.key}</span>
               </Link>

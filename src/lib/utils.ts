@@ -13,3 +13,11 @@ export function getInitials(name: string) {
     .map((part) => part[0]?.toUpperCase())
     .join("")
 }
+
+export function formatDate(date: string | Date) {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
+}

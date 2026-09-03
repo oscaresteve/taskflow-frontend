@@ -28,6 +28,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import { ColorDot } from "../ui/color-dot";
 
 export default function ProjectsNav() {
   const pathname = usePathname();
@@ -98,6 +99,7 @@ export default function ProjectsNav() {
                   return (
                     <SidebarMenuSubItem key={project.id}>
                       <SidebarMenuSubButton isActive={isNavActive(pathname, href)} render={<Link href={href} />}>
+                        <ColorDot color={project.color}></ColorDot>
                         {project.name}
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
