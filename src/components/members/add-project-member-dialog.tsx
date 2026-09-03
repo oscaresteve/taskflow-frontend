@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,10 +12,12 @@ import { FormDialog } from "@/components/common/form-dialog";
 import { MemberCandidate, MemberPicker } from "@/components/members/member-picker";
 import { useCreateProjectMember } from "@/hooks/use-create-project-member";
 import { useProjectRole } from "@/hooks/use-project-role";
-import { getActiveWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
+import { getActiveWorkspaceMembersInfiniteQuery } from "@/lib/queries/workspace-member.queries";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectMemberDto, createProjectMemberSchema } from "@/lib/schemas/project-member.schema";
 import { assignableProjectRoles } from "@/lib/permissions/project-member-permissions";
+
+const PICKER_PAGE_SIZE = 10;
 
 interface AddProjectMemberDialogProps {
   workspaceSlug: string;
@@ -31,23 +33,46 @@ export function AddProjectMemberDialog({
   onOpenChange,
 }: AddProjectMemberDialogProps) {
   const createProjectMember = useCreateProjectMember(workspaceSlug, projectSlug);
-  const { data: workspaceMembers, isLoading: isCandidatesLoading } = useQuery(
-    getActiveWorkspaceMembersQuery(workspaceSlug, projectSlug),
-  );
 
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
   const assignableRoles = assignableProjectRoles(myRole);
 
-  const allCandidates: MemberCandidate[] = (workspaceMembers?.data ?? []).map((member) => ({
-    id: member.id,
-    userId: member.userId,
-    name: member.user.name,
-    email: member.user.email,
-    avatarUrl: member.user.avatarUrl,
-  }));
-
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selected, setSelected] = useState<MemberCandidate | null>(null);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timeout);
+  }, [search]);
+
+  const {
+    data: workspaceMembers,
+    isLoading: isCandidatesLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
+    getActiveWorkspaceMembersInfiniteQuery({
+      workspaceSlug,
+      excludeProjectSlug: projectSlug,
+      search: debouncedSearch,
+      limit: PICKER_PAGE_SIZE,
+    }),
+  );
+
+  const candidates: MemberCandidate[] = (workspaceMembers?.pages.flatMap((page) => page.data) ?? []).map(
+    (member) => ({
+      id: member.id,
+      userId: member.userId,
+      name: member.user.name,
+      email: member.user.email,
+      avatarUrl: member.user.avatarUrl,
+    }),
+  );
+  const remaining = workspaceMembers
+    ? workspaceMembers.pages[workspaceMembers.pages.length - 1].pagination.total - candidates.length
+    : 0;
 
   const form = useForm<CreateProjectMemberDto>({
     resolver: zodResolver(createProjectMemberSchema),
@@ -61,17 +86,11 @@ export function AddProjectMemberDialog({
     if (!next) {
       form.reset();
       setSearch("");
+      setDebouncedSearch("");
       setSelected(null);
     }
     onOpenChange(next);
   }
-
-  const query = search.toLowerCase();
-  const candidates = query
-    ? allCandidates.filter(
-        (candidate) => candidate.name.toLowerCase().includes(query) || candidate.email.toLowerCase().includes(query),
-      )
-    : allCandidates;
 
   function handleSelect(candidate: MemberCandidate) {
     setSelected(candidate);
@@ -124,6 +143,10 @@ export function AddProjectMemberDialog({
             onSelect={handleSelect}
             onClear={handleClear}
             error={!!form.formState.errors.userId}
+            hasMore={hasNextPage}
+            isLoadingMore={isFetchingNextPage}
+            remaining={remaining}
+            onLoadMore={() => fetchNextPage()}
           />
           <Controller
             name="role"

@@ -29,6 +29,10 @@ interface MemberPickerProps {
   onSelect: (candidate: MemberCandidate) => void;
   onClear: () => void;
   error?: boolean;
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
+  remaining?: number;
+  onLoadMore?: () => void;
 }
 
 export function MemberPicker({
@@ -43,6 +47,10 @@ export function MemberPicker({
   onSelect,
   onClear,
   error,
+  hasMore,
+  isLoadingMore,
+  remaining,
+  onLoadMore,
 }: MemberPickerProps) {
   return (
     <Field>
@@ -82,23 +90,35 @@ export function MemberPicker({
                 {emptyMessage}
               </p>
             ) : (
-              candidates.map((candidate) => (
-                <button
-                  key={candidate.id}
-                  type="button"
-                  onClick={() => onSelect(candidate)}
-                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
-                >
-                  <Avatar size="sm">
-                    <AvatarImage src={candidate.avatarUrl ?? undefined} alt={candidate.name} />
-                    <AvatarFallback>{getInitials(candidate.name)}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-1 flex-col truncate">
-                    <span className="truncate">{candidate.name}</span>
-                    <span className="truncate text-xs text-muted-foreground">{candidate.email}</span>
-                  </div>
-                </button>
-              ))
+              <>
+                {candidates.map((candidate) => (
+                  <button
+                    key={candidate.id}
+                    type="button"
+                    onClick={() => onSelect(candidate)}
+                    className="flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
+                  >
+                    <Avatar size="sm">
+                      <AvatarImage src={candidate.avatarUrl ?? undefined} alt={candidate.name} />
+                      <AvatarFallback>{getInitials(candidate.name)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-1 flex-col truncate">
+                      <span className="truncate">{candidate.name}</span>
+                      <span className="truncate text-xs text-muted-foreground">{candidate.email}</span>
+                    </div>
+                  </button>
+                ))}
+                {hasMore && (
+                  <button
+                    type="button"
+                    onClick={() => !isLoadingMore && onLoadMore?.()}
+                    aria-disabled={isLoadingMore}
+                    className="rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted"
+                  >
+                    {isLoadingMore ? "Loading…" : `${remaining} more`}
+                  </button>
+                )}
+              </>
             )}
           </div>
         </>

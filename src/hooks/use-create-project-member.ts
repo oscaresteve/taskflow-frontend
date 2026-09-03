@@ -12,7 +12,9 @@ export function useCreateProjectMember(workspaceSlug: string, projectSlug: strin
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: projectMemberKeys.lists(workspaceSlug, projectSlug) });
       // The added user should no longer show up as an addable candidate for this project.
-      queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.activeList(workspaceSlug, projectSlug) });
+      queryClient.invalidateQueries({
+        queryKey: workspaceMemberKeys.activeInfiniteList(workspaceSlug, { excludeProjectSlug: projectSlug }),
+      });
     },
   });
 }

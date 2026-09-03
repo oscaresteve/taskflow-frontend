@@ -1,6 +1,7 @@
-import { keepPreviousData, queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { getMyWorkspaceMember, getWorkspaceMembers } from "@/lib/api/workspace-members.api";
 import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
+import { getNextPageParam } from "@/lib/queries/pagination";
 import { WorkspaceMemberStatus, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 
@@ -24,10 +25,34 @@ export const getWorkspaceMembersQuery = (workspaceSlug: string) =>
 // requires a user to be an active workspace member before they can be added to a project.
 // excludeProjectSlug filters out anyone who already has a project-member row there (any
 // isActive value), so someone previously removed from the project doesn't show up as pickable.
-export const getActiveWorkspaceMembersQuery = (workspaceSlug: string, excludeProjectSlug?: string) =>
-  queryOptions({
-    queryKey: workspaceMemberKeys.activeList(workspaceSlug, excludeProjectSlug),
-    queryFn: () => getWorkspaceMembers({ workspaceSlug, status: ["ACTIVE"], excludeProjectSlug }),
+// search is server-side (not filtered client-side over a capped page), and pages accumulate via
+// "load more" in the picker, same shape as the sidebar nav infinite queries.
+export const getActiveWorkspaceMembersInfiniteQuery = ({
+  workspaceSlug,
+  excludeProjectSlug,
+  search,
+  limit,
+}: {
+  workspaceSlug: string;
+  excludeProjectSlug?: string;
+  search: string;
+  limit: number;
+}) =>
+  infiniteQueryOptions({
+    queryKey: workspaceMemberKeys.activeInfiniteList(workspaceSlug, { excludeProjectSlug, search, limit }),
+    queryFn: ({ pageParam }) =>
+      getWorkspaceMembers({
+        workspaceSlug,
+        status: ["ACTIVE"],
+        excludeProjectSlug,
+        // The backend's searchSchema rejects an empty string (min(1)), so an empty search must be
+        // omitted rather than sent through — same convention getUsers follows.
+        search: search || undefined,
+        page: pageParam,
+        limit,
+      }),
+    initialPageParam: 1,
+    getNextPageParam,
     enabled: !!workspaceSlug,
   });
 

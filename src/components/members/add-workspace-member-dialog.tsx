@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,10 +12,12 @@ import { FormDialog } from "@/components/common/form-dialog";
 import { MemberCandidate, MemberPicker } from "@/components/members/member-picker";
 import { useCreateWorkspaceMember } from "@/hooks/use-create-workspace-member";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
-import { getUsersQuery } from "@/lib/queries/user.queries";
+import { getUsersInfiniteQuery } from "@/lib/queries/user.queries";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateWorkspaceMemberDto, createWorkspaceMemberSchema } from "@/lib/schemas/workspace-member.schema";
 import { assignableWorkspaceRoles } from "@/lib/permissions/workspace-member-permissions";
+
+const PICKER_PAGE_SIZE = 10;
 
 interface AddWorkspaceMemberDialogProps {
   workspaceSlug: string;
@@ -55,14 +57,21 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
     return () => clearTimeout(timeout);
   }, [search]);
 
-  const { data: users, isLoading: isUsersLoading } = useQuery(getUsersQuery(debouncedSearch, workspaceSlug));
-  const candidates: MemberCandidate[] = (users?.data ?? []).map((user) => ({
+  const {
+    data: users,
+    isLoading: isUsersLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(getUsersInfiniteQuery(debouncedSearch, workspaceSlug, PICKER_PAGE_SIZE));
+  const candidates: MemberCandidate[] = (users?.pages.flatMap((page) => page.data) ?? []).map((user) => ({
     id: user.id,
     userId: user.id,
     name: user.name,
     email: user.email,
     avatarUrl: user.avatarUrl,
   }));
+  const remaining = users ? users.pages[users.pages.length - 1].pagination.total - candidates.length : 0;
 
   function handleSelect(candidate: MemberCandidate) {
     setSelected(candidate);
@@ -115,6 +124,10 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
             onSelect={handleSelect}
             onClear={handleClear}
             error={!!form.formState.errors.userId}
+            hasMore={hasNextPage}
+            isLoadingMore={isFetchingNextPage}
+            remaining={remaining}
+            onLoadMore={() => fetchNextPage()}
           />
           <Controller
             name="role"
