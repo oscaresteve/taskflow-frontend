@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { UserPlus, UserX } from "lucide-react";
+import { UserCheck, UserCog, UserPlus, UserX } from "lucide-react";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -62,6 +62,13 @@ export default function WorkspaceMembersPage() {
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
+  const [activateDialogOpen, setActivateDialogOpen] = useState(false);
+  const [memberToActivate, setMemberToActivate] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
+  const [roleChangeDialogOpen, setRoleChangeDialogOpen] = useState(false);
+  const [pendingRoleChange, setPendingRoleChange] = useState<{
+    member: WorkspaceMemberWithUserResponseDto;
+    role: WorkspaceRole;
+  } | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ACTIVE");
@@ -134,8 +141,17 @@ export default function WorkspaceMembersPage() {
     });
   }
 
-  function handleActivate(member: WorkspaceMemberWithUserResponseDto) {
-    activateWorkspaceMember.mutate(member.userId, { onError: reportError });
+  function handleRequestActivate(member: WorkspaceMemberWithUserResponseDto) {
+    setMemberToActivate(member);
+    setActivateDialogOpen(true);
+  }
+
+  function handleConfirmActivate() {
+    if (!memberToActivate) return;
+    activateWorkspaceMember.mutate(memberToActivate.userId, {
+      onSuccess: () => setActivateDialogOpen(false),
+      onError: reportError,
+    });
   }
 
   function handleRequestRemove(member: WorkspaceMemberWithUserResponseDto) {
@@ -151,9 +167,22 @@ export default function WorkspaceMembersPage() {
     });
   }
 
-  function handleChangeRole(member: WorkspaceMemberWithUserResponseDto, role: WorkspaceRole) {
+  function handleRequestChangeRole(member: WorkspaceMemberWithUserResponseDto, role: WorkspaceRole) {
     if (role === member.role) return;
-    updateWorkspaceMember.mutate({ userId: member.userId, data: { role } }, { onError: reportError });
+    setPendingRoleChange({ member, role });
+    setRoleChangeDialogOpen(true);
+  }
+
+  function handleConfirmChangeRole() {
+    if (!pendingRoleChange) return;
+    const { member, role } = pendingRoleChange;
+    updateWorkspaceMember.mutate(
+      { userId: member.userId, data: { role } },
+      {
+        onSuccess: () => setRoleChangeDialogOpen(false),
+        onError: reportError,
+      },
+    );
   }
 
   function roleChangeable(member: WorkspaceMemberWithUserResponseDto) {
@@ -180,7 +209,7 @@ export default function WorkspaceMembersPage() {
     return (
       <>
         {activatable ? (
-          <Button variant="link" className="h-auto p-0 text-sm" onClick={() => handleActivate(member)}>
+          <Button variant="link" className="h-auto p-0 text-sm" onClick={() => handleRequestActivate(member)}>
             Activate
           </Button>
         ) : null}
@@ -235,7 +264,7 @@ export default function WorkspaceMembersPage() {
         members={members}
         assignableRoles={assignableRoles}
         roleChangeable={roleChangeable}
-        onChangeRole={handleChangeRole}
+        onChangeRole={handleRequestChangeRole}
         renderActions={renderActions}
         emptyMessage="No members found."
       />
@@ -252,6 +281,26 @@ export default function WorkspaceMembersPage() {
         onConfirm={handleConfirmRemove}
         pending={removeWorkspaceMember.isPending}
         Icon={UserX}
+      />
+      <ConfirmDialog
+        open={roleChangeDialogOpen}
+        onOpenChange={setRoleChangeDialogOpen}
+        title="Change role"
+        description={`Change ${pendingRoleChange?.member.user.name}'s role to ${pendingRoleChange?.role}?`}
+        confirmLabel="Change role"
+        onConfirm={handleConfirmChangeRole}
+        pending={updateWorkspaceMember.isPending}
+        Icon={UserCog}
+      />
+      <ConfirmDialog
+        open={activateDialogOpen}
+        onOpenChange={setActivateDialogOpen}
+        title="Activate member"
+        description={`Activate ${memberToActivate?.user.name}? They'll get immediate access to this workspace.`}
+        confirmLabel="Activate"
+        onConfirm={handleConfirmActivate}
+        pending={activateWorkspaceMember.isPending}
+        Icon={UserCheck}
       />
     </PageContainer>
   );

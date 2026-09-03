@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { UserPlus, UserX } from "lucide-react";
+import { UserCog, UserPlus, UserX } from "lucide-react";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useProjectRole } from "@/hooks/use-project-role";
@@ -63,6 +63,11 @@ export default function ProjectMembersPage() {
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
   const [memberToDeactivate, setMemberToDeactivate] = useState<ProjectMemberWithUserResponseDto | null>(null);
+  const [roleChangeDialogOpen, setRoleChangeDialogOpen] = useState(false);
+  const [pendingRoleChange, setPendingRoleChange] = useState<{
+    member: ProjectMemberWithUserResponseDto;
+    role: ProjectRole;
+  } | null>(null);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ACTIVE");
@@ -144,9 +149,22 @@ export default function ProjectMembersPage() {
     });
   }
 
-  function handleChangeRole(member: ProjectMemberWithUserResponseDto, role: ProjectRole) {
+  function handleRequestChangeRole(member: ProjectMemberWithUserResponseDto, role: ProjectRole) {
     if (role === member.role) return;
-    updateProjectMember.mutate({ userId: member.userId, data: { role } }, { onError: reportError });
+    setPendingRoleChange({ member, role });
+    setRoleChangeDialogOpen(true);
+  }
+
+  function handleConfirmChangeRole() {
+    if (!pendingRoleChange) return;
+    const { member, role } = pendingRoleChange;
+    updateProjectMember.mutate(
+      { userId: member.userId, data: { role } },
+      {
+        onSuccess: () => setRoleChangeDialogOpen(false),
+        onError: reportError,
+      },
+    );
   }
 
   function handleRequestDeactivate(member: ProjectMemberWithUserResponseDto) {
@@ -230,7 +248,7 @@ export default function ProjectMembersPage() {
         members={members}
         assignableRoles={assignableRoles}
         roleChangeable={roleChangeable}
-        onChangeRole={handleChangeRole}
+        onChangeRole={handleRequestChangeRole}
         renderActions={renderActions}
         emptyMessage="No members found."
       />
@@ -252,6 +270,16 @@ export default function ProjectMembersPage() {
         onConfirm={handleConfirmDeactivate}
         pending={deactivateProjectMember.isPending}
         Icon={UserX}
+      />
+      <ConfirmDialog
+        open={roleChangeDialogOpen}
+        onOpenChange={setRoleChangeDialogOpen}
+        title="Change role"
+        description={`Change ${pendingRoleChange?.member.user.name}'s role to ${pendingRoleChange?.role}?`}
+        confirmLabel="Change role"
+        onConfirm={handleConfirmChangeRole}
+        pending={updateProjectMember.isPending}
+        Icon={UserCog}
       />
     </PageContainer>
   );
