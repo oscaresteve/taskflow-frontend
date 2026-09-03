@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, MoreVertical, Orbit, Plus, Settings } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
+import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function WorkspacesNav() {
-  const { data: workspaces, isLoading, isError } = useQuery(getActiveWorkspacesQuery());
+  const { data: workspaces, isLoading, isError } = useQuery(getWorkspacesQuery());
   const [createOpen, setCreateOpen] = useState(false);
   const activeWorkspaces = workspaces?.data ?? [];
 

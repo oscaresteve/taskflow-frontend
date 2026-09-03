@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ExternalLink, MoreHorizontal, Plus, Settings, ShieldMinus, Users } from "lucide-react";
-import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
+import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -169,7 +169,7 @@ export default function WorkspacesPage() {
     isLoading,
     isError,
   } = useQuery({
-    ...getActiveWorkspacesQuery({ page, search: search || undefined, limit, sort, order }),
+    ...getWorkspacesQuery({ page, search: search || undefined, limit, sort, order }),
     placeholderData: keepPreviousData,
   });
 

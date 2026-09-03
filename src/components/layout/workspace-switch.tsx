@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getActiveWorkspacesQuery } from "@/lib/queries/workspace.queries";
+import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,7 +25,7 @@ export default function WorkspaceSwitch() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: workspaces, isLoading } = useQuery(getActiveWorkspacesQuery());
+  const { data: workspaces, isLoading } = useQuery(getWorkspacesQuery());
   const [createOpen, setCreateOpen] = useState(false);
   const activeWorkspaces = workspaces?.data ?? [];
 

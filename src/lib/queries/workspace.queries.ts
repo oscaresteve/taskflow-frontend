@@ -8,7 +8,7 @@ import { SortOrder } from "@/lib/dtos/pagination.dto";
 // and the "manage workspaces" page. Inactive workspaces 404 on every workspace-scoped endpoint (the
 // backend treats isActive as a soft delete), so nothing in the frontend surfaces them until a
 // reactivate flow exists.
-export const getActiveWorkspacesQuery = ({
+export const getWorkspacesQuery = ({
   page,
   limit,
   search,
