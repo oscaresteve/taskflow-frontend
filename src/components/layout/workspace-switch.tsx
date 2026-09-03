@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { getWorkspaceQuery, getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,15 +21,21 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import Link from "next/link";
 
+const SWITCHER_PAGE_SIZE = 5;
+
 export default function WorkspaceSwitch() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: workspaces, isLoading } = useQuery(getWorkspacesQuery());
+  const { data: activeWorkspace, isLoading } = useQuery(getWorkspaceQuery(workspaceSlug));
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    getWorkspacesInfiniteQuery(SWITCHER_PAGE_SIZE),
+  );
   const [createOpen, setCreateOpen] = useState(false);
-  const activeWorkspaces = workspaces?.data ?? [];
+  const workspaces = data?.pages.flatMap((page) => page.data) ?? [];
+  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - workspaces.length : 0;
 
-  if (isLoading || activeWorkspaces.length === 0) {
+  if (isLoading || !activeWorkspace) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -44,9 +50,6 @@ export default function WorkspaceSwitch() {
       </SidebarMenu>
     );
   }
-
-  // The layout already guarantees workspaceSlug is valid (404s otherwise), so this lookup can't miss.
-  const activeWorkspace = activeWorkspaces.find((workspace) => workspace.slug === workspaceSlug) ?? activeWorkspaces[0];
 
   return (
     <SidebarMenu>
@@ -78,7 +81,7 @@ export default function WorkspaceSwitch() {
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel className="text-xs text-muted-foreground">Workspaces</DropdownMenuLabel>
-              {activeWorkspaces.map((workspace) => (
+              {workspaces.map((workspace) => (
                 <DropdownMenuItem
                   key={workspace.id}
                   onClick={() => router.push(`/workspaces/${workspace.slug}`)}
@@ -91,6 +94,16 @@ export default function WorkspaceSwitch() {
                   {workspace.name}
                 </DropdownMenuItem>
               ))}
+              {hasNextPage && (
+                <DropdownMenuItem
+                  closeOnClick={false}
+                  onClick={() => !isFetchingNextPage && fetchNextPage()}
+                  aria-disabled={isFetchingNextPage}
+                  className="gap-2 p-2 text-muted-foreground"
+                >
+                  {isFetchingNextPage ? "Loading…" : `${remaining} more`}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setCreateOpen(true)} className="gap-2 p-2">
