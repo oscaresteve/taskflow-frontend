@@ -15,7 +15,7 @@ import {
 import NavUser from "@/components/layout/user-nav";
 import WorkspaceSwitch from "@/components/layout/workspace-switch";
 import GlobalNav from "./global-nav";
-import ProjectsNav from "@/components/projects/projects-nav";
+import ProjectsNav from "@/components/layout/projects-nav";
 import { LayoutDashboard, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
