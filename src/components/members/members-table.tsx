@@ -14,7 +14,7 @@ interface MemberLike {
   id: string;
   role: MemberRole;
   joinedAt: string | null;
-  user: { name: string; email: string; avatarUrl: string | null };
+  user: { id: string; name: string; email: string; avatarUrl: string | null };
 }
 
 export function MembersTable<TMember extends MemberLike>({
@@ -24,6 +24,7 @@ export function MembersTable<TMember extends MemberLike>({
   onChangeRole,
   renderActions,
   emptyMessage,
+  actorUserId,
 }: {
   members: TMember[];
   assignableRoles: MemberRole[];
@@ -31,6 +32,7 @@ export function MembersTable<TMember extends MemberLike>({
   onChangeRole: (member: TMember, role: MemberRole) => void;
   renderActions: (member: TMember) => ReactNode | null;
   emptyMessage: string;
+  actorUserId?: string;
 }) {
   if (members.length === 0) {
     return <p className="px-1 py-6 text-center text-sm text-muted-foreground">{emptyMessage}</p>;
@@ -50,6 +52,7 @@ export function MembersTable<TMember extends MemberLike>({
       <TableBody>
         {members.map((member) => {
           const actions = renderActions(member);
+          const isActor = actorUserId === member.user.id;
           return (
             <TableRow key={member.id}>
               <TableCell>
@@ -58,7 +61,10 @@ export function MembersTable<TMember extends MemberLike>({
                     <AvatarImage src={member.user.avatarUrl ?? undefined} alt={member.user.name} />
                     <AvatarFallback>{getInitials(member.user.name)}</AvatarFallback>
                   </Avatar>
-                  <span className="truncate font-medium">{member.user.name}</span>
+                  <span className="truncate font-medium">
+                    {member.user.name}
+                    {isActor && " (You)"}
+                  </span>
                 </div>
               </TableCell>
               <TableCell className="text-muted-foreground">{member.user.email}</TableCell>

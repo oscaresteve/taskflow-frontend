@@ -255,6 +255,7 @@ export default function ProjectMembersPage() {
         onChangeRole={handleRequestChangeRole}
         renderActions={renderActions}
         emptyMessage="No members found."
+        actorUserId={me?.id}
       />
       <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />
 
