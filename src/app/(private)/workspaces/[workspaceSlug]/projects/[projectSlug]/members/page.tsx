@@ -19,6 +19,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MembersFilterBar } from "@/components/members/members-filter-bar";
 import { MembersTable } from "@/components/members/members-table";
 import { PageContainer } from "@/components/common/page-container";
+import { PageHeader } from "@/components/common/page-header";
 import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
 import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
 import { ApiError } from "@/lib/http/api-error";
@@ -216,15 +217,17 @@ export default function ProjectMembersPage() {
 
   return (
     <PageContainer className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold">Members</h1>
-        {isProjectManager(myRole) ? (
-          <Button size="sm" onClick={() => setAddMemberOpen(true)}>
-            <UserPlus />
-            Add member
-          </Button>
-        ) : null}
-      </div>
+      <PageHeader
+        title="Members"
+        actions={
+          isProjectManager(myRole) ? (
+            <Button size="sm" onClick={() => setAddMemberOpen(true)}>
+              <UserPlus />
+              Add member
+            </Button>
+          ) : null
+        }
+      />
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <MembersFilterBar

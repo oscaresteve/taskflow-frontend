@@ -1,6 +1,7 @@
 "use client";
 
 import { PageContainer } from "@/components/common/page-container";
+import { PageHeader } from "@/components/common/page-header";
 import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SearchInput } from "@/components/common/search-input";
@@ -230,15 +231,17 @@ export default function ProjectsPage() {
 
   return (
     <PageContainer className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold">Manage projects</h1>
-        {isWorkspaceManager(myWorkspaceRole) && (
-          <Button size="sm" onClick={() => setCreateOpen(true)}>
-            <Plus />
-            New project
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        title="Manage projects"
+        actions={
+          isWorkspaceManager(myWorkspaceRole) ? (
+            <Button size="sm" onClick={() => setCreateOpen(true)}>
+              <Plus />
+              New project
+            </Button>
+          ) : null
+        }
+      />
 
       <div className="flex items-center justify-between gap-2">
         <SearchInput value={search} onChange={handleSearchChange} placeholder="Search projects" className="w-48" />

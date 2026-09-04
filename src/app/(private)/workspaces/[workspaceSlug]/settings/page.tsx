@@ -5,6 +5,7 @@ import { DeactivateWorkspaceSection } from "./_components/deactivate-workspace-s
 import { WorkspaceNameSection } from "./_components/workspace-name-section";
 import { WorkspaceDescriptionSection } from "./_components/workspace-description-section";
 import { PageContainer } from "@/components/common/page-container";
+import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
@@ -28,6 +29,7 @@ export default function WorkspaceSettingsPage() {
 
   return (
     <PageContainer className="flex flex-col gap-6 pb-20">
+      <PageHeader title="Settings" />
       <WorkspaceNameSection />
       <WorkspaceDescriptionSection />
       <DeactivateWorkspaceSection />

@@ -5,6 +5,7 @@ import { ArchiveProjectSection } from "./_components/archive-project-section";
 import { ProjectNameSection } from "./_components/project-name-section";
 import { ProjectDescriptionSection } from "./_components/project-description-section";
 import { PageContainer } from "@/components/common/page-container";
+import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
@@ -28,6 +29,7 @@ export default function ProjectSettingsPage() {
 
   return (
     <PageContainer className="flex flex-col gap-6 pb-20">
+      <PageHeader title="Settings" />
       <ProjectNameSection />
       <ProjectDescriptionSection />
       <ArchiveProjectSection />

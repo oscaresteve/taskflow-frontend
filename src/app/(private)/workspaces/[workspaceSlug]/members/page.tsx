@@ -19,6 +19,7 @@ import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdow
 import { MembersFilterBar } from "@/components/members/members-filter-bar";
 import { MembersTable } from "@/components/members/members-table";
 import { PageContainer } from "@/components/common/page-container";
+import { PageHeader } from "@/components/common/page-header";
 import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-member";
 import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
 import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
@@ -244,15 +245,17 @@ export default function WorkspaceMembersPage() {
 
   return (
     <PageContainer className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold">Members</h1>
-        {isWorkspaceManager(myRole) ? (
-          <Button size="sm" onClick={() => setAddMemberOpen(true)}>
-            <UserPlus />
-            Add member
-          </Button>
-        ) : null}
-      </div>
+      <PageHeader
+        title="Members"
+        actions={
+          isWorkspaceManager(myRole) ? (
+            <Button size="sm" onClick={() => setAddMemberOpen(true)}>
+              <UserPlus />
+              Add member
+            </Button>
+          ) : null
+        }
+      />
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <MembersFilterBar

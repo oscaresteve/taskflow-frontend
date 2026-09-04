@@ -28,6 +28,7 @@ import {
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { PageContainer } from "@/components/common/page-container";
+import { PageHeader } from "@/components/common/page-header";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { getInitials } from "@/lib/utils";
@@ -212,13 +213,15 @@ export default function WorkspacesPage() {
 
   return (
     <PageContainer className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold">Manage workspaces</h1>
-        <Button size="sm" onClick={() => setCreateOpen(true)}>
-          <Plus />
-          New workspace
-        </Button>
-      </div>
+      <PageHeader
+        title="Manage workspaces"
+        actions={
+          <Button size="sm" onClick={() => setCreateOpen(true)}>
+            <Plus />
+            New workspace
+          </Button>
+        }
+      />
 
       <div className="flex items-center justify-between gap-2">
         <SearchInput value={search} onChange={handleSearchChange} placeholder="Search workspaces" className="w-48" />
