@@ -15,9 +15,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { useProjectRole } from "@/hooks/use-project-role";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { useParams } from "next/navigation";
 import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
+import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import { ColorDot } from "@/components/ui/color-dot";
@@ -173,6 +175,7 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
 
 export default function ProjectsPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
+  const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<ProjectSortField>("name");
@@ -229,10 +232,12 @@ export default function ProjectsPage() {
     <PageContainer className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
         <h1 className="text-xl font-semibold">Manage projects</h1>
-        <Button size="sm" onClick={() => setCreateOpen(true)}>
-          <Plus />
-          New project
-        </Button>
+        {isWorkspaceManager(myWorkspaceRole) && (
+          <Button size="sm" onClick={() => setCreateOpen(true)}>
+            <Plus />
+            New project
+          </Button>
+        )}
       </div>
 
       <div className="flex items-center justify-between gap-2">

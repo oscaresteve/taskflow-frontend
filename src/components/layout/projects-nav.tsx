@@ -29,23 +29,21 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { ColorDot } from "../ui/color-dot";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
+import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 
 const NAV_PAGE_SIZE = 5;
 
 export default function ProjectsNav() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(getProjectsInfiniteQuery(workspaceSlug, NAV_PAGE_SIZE));
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    getProjectsInfiniteQuery(workspaceSlug, NAV_PAGE_SIZE),
+  );
   const [createOpen, setCreateOpen] = useState(false);
   const projects = data?.pages.flatMap((page) => page.data) ?? [];
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - projects.length : 0;
+  const { role: myRole } = useWorkspaceRole(workspaceSlug);
 
   return (
     <SidebarGroup>
@@ -59,10 +57,12 @@ export default function ProjectsNav() {
             Projects
           </CollapsibleTrigger>
 
-          <SidebarMenuAction onClick={() => setCreateOpen(true)} title="New project" className="right-7">
-            <Plus />
-            <span className="sr-only">New project</span>
-          </SidebarMenuAction>
+          {isWorkspaceManager(myRole) && (
+            <SidebarMenuAction onClick={() => setCreateOpen(true)} title="New project" className="right-7">
+              <Plus />
+              <span className="sr-only">New project</span>
+            </SidebarMenuAction>
+          )}
 
           <DropdownMenu>
             <DropdownMenuTrigger
