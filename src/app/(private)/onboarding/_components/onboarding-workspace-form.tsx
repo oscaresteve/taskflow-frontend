@@ -15,15 +15,15 @@ import { Controller, useForm } from "react-hook-form";
 const underlineInputClassName =
   "rounded-none border-0 border-b-2 border-input bg-transparent aria-invalid:ring-0 px-0 focus-visible:border-foreground focus-visible:ring-0";
 
-export function OnboardingWorkspaceForm() {
+export function OnboardingWorkspaceForm({ name }: { name: string }) {
   const router = useRouter();
   const createWorkspace = useCreateWorkspace();
 
   const form = useForm<CreateWorkspaceDto>({
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: `${name}'s workspace`,
+      description: `${name}'s main workspace`,
     },
   });
 
