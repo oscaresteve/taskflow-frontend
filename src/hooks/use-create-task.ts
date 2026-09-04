@@ -9,7 +9,7 @@ export function useCreateTask(workspaceSlug: string, projectSlug: string) {
   return useMutation({
     mutationFn: (data: CreateTaskDto) => createTask({ workspaceSlug, projectSlug, data }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: taskKeys.lists(workspaceSlug, projectSlug) });
+      queryClient.invalidateQueries({ queryKey: taskKeys.columnLists(workspaceSlug, projectSlug) });
     },
   });
 }

@@ -1,6 +1,7 @@
 import { request } from "@/lib/http/client";
+import { buildQueryString } from "@/lib/http/query-string";
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
-import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
+import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { CreateTaskDto, UpdateTaskDto } from "@/lib/schemas/task.schema";
 
 export function createTask({
@@ -18,10 +19,27 @@ export function createTask({
   });
 }
 
-export function getTasks({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
-  return request<PaginatedResponseDto<TaskResponseDto>>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks`, {
-    method: "GET",
-  });
+export function getTasks({
+  workspaceSlug,
+  projectSlug,
+  page,
+  limit,
+  isArchived,
+  status,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  page?: number;
+  limit?: number;
+  isArchived?: boolean;
+  status?: TaskStatus;
+}) {
+  const queryString = buildQueryString({ page, limit, isArchived, status });
+
+  return request<PaginatedResponseDto<TaskResponseDto>>(
+    `/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks${queryString}`,
+    { method: "GET" },
+  );
 }
 
 export function getTask({

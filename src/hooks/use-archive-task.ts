@@ -10,7 +10,7 @@ export function useArchiveTask(workspaceSlug: string, projectSlug: string, taskN
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: taskKeys.detail(workspaceSlug, projectSlug, taskNumber) }),
-        queryClient.invalidateQueries({ queryKey: taskKeys.lists(workspaceSlug, projectSlug) }),
+        queryClient.invalidateQueries({ queryKey: taskKeys.columnLists(workspaceSlug, projectSlug) }),
       ]);
     },
   });
