@@ -1,6 +1,7 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useDroppable } from "@dnd-kit/core";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,6 +9,7 @@ import { UserResponseDto } from "@/lib/dtos/auth.dto";
 import { TaskStatus } from "@/lib/dtos/tasks.dto";
 import { getTasksColumnQuery } from "@/lib/queries/task.queries";
 import { statusLabel } from "@/lib/task-labels";
+import { cn } from "@/lib/utils";
 import { KanbanCard } from "./kanban-card";
 
 const COLUMN_PAGE_SIZE = 25;
@@ -24,13 +26,17 @@ export function KanbanColumn({ workspaceSlug, projectSlug, projectKey, status, a
   const { data, isLoading, isError, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
     getTasksColumnQuery(workspaceSlug, projectSlug, status, COLUMN_PAGE_SIZE),
   );
+  const { setNodeRef, isOver } = useDroppable({ id: status });
 
   const tasks = data?.pages.flatMap((page) => page.data) ?? [];
   const total = data?.pages[0]?.pagination.total ?? 0;
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - tasks.length : 0;
 
   return (
-    <div className="flex w-72 shrink-0 flex-col gap-3 rounded-lg bg-muted/30 p-2">
+    <div
+      ref={setNodeRef}
+      className={cn("flex w-72 shrink-0 flex-col gap-3 rounded-lg bg-muted/30 p-2", isOver && "bg-muted/60")}
+    >
       <div className="flex items-center gap-2 px-1">
         <span className="text-sm font-medium">{statusLabel[status]}</span>
         <Badge variant="outline">{total}</Badge>
