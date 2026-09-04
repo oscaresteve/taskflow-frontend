@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { LayoutDashboard, Settings, Users } from "lucide-react";
+import { Kanban, LayoutDashboard, Settings, Users } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 
 const projectTabs = [
   { label: "Overview", segment: "", Icon: LayoutDashboard },
+  { label: "Kanban", segment: "/kanban", Icon: Kanban },
   { label: "Members", segment: "/members", Icon: Users },
   { label: "Settings", segment: "/settings", Icon: Settings },
 ];
