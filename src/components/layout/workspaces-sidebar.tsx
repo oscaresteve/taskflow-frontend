@@ -35,7 +35,12 @@ export function WorkspacesSidebar() {
       <SidebarHeader>
         <WorkspaceSwitch />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)",
+        }}
+      >
         <GlobalNav />
         <Separator />
         <SidebarGroup>
