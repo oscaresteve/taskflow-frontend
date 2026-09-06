@@ -1,6 +1,11 @@
 export type TaskStatus = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
+export type MoveTaskDto = {
+  status: TaskStatus;
+  afterTaskId: string | null;
+};
+
 export type TaskResponseDto = {
   id: string;
   projectId: string;
@@ -19,7 +24,7 @@ export type TaskResponseDto = {
   dueDate: string | null;
   completedAt: string | null;
 
-  position: number;
+  rank: string;
 
   isArchived: boolean;
 

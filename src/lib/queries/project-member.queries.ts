@@ -11,9 +11,14 @@ export const getMyProjectMemberQuery = (workspaceSlug: string, projectSlug: stri
     enabled: !!workspaceSlug && !!projectSlug,
   });
 
-// Includes both isActive values so the members page can surface active and inactive members,
-// not just the active roster.
-export const getProjectMembersQuery = ({
+// The endpoint is paginated and caps a page at 100. A project's active roster stays well under
+// that, so it is fetched in one go rather than chained page by page.
+const ACTIVE_ROSTER_LIMIT = 100;
+
+// The active roster of a project: who can be assigned a task and who shows up as an avatar.
+// Inactive members are excluded server-side rather than filtered out here — filtering a capped page
+// on the client silently drops active members whose slot on page 1 was taken by an inactive one.
+export const getActiveProjectMembersQuery = ({
   workspaceSlug,
   projectSlug,
 }: {
@@ -21,8 +26,9 @@ export const getProjectMembersQuery = ({
   projectSlug: string;
 }) =>
   queryOptions({
-    queryKey: projectMemberKeys.lists(workspaceSlug, projectSlug),
-    queryFn: () => getProjectMembers({ workspaceSlug, projectSlug, isActive: [true, false] }),
+    queryKey: projectMemberKeys.activeList(workspaceSlug, projectSlug),
+    queryFn: () =>
+      getProjectMembers({ workspaceSlug, projectSlug, isActive: [true], limit: ACTIVE_ROSTER_LIMIT }),
     enabled: !!workspaceSlug && !!projectSlug,
   });
 

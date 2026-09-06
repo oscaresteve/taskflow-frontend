@@ -15,8 +15,8 @@ export const projectMemberKeys = {
   all: ["project-members"] as const,
   me: (workspaceSlug: string, projectSlug: string) =>
     [...projectMemberKeys.all, "me", workspaceSlug, projectSlug] as const,
-  lists: (workspaceSlug: string, projectSlug: string) =>
-    [...projectMemberKeys.all, "list", workspaceSlug, projectSlug] as const,
+  activeList: (workspaceSlug: string, projectSlug: string) =>
+    [...projectMemberKeys.all, "active-list", workspaceSlug, projectSlug] as const,
   paginatedList: (workspaceSlug: string, projectSlug: string, params: ProjectMemberListParams = {}) =>
     [...projectMemberKeys.all, "paginated-list", workspaceSlug, projectSlug, params] as const,
 };

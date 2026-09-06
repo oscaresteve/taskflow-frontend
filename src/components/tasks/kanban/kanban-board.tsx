@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { ProjectMemberWithUserResponseDto } from "@/lib/dtos/project-members.dto";
-import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { taskStatuses } from "@/lib/schemas/task.schema";
-import { useMoveTaskStatus } from "@/hooks/use-move-task-status";
+import { getTasksBoardQuery } from "@/lib/queries/task.queries";
+import { useKanbanDrag } from "@/hooks/use-kanban-drag";
+import { Skeleton } from "@/components/ui/skeleton";
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";
 
@@ -17,28 +19,32 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ workspaceSlug, project, members }: KanbanBoardProps) {
-  const [activeTask, setActiveTask] = useState<TaskResponseDto | null>(null);
-  const moveTaskStatus = useMoveTaskStatus(workspaceSlug, project.slug);
-  const assigneesById = new Map(members.map((member) => [member.userId, member.user]));
+  const { data: tasks, isLoading, isError } = useQuery(getTasksBoardQuery(workspaceSlug, project.slug));
 
-  // A pointer needs to travel a few pixels before this counts as a drag, so a plain click on a
-  // card still navigates to its detail page instead of always starting a drag.
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+  const { activeTask, columns, dropStatus, sensors, collisionDetection, handlers } = useKanbanDrag({
+    workspaceSlug,
+    projectSlug: project.slug,
+    tasks,
+  });
 
-  function handleDragStart(event: DragStartEvent) {
-    setActiveTask((event.active.data.current?.task as TaskResponseDto | undefined) ?? null);
+  const assigneesById = useMemo(() => new Map(members.map((member) => [member.userId, member.user])), [members]);
+
+  if (isError) {
+    return <p className="py-4 text-sm text-muted-foreground">Failed to load tasks.</p>;
   }
 
-  function handleDragEnd(event: DragEndEvent) {
-    setActiveTask(null);
-    const task = event.active.data.current?.task as TaskResponseDto | undefined;
-    const toStatus = event.over?.id as TaskStatus | undefined;
-    if (!task || !toStatus || toStatus === task.status) return;
-    moveTaskStatus.mutate({ task, toStatus });
+  if (isLoading) {
+    return (
+      <div className="flex gap-3">
+        {taskStatuses.map((status) => (
+          <Skeleton key={status} className="h-64 w-72 shrink-0" />
+        ))}
+      </div>
+    );
   }
 
   return (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={collisionDetection} {...handlers}>
       <div className="flex gap-3 overflow-x-auto pb-2">
         {taskStatuses.map((status) => (
           <KanbanColumn
@@ -47,6 +53,8 @@ export function KanbanBoard({ workspaceSlug, project, members }: KanbanBoardProp
             projectSlug={project.slug}
             projectKey={project.key}
             status={status}
+            tasks={columns[status]}
+            isDropTarget={dropStatus === status}
             assigneesById={assigneesById}
           />
         ))}
@@ -55,7 +63,6 @@ export function KanbanBoard({ workspaceSlug, project, members }: KanbanBoardProp
       <DragOverlay>
         {activeTask && (
           <KanbanCard
-            href={`/workspaces/${workspaceSlug}/projects/${project.slug}/tasks/${activeTask.taskNumber}`}
             taskKey={`${project.key}-${activeTask.taskNumber}`}
             task={activeTask}
             assignee={activeTask.assigneeId ? assigneesById.get(activeTask.assigneeId) : undefined}

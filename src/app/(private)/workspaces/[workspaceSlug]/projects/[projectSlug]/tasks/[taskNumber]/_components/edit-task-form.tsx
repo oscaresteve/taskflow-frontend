@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { ApiError } from "@/lib/http/api-error";
-import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getTaskQuery } from "@/lib/queries/task.queries";
 import { UpdateTaskDto, taskPriorities, taskStatuses, updateTaskSchema } from "@/lib/schemas/task.schema";
 import { statusLabel } from "@/lib/task-labels";
@@ -28,8 +28,8 @@ export function EditTaskForm() {
     taskNumber: string;
   }>();
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
-  const { data: projectMembers } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
-  const members = projectMembers?.data.filter((member) => member.isActive) ?? [];
+  const { data: projectMembers } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
+  const members = projectMembers?.data ?? [];
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
 
   const form = useForm<UpdateTaskDto>({

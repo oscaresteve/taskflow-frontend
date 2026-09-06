@@ -29,7 +29,6 @@ export const updateTaskSchema = z
     status: z.enum(taskStatuses).optional(),
     assigneeId: z.cuid().optional().nullable(),
     dueDate: z.iso.datetime().optional().nullable(),
-    position: z.number().optional(),
   })
   .refine((data) => Object.keys(data).length > 0, "At least one field must be provided");
 

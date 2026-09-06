@@ -1,74 +1,69 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { UserResponseDto } from "@/lib/dtos/auth.dto";
-import { TaskStatus } from "@/lib/dtos/tasks.dto";
-import { getTasksColumnQuery } from "@/lib/queries/task.queries";
+import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { statusLabel } from "@/lib/task-labels";
 import { cn } from "@/lib/utils";
-import { KanbanCard } from "./kanban-card";
-
-const COLUMN_PAGE_SIZE = 25;
+import { SortableKanbanCard } from "./kanban-card";
 
 interface KanbanColumnProps {
   workspaceSlug: string;
   projectSlug: string;
   projectKey: string;
   status: TaskStatus;
+  tasks: TaskResponseDto[];
+  isDropTarget: boolean;
   assigneesById: Map<string, UserResponseDto>;
 }
 
-export function KanbanColumn({ workspaceSlug, projectSlug, projectKey, status, assigneesById }: KanbanColumnProps) {
-  const { data, isLoading, isError, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(
-    getTasksColumnQuery(workspaceSlug, projectSlug, status, COLUMN_PAGE_SIZE),
-  );
-  const { setNodeRef, isOver } = useDroppable({ id: status });
+export function KanbanColumn({
+  workspaceSlug,
+  projectSlug,
+  projectKey,
+  status,
+  tasks,
+  isDropTarget,
+  assigneesById,
+}: KanbanColumnProps) {
+  // El droppable de la columna recoge lo que se suelta fuera de una tarjeta: el hueco bajo la
+  // ultima o una columna vacia, donde no hay ningun sortable al que apuntar. Su `isOver` no se usa;
+  // el resaltado lo decide el board, que sabe en que columna va a caer la tarjeta.
+  const { setNodeRef } = useDroppable({ id: status });
 
-  const tasks = data?.pages.flatMap((page) => page.data) ?? [];
-  const total = data?.pages[0]?.pagination.total ?? 0;
-  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - tasks.length : 0;
+  // SortableContext reacciona a `items` por identidad, asi que se memoiza: crearlo en cada render
+  // le haria recalcular su estado interno continuamente durante el arrastre.
+  const itemIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
 
   return (
     <div
       ref={setNodeRef}
-      className={cn("flex w-72 shrink-0 flex-col gap-3 rounded-lg bg-muted/30 p-2", isOver && "bg-muted/60")}
+      className={cn("flex w-72 shrink-0 flex-col gap-3 rounded-lg bg-muted/30 p-2", isDropTarget && "bg-muted/60")}
     >
       <div className="flex items-center gap-2 px-1">
         <span className="text-sm font-medium">{statusLabel[status]}</span>
-        <Badge variant="outline">{total}</Badge>
+        <Badge variant="outline">{tasks.length}</Badge>
       </div>
-      <div className="flex flex-col gap-2">
-        {isError ? (
-          <p className="px-1 py-4 text-center text-sm text-muted-foreground">Failed to load</p>
-        ) : isLoading ? (
-          <>
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-20 w-full" />
-          </>
-        ) : tasks.length === 0 ? (
-          <p className="px-1 py-4 text-center text-sm text-muted-foreground">No tasks</p>
-        ) : (
-          <>
-            {tasks.map((task) => (
-              <KanbanCard
+
+      <div className="flex min-h-16 flex-col gap-2">
+        <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+          {tasks.length === 0 ? (
+            <p className="px-1 py-4 text-center text-sm text-muted-foreground">No tasks</p>
+          ) : (
+            tasks.map((task) => (
+              <SortableKanbanCard
                 key={task.id}
                 href={`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${task.taskNumber}`}
                 taskKey={`${projectKey}-${task.taskNumber}`}
                 task={task}
                 assignee={task.assigneeId ? assigneesById.get(task.assigneeId) : undefined}
               />
-            ))}
-            {hasNextPage && (
-              <Button variant="ghost" size="sm" onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-                {isFetchingNextPage ? "Loading…" : `${remaining} more`}
-              </Button>
-            )}
-          </>
-        )}
+            ))
+          )}
+        </SortableContext>
       </div>
     </div>
   );

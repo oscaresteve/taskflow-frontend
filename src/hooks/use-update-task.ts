@@ -11,7 +11,7 @@ export function useUpdateTask(workspaceSlug: string, projectSlug: string, taskNu
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: taskKeys.detail(workspaceSlug, projectSlug, taskNumber) }),
-        queryClient.invalidateQueries({ queryKey: taskKeys.columnLists(workspaceSlug, projectSlug) }),
+        queryClient.invalidateQueries({ queryKey: taskKeys.board(workspaceSlug, projectSlug) }),
       ]);
     },
   });

@@ -3,21 +3,23 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getProjectQuery } from "@/lib/queries/project.queries";
-import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { KanbanBoard } from "@/components/tasks/kanban/kanban-board";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 
 export default function ProjectPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
-  const { data: projectMembers } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug }));
-  const members = projectMembers?.data.filter((member) => member.isActive) ?? [];
+  const { data: projectMembers } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
+  // Memoizado porque baja al tablero y de ahi al mapa de asignados: un array nuevo en cada render
+  // haria que el kanban se re-renderizara entero durante el arrastre.
+  const members = useMemo(() => projectMembers?.data ?? [], [projectMembers]);
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
 
   if (isError) {

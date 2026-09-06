@@ -18,7 +18,7 @@ import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { useParams } from "next/navigation";
-import { getProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import Link from "next/link";
@@ -128,10 +128,10 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
     data: members,
     isLoading,
     isError,
-  } = useQuery(getProjectMembersQuery({ workspaceSlug, projectSlug: project.slug }));
+  } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug: project.slug }));
   const { role: myRole } = useProjectRole(workspaceSlug, project.slug);
 
-  const owners = members?.data.filter((member) => member.role === "OWNER" && member.isActive) ?? [];
+  const owners = members?.data.filter((member) => member.role === "OWNER") ?? [];
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
   const remainingOwners = owners.length - visibleOwners.length;
 

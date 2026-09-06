@@ -1,7 +1,5 @@
 import { request } from "@/lib/http/client";
-import { buildQueryString } from "@/lib/http/query-string";
-import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
-import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
+import { MoveTaskDto, TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { CreateTaskDto, UpdateTaskDto } from "@/lib/schemas/task.schema";
 
 export function createTask({
@@ -19,27 +17,10 @@ export function createTask({
   });
 }
 
-export function getTasks({
-  workspaceSlug,
-  projectSlug,
-  page,
-  limit,
-  isArchived,
-  status,
-}: {
-  workspaceSlug: string;
-  projectSlug: string;
-  page?: number;
-  limit?: number;
-  isArchived?: boolean;
-  status?: TaskStatus;
-}) {
-  const queryString = buildQueryString({ page, limit, isArchived, status });
-
-  return request<PaginatedResponseDto<TaskResponseDto>>(
-    `/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks${queryString}`,
-    { method: "GET" },
-  );
+export function getBoardTasks({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
+  return request<TaskResponseDto[]>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/board`, {
+    method: "GET",
+  });
 }
 
 export function getTask({
@@ -68,6 +49,23 @@ export function updateTask({
   data: UpdateTaskDto;
 }) {
   return request<TaskResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export function moveTask({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+  data,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+  data: MoveTaskDto;
+}) {
+  return request<TaskResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/move`, {
     method: "PATCH",
     body: JSON.stringify(data),
   });
