@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/common/form-dialog";
 import { MemberCandidate, MemberPicker } from "@/components/members/member-picker";
 import { useCreateProjectMember } from "@/hooks/use-create-project-member";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { getActiveWorkspaceMembersInfiniteQuery } from "@/lib/queries/workspace-member.queries";
 import { ApiError } from "@/lib/http/api-error";
@@ -38,13 +39,8 @@ export function AddProjectMemberDialog({
   const assignableRoles = assignableProjectRoles(myRole);
 
   const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const [selected, setSelected] = useState<MemberCandidate | null>(null);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
 
   const {
     data: workspaceMembers,
@@ -86,7 +82,6 @@ export function AddProjectMemberDialog({
     if (!next) {
       form.reset();
       setSearch("");
-      setDebouncedSearch("");
       setSelected(null);
     }
     onOpenChange(next);

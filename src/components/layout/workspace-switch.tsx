@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getWorkspaceQuery, getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
+import { SearchInput } from "@/components/common/search-input";
 import { ChevronsUpDown, Plus, Settings } from "lucide-react";
 import {
   DropdownMenu,
@@ -28,8 +30,10 @@ export default function WorkspaceSwitch() {
   const { isMobile } = useSidebar();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: activeWorkspace, isLoading } = useQuery(getWorkspaceQuery(workspaceSlug));
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    getWorkspacesInfiniteQuery(SWITCHER_PAGE_SIZE),
+    getWorkspacesInfiniteQuery({ limit: SWITCHER_PAGE_SIZE, search: debouncedSearch }),
   );
   const [createOpen, setCreateOpen] = useState(false);
   const workspaces = data?.pages.flatMap((page) => page.data) ?? [];
@@ -81,6 +85,16 @@ export default function WorkspaceSwitch() {
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel className="text-xs text-muted-foreground">Workspaces</DropdownMenuLabel>
+              {/* Stops keydown from bubbling to the menu's typeahead handler, which would otherwise
+                  hijack keystrokes (and move item focus) instead of letting them reach the input. */}
+              <div onKeyDown={(e) => e.stopPropagation()} className="p-2">
+                <SearchInput value={search} onChange={setSearch} placeholder="Search workspaces" />
+              </div>
+              {workspaces.length === 0 && (
+                <div className="flex h-9 items-center px-2 text-sm text-muted-foreground">
+                  {debouncedSearch ? "No workspaces found" : "No workspaces yet"}
+                </div>
+              )}
               {workspaces.map((workspace) => (
                 <DropdownMenuItem
                   key={workspace.id}

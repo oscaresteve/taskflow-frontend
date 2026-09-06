@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { ChevronDown, FolderKanban, MoreVertical, Plus, Settings } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getProjectsInfiniteQuery } from "@/lib/queries/project.queries";
 import { isNavActive } from "@/lib/nav";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
+import { SearchInput } from "@/components/common/search-input";
 import {
   SidebarGroup,
   SidebarMenuAction,
@@ -37,8 +39,10 @@ const NAV_PAGE_SIZE = 5;
 export default function ProjectsNav() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    getProjectsInfiniteQuery(workspaceSlug, NAV_PAGE_SIZE),
+    getProjectsInfiniteQuery({ workspaceSlug, limit: NAV_PAGE_SIZE, search: debouncedSearch }),
   );
   const [createOpen, setCreateOpen] = useState(false);
   const projects = data?.pages.flatMap((page) => page.data) ?? [];
@@ -86,6 +90,7 @@ export default function ProjectsNav() {
 
           <CollapsibleContent>
             <SidebarMenuSub>
+              <SearchInput value={search} onChange={setSearch} placeholder="Search projects" size="sm" />
               {isError ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
@@ -102,7 +107,9 @@ export default function ProjectsNav() {
                 ))
               ) : projects.length === 0 ? (
                 <SidebarMenuSubItem>
-                  <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">No projects yet</div>
+                  <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
+                    {debouncedSearch ? "No projects found" : "No projects yet"}
+                  </div>
                 </SidebarMenuSubItem>
               ) : (
                 <>

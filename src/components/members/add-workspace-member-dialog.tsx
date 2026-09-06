@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/common/form-dialog";
 import { MemberCandidate, MemberPicker } from "@/components/members/member-picker";
 import { useCreateWorkspaceMember } from "@/hooks/use-create-workspace-member";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { getUsersInfiniteQuery } from "@/lib/queries/user.queries";
 import { ApiError } from "@/lib/http/api-error";
@@ -31,7 +32,7 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
   const assignableRoles = assignableWorkspaceRoles(myRole);
 
   const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const [selected, setSelected] = useState<MemberCandidate | null>(null);
 
   const form = useForm<CreateWorkspaceMemberDto>({
@@ -46,16 +47,10 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
     if (!next) {
       form.reset();
       setSearch("");
-      setDebouncedSearch("");
       setSelected(null);
     }
     onOpenChange(next);
   }
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedSearch(search), 300);
-    return () => clearTimeout(timeout);
-  }, [search]);
 
   const {
     data: users,

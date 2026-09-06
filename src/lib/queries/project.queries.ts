@@ -6,10 +6,19 @@ import { SortOrder } from "@/lib/dtos/pagination.dto";
 
 // "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
 // getNextPageParam helper can back any other list that outgrows a "load more" button later.
-export const getProjectsInfiniteQuery = (workspaceSlug: string, limit: number) =>
+export const getProjectsInfiniteQuery = ({
+  workspaceSlug,
+  limit,
+  search,
+}: {
+  workspaceSlug: string;
+  limit: number;
+  search?: string;
+}) =>
   infiniteQueryOptions({
-    queryKey: projectKeys.infiniteList(workspaceSlug, { limit }),
-    queryFn: ({ pageParam }) => getProjects({ workspaceSlug, page: pageParam, limit, sort: "name", order: "asc" }),
+    queryKey: projectKeys.infiniteList(workspaceSlug, { limit, search }),
+    queryFn: ({ pageParam }) =>
+      getProjects({ workspaceSlug, page: pageParam, limit, sort: "name", order: "asc", search: search || undefined }),
     initialPageParam: 1,
     getNextPageParam,
     enabled: !!workspaceSlug,

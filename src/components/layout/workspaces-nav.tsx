@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, MoreVertical, Orbit, Plus, Settings } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
 import { getInitials } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -28,18 +29,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import { SearchInput } from "../common/search-input";
 
 const NAV_PAGE_SIZE = 5;
 
 export function WorkspacesNav() {
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(getWorkspacesInfiniteQuery(NAV_PAGE_SIZE));
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    getWorkspacesInfiniteQuery({ limit: NAV_PAGE_SIZE, search: debouncedSearch }),
+  );
   const [createOpen, setCreateOpen] = useState(false);
   const activeWorkspaces = data?.pages.flatMap((page) => page.data) ?? [];
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - activeWorkspaces.length : 0;
@@ -48,9 +47,7 @@ export function WorkspacesNav() {
     <SidebarGroup>
       <SidebarMenu>
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
-          <CollapsibleTrigger
-            render={<SidebarMenuButton className="group/orbit" />}
-          >
+          <CollapsibleTrigger render={<SidebarMenuButton className="group/orbit" />}>
             <span className="relative size-4 shrink-0">
               <Orbit className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/orbit:opacity-0" />
               <ChevronDown className="absolute inset-0 size-4 opacity-0 transition-all group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180" />
@@ -85,6 +82,7 @@ export function WorkspacesNav() {
 
           <CollapsibleContent>
             <SidebarMenuSub>
+              <SearchInput value={search} onChange={setSearch} placeholder="Search workspaces" size="sm" />
               {isError ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
@@ -102,7 +100,9 @@ export function WorkspacesNav() {
                 ))
               ) : activeWorkspaces.length === 0 ? (
                 <SidebarMenuSubItem>
-                  <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">No workspaces yet</div>
+                  <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
+                    {debouncedSearch ? "No workspaces found" : "No workspaces yet"}
+                  </div>
                 </SidebarMenuSubItem>
               ) : (
                 <>
