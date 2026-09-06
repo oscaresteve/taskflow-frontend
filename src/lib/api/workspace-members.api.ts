@@ -38,6 +38,30 @@ export function getWorkspaceMembers({
   );
 }
 
+export function getAllWorkspaceMembers({
+  workspaceSlug,
+  role,
+  status,
+  search,
+  excludeProjectSlug,
+  sort,
+  order,
+}: {
+  workspaceSlug: string;
+  role?: WorkspaceRole;
+  status?: WorkspaceMemberStatus | WorkspaceMemberStatus[];
+  search?: string;
+  excludeProjectSlug?: string;
+  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  order?: SortOrder;
+}) {
+  const queryString = buildQueryString({ role, status, search, excludeProjectSlug, sort, order });
+
+  return request<WorkspaceMemberWithUserResponseDto[]>(`/workspaces/${workspaceSlug}/members/all${queryString}`, {
+    method: "GET",
+  });
+}
+
 export function getMyWorkspaceMember({ workspaceSlug }: { workspaceSlug: string }) {
   return request<WorkspaceMemberResponseDto>(`/workspaces/${workspaceSlug}/members/me`, {
     method: "GET",

@@ -131,7 +131,7 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
   } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug: project.slug }));
   const { role: myRole } = useProjectRole(workspaceSlug, project.slug);
 
-  const owners = members?.data.filter((member) => member.role === "OWNER") ?? [];
+  const owners = members?.filter((member) => member.role === "OWNER") ?? [];
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
   const remainingOwners = owners.length - visibleOwners.length;
 

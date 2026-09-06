@@ -29,7 +29,7 @@ export function EditTaskForm() {
   }>();
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
   const { data: projectMembers } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
-  const members = projectMembers?.data ?? [];
+  const members = projectMembers ?? [];
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
 
   const form = useForm<UpdateTaskDto>({

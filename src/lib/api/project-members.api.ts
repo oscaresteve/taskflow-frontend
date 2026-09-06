@@ -33,6 +33,31 @@ export function getProjectMembers({
   );
 }
 
+export function getAllProjectMembers({
+  workspaceSlug,
+  projectSlug,
+  isActive,
+  role,
+  search,
+  sort,
+  order,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  isActive?: boolean | boolean[];
+  role?: ProjectRole;
+  search?: string;
+  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  order?: SortOrder;
+}) {
+  const queryString = buildQueryString({ isActive, role, search, sort, order });
+
+  return request<ProjectMemberWithUserResponseDto[]>(
+    `/workspaces/${workspaceSlug}/projects/${projectSlug}/members/all${queryString}`,
+    { method: "GET" },
+  );
+}
+
 export function getMyProjectMember({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
   return request<ProjectMemberResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/members/me`, {
     method: "GET",

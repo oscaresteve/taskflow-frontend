@@ -1,5 +1,5 @@
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from "@tanstack/react-query";
-import { getMyWorkspaceMember, getWorkspaceMembers } from "@/lib/api/workspace-members.api";
+import { getAllWorkspaceMembers, getMyWorkspaceMember, getWorkspaceMembers } from "@/lib/api/workspace-members.api";
 import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 import { getNextPageParam } from "@/lib/queries/pagination";
 import { WorkspaceMemberStatus, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
@@ -12,12 +12,10 @@ export const getMyWorkspaceMemberQuery = (workspaceSlug: string) =>
     enabled: !!workspaceSlug,
   });
 
-// Includes PENDING and REMOVED alongside ACTIVE so the members page can surface people awaiting
-// activation and people who were removed, not just the active roster.
 export const getWorkspaceMembersQuery = (workspaceSlug: string) =>
   queryOptions({
     queryKey: workspaceMemberKeys.lists(workspaceSlug),
-    queryFn: () => getWorkspaceMembers({ workspaceSlug, status: ["ACTIVE", "PENDING", "REMOVED"] }),
+    queryFn: () => getAllWorkspaceMembers({ workspaceSlug, status: ["ACTIVE", "PENDING", "REMOVED"] }),
     enabled: !!workspaceSlug,
   });
 

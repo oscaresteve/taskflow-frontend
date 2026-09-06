@@ -20,7 +20,7 @@ export default function WorkspacePage() {
   const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
   const { data: projects, isLoading: isProjectsLoading } = useQuery(getProjectsQuery(workspaceSlug));
   const { data: members, isLoading: isMembersLoading } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
-  const activeMembers = members?.data.filter((member) => member.status === "ACTIVE") ?? [];
+  const activeMembers = members?.filter((member) => member.status === "ACTIVE") ?? [];
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">Failed to load workspace.</p>;

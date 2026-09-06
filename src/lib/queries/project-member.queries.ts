@@ -1,6 +1,6 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { projectMemberKeys } from "../query-keys/project-member.keys";
-import { getMyProjectMember, getProjectMembers } from "../api/project-members.api";
+import { getAllProjectMembers, getMyProjectMember, getProjectMembers } from "../api/project-members.api";
 import { ProjectRole } from "../dtos/project-members.dto";
 import { SortOrder } from "../dtos/pagination.dto";
 
@@ -11,13 +11,6 @@ export const getMyProjectMemberQuery = (workspaceSlug: string, projectSlug: stri
     enabled: !!workspaceSlug && !!projectSlug,
   });
 
-// The endpoint is paginated and caps a page at 100. A project's active roster stays well under
-// that, so it is fetched in one go rather than chained page by page.
-const ACTIVE_ROSTER_LIMIT = 100;
-
-// The active roster of a project: who can be assigned a task and who shows up as an avatar.
-// Inactive members are excluded server-side rather than filtered out here — filtering a capped page
-// on the client silently drops active members whose slot on page 1 was taken by an inactive one.
 export const getActiveProjectMembersQuery = ({
   workspaceSlug,
   projectSlug,
@@ -27,8 +20,7 @@ export const getActiveProjectMembersQuery = ({
 }) =>
   queryOptions({
     queryKey: projectMemberKeys.activeList(workspaceSlug, projectSlug),
-    queryFn: () =>
-      getProjectMembers({ workspaceSlug, projectSlug, isActive: [true], limit: ACTIVE_ROSTER_LIMIT }),
+    queryFn: () => getAllProjectMembers({ workspaceSlug, projectSlug, isActive: [true] }),
     enabled: !!workspaceSlug && !!projectSlug,
   });
 

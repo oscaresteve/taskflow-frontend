@@ -19,7 +19,7 @@ export default function ProjectPage() {
   const { data: projectMembers } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
   // Memoizado porque baja al tablero y de ahi al mapa de asignados: un array nuevo en cada render
   // haria que el kanban se re-renderizara entero durante el arrastre.
-  const members = useMemo(() => projectMembers?.data ?? [], [projectMembers]);
+  const members = useMemo(() => projectMembers ?? [], [projectMembers]);
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
 
   if (isError) {

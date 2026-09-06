@@ -114,7 +114,7 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
   const { data: members, isLoading, isError } = useQuery(getWorkspaceMembersQuery(workspace.slug));
   const { role: myRole } = useWorkspaceRole(workspace.slug);
 
-  const owners = members?.data.filter((member) => member.role === "OWNER" && member.status === "ACTIVE") ?? [];
+  const owners = members?.filter((member) => member.role === "OWNER" && member.status === "ACTIVE") ?? [];
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
   const remainingOwners = owners.length - visibleOwners.length;
 
