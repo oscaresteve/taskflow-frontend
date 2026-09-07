@@ -7,16 +7,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { useCreateWorkspace } from "@/hooks/use-create-workspace";
+import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { CreateWorkspaceDto, createWorkspaceSchema } from "@/lib/schemas/workspace.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { underlineFieldLabelClassName, underlineInputClassName } from "./onboarding-styles";
 
-const underlineInputClassName =
-  "rounded-none border-0 border-b-2 border-input bg-transparent aria-invalid:ring-0 px-0 focus-visible:border-foreground focus-visible:ring-0";
+interface OnboardingWorkspaceFormProps {
+  name: string;
+  onCreated: (workspace: WorkspaceResponseDto) => void;
+}
 
-export function OnboardingWorkspaceForm({ name }: { name: string }) {
-  const router = useRouter();
+export function OnboardingWorkspaceForm({ name, onCreated }: OnboardingWorkspaceFormProps) {
   const createWorkspace = useCreateWorkspace();
 
   const form = useForm<CreateWorkspaceDto>({
@@ -30,7 +32,7 @@ export function OnboardingWorkspaceForm({ name }: { name: string }) {
   async function onSubmit(data: CreateWorkspaceDto) {
     try {
       const workspace = await createWorkspace.mutateAsync(data);
-      router.push(`/workspaces/${workspace.slug}`);
+      onCreated(workspace);
     } catch (error) {
       toast.add({
         type: "error",
@@ -48,7 +50,7 @@ export function OnboardingWorkspaceForm({ name }: { name: string }) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="name" className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              <FieldLabel htmlFor="name" className={underlineFieldLabelClassName}>
                 Name
               </FieldLabel>
               <Input
@@ -70,10 +72,7 @@ export function OnboardingWorkspaceForm({ name }: { name: string }) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel
-                htmlFor="description"
-                className="text-xs font-medium tracking-wide text-muted-foreground uppercase"
-              >
+              <FieldLabel htmlFor="description" className={underlineFieldLabelClassName}>
                 Description
               </FieldLabel>
               <Textarea
@@ -88,8 +87,8 @@ export function OnboardingWorkspaceForm({ name }: { name: string }) {
           )}
         />
         <Field className="mt-4">
-          <Button type="submit" size="lg" className="w-full">
-            Get started
+          <Button type="submit" size="lg" className="w-full" disabled={form.formState.isSubmitting}>
+            Continue
           </Button>
         </Field>
       </FieldGroup>
