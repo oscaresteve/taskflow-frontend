@@ -3,29 +3,23 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { UserCog, UserPlus, UserX } from "lucide-react";
+import { CircleCheckIcon, CircleMinusIcon, type LucideIcon, UserCog, UserPlus, UserX } from "lucide-react";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { Button } from "@/components/ui/button";
-import { PageSizeSelect } from "@/components/common/page-size-select";
-import { PaginationControls } from "@/components/common/pagination-controls";
-import { SortControls } from "@/components/common/sort-controls";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { AddProjectMemberDialog } from "@/components/members/add-project-member-dialog";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { MembersFilterBar } from "@/components/members/members-filter-bar";
-import { MembersTable } from "@/components/members/members-table";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ProjectMembersPanel } from "./_components/project-members-panel";
 import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
 import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
 import { ApiError } from "@/lib/http/api-error";
-import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
-import { RoleFilter } from "@/lib/role-labels";
 import { getFullName } from "@/lib/utils";
 import {
   assignableProjectRoles,
@@ -33,29 +27,14 @@ import {
   canUpdateProjectMemberRole,
   isProjectManager,
 } from "@/lib/permissions/project-member-permissions";
+import { Badge } from "@/components/ui/badge";
 
-const PAGE_SIZE_OPTIONS = [5, 10, 15];
+type StatusTab = "ACTIVE" | "INACTIVE";
 
-type MemberSortField = "joinedAt" | "createdAt" | "updatedAt";
-
-const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
-  { value: "joinedAt", label: "Joined" },
-  { value: "createdAt", label: "Created" },
-  { value: "updatedAt", label: "Updated" },
+const STATUS_TABS: { value: StatusTab; label: string; icon: LucideIcon }[] = [
+  { value: "ACTIVE", label: "Active", icon: CircleCheckIcon },
+  { value: "INACTIVE", label: "Inactive", icon: CircleMinusIcon },
 ];
-
-type StatusFilter = "ALL" | "ACTIVE" | "INACTIVE";
-
-const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
-  { value: "ALL", label: "All statuses" },
-  { value: "ACTIVE", label: "Active" },
-  { value: "INACTIVE", label: "Inactive" },
-];
-
-function isActiveParam(statusFilter: StatusFilter): boolean[] {
-  if (statusFilter === "ALL") return [true, false];
-  return statusFilter === "ACTIVE" ? [true] : [false];
-}
 
 export default function ProjectMembersPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
@@ -71,78 +50,20 @@ export default function ProjectMembersPage() {
     member: ProjectMemberWithUserResponseDto;
     role: ProjectRole;
   } | null>(null);
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ACTIVE");
-  const [sort, setSort] = useState<MemberSortField>("joinedAt");
-  const [order, setOrder] = useState<SortOrder>("asc");
-  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
-  const [page, setPage] = useState(1);
+  const [statusTab, setStatusTab] = useState<StatusTab>("ACTIVE");
 
-  const role = roleFilter === "ALL" ? undefined : roleFilter;
-  const searchParam = search || undefined;
-
-  const membersQuery = useQuery(
-    getProjectMembersPageQuery({
-      workspaceSlug,
-      projectSlug,
-      isActive: isActiveParam(statusFilter),
-      role,
-      search: searchParam,
-      sort,
-      order,
-      page,
-      limit,
-    }),
+  const activeCountQuery = useQuery(
+    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [true], page: 1, limit: 1 }),
   );
-
-  function handleSearchChange(value: string) {
-    setSearch(value);
-    setPage(1);
-  }
-
-  function handleRoleFilterChange(value: RoleFilter) {
-    setRoleFilter(value);
-    setPage(1);
-  }
-
-  function handleStatusFilterChange(value: StatusFilter) {
-    setStatusFilter(value);
-    setPage(1);
-  }
-
-  function handleSortFieldChange(value: MemberSortField) {
-    setSort(value);
-    setPage(1);
-  }
-
-  function handleSortOrderChange(value: SortOrder) {
-    setOrder(value);
-    setPage(1);
-  }
-
-  function handleLimitChange(value: number) {
-    setLimit(value);
-    setPage(1);
-  }
-
-  if (membersQuery.isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
-  }
-
-  if (!membersQuery.data) {
-    return (
-      <PageContainer className="flex flex-col gap-3">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-14 w-full" />
-        <Skeleton className="h-14 w-full" />
-      </PageContainer>
-    );
-  }
+  const inactiveCountQuery = useQuery(
+    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [false], page: 1, limit: 1 }),
+  );
+  const countQueryByStatus = {
+    ACTIVE: activeCountQuery,
+    INACTIVE: inactiveCountQuery,
+  };
 
   const assignableRoles = assignableProjectRoles(myRole);
-  const members = membersQuery.data.data;
 
   function reportError(error: unknown) {
     toast.add({
@@ -236,38 +157,36 @@ export default function ProjectMembersPage() {
         }
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <MembersFilterBar
-          search={search}
-          onSearchChange={handleSearchChange}
-          roleFilter={roleFilter}
-          onRoleFilterChange={handleRoleFilterChange}
-          statusFilter={statusFilter}
-          onStatusFilterChange={handleStatusFilterChange}
-          statusOptions={STATUS_OPTIONS}
-        />
-        <div className="flex items-center gap-2">
-          <SortControls
-            field={sort}
-            order={order}
-            options={SORT_OPTIONS}
-            onFieldChange={handleSortFieldChange}
-            onOrderChange={handleSortOrderChange}
-          />
-          <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+      <Tabs value={statusTab} onValueChange={(value) => setStatusTab(value as StatusTab)}>
+        <div className="border-b">
+          <TabsList variant="line">
+            {STATUS_TABS.map((tab) => {
+              const total = countQueryByStatus[tab.value].data?.pagination.total;
+              return (
+                <TabsTrigger key={tab.value} value={tab.value}>
+                  <tab.icon />
+                  {tab.label}
+                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
         </div>
-      </div>
-
-      <MembersTable
-        members={members}
-        assignableRoles={assignableRoles}
-        roleChangeable={roleChangeable}
-        onChangeRole={handleRequestChangeRole}
-        renderActions={renderActions}
-        emptyMessage="No members found."
-        actorUserId={me?.id}
-      />
-      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />
+        {STATUS_TABS.map((tab) => (
+          <TabsContent key={tab.value} value={tab.value}>
+            <ProjectMembersPanel
+              workspaceSlug={workspaceSlug}
+              projectSlug={projectSlug}
+              isActive={tab.value === "ACTIVE"}
+              assignableRoles={assignableRoles}
+              roleChangeable={roleChangeable}
+              onChangeRole={handleRequestChangeRole}
+              renderActions={renderActions}
+              actorUserId={me?.id}
+            />
+          </TabsContent>
+        ))}
+      </Tabs>
 
       <AddProjectMemberDialog
         workspaceSlug={workspaceSlug}

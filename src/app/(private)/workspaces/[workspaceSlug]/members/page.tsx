@@ -3,34 +3,37 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { UserCheck, UserCog, UserPlus, UserX } from "lucide-react";
+import {
+  CircleCheckIcon,
+  ClockIcon,
+  type LucideIcon,
+  UserCheck,
+  UserCog,
+  UserPlus,
+  UserX,
+  UserXIcon,
+} from "lucide-react";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { Button } from "@/components/ui/button";
-import { PageSizeSelect } from "@/components/common/page-size-select";
-import { PaginationControls } from "@/components/common/pagination-controls";
-import { SortControls } from "@/components/common/sort-controls";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { AddWorkspaceMemberDialog } from "@/components/members/add-workspace-member-dialog";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { MembersFilterBar } from "@/components/members/members-filter-bar";
-import { MembersTable } from "@/components/members/members-table";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WorkspaceMembersPanel } from "./_components/workspace-members-panel";
 import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-member";
 import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
 import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
 import { ApiError } from "@/lib/http/api-error";
-import { SortOrder } from "@/lib/dtos/pagination.dto";
 import {
   WorkspaceMemberStatus,
   WorkspaceMemberWithUserResponseDto,
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
-import { RoleFilter } from "@/lib/role-labels";
 import { getFullName } from "@/lib/utils";
 import {
   assignableWorkspaceRoles,
@@ -39,24 +42,12 @@ import {
   canUpdateWorkspaceMemberRole,
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
+import { Badge } from "@/components/ui/badge";
 
-const PAGE_SIZE_OPTIONS = [5, 10, 15];
-
-type MemberSortField = "joinedAt" | "createdAt" | "updatedAt";
-
-const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
-  { value: "joinedAt", label: "Joined" },
-  { value: "createdAt", label: "Created" },
-  { value: "updatedAt", label: "Updated" },
-];
-
-type StatusFilter = "ALL" | WorkspaceMemberStatus;
-
-const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
-  { value: "ALL", label: "All statuses" },
-  { value: "ACTIVE", label: "Active" },
-  { value: "PENDING", label: "Pending" },
-  { value: "REMOVED", label: "Removed" },
+const STATUS_TABS: { value: WorkspaceMemberStatus; label: string; icon: LucideIcon }[] = [
+  { value: "ACTIVE", label: "Active", icon: CircleCheckIcon },
+  { value: "PENDING", label: "Pending", icon: ClockIcon },
+  { value: "REMOVED", label: "Removed", icon: UserXIcon },
 ];
 
 export default function WorkspaceMembersPage() {
@@ -76,70 +67,24 @@ export default function WorkspaceMembersPage() {
     member: WorkspaceMemberWithUserResponseDto;
     role: WorkspaceRole;
   } | null>(null);
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ACTIVE");
-  const [sort, setSort] = useState<MemberSortField>("joinedAt");
-  const [order, setOrder] = useState<SortOrder>("asc");
-  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
-  const [page, setPage] = useState(1);
+  const [statusTab, setStatusTab] = useState<WorkspaceMemberStatus>("ACTIVE");
 
-  const role = roleFilter === "ALL" ? undefined : roleFilter;
-  const status =
-    statusFilter === "ALL" ? (["ACTIVE", "PENDING", "REMOVED"] as WorkspaceMemberStatus[]) : [statusFilter];
-  const searchParam = search || undefined;
-
-  const membersQuery = useQuery(
-    getWorkspaceMembersPageQuery({ workspaceSlug, status, role, search: searchParam, sort, order, page, limit }),
+  const activeCountQuery = useQuery(
+    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["ACTIVE"], page: 1, limit: 1 }),
   );
-
-  function handleSearchChange(value: string) {
-    setSearch(value);
-    setPage(1);
-  }
-
-  function handleRoleFilterChange(value: RoleFilter) {
-    setRoleFilter(value);
-    setPage(1);
-  }
-
-  function handleStatusFilterChange(value: StatusFilter) {
-    setStatusFilter(value);
-    setPage(1);
-  }
-
-  function handleSortFieldChange(value: MemberSortField) {
-    setSort(value);
-    setPage(1);
-  }
-
-  function handleSortOrderChange(value: SortOrder) {
-    setOrder(value);
-    setPage(1);
-  }
-
-  function handleLimitChange(value: number) {
-    setLimit(value);
-    setPage(1);
-  }
-
-  if (membersQuery.isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
-  }
-
-  if (!membersQuery.data) {
-    return (
-      <PageContainer className="flex flex-col gap-3">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-14 w-full" />
-        <Skeleton className="h-14 w-full" />
-      </PageContainer>
-    );
-  }
+  const pendingCountQuery = useQuery(
+    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["PENDING"], page: 1, limit: 1 }),
+  );
+  const removedCountQuery = useQuery(
+    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["REMOVED"], page: 1, limit: 1 }),
+  );
+  const countQueryByStatus = {
+    ACTIVE: activeCountQuery,
+    PENDING: pendingCountQuery,
+    REMOVED: removedCountQuery,
+  };
 
   const assignableRoles = assignableWorkspaceRoles(myRole);
-  const members = membersQuery.data.data;
 
   function reportError(error: unknown) {
     toast.add({
@@ -267,38 +212,35 @@ export default function WorkspaceMembersPage() {
         }
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <MembersFilterBar
-          search={search}
-          onSearchChange={handleSearchChange}
-          roleFilter={roleFilter}
-          onRoleFilterChange={handleRoleFilterChange}
-          statusFilter={statusFilter}
-          onStatusFilterChange={handleStatusFilterChange}
-          statusOptions={STATUS_OPTIONS}
-        />
-        <div className="flex items-center gap-2">
-          <SortControls
-            field={sort}
-            order={order}
-            options={SORT_OPTIONS}
-            onFieldChange={handleSortFieldChange}
-            onOrderChange={handleSortOrderChange}
-          />
-          <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+      <Tabs value={statusTab} onValueChange={(value) => setStatusTab(value as WorkspaceMemberStatus)}>
+        <div className="border-b">
+          <TabsList variant="line">
+            {STATUS_TABS.map((tab) => {
+              const total = countQueryByStatus[tab.value].data?.pagination.total;
+              return (
+                <TabsTrigger key={tab.value} value={tab.value}>
+                  <tab.icon />
+                  {tab.label}
+                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
         </div>
-      </div>
-
-      <MembersTable
-        members={members}
-        assignableRoles={assignableRoles}
-        roleChangeable={roleChangeable}
-        onChangeRole={handleRequestChangeRole}
-        renderActions={renderActions}
-        emptyMessage="No members found."
-        actorUserId={me?.id}
-      />
-      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />
+        {STATUS_TABS.map((tab) => (
+          <TabsContent key={tab.value} value={tab.value}>
+            <WorkspaceMembersPanel
+              workspaceSlug={workspaceSlug}
+              status={tab.value}
+              assignableRoles={assignableRoles}
+              roleChangeable={roleChangeable}
+              onChangeRole={handleRequestChangeRole}
+              renderActions={renderActions}
+              actorUserId={me?.id}
+            />
+          </TabsContent>
+        ))}
+      </Tabs>
 
       <AddWorkspaceMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
       <ConfirmDialog
