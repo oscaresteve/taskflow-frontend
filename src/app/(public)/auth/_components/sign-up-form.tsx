@@ -10,6 +10,7 @@ import { signUp } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
 import { SignUpDto, signUpSchema } from "@/lib/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -68,6 +69,7 @@ export function SignUpForm() {
                     aria-invalid={fieldState.invalid}
                     id="firstName"
                     type="text"
+                    autoComplete="given-name"
                     placeholder="John"
                     required
                   />
@@ -86,6 +88,7 @@ export function SignUpForm() {
                     aria-invalid={fieldState.invalid}
                     id="lastName"
                     type="text"
+                    autoComplete="family-name"
                     placeholder="Doe"
                     required
                   />
@@ -104,6 +107,7 @@ export function SignUpForm() {
                     aria-invalid={fieldState.invalid}
                     id="email"
                     type="email"
+                    autoComplete="email"
                     placeholder="m@example.com"
                     required
                   />
@@ -127,9 +131,14 @@ export function SignUpForm() {
                     }}
                     aria-invalid={fieldState.invalid}
                     id="password"
+                    autoComplete="new-password"
                     required
                   />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  {fieldState.invalid ? (
+                    <FieldError errors={[fieldState.error]} />
+                  ) : (
+                    <FieldDescription>At least 8 characters, with uppercase, lowercase, and a number.</FieldDescription>
+                  )}
                 </Field>
               )}
             />
@@ -139,13 +148,22 @@ export function SignUpForm() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
-                  <PasswordInput {...field} aria-invalid={fieldState.invalid} id="confirmPassword" required />
+                  <PasswordInput
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id="confirmPassword"
+                    autoComplete="new-password"
+                    required
+                  />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
             <Field>
-              <Button type="submit">Create Account</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+                Create Account
+              </Button>
               <FieldDescription className="text-center">
                 Already have an account? <Link href="/auth/sign-in">Sign in</Link>
               </FieldDescription>

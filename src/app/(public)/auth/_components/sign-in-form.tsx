@@ -10,6 +10,7 @@ import { signIn } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
 import { SignInDto, signInSchema } from "@/lib/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -59,6 +60,7 @@ export function SignInForm() {
                     aria-invalid={fieldState.invalid}
                     id="email"
                     type="email"
+                    autoComplete="email"
                     placeholder="m@example.com"
                     required
                   />
@@ -72,13 +74,22 @@ export function SignInForm() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <PasswordInput {...field} aria-invalid={fieldState.invalid} id="password" required />
+                  <PasswordInput
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id="password"
+                    autoComplete="current-password"
+                    required
+                  />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
             <Field>
-              <Button type="submit">Sign In</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+                Sign In
+              </Button>
               <FieldDescription className="text-center">
                 Don&apos;t have an account? <Link href="/auth/sign-up">Sign up</Link>
               </FieldDescription>
