@@ -8,13 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { MemberRole } from "@/lib/member-role-filter";
-import { formatDate, getInitials } from "@/lib/utils";
+import { formatDate, getFullName, getInitials } from "@/lib/utils";
 
 interface MemberLike {
   id: string;
   role: MemberRole;
   joinedAt: string | null;
-  user: { id: string; name: string; email: string; avatarUrl: string | null };
+  user: { id: string; firstName: string; lastName: string; email: string; avatarUrl: string | null };
 }
 
 export function MembersTable<TMember extends MemberLike>({
@@ -53,16 +53,17 @@ export function MembersTable<TMember extends MemberLike>({
         {members.map((member) => {
           const actions = renderActions(member);
           const isActor = actorUserId === member.user.id;
+          const memberName = getFullName(member.user.firstName, member.user.lastName);
           return (
             <TableRow key={member.id}>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Avatar size="sm">
-                    <AvatarImage src={member.user.avatarUrl ?? undefined} alt={member.user.name} />
-                    <AvatarFallback>{getInitials(member.user.name)}</AvatarFallback>
+                    <AvatarImage src={member.user.avatarUrl ?? undefined} alt={memberName} />
+                    <AvatarFallback>{getInitials(memberName)}</AvatarFallback>
                   </Avatar>
                   <span className="truncate font-medium">
-                    {member.user.name}
+                    {memberName}
                     {isActor && " (You)"}
                   </span>
                 </div>

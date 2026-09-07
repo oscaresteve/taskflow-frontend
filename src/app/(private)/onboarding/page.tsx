@@ -21,7 +21,7 @@ export default async function OnboardingPage() {
             <div className="flex flex-col">
               <h1 className="text-3xl font-semibold text-balance">Let&apos;s set up your workspace</h1>
               <p className="mt-2 text-sm text-muted-foreground">This is where your projects and tasks will live.</p>
-              <OnboardingWorkspaceForm name={me.name} />
+              <OnboardingWorkspaceForm name={me.firstName} />
             </div>
           </>
         )}

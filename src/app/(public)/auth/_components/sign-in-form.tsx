@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/common/password-input";
 import { toast } from "@/components/ui/toast";
 import { signIn } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
@@ -71,7 +72,7 @@ export function SignInForm() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} id="password" type="password" required />
+                  <PasswordInput {...field} aria-invalid={fieldState.invalid} id="password" required />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

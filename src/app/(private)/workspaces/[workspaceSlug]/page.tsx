@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { ColorDot } from "@/components/ui/color-dot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getInitials } from "@/lib/utils";
+import { getFullName, getInitials } from "@/lib/utils";
 import { PageContainer } from "@/components/common/page-container";
 
 export default function WorkspacePage() {
@@ -102,16 +102,19 @@ export default function WorkspacePage() {
           ) : activeMembers.length === 0 ? (
             <p className="text-sm text-muted-foreground">No members yet.</p>
           ) : (
-            activeMembers.map((member) => (
-              <div key={member.id} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
-                <Avatar size="sm">
-                  <AvatarImage src={member.user.avatarUrl ?? undefined} alt={member.user.name} />
-                  <AvatarFallback>{getInitials(member.user.name)}</AvatarFallback>
-                </Avatar>
-                <span className="flex-1 truncate">{member.user.name}</span>
-                <Badge variant="outline">{member.role}</Badge>
-              </div>
-            ))
+            activeMembers.map((member) => {
+              const memberName = getFullName(member.user.firstName, member.user.lastName);
+              return (
+                <div key={member.id} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
+                  <Avatar size="sm">
+                    <AvatarImage src={member.user.avatarUrl ?? undefined} alt={memberName} />
+                    <AvatarFallback>{getInitials(memberName)}</AvatarFallback>
+                  </Avatar>
+                  <span className="flex-1 truncate">{memberName}</span>
+                  <Badge variant="outline">{member.role}</Badge>
+                </div>
+              );
+            })
           )}
         </CardContent>
       </Card>

@@ -18,6 +18,7 @@ import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queri
 import { getTaskQuery } from "@/lib/queries/task.queries";
 import { UpdateTaskDto, taskPriorities, taskStatuses, updateTaskSchema } from "@/lib/schemas/task.schema";
 import { statusLabel } from "@/lib/task-labels";
+import { getFullName } from "@/lib/utils";
 
 const UNASSIGNED = "unassigned";
 
@@ -175,7 +176,7 @@ export function EditTaskForm() {
                   <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
                   {members.map((member) => (
                     <SelectItem key={member.userId} value={member.userId}>
-                      {member.user.name}
+                      {getFullName(member.user.firstName, member.user.lastName)}
                     </SelectItem>
                   ))}
                 </SelectContent>

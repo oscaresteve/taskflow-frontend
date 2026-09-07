@@ -31,6 +31,7 @@ import {
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
 import { RoleFilter } from "@/lib/member-role-filter";
+import { getFullName } from "@/lib/utils";
 import {
   assignableWorkspaceRoles,
   canActivateWorkspaceMember,
@@ -158,7 +159,10 @@ export default function WorkspaceMembersPage() {
     activateWorkspaceMember.mutate(memberToActivate.userId, {
       onSuccess: () => {
         setActivateDialogOpen(false);
-        toast.add({ type: "success", description: `${memberToActivate.user.name} activated.` });
+        toast.add({
+          type: "success",
+          description: `${getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName)} activated.`,
+        });
       },
       onError: reportError,
     });
@@ -174,7 +178,10 @@ export default function WorkspaceMembersPage() {
     removeWorkspaceMember.mutate(memberToRemove.userId, {
       onSuccess: () => {
         setRemoveDialogOpen(false);
-        toast.add({ type: "success", description: `${memberToRemove.user.name} removed from the workspace.` });
+        toast.add({
+          type: "success",
+          description: `${getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName)} removed from the workspace.`,
+        });
       },
       onError: reportError,
     });
@@ -194,7 +201,10 @@ export default function WorkspaceMembersPage() {
       {
         onSuccess: () => {
           setRoleChangeDialogOpen(false);
-          toast.add({ type: "success", description: `${member.user.name}'s role changed to ${role}.` });
+          toast.add({
+            type: "success",
+            description: `${getFullName(member.user.firstName, member.user.lastName)}'s role changed to ${role}.`,
+          });
         },
         onError: reportError,
       },
@@ -295,7 +305,7 @@ export default function WorkspaceMembersPage() {
         open={removeDialogOpen}
         onOpenChange={setRemoveDialogOpen}
         title="Remove member"
-        description={`Remove ${memberToRemove?.user.name} from this workspace? They'll lose access immediately.`}
+        description={`Remove ${memberToRemove ? getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName) : ""} from this workspace? They'll lose access immediately.`}
         confirmLabel="Remove"
         variant="destructive"
         onConfirm={handleConfirmRemove}
@@ -306,7 +316,7 @@ export default function WorkspaceMembersPage() {
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
         title="Change role"
-        description={`Change ${pendingRoleChange?.member.user.name}'s role to ${pendingRoleChange?.role}?`}
+        description={`Change ${pendingRoleChange ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName) : ""}'s role to ${pendingRoleChange?.role}?`}
         confirmLabel="Change role"
         onConfirm={handleConfirmChangeRole}
         pending={updateWorkspaceMember.isPending}
@@ -316,7 +326,7 @@ export default function WorkspaceMembersPage() {
         open={activateDialogOpen}
         onOpenChange={setActivateDialogOpen}
         title="Activate member"
-        description={`Activate ${memberToActivate?.user.name}? They'll get immediate access to this workspace.`}
+        description={`Activate ${memberToActivate ? getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName) : ""}? They'll get immediate access to this workspace.`}
         confirmLabel="Activate"
         onConfirm={handleConfirmActivate}
         pending={activateWorkspaceMember.isPending}

@@ -14,6 +14,10 @@ export function getInitials(name: string) {
     .join("")
 }
 
+export function getFullName(firstName: string, lastName: string) {
+  return `${firstName} ${lastName}`
+}
+
 export function formatDate(date: string | Date) {
   return new Date(date).toLocaleDateString("en-US", {
     year: "numeric",

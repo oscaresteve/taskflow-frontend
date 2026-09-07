@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/common/password-input";
 import { toast } from "@/components/ui/toast";
 import { signUp } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
@@ -17,16 +18,25 @@ export function SignUpForm() {
   const router = useRouter();
   const form = useForm<SignUpDto>({
     resolver: zodResolver(signUpSchema),
+    mode: "onTouched",
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
+      timezone: "",
+      locale: "",
     },
   });
 
   async function onSubmit(data: SignUpDto) {
     try {
-      await signUp(data);
+      await signUp({
+        ...data,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        locale: navigator.language,
+      });
       router.push("/");
       router.refresh();
     } catch (error) {
@@ -48,17 +58,35 @@ export function SignUpForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <FieldGroup>
             <Controller
-              name="name"
+              name="firstName"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                  <FieldLabel htmlFor="firstName">First Name</FieldLabel>
                   <Input
                     {...field}
                     aria-invalid={fieldState.invalid}
-                    id="name"
+                    id="firstName"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="John"
+                    required
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="lastName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+                  <Input
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id="lastName"
+                    type="text"
+                    placeholder="Doe"
                     required
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -89,7 +117,29 @@ export function SignUpForm() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <Input {...field} aria-invalid={fieldState.invalid} id="password" type="password" required />
+                  <PasswordInput
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      if (form.getFieldState("confirmPassword").isTouched) {
+                        form.trigger("confirmPassword");
+                      }
+                    }}
+                    aria-invalid={fieldState.invalid}
+                    id="password"
+                    required
+                  />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="confirmPassword"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+                  <PasswordInput {...field} aria-invalid={fieldState.invalid} id="confirmPassword" required />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

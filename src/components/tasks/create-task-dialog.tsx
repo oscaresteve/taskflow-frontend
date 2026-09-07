@@ -18,6 +18,7 @@ import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { ProjectMemberWithUserResponseDto } from "@/lib/dtos/project-members.dto";
 import { CreateTaskDto, createTaskSchema, taskPriorities } from "@/lib/schemas/task.schema";
 import { priorityVariant } from "@/lib/task-labels";
+import { getFullName } from "@/lib/utils";
 
 const UNASSIGNED = "unassigned";
 
@@ -154,7 +155,7 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
                     <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
                     {members.map((member) => (
                       <SelectItem key={member.userId} value={member.userId}>
-                        {member.user.name}
+                        {getFullName(member.user.firstName, member.user.lastName)}
                       </SelectItem>
                     ))}
                   </SelectContent>

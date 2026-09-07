@@ -17,6 +17,7 @@ import { getUsersInfiniteQuery } from "@/lib/queries/user.queries";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateWorkspaceMemberDto, createWorkspaceMemberSchema } from "@/lib/schemas/workspace-member.schema";
 import { assignableWorkspaceRoles } from "@/lib/permissions/workspace-member-permissions";
+import { getFullName } from "@/lib/utils";
 
 const PICKER_PAGE_SIZE = 10;
 
@@ -62,7 +63,7 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
   const candidates: MemberCandidate[] = (users?.pages.flatMap((page) => page.data) ?? []).map((user) => ({
     id: user.id,
     userId: user.id,
-    name: user.name,
+    name: getFullName(user.firstName, user.lastName),
     email: user.email,
     avatarUrl: user.avatarUrl,
   }));

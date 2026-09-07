@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { UserResponseDto } from "@/lib/dtos/auth.dto";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
-import { cn, formatDate, getInitials } from "@/lib/utils";
+import { cn, formatDate, getFullName, getInitials } from "@/lib/utils";
 import { priorityVariant } from "@/lib/task-labels";
 
 interface KanbanCardProps {
@@ -16,6 +16,7 @@ interface KanbanCardProps {
 }
 
 export function KanbanCard({ taskKey, task, assignee }: KanbanCardProps) {
+  const assigneeName = assignee ? getFullName(assignee.firstName, assignee.lastName) : undefined;
   return (
     <Card size="sm" className="gap-2 transition-colors hover:bg-muted/50">
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
@@ -28,8 +29,8 @@ export function KanbanCard({ taskKey, task, assignee }: KanbanCardProps) {
           {task.dueDate ? <span className="text-xs text-muted-foreground">{formatDate(task.dueDate)}</span> : <span />}
           {assignee && (
             <Avatar size="sm">
-              <AvatarImage src={assignee.avatarUrl ?? undefined} alt={assignee.name} />
-              <AvatarFallback>{getInitials(assignee.name)}</AvatarFallback>
+              <AvatarImage src={assignee.avatarUrl ?? undefined} alt={assigneeName} />
+              <AvatarFallback>{getInitials(assigneeName!)}</AvatarFallback>
             </Avatar>
           )}
         </div>

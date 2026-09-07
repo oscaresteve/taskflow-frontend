@@ -26,6 +26,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
 import { RoleFilter } from "@/lib/member-role-filter";
+import { getFullName } from "@/lib/utils";
 import {
   assignableProjectRoles,
   canDeactivateProjectMember,
@@ -165,7 +166,10 @@ export default function ProjectMembersPage() {
       {
         onSuccess: () => {
           setRoleChangeDialogOpen(false);
-          toast.add({ type: "success", description: `${member.user.name}'s role changed to ${role}.` });
+          toast.add({
+            type: "success",
+            description: `${getFullName(member.user.firstName, member.user.lastName)}'s role changed to ${role}.`,
+          });
         },
         onError: reportError,
       },
@@ -182,7 +186,10 @@ export default function ProjectMembersPage() {
     deactivateProjectMember.mutate(memberToDeactivate.userId, {
       onSuccess: () => {
         setDeactivateDialogOpen(false);
-        toast.add({ type: "success", description: `${memberToDeactivate.user.name} deactivated on this project.` });
+        toast.add({
+          type: "success",
+          description: `${getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName)} deactivated on this project.`,
+        });
       },
       onError: reportError,
     });
@@ -272,7 +279,7 @@ export default function ProjectMembersPage() {
         open={deactivateDialogOpen}
         onOpenChange={setDeactivateDialogOpen}
         title="Deactivate member"
-        description={`Deactivate ${memberToDeactivate?.user.name} on this project? They'll lose access to it immediately.`}
+        description={`Deactivate ${memberToDeactivate ? getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName) : ""} on this project? They'll lose access to it immediately.`}
         confirmLabel="Deactivate"
         variant="destructive"
         onConfirm={handleConfirmDeactivate}
@@ -283,7 +290,7 @@ export default function ProjectMembersPage() {
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
         title="Change role"
-        description={`Change ${pendingRoleChange?.member.user.name}'s role to ${pendingRoleChange?.role}?`}
+        description={`Change ${pendingRoleChange ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName) : ""}'s role to ${pendingRoleChange?.role}?`}
         confirmLabel="Change role"
         onConfirm={handleConfirmChangeRole}
         pending={updateProjectMember.isPending}

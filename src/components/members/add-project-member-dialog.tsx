@@ -17,6 +17,7 @@ import { getActiveWorkspaceMembersInfiniteQuery } from "@/lib/queries/workspace-
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectMemberDto, createProjectMemberSchema } from "@/lib/schemas/project-member.schema";
 import { assignableProjectRoles } from "@/lib/permissions/project-member-permissions";
+import { getFullName } from "@/lib/utils";
 
 const PICKER_PAGE_SIZE = 10;
 
@@ -61,7 +62,7 @@ export function AddProjectMemberDialog({
     (member) => ({
       id: member.id,
       userId: member.userId,
-      name: member.user.name,
+      name: getFullName(member.user.firstName, member.user.lastName),
       email: member.user.email,
       avatarUrl: member.user.avatarUrl,
     }),

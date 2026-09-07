@@ -31,7 +31,7 @@ import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
-import { getInitials } from "@/lib/utils";
+import { getFullName, getInitials } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 
 const MAX_VISIBLE_OWNERS = 4;
@@ -141,12 +141,15 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
           <span className="text-sm text-muted-foreground">—</span>
         ) : (
           <AvatarGroup>
-            {visibleOwners.map((owner) => (
-              <Avatar key={owner.id} size="sm">
-                <AvatarImage src={owner.user.avatarUrl ?? undefined} alt={owner.user.name} />
-                <AvatarFallback>{getInitials(owner.user.name)}</AvatarFallback>
-              </Avatar>
-            ))}
+            {visibleOwners.map((owner) => {
+              const ownerName = getFullName(owner.user.firstName, owner.user.lastName);
+              return (
+                <Avatar key={owner.id} size="sm">
+                  <AvatarImage src={owner.user.avatarUrl ?? undefined} alt={ownerName} />
+                  <AvatarFallback>{getInitials(ownerName)}</AvatarFallback>
+                </Avatar>
+              );
+            })}
             {remainingOwners > 0 && <AvatarGroupCount>+{remainingOwners}</AvatarGroupCount>}
           </AvatarGroup>
         )}
