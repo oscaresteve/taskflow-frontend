@@ -4,7 +4,7 @@ import { BreadcrumbNav } from "@/components/layout/breadcrumb-nav";
 
 export default function AppHeader() {
   return (
-    <header className="sticky top-0 z-50 flex h-(--header-height) w-full shrink-0 items-center border-b bg-background">
+    <header className="fixed inset-x-0 top-0 z-50 flex h-(--header-height) w-full shrink-0 items-center border-b bg-background">
       <SidebarTrigger className="mx-3" />
       <Separator orientation="vertical" className="h-8 my-auto" />
       <BreadcrumbNav />
