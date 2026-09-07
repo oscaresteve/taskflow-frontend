@@ -43,6 +43,7 @@ import {
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
 import { Badge } from "@/components/ui/badge";
+import { roleLabel } from "@/lib/role-labels";
 
 const STATUS_TABS: { value: WorkspaceMemberStatus; label: string; icon: LucideIcon }[] = [
   { value: "ACTIVE", label: "Active", icon: CircleCheckIcon },
@@ -247,7 +248,11 @@ export default function WorkspaceMembersPage() {
         open={removeDialogOpen}
         onOpenChange={setRemoveDialogOpen}
         title="Remove member"
-        description={`Remove ${memberToRemove ? getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName) : ""} from this workspace? They'll lose access immediately.`}
+        description={
+          memberToRemove
+            ? `Remove ${getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName)} from this workspace? They'll lose access immediately.`
+            : ""
+        }
         confirmLabel="Remove"
         variant="destructive"
         onConfirm={handleConfirmRemove}
@@ -258,8 +263,12 @@ export default function WorkspaceMembersPage() {
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
         title="Change role"
-        description={`Change ${pendingRoleChange ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName) : ""}'s role to ${pendingRoleChange?.role}?`}
-        confirmLabel="Change role"
+        description={
+          pendingRoleChange
+            ? `Change ${getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)}'s role? They'll get ${roleLabel[pendingRoleChange.role]} access to this workspace.`
+            : ""
+        }
+        confirmLabel="Change"
         onConfirm={handleConfirmChangeRole}
         pending={updateWorkspaceMember.isPending}
         Icon={UserCog}
@@ -268,7 +277,11 @@ export default function WorkspaceMembersPage() {
         open={activateDialogOpen}
         onOpenChange={setActivateDialogOpen}
         title="Activate member"
-        description={`Activate ${memberToActivate ? getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName) : ""}? They'll get immediate access to this workspace.`}
+        description={
+          memberToActivate
+            ? `Activate ${getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName)}? They'll get immediate access to this workspace.`
+            : ""
+        }
         confirmLabel="Activate"
         onConfirm={handleConfirmActivate}
         pending={activateWorkspaceMember.isPending}

@@ -28,6 +28,7 @@ import {
   isProjectManager,
 } from "@/lib/permissions/project-member-permissions";
 import { Badge } from "@/components/ui/badge";
+import { roleLabel } from "@/lib/role-labels";
 
 type StatusTab = "ACTIVE" | "INACTIVE";
 
@@ -198,7 +199,11 @@ export default function ProjectMembersPage() {
         open={deactivateDialogOpen}
         onOpenChange={setDeactivateDialogOpen}
         title="Deactivate member"
-        description={`Deactivate ${memberToDeactivate ? getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName) : ""} on this project? They'll lose access to it immediately.`}
+        description={
+          memberToDeactivate
+            ? `Deactivate ${getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName)} on this project? They'll lose access to it immediately.`
+            : ""
+        }
         confirmLabel="Deactivate"
         variant="destructive"
         onConfirm={handleConfirmDeactivate}
@@ -209,8 +214,12 @@ export default function ProjectMembersPage() {
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
         title="Change role"
-        description={`Change ${pendingRoleChange ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName) : ""}'s role to ${pendingRoleChange?.role}?`}
-        confirmLabel="Change role"
+        description={
+          pendingRoleChange
+            ? `Change ${getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)}'s role? They'll get ${roleLabel[pendingRoleChange.role]} access to this project.`
+            : ""
+        }
+        confirmLabel="Change"
         onConfirm={handleConfirmChangeRole}
         pending={updateProjectMember.isPending}
         Icon={UserCog}
