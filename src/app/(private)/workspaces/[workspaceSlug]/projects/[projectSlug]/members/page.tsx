@@ -25,7 +25,7 @@ import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-membe
 import { ApiError } from "@/lib/http/api-error";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
-import { RoleFilter } from "@/lib/member-role-filter";
+import { RoleFilter } from "@/lib/role-labels";
 import { getFullName } from "@/lib/utils";
 import {
   assignableProjectRoles,

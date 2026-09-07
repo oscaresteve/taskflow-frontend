@@ -18,6 +18,8 @@ import { ApiError } from "@/lib/http/api-error";
 import { CreateWorkspaceMemberDto, createWorkspaceMemberSchema } from "@/lib/schemas/workspace-member.schema";
 import { assignableWorkspaceRoles } from "@/lib/permissions/workspace-member-permissions";
 import { getFullName } from "@/lib/utils";
+import { RoleIconLabel, RoleSelectItemContent } from "@/components/members/role-badge";
+import { MemberRole } from "@/lib/role-labels";
 
 const PICKER_PAGE_SIZE = 10;
 
@@ -133,12 +135,12 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
                 <FieldLabel htmlFor="member-role">Role</FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger id="member-role" className="w-full">
-                    <SelectValue />
+                    <SelectValue>{(role: MemberRole) => <RoleIconLabel role={role} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {assignableRoles.map((role) => (
                       <SelectItem key={role} value={role}>
-                        {role}
+                        <RoleSelectItemContent role={role} />
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
-import { MemberRole } from "@/lib/member-role-filter";
+import { MemberRole } from "@/lib/role-labels";
 import { formatDate, getFullName, getInitials } from "@/lib/utils";
+import { RoleBadge, RoleSelectItemContent } from "@/components/members/role-badge";
 
 interface MemberLike {
   id: string;
@@ -75,22 +76,19 @@ export function MembersTable<TMember extends MemberLike>({
               <TableCell>
                 {roleChangeable(member) ? (
                   <Select value={member.role} onValueChange={(role) => onChangeRole(member, role as MemberRole)}>
-                    <SelectTrigger
-                      size="sm"
-                      className="h-auto border-transparent bg-transparent px-1 py-0.5 shadow-none"
-                    >
-                      <SelectValue />
+                    <SelectTrigger className="border-transparent bg-transparent p-0 ring-0! border-0">
+                      <SelectValue>{(role: MemberRole) => <RoleBadge role={role} />}</SelectValue>
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="w-64">
                       {assignableRoles.map((role) => (
                         <SelectItem key={role} value={role}>
-                          {role}
+                          <RoleSelectItemContent role={role} />
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 ) : (
-                  <span className="px-1 text-sm">{member.role}</span>
+                  <RoleBadge role={member.role} />
                 )}
               </TableCell>
               <TableCell>

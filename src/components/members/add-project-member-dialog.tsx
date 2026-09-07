@@ -18,6 +18,8 @@ import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectMemberDto, createProjectMemberSchema } from "@/lib/schemas/project-member.schema";
 import { assignableProjectRoles } from "@/lib/permissions/project-member-permissions";
 import { getFullName } from "@/lib/utils";
+import { RoleIconLabel, RoleSelectItemContent } from "@/components/members/role-badge";
+import { MemberRole } from "@/lib/role-labels";
 
 const PICKER_PAGE_SIZE = 10;
 
@@ -152,12 +154,12 @@ export function AddProjectMemberDialog({
                 <FieldLabel htmlFor="project-member-role">Role</FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger id="project-member-role" className="w-full">
-                    <SelectValue />
+                    <SelectValue>{(role: MemberRole) => <RoleIconLabel role={role} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {assignableRoles.map((role) => (
                       <SelectItem key={role} value={role}>
-                        {role}
+                        <RoleSelectItemContent role={role} />
                       </SelectItem>
                     ))}
                   </SelectContent>

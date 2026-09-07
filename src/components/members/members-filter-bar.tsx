@@ -2,7 +2,8 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SearchInput } from "@/components/common/search-input";
-import { RoleFilter, roleFilterLabels, roleFilters } from "@/lib/member-role-filter";
+import { RoleFilter, roleFilters } from "@/lib/role-labels";
+import { RoleIconLabel } from "@/components/members/role-badge";
 
 export function MembersFilterBar<TStatus extends string>({
   search,
@@ -26,12 +27,12 @@ export function MembersFilterBar<TStatus extends string>({
       <SearchInput value={search} onChange={onSearchChange} placeholder="Search members" className="w-48" />
       <Select value={roleFilter} onValueChange={(value) => value && onRoleFilterChange(value as RoleFilter)}>
         <SelectTrigger>
-          <SelectValue>{(selected: RoleFilter) => roleFilterLabels[selected]}</SelectValue>
+          <SelectValue>{(selected: RoleFilter) => <RoleIconLabel role={selected} />}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {roleFilters.map((role) => (
             <SelectItem key={role} value={role}>
-              {roleFilterLabels[role]}
+              <RoleIconLabel role={role} />
             </SelectItem>
           ))}
         </SelectContent>

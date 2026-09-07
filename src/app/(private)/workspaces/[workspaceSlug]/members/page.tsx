@@ -30,7 +30,7 @@ import {
   WorkspaceMemberWithUserResponseDto,
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
-import { RoleFilter } from "@/lib/member-role-filter";
+import { RoleFilter } from "@/lib/role-labels";
 import { getFullName } from "@/lib/utils";
 import {
   assignableWorkspaceRoles,
