@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { FolderKanban, Users } from "lucide-react";
-import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,44 +13,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getFullName, getInitials } from "@/lib/utils";
 import { PageContainer } from "@/components/common/page-container";
+import { WorkspaceHeader } from "./_components/workspace-header";
 
 export default function WorkspacePage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
   const { data: projects, isLoading: isProjectsLoading } = useQuery(getProjectsQuery(workspaceSlug));
   const { data: members, isLoading: isMembersLoading } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
   const activeMembers = members?.filter((member) => member.status === "ACTIVE") ?? [];
 
-  if (isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load workspace.</p>;
-  }
-
-  if (isLoading || !workspace) {
-    return (
-      <div className="flex flex-col gap-6 p-6">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="grid gap-2">
-            <Skeleton className="h-5 w-40" />
-            <Skeleton className="h-4 w-64" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <PageContainer className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Avatar size="lg">
-          <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-          <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-        </Avatar>
-        <div className="grid gap-1">
-          <h1 className="text-xl font-semibold">{workspace.name}</h1>
-          {workspace.description ? <p className="text-sm text-muted-foreground">{workspace.description}</p> : null}
-        </div>
-      </div>
+      <WorkspaceHeader workspaceSlug={workspaceSlug} />
 
       <Card>
         <CardHeader>
