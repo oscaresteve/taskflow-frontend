@@ -2,9 +2,7 @@ import { notFound } from "next/navigation";
 import { getProjectServer } from "@/lib/api/projects.server";
 import { ProjectNavTabs } from "@/components/layout/project-nav-tabs";
 import { PageContainer } from "@/components/common/page-container";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { getInitials } from "@/lib/utils";
+import { ProjectHeader } from "./_components/project-header";
 
 export default async function ProjectLayout({
   children,
@@ -20,20 +18,7 @@ export default async function ProjectLayout({
     <div className="flex flex-col">
       <div className="border-b">
         <PageContainer className="flex flex-col gap-4 pb-0">
-          <div className="flex items-center gap-4">
-            <Avatar size="lg">
-              <AvatarFallback style={project.color ? { backgroundColor: project.color, color: "#fff" } : undefined}>
-                {project.icon ?? getInitials(project.name)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-semibold">{project.name}</h1>
-                <Badge variant="secondary">{project.key}</Badge>
-              </div>
-              {project.description ? <p className="text-sm text-muted-foreground">{project.description}</p> : null}
-            </div>
-          </div>
+          <ProjectHeader workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
           <ProjectNavTabs />
         </PageContainer>
       </div>
