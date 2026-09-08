@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/common/form-dialog";
+import { ColorPicker } from "@/components/common/color-picker";
 import { useCreateProject } from "@/hooks/use-create-project";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectDto, createProjectSchema } from "@/lib/schemas/project.schema";
@@ -31,6 +32,7 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
       name: "",
       key: "",
       description: "",
+      color: undefined,
     },
   });
 
@@ -120,6 +122,16 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
                   placeholder="Redesign of the marketing site"
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+          <Controller
+            name="color"
+            control={form.control}
+            render={({ field }) => (
+              <Field orientation="horizontal">
+                <FieldLabel>Color</FieldLabel>
+                <ColorPicker value={field.value ?? null} onChange={(value) => field.onChange(value ?? undefined)} />
               </Field>
             )}
           />

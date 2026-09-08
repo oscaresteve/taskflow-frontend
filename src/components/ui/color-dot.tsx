@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function ColorDot({
   className,
@@ -9,11 +9,14 @@ function ColorDot({
   return (
     <span
       data-slot="color-dot"
-      className={cn("size-2 shrink-0 rounded-full bg-muted-foreground", className)}
+      className={cn(
+        "size-2 shrink-0 rounded-full bg-muted items-center justify-center text-muted-foreground",
+        className,
+      )}
       style={color ? { backgroundColor: color, ...style } : style}
       {...props}
     />
-  )
+  );
 }
 
-export { ColorDot }
+export { ColorDot };

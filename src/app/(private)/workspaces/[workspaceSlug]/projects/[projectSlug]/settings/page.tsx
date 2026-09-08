@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { ArchiveProjectSection } from "./_components/archive-project-section";
 import { ProjectNameSection } from "./_components/project-name-section";
 import { ProjectDescriptionSection } from "./_components/project-description-section";
+import { ProjectColorSection } from "./_components/project-color-section";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,6 +33,7 @@ export default function ProjectSettingsPage() {
       <PageHeader title="Settings" />
       <ProjectNameSection />
       <ProjectDescriptionSection />
+      <ProjectColorSection />
       <ArchiveProjectSection />
     </PageContainer>
   );

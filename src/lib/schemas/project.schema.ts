@@ -44,7 +44,12 @@ export const updateProjectDescriptionSchema = z.object({
   description: descriptionSchema.nullable(),
 });
 
+export const updateProjectColorSchema = z.object({
+  color: z.string().nullable(),
+});
+
 export type CreateProjectDto = z.infer<typeof createProjectSchema>;
 export type UpdateProjectDto = z.infer<typeof updateProjectSchema>;
 export type UpdateProjectNameDto = z.infer<typeof updateProjectNameSchema>;
 export type UpdateProjectDescriptionDto = z.infer<typeof updateProjectDescriptionSchema>;
+export type UpdateProjectColorDto = z.infer<typeof updateProjectColorSchema>;
