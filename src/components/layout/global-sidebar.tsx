@@ -4,6 +4,9 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -11,15 +14,16 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import UserNav from "@/components/layout/user-nav";
-import { WorkspacesNav } from "@/components/layout/workspaces-nav";
+import { AppNav } from "./app-nav";
 import GlobalNav from "./global-nav";
+import { WorkspacesNav } from "./workspaces-nav";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import TaskflowLogo from "./taskflow-logo";
 
 export function GlobalSidebar() {
   return (
-    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
+    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -29,16 +33,30 @@ export function GlobalSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent
-        style={{
-          maskImage: "linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)",
-        }}
-      >
-        <GlobalNav />
+      <Separator />
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Global</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <GlobalNav />
+          </SidebarGroupContent>
+        </SidebarGroup>
         <Separator />
-        <WorkspacesNav />
+        {/* No SidebarGroupLabel: WorkspacesNav's own collapsible trigger already reads "Workspaces". */}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <WorkspacesNav />
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <Separator />
+        <SidebarGroup>
+          <SidebarGroupLabel>App</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <AppNav />
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
+      <Separator />
       <SidebarFooter>
         <UserNav />
       </SidebarFooter>

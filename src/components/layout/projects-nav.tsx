@@ -13,7 +13,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import { SearchInput } from "@/components/common/search-input";
 import {
-  SidebarGroup,
   SidebarMenuAction,
   SidebarMenu,
   SidebarMenuButton,
@@ -50,7 +49,7 @@ export default function ProjectsNav() {
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
 
   return (
-    <SidebarGroup>
+    <>
       <SidebarMenu>
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
           <CollapsibleTrigger render={<SidebarMenuButton className="group/folder" />}>
@@ -143,6 +142,6 @@ export default function ProjectsNav() {
       </SidebarMenu>
 
       <CreateProjectDialog workspaceSlug={workspaceSlug} open={createOpen} onOpenChange={setCreateOpen} />
-    </SidebarGroup>
+    </>
   );
 }

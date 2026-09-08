@@ -6,6 +6,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -14,36 +15,39 @@ import {
 } from "@/components/ui/sidebar";
 import NavUser from "@/components/layout/user-nav";
 import WorkspaceSwitch from "@/components/layout/workspace-switch";
+import { AppNav } from "./app-nav";
 import GlobalNav from "./global-nav";
 import ProjectsNav from "@/components/layout/projects-nav";
 import { LayoutDashboard, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
-import { Separator } from "@/components/ui/separator";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
+import { Separator } from "../ui/separator";
 
-export function WorkspacesSidebar() {
+export function WorkspaceSidebar() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const overviewHref = `/workspaces/${workspaceSlug}`;
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
 
   return (
-    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
+    <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" collapsible="icon">
       <SidebarHeader>
         <WorkspaceSwitch />
       </SidebarHeader>
-      <SidebarContent
-        style={{
-          maskImage: "linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)",
-        }}
-      >
-        <GlobalNav />
+      <Separator />
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Global</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <GlobalNav />
+          </SidebarGroupContent>
+        </SidebarGroup>
         <Separator />
         <SidebarGroup>
+          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -55,11 +59,8 @@ export function WorkspacesSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <ProjectsNav />
-        <SidebarGroup>
-          <SidebarGroupContent>
+            {/* Own SidebarGroup (a div), so it sits between the two <ul>s instead of nesting inside one. */}
+            <ProjectsNav />
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
@@ -84,7 +85,15 @@ export function WorkspacesSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <Separator />
+        <SidebarGroup>
+          <SidebarGroupLabel>App</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <AppNav />
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
+      <Separator />
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>

@@ -2,7 +2,7 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LucideIcon } from "lucide-react";
+import { LucideIcon, Settings2 } from "lucide-react";
 import { isNavActive } from "@/lib/nav";
 
 type NavigationItem = {
@@ -11,19 +11,19 @@ type NavigationItem = {
   href: string;
 };
 
-const globalNavigation: NavigationItem[] = [
+const appNavigation: NavigationItem[] = [
   {
-    name: "Home",
-    icon: Home,
-    href: "/home",
+    name: "Preferences",
+    icon: Settings2,
+    href: "/preferences",
   },
 ];
 
-export default function GlobalNav() {
+export function AppNav() {
   const pathname = usePathname();
   return (
     <SidebarMenu>
-      {globalNavigation.map((nav) => {
+      {appNavigation.map((nav) => {
         const Icon = nav.icon;
         const isActive = isNavActive(pathname, nav.href);
         return (

@@ -12,9 +12,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
 import {
-  SidebarGroup,
-  SidebarMenuAction,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -44,7 +43,7 @@ export function WorkspacesNav() {
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - activeWorkspaces.length : 0;
 
   return (
-    <SidebarGroup>
+    <>
       <SidebarMenu>
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
           <CollapsibleTrigger render={<SidebarMenuButton className="group/orbit" />}>
@@ -136,6 +135,6 @@ export function WorkspacesNav() {
       </SidebarMenu>
 
       <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
-    </SidebarGroup>
+    </>
   );
 }
