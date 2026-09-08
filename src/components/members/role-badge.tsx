@@ -9,6 +9,7 @@ import {
   roleLabel,
   roleVariant,
 } from "@/lib/role-labels";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "../ui/item";
 
 export function RoleBadge({ role }: { role: MemberRole }) {
   const Icon = roleIcon[role];
@@ -33,10 +34,16 @@ export function RoleIconLabel({ role }: { role: RoleFilter }) {
 }
 
 export function RoleSelectItemContent({ role }: { role: MemberRole }) {
+  const Icon = roleIcon[role];
   return (
-    <span className="flex flex-col gap-1 py-1.5 whitespace-normal">
-      <RoleIconLabel role={role} />
-      <span className="text-xs font-normal text-muted-foreground">{roleDescription[role]}</span>
-    </span>
+    <Item size="xs" className="w-full text-wrap">
+      <ItemMedia variant="icon">
+        <Icon />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle>{roleLabel[role]}</ItemTitle>
+        <ItemDescription>{roleDescription[role]}</ItemDescription>
+      </ItemContent>
+    </Item>
   );
 }
