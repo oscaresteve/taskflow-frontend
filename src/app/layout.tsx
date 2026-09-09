@@ -36,7 +36,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           attribute="class"
           defaultTheme={colorScheme ?? "system"}
           enableSystem
-          disableTransitionOnChange
         >
           <QueryProvider>
             <TooltipProvider>{children}</TooltipProvider>

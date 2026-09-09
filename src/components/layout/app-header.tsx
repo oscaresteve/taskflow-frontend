@@ -1,6 +1,7 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { BreadcrumbNav } from "@/components/layout/breadcrumb-nav";
+import { ColorSchemeToggle } from "@/components/common/color-scheme-toggle";
 
 export default function AppHeader() {
   return (
@@ -8,6 +9,9 @@ export default function AppHeader() {
       <SidebarTrigger className="mx-3" />
       <Separator orientation="vertical" className="h-8 my-auto" />
       <BreadcrumbNav />
+      <div className="flex ml-auto mx-3">
+        <ColorSchemeToggle />
+      </div>
     </header>
   );
 }
