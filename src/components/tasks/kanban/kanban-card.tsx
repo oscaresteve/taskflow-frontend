@@ -6,8 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { UserResponseDto } from "@/lib/dtos/auth.dto";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
-import { cn, formatDate, getFullName, getInitials } from "@/lib/utils";
+import { cn, getFullName, getInitials } from "@/lib/utils";
 import { priorityVariant } from "@/lib/task-labels";
+import { useFormatter } from "next-intl";
 
 interface KanbanCardProps {
   taskKey: string;
@@ -16,6 +17,7 @@ interface KanbanCardProps {
 }
 
 export function KanbanCard({ taskKey, task, assignee }: KanbanCardProps) {
+  const format = useFormatter();
   const assigneeName = assignee ? getFullName(assignee.firstName, assignee.lastName) : undefined;
   return (
     <Card size="sm" className="gap-2 transition-colors hover:bg-muted/50">
@@ -26,7 +28,11 @@ export function KanbanCard({ taskKey, task, assignee }: KanbanCardProps) {
       <p className="px-(--card-spacing) text-sm font-medium">{task.title}</p>
       {(assignee || task.dueDate) && (
         <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
-          {task.dueDate ? <span className="text-xs text-muted-foreground">{formatDate(task.dueDate)}</span> : <span />}
+          {task.dueDate ? (
+            <span className="text-xs text-muted-foreground">{format.dateTime(new Date(task.dueDate), "short")}</span>
+          ) : (
+            <span />
+          )}
           {assignee && (
             <Avatar size="sm">
               <AvatarImage src={assignee.avatarUrl ?? undefined} alt={assigneeName} />

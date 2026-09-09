@@ -60,5 +60,16 @@ export default getRequestConfig(async () => {
   return {
     locale,
     messages: messagesByLocale[locale],
+    // Preset compartido para no repetir las mismas opciones de Intl.DateTimeFormat en
+    // cada sitio que muestra una fecha (tabla de miembros, tarjetas de tarea, etc.).
+    formats: {
+      dateTime: {
+        short: {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        },
+      },
+    },
   };
 });

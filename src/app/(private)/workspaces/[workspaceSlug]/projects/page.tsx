@@ -24,7 +24,7 @@ import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissio
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
 import { ColorDot } from "@/components/ui/color-dot";
-import { formatDate, getFullName, getInitials } from "@/lib/utils";
+import { getFullName, getInitials } from "@/lib/utils";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import { useArchiveProject } from "@/hooks/use-archive-project";
@@ -38,7 +38,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 const MAX_VISIBLE_OWNERS = 4;
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
@@ -120,6 +120,7 @@ function ProjectActionsMenu({
 }
 
 function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project: ProjectResponseDto }) {
+  const format = useFormatter();
   const {
     data: members,
     isLoading,
@@ -165,7 +166,7 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
           </AvatarGroup>
         )}
       </TableCell>
-      <TableCell className="text-muted-foreground">{formatDate(project.createdAt)}</TableCell>
+      <TableCell className="text-muted-foreground">{format.dateTime(new Date(project.createdAt), "short")}</TableCell>
       <TableCell>
         <ProjectActionsMenu workspaceSlug={workspaceSlug} project={project} canManage={canManage} />
       </TableCell>

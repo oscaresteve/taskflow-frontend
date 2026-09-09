@@ -8,9 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { MemberRole } from "@/lib/role-labels";
-import { formatDate, getFullName, getInitials } from "@/lib/utils";
+import { getFullName, getInitials } from "@/lib/utils";
 import { RoleBadge, RoleSelectItemContent } from "@/components/members/role-badge";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 
 interface MemberLike {
   id: string;
@@ -37,6 +37,7 @@ export function MembersTable<TMember extends MemberLike>({
   actorUserId?: string;
 }) {
   const t = useTranslations("members");
+  const format = useFormatter();
 
   if (members.length === 0) {
     return <p className="px-1 py-6 text-center text-sm text-muted-foreground">{emptyMessage}</p>;
@@ -74,7 +75,7 @@ export function MembersTable<TMember extends MemberLike>({
               </TableCell>
               <TableCell className="text-muted-foreground">{member.user.email}</TableCell>
               <TableCell className="text-muted-foreground">
-                {member.joinedAt ? formatDate(member.joinedAt) : t("membersTable.noJoinDate")}
+                {member.joinedAt ? format.dateTime(new Date(member.joinedAt), "short") : t("membersTable.noJoinDate")}
               </TableCell>
               <TableCell>
                 {roleChangeable(member) ? (
