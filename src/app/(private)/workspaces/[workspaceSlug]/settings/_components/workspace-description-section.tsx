@@ -64,7 +64,7 @@ export function WorkspaceDescriptionSection() {
         title="Description"
         description="A short description of your workspace."
         footerHint="Max 500 characters"
-        footer={
+        footerAction={
           <Button type="submit" disabled={updateWorkspace.isPending}>
             {updateWorkspace.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             Save

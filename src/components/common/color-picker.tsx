@@ -28,10 +28,10 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         nativeButton={false}
-        render={<Avatar size="lg" className="cursor-pointer transition-opacity hover:opacity-80" />}
+        render={<Avatar size="lg" className="size-16! cursor-pointer transition-opacity hover:opacity-80" />}
       >
         <AvatarFallback style={value ? { backgroundColor: value } : undefined}>
-          {!value && <Palette className="size-4 text-muted-foreground" />}
+          {!value && <Palette className="size-6 text-muted-foreground" />}
         </AvatarFallback>
       </PopoverTrigger>
       <PopoverContent className="p-2 w-fit" align="end">

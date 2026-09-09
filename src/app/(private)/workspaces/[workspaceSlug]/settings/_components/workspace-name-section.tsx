@@ -68,7 +68,7 @@ export function WorkspaceNameSection() {
         title="Name"
         description="This is your workspace's visible name."
         footerHint="Max 100 characters"
-        footer={
+        footerAction={
           <Button type="submit" disabled={updateWorkspace.isPending}>
             {updateWorkspace.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             Save

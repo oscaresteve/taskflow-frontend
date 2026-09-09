@@ -64,20 +64,21 @@ export function ProjectColorSection() {
       <SettingCard
         title="Color"
         description="Used to tell this project apart at a glance."
-        action={
-          <Controller
-            name="color"
-            control={form.control}
-            render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
-          />
-        }
-        footer={
+        footerHint="Choose no color to leave it unset."
+        footerAction={
           <Button type="submit" disabled={updateProject.isPending}>
             {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             Save
           </Button>
         }
-      />
+        orientation="horizontal"
+      >
+        <Controller
+          name="color"
+          control={form.control}
+          render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
+        />
+      </SettingCard>
     </form>
   );
 }

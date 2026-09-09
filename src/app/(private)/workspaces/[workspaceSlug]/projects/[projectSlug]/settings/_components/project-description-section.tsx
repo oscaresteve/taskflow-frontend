@@ -64,7 +64,7 @@ export function ProjectDescriptionSection() {
         title="Description"
         description="A short description of your project."
         footerHint="Max 500 characters"
-        footer={
+        footerAction={
           <Button type="submit" disabled={updateProject.isPending}>
             {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             Save

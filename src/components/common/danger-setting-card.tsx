@@ -22,7 +22,7 @@ export function DangerSettingCard({ Icon, title, description, actionLabel, onAct
         </span>
       }
       description={description}
-      footer={
+      footerAction={
         <Button variant="destructive" onClick={onAction} disabled={pending}>
           {actionLabel}
         </Button>
