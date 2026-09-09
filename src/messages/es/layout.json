@@ -1,0 +1,73 @@
+{
+  "globalNav": {
+    "home": "Inicio"
+  },
+  "appNav": {
+    "preferences": "Preferencias"
+  },
+  "breadcrumb": {
+    "home": "Inicio",
+    "preferences": "Preferencias",
+    "manageWorkspaces": "Gestionar espacios de trabajo",
+    "settings": "Configuración",
+    "members": "Miembros"
+  },
+  "globalSidebar": {
+    "global": "Global",
+    "app": "Aplicación"
+  },
+  "workspaceSidebar": {
+    "global": "Global",
+    "workspace": "Espacio de trabajo",
+    "app": "Aplicación",
+    "overview": "Resumen",
+    "members": "Miembros",
+    "settings": "Configuración"
+  },
+  "projectNavTabs": {
+    "overview": "Resumen",
+    "kanban": "Kanban",
+    "members": "Miembros",
+    "settings": "Configuración"
+  },
+  "projectsNav": {
+    "title": "Proyectos",
+    "newProject": "Nuevo proyecto",
+    "moreOptions": "Más opciones",
+    "manageProjects": "Gestionar proyectos",
+    "searchPlaceholder": "Buscar proyectos",
+    "failedToLoad": "No se pudieron cargar los proyectos",
+    "noneFound": "No se encontraron proyectos",
+    "noneYet": "Todavía no hay proyectos",
+    "loading": "Cargando…",
+    "remaining": "{count} más"
+  },
+  "workspacesNav": {
+    "title": "Espacios de trabajo",
+    "newWorkspace": "Nuevo espacio de trabajo",
+    "moreOptions": "Más opciones",
+    "manageWorkspaces": "Gestionar espacios de trabajo",
+    "searchPlaceholder": "Buscar espacios de trabajo",
+    "failedToLoad": "No se pudieron cargar los espacios de trabajo",
+    "noneFound": "No se encontraron espacios de trabajo",
+    "noneYet": "Todavía no hay espacios de trabajo",
+    "loading": "Cargando…",
+    "remaining": "{count} más"
+  },
+  "workspaceSwitch": {
+    "workspaces": "Espacios de trabajo",
+    "searchPlaceholder": "Buscar espacios de trabajo",
+    "noneFound": "No se encontraron espacios de trabajo",
+    "noneYet": "Todavía no hay espacios de trabajo",
+    "loading": "Cargando…",
+    "remaining": "{count} más",
+    "createWorkspace": "Crear espacio de trabajo",
+    "manageWorkspaces": "Gestionar espacios de trabajo"
+  },
+  "userNav": {
+    "logOut": "Cerrar sesión",
+    "logOutConfirmTitle": "Cerrar sesión",
+    "logOutConfirmDescription": "¿Seguro que quieres cerrar sesión? Tendrás que volver a iniciar sesión para acceder a tu cuenta.",
+    "logOutError": "Algo salió mal"
+  }
+}

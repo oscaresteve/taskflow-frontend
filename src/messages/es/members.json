@@ -1,0 +1,103 @@
+{
+  "genericError": "Algo salió mal",
+  "roleLabel": {
+    "OWNER": "Propietario",
+    "ADMIN": "Administrador",
+    "MEMBER": "Miembro"
+  },
+  "roleDescription": {
+    "OWNER": "Control total, incluida la eliminación y la gestión de todos los miembros.",
+    "ADMIN": "Gestiona miembros y configuración, pero no puede eliminarlo.",
+    "MEMBER": "Puede acceder y contribuir, sin acceso de gestión."
+  },
+  "roleFilter": {
+    "all": "Todos los roles"
+  },
+  "workspaceMembersPanel": {
+    "failedToLoad": "No se pudieron cargar los miembros.",
+    "emptyMessage": "No se encontraron miembros.",
+    "sortJoined": "Incorporación",
+    "sortCreated": "Creado",
+    "sortUpdated": "Actualizado"
+  },
+  "projectMembersPanel": {
+    "failedToLoad": "No se pudieron cargar los miembros.",
+    "emptyMessage": "No se encontraron miembros.",
+    "sortJoined": "Incorporación",
+    "sortCreated": "Creado",
+    "sortUpdated": "Actualizado"
+  },
+  "membersFilterBar": {
+    "searchPlaceholder": "Buscar miembros"
+  },
+  "membersTable": {
+    "columnName": "Nombre",
+    "columnEmail": "Correo electrónico",
+    "columnJoined": "Incorporación",
+    "columnRole": "Rol",
+    "columnActions": "Acciones",
+    "youSuffix": " (Tú)",
+    "noJoinDate": "—",
+    "actionsSrOnly": "Acciones del miembro"
+  },
+  "memberPicker": {
+    "defaultLabel": "Miembro",
+    "searchPlaceholder": "Buscar por nombre o correo electrónico",
+    "loadingMore": "Cargando…",
+    "moreCandidates": "{count} más",
+    "selectPersonError": "Selecciona una persona para añadir",
+    "clearSelection": "Quitar selección"
+  },
+  "workspaceMembersPage": {
+    "title": "Miembros",
+    "addMember": "Añadir miembro",
+    "tabActive": "Activos",
+    "tabPending": "Pendientes",
+    "tabRemoved": "Eliminados",
+    "activate": "Activar",
+    "remove": "Eliminar",
+    "activatedToast": "{name} activado.",
+    "removedToast": "{name} eliminado del espacio de trabajo.",
+    "roleChangedToast": "El rol de {name} se cambió a {role}.",
+    "removeMemberTitle": "Eliminar miembro",
+    "removeMemberDescription": "¿Eliminar a {name} de este espacio de trabajo? Perderá el acceso de inmediato.",
+    "removeConfirmLabel": "Eliminar",
+    "changeRoleTitle": "Cambiar rol",
+    "changeRoleDescription": "¿Cambiar el rol de {name}? Tendrá acceso de {role} a este espacio de trabajo.",
+    "changeRoleConfirmLabel": "Cambiar",
+    "activateMemberTitle": "Activar miembro",
+    "activateMemberDescription": "¿Activar a {name}? Tendrá acceso inmediato a este espacio de trabajo.",
+    "activateConfirmLabel": "Activar"
+  },
+  "projectMembersPage": {
+    "title": "Miembros",
+    "addMember": "Añadir miembro",
+    "tabActive": "Activos",
+    "tabInactive": "Inactivos",
+    "deactivate": "Desactivar",
+    "roleChangedToast": "El rol de {name} se cambió a {role}.",
+    "deactivatedToast": "{name} desactivado en este proyecto.",
+    "deactivateMemberTitle": "Desactivar miembro",
+    "deactivateMemberDescription": "¿Desactivar a {name} en este proyecto? Perderá el acceso de inmediato.",
+    "deactivateConfirmLabel": "Desactivar",
+    "changeRoleTitle": "Cambiar rol",
+    "changeRoleDescription": "¿Cambiar el rol de {name}? Tendrá acceso de {role} a este proyecto.",
+    "changeRoleConfirmLabel": "Cambiar"
+  },
+  "addWorkspaceMemberDialog": {
+    "title": "Añadir miembro",
+    "description": "Busca a una persona por nombre o correo electrónico. Se añadirá como pendiente hasta que un propietario o administrador la active.",
+    "submitLabel": "Añadir miembro",
+    "roleLabel": "Rol",
+    "emptyMessage": "No se encontraron personas coincidentes.",
+    "addedToast": "{name} añadido, pendiente de activación."
+  },
+  "addProjectMemberDialog": {
+    "title": "Añadir miembro",
+    "description": "Añade un miembro del espacio de trabajo a este proyecto.",
+    "submitLabel": "Añadir miembro",
+    "roleLabel": "Rol",
+    "emptyMessage": "No se encontraron miembros del espacio de trabajo coincidentes.",
+    "addedToast": "{name} añadido al proyecto."
+  }
+}

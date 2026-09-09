@@ -1,0 +1,36 @@
+{
+  "onboardingFlow": {
+    "workspaceStepTitle": "Configuremos tu espacio de trabajo",
+    "workspaceStepDescription": "Aquí vivirán tus proyectos y tareas.",
+    "projectStepTitle": "Crea tu primer proyecto",
+    "projectStepDescription": "Añade un proyecto para que {workspaceName} pueda empezar a organizar el trabajo."
+  },
+  "onboardingLogoutButton": {
+    "logOut": "Cerrar sesión",
+    "confirmDescription": "¿Seguro que quieres cerrar sesión? Tendrás que volver a iniciar sesión para acceder a tu cuenta.",
+    "genericError": "Algo salió mal"
+  },
+  "onboardingProjectForm": {
+    "defaultName": "Primer proyecto de {workspaceName}",
+    "defaultDescription": "Donde viven las primeras tareas de {workspaceName}.",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Rediseño del sitio web",
+    "keyLabel": "Clave",
+    "keyPlaceholder": "WEB",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Rediseño del sitio web de marketing",
+    "submitButton": "Crear proyecto",
+    "skipButton": "Omitir por ahora",
+    "genericError": "Algo salió mal"
+  },
+  "onboardingWorkspaceForm": {
+    "defaultName": "Espacio de trabajo de {name}",
+    "defaultDescription": "Espacio de trabajo principal de {name}",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Acme Inc",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Espacio de trabajo principal de Acme Inc",
+    "submitButton": "Continuar",
+    "genericError": "Algo salió mal"
+  }
+}

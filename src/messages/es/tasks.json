@@ -1,0 +1,60 @@
+{
+  "errors": {
+    "generic": "Algo salió mal"
+  },
+  "fields": {
+    "title": "Título",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Opcional",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "assignee": "Asignado a",
+    "unassigned": "Sin asignar",
+    "dueDate": "Fecha límite"
+  },
+  "status": {
+    "TODO": "Por hacer",
+    "IN_PROGRESS": "En progreso",
+    "IN_REVIEW": "En revisión",
+    "DONE": "Hecho"
+  },
+  "validation": {
+    "titleMinLength": "El título debe tener al menos 2 caracteres",
+    "titleMaxLength": "El título no puede superar los 100 caracteres",
+    "atLeastOneField": "Debe proporcionarse al menos un campo"
+  },
+  "kanbanPage": {
+    "failedToLoadProject": "No se pudo cargar el proyecto.",
+    "title": "Kanban",
+    "createTask": "Crear tarea"
+  },
+  "kanbanBoard": {
+    "failedToLoad": "No se pudieron cargar las tareas."
+  },
+  "kanbanColumn": {
+    "noTasks": "Sin tareas"
+  },
+  "taskPage": {
+    "failedToLoadTask": "No se pudo cargar la tarea.",
+    "backToProject": "Volver al proyecto",
+    "archived": "Archivada",
+    "dangerZone": "Zona de peligro"
+  },
+  "editTaskForm": {
+    "saveChanges": "Guardar cambios"
+  },
+  "archiveTaskSection": {
+    "title": "Archivar tarea",
+    "description": "Las tareas archivadas se ocultan de la lista de tareas y ya no se pueden editar.",
+    "archived": "Archivada",
+    "archive": "Archivar",
+    "confirmTitle": "¿Archivar {taskTitle}?",
+    "confirmDescription": "Esto archivará la tarea y la ocultará de la lista de tareas. Esta acción no se puede deshacer desde la app."
+  },
+  "createTaskDialog": {
+    "title": "Crear tarea",
+    "description": "Añade una nueva tarea a este proyecto.",
+    "submit": "Crear tarea",
+    "titlePlaceholder": "Configurar el entorno de staging"
+  }
+}

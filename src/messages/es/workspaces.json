@@ -1,0 +1,90 @@
+{
+  "errors": {
+    "generic": "Algo salió mal"
+  },
+  "validation": {
+    "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "nameMaxLength": "El nombre no puede superar los 100 caracteres",
+    "logoUrlInvalid": "La URL del logo debe ser una URL válida",
+    "atLeastOneField": "Debe proporcionarse al menos un campo"
+  },
+  "workspacesPage": {
+    "title": "Gestionar espacios de trabajo",
+    "newWorkspace": "Nuevo espacio de trabajo",
+    "searchPlaceholder": "Buscar espacios de trabajo",
+    "failedToLoad": "No se pudieron cargar los espacios de trabajo.",
+    "noWorkspacesFound": "No se encontraron espacios de trabajo.",
+    "columns": {
+      "workspace": "Espacio de trabajo",
+      "slug": "Slug",
+      "owners": "Propietarios",
+      "actions": "Acciones"
+    },
+    "sort": {
+      "name": "Nombre",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado"
+    }
+  },
+  "workspaceActionsMenu": {
+    "ariaLabel": "Acciones del espacio de trabajo",
+    "open": "Abrir",
+    "members": "Miembros",
+    "settings": "Configuración",
+    "deactivate": "Desactivar",
+    "deactivateTitle": "¿Desactivar {name}?",
+    "deactivateDescription": "Esto desactivará el espacio de trabajo y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
+    "deactivateConfirmLabel": "Desactivar"
+  },
+  "workspacePage": {
+    "projects": "Proyectos",
+    "noProjectsYet": "Todavía no hay proyectos.",
+    "members": "Miembros",
+    "noMembersYet": "Todavía no hay miembros."
+  },
+  "workspaceSettingsPage": {
+    "title": "Configuración",
+    "noPermission": "No tienes permiso para ver esta página."
+  },
+  "deactivateWorkspaceSection": {
+    "title": "Desactivar espacio de trabajo",
+    "description": "Este espacio de trabajo dejará de estar accesible para los miembros.",
+    "actionLabel": "Desactivar",
+    "dialogTitle": "¿Desactivar {name}?",
+    "dialogDescription": "Esto desactivará el espacio de trabajo y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
+    "confirmLabel": "Desactivar"
+  },
+  "workspaceDescriptionSection": {
+    "title": "Descripción",
+    "description": "Una breve descripción de tu espacio de trabajo.",
+    "footerHint": "Máximo 500 caracteres",
+    "failedToLoad": "No se pudo cargar el espacio de trabajo.",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Espacio de trabajo principal de Acme Inc",
+    "successMessage": "Descripción del espacio de trabajo actualizada."
+  },
+  "workspaceNameSection": {
+    "loadingTitle": "Nombre del espacio de trabajo",
+    "title": "Nombre",
+    "description": "Este es el nombre visible de tu espacio de trabajo.",
+    "footerHint": "Máximo 100 caracteres",
+    "failedToLoad": "No se pudo cargar el espacio de trabajo.",
+    "nameLabel": "Nombre del espacio de trabajo",
+    "namePlaceholder": "Acme Inc",
+    "successMessage": "Nombre del espacio de trabajo actualizado."
+  },
+  "notFound": {
+    "title": "Espacio de trabajo no encontrado",
+    "description": "Este espacio de trabajo no existe o no tienes acceso a él.",
+    "goToHome": "Ir a inicio"
+  },
+  "createWorkspaceDialog": {
+    "title": "Crear espacio de trabajo",
+    "description": "Configura un nuevo espacio de trabajo para organizar proyectos y tareas.",
+    "submitLabel": "Crear espacio de trabajo",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Acme Inc",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Espacio de trabajo principal de Acme Inc"
+  }
+}

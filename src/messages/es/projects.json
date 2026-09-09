@@ -1,0 +1,101 @@
+{
+  "errors": {
+    "generic": "Algo salió mal"
+  },
+  "validation": {
+    "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "nameMaxLength": "El nombre no puede superar los 100 caracteres",
+    "keyMinLength": "La clave debe tener al menos 2 caracteres",
+    "keyMaxLength": "La clave no puede superar los 10 caracteres",
+    "keyFormat": "La clave solo puede contener letras mayúsculas y números",
+    "iconMustBeString": "El icono debe ser una cadena de texto",
+    "colorMustBeString": "El color debe ser una cadena de texto",
+    "atLeastOneField": "Debe proporcionarse al menos un campo"
+  },
+  "projectsPage": {
+    "title": "Gestionar proyectos",
+    "newProject": "Nuevo proyecto",
+    "searchPlaceholder": "Buscar proyectos",
+    "failedToLoad": "No se pudieron cargar los proyectos.",
+    "noProjectsFound": "No se encontraron proyectos.",
+    "sortOptions": {
+      "name": "Nombre",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado"
+    },
+    "columns": {
+      "project": "Proyecto",
+      "slug": "Slug",
+      "key": "Clave",
+      "owners": "Propietarios",
+      "createdAt": "Creado el",
+      "actions": "Acciones"
+    }
+  },
+  "projectActionsMenu": {
+    "ariaLabel": "Acciones del proyecto",
+    "open": "Abrir",
+    "members": "Miembros",
+    "settings": "Configuración",
+    "archive": "Archivar",
+    "confirmTitle": "¿Archivar {projectName}?",
+    "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app."
+  },
+  "projectNotFound": {
+    "title": "Proyecto no encontrado",
+    "description": "Este proyecto no existe o no tienes acceso a él.",
+    "goToWorkspace": "Ir al espacio de trabajo"
+  },
+  "projectOverviewPage": {
+    "title": "Resumen del proyecto"
+  },
+  "projectSettingsPage": {
+    "title": "Configuración",
+    "noPermission": "No tienes permiso para ver esta página."
+  },
+  "archiveProjectSection": {
+    "title": "Archivar proyecto",
+    "description": "Este proyecto dejará de estar accesible para los miembros.",
+    "archive": "Archivar",
+    "confirmTitle": "¿Archivar {projectName}?",
+    "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app."
+  },
+  "projectColorSection": {
+    "title": "Color",
+    "description": "Se usa para distinguir este proyecto de un vistazo.",
+    "footerHint": "Elige sin color para dejarlo sin definir.",
+    "failedToLoad": "No se pudo cargar el proyecto.",
+    "updated": "Color del proyecto actualizado."
+  },
+  "projectDescriptionSection": {
+    "title": "Descripción",
+    "description": "Una breve descripción de tu proyecto.",
+    "footerHint": "Máximo 500 caracteres",
+    "fieldLabel": "Descripción",
+    "placeholder": "Rediseño del sitio web de marketing",
+    "failedToLoad": "No se pudo cargar el proyecto.",
+    "updated": "Descripción del proyecto actualizada."
+  },
+  "projectNameSection": {
+    "title": "Nombre",
+    "description": "Este es el nombre visible de tu proyecto.",
+    "footerHint": "Máximo 100 caracteres",
+    "fieldLabel": "Nombre del proyecto",
+    "placeholder": "Rediseño del sitio web",
+    "failedToLoad": "No se pudo cargar el proyecto.",
+    "updated": "Nombre del proyecto actualizado."
+  },
+  "createProjectDialog": {
+    "title": "Crear proyecto",
+    "description": "Configura un nuevo proyecto para organizar tareas.",
+    "submit": "Crear proyecto",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Rediseño del sitio web",
+    "keyLabel": "Clave",
+    "keyPlaceholder": "WEB",
+    "keyDefault": "CLAVE",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Rediseño del sitio web de marketing",
+    "colorLabel": "Color"
+  }
+}

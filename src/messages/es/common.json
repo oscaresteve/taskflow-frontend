@@ -1,0 +1,31 @@
+{
+  "actions": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "save": "Guardar"
+  },
+  "search": {
+    "clear": "Borrar búsqueda"
+  },
+  "pageSize": "{size} / página",
+  "sort": {
+    "ascending": "Orden ascendente",
+    "descending": "Orden descendente"
+  },
+  "colorPicker": {
+    "noColor": "Sin color"
+  },
+  "colorSchemeToggle": {
+    "toggleTheme": "Cambiar tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "passwordInput": {
+    "show": "Mantén pulsado para mostrar la contraseña",
+    "hide": "Suelta para ocultar la contraseña"
+  },
+  "validation": {
+    "descriptionMaxLength": "La descripción no puede superar los 500 caracteres"
+  }
+}
