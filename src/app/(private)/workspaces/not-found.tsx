@@ -11,8 +11,8 @@ export default async function WorkspaceNotFound() {
         <h1 className="text-xl font-semibold">{t("notFound.title")}</h1>
         <p className="text-sm text-muted-foreground">{t("notFound.description")}</p>
       </div>
-      <Button nativeButton={false} render={<Link href="/home" />}>
-        {t("notFound.goToHome")}
+      <Button nativeButton={false} render={<Link href="/my-space" />}>
+        {t("notFound.goToMySpace")}
       </Button>
     </main>
   );

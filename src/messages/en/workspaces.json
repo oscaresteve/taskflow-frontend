@@ -76,7 +76,7 @@
   "notFound": {
     "title": "Workspace not found",
     "description": "This workspace doesn't exist or you don't have access to it.",
-    "goToHome": "Go to home"
+    "goToMySpace": "Go to my space"
   },
   "createWorkspaceDialog": {
     "title": "Create workspace",

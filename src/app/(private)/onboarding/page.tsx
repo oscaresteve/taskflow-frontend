@@ -7,7 +7,7 @@ import { getCurrentUser } from "@/lib/api/auth.server";
 
 export default async function OnboardingPage() {
   if (await hasWorkspaces()) {
-    redirect("/home");
+    redirect("/my-space");
   }
   const me = await getCurrentUser();
 

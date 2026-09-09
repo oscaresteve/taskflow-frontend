@@ -1,12 +1,12 @@
 {
   "globalNav": {
-    "home": "Inicio"
+    "mySpace": "Mi espacio"
   },
   "appNav": {
     "preferences": "Preferencias"
   },
   "breadcrumb": {
-    "home": "Inicio",
+    "mySpace": "Mi espacio",
     "preferences": "Preferencias",
     "manageWorkspaces": "Gestionar espacios de trabajo",
     "settings": "Configuración",

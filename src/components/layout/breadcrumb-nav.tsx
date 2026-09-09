@@ -28,7 +28,7 @@ export function BreadcrumbNav() {
 
   if (!workspaceSlug) {
     const globalLabel =
-      pathname === "/home" ? t("breadcrumb.home")
+      pathname === "/my-space" ? t("breadcrumb.mySpace")
       : pathname.startsWith("/preferences") ? t("breadcrumb.preferences")
       : pathname === "/workspaces" ? t("breadcrumb.manageWorkspaces")
       : null;

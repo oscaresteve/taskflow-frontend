@@ -30,7 +30,7 @@ export function GlobalSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link href="/home" />}>
+            <SidebarMenuButton size="lg" render={<Link href="/my-space" />}>
               <TaskflowLogo />
             </SidebarMenuButton>
           </SidebarMenuItem>

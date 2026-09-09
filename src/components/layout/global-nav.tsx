@@ -2,7 +2,7 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LucideIcon } from "lucide-react";
+import { Rocket, LucideIcon } from "lucide-react";
 import { isNavActive } from "@/lib/nav";
 import { useTranslations } from "next-intl";
 
@@ -18,9 +18,9 @@ export default function GlobalNav() {
 
   const globalNavigation: NavigationItem[] = [
     {
-      name: t("globalNav.home"),
-      icon: Home,
-      href: "/home",
+      name: t("globalNav.mySpace"),
+      icon: Rocket,
+      href: "/my-space",
     },
   ];
 

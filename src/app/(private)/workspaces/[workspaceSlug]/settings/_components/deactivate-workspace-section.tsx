@@ -23,7 +23,7 @@ export function DeactivateWorkspaceSection() {
   async function handleDeactivate() {
     try {
       await deactivateWorkspace.mutateAsync();
-      router.push("/home");
+      router.push("/my-space");
     } catch (error) {
       toast.add({
         type: "error",
