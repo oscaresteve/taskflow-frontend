@@ -37,9 +37,9 @@ export function KanbanBoard({ workspaceSlug, project, members }: KanbanBoardProp
 
   if (isLoading) {
     return (
-      <div className="flex gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {taskStatuses.map((status) => (
-          <Skeleton key={status} className="h-64 w-72 shrink-0" />
+          <Skeleton key={status} className="h-64" />
         ))}
       </div>
     );
@@ -47,7 +47,7 @@ export function KanbanBoard({ workspaceSlug, project, members }: KanbanBoardProp
 
   return (
     <DndContext sensors={sensors} collisionDetection={collisionDetection} {...handlers}>
-      <div className="flex gap-3 overflow-x-auto pb-2">
+      <div className="grid grid-cols-4 gap-3">
         {taskStatuses.map((status) => (
           <KanbanColumn
             key={status}

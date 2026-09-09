@@ -43,7 +43,7 @@ export function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={cn("flex w-72 shrink-0 flex-col gap-3 rounded-lg bg-muted/30 p-2", isDropTarget && "bg-muted/60")}
+      className={cn("flex flex-col gap-3 rounded-lg bg-muted/30 p-2", isDropTarget && "bg-muted/60")}
     >
       <div className="flex items-center gap-2 px-1">
         <span className="text-sm font-medium">{statusLabel[status]}</span>
