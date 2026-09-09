@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,9 +23,18 @@ export function ColorSchemeToggle() {
         <span className="sr-only">{t("colorSchemeToggle.toggleTheme")}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setColorScheme("light")}>{t("colorSchemeToggle.light")}</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setColorScheme("dark")}>{t("colorSchemeToggle.dark")}</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setColorScheme("system")}>{t("colorSchemeToggle.system")}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setColorScheme("light")}>
+          <Sun />
+          {t("colorSchemeToggle.light")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setColorScheme("dark")}>
+          <Moon />
+          {t("colorSchemeToggle.dark")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setColorScheme("system")}>
+          <Monitor />
+          {t("colorSchemeToggle.system")}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
