@@ -68,7 +68,7 @@ export function MemberPicker({
             <span className="truncate">{selected.name}</span>
             <span className="truncate text-xs text-muted-foreground">{selected.email}</span>
           </div>
-          <Button type="button" variant="ghost" size="icon-sm" onClick={onClear}>
+          <Button type="button" variant="ghost" size="icon-sm" onClick={onClear} aria-label={t("memberPicker.clearSelection")}>
             <XIcon />
           </Button>
         </div>

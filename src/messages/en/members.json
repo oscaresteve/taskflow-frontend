@@ -45,7 +45,8 @@
     "searchPlaceholder": "Search by name or email",
     "loadingMore": "Loading…",
     "moreCandidates": "{count} more",
-    "selectPersonError": "Select a person to add"
+    "selectPersonError": "Select a person to add",
+    "clearSelection": "Clear selection"
   },
   "workspaceMembersPage": {
     "title": "Members",
