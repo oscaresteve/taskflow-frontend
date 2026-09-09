@@ -25,13 +25,30 @@ export function BreadcrumbNav() {
   );
 
   if (!workspaceSlug) {
-    return null;
+    const globalLabel =
+      pathname === "/home" ? "Home"
+      : pathname.startsWith("/preferences") ? "Preferences"
+      : pathname === "/workspaces" ? "Manage workspaces"
+      : null;
+
+    if (!globalLabel) {
+      return null;
+    }
+
+    return (
+      <Breadcrumb className="mx-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbPage>{globalLabel}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    );
   }
 
-  const isNewProject = !projectSlug && pathname.endsWith("/new-project");
   const isSettings = pathname.endsWith("/settings");
   const isMembers = pathname.endsWith("/members");
-  const hasMoreCrumbs = isNewProject || isSettings || isMembers || Boolean(projectSlug);
+  const hasMoreCrumbs = isSettings || isMembers || Boolean(projectSlug);
 
   return (
     <Breadcrumb className="mx-4">
@@ -45,14 +62,6 @@ export function BreadcrumbNav() {
             <BreadcrumbPage>{workspace?.name ?? workspaceSlug}</BreadcrumbPage>
           )}
         </BreadcrumbItem>
-        {isNewProject && (
-          <>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>New project</BreadcrumbPage>
-            </BreadcrumbItem>
-          </>
-        )}
         {projectSlug && (
           <>
             <BreadcrumbSeparator />
