@@ -6,5 +6,14 @@
     "title": "Color scheme",
     "description": "Choose how TaskFlow looks on this device.",
     "footerHint": "Changes are applied immediately."
+  },
+  "languageSection": {
+    "title": "Language",
+    "description": "Choose the language used across TaskFlow.",
+    "en": "English",
+    "es": "Español"
+  },
+  "errors": {
+    "generic": "Something went wrong"
   }
 }

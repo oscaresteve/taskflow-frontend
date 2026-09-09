@@ -9,8 +9,8 @@ export interface UserResponseDto {
   isActive: boolean;
   emailVerifiedAt: string | null;
   lastLoginAt: string | null;
-  timezone: string;
-  locale: string;
+  timezone: string | null;
+  locale: string | null;
   createdAt: string;
   updatedAt: string;
 }

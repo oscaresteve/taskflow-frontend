@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
+import { normalizeLocale } from "@/lib/locale";
 
 export function SignUpForm() {
   const t = useTranslations("auth");
@@ -29,7 +30,7 @@ export function SignUpForm() {
       password: "",
       confirmPassword: "",
       timezone: "",
-      locale: "",
+      locale: "en",
     },
   });
 
@@ -38,7 +39,7 @@ export function SignUpForm() {
       await signUp({
         ...data,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        locale: navigator.language,
+        locale: normalizeLocale(navigator.language),
       });
       router.push("/");
       router.refresh();

@@ -1,5 +1,5 @@
 import { AuthResponseDto, UserResponseDto } from "../dtos/auth.dto";
-import { SignInDto, SignUpDto } from "../schemas/auth.schema";
+import { SignInDto, SignUpDto, UpdateMeDto } from "../schemas/auth.schema";
 import { request } from "@/lib/http/client";
 
 export function signIn(input: SignInDto) {
@@ -19,6 +19,13 @@ export function signUp(input: SignUpDto) {
 export function getMe() {
   return request<UserResponseDto>("/auth/me", {
     method: "GET",
+  });
+}
+
+export function updateMe(data: UpdateMeDto) {
+  return request<UserResponseDto>("/auth/me", {
+    method: "PATCH",
+    body: JSON.stringify(data),
   });
 }
 
