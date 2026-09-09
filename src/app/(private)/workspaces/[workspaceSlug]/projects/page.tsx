@@ -219,7 +219,7 @@ export default function ProjectsPage() {
 
   if (isLoading || !projects) {
     return (
-      <PageContainer className="flex flex-col gap-3">
+      <PageContainer>
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-9 w-full" />
         <Skeleton className="h-14 w-full" />
@@ -237,7 +237,7 @@ export default function ProjectsPage() {
   ];
 
   return (
-    <PageContainer className="flex flex-col gap-4">
+    <PageContainer>
       <PageHeader
         title={t("projectsPage.title")}
         actions={

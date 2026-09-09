@@ -17,7 +17,7 @@ export default async function ProjectLayout({
   return (
     <div className="flex flex-col">
       <div className="border-b">
-        <PageContainer className="flex flex-col gap-4 pb-0">
+        <PageContainer className="pb-0">
           <ProjectHeader workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
           <ProjectNavTabs />
         </PageContainer>

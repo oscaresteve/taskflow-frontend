@@ -207,7 +207,7 @@ export default function WorkspacesPage() {
 
   if (isLoading || !workspaces) {
     return (
-      <PageContainer className="flex flex-col gap-3">
+      <PageContainer>
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-9 w-full" />
         <Skeleton className="h-14 w-full" />
@@ -219,7 +219,7 @@ export default function WorkspacesPage() {
   const { pages: totalPages } = workspaces.pagination;
 
   return (
-    <PageContainer className="flex flex-col gap-4">
+    <PageContainer>
       <PageHeader
         title={t("workspacesPage.title")}
         actions={

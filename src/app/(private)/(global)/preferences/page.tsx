@@ -8,7 +8,7 @@ export default async function PreferencesPage() {
   const t = await getTranslations("preferences");
 
   return (
-    <PageContainer className="flex flex-col gap-6 pb-20">
+    <PageContainer className="max-w-5xl">
       <PageHeader title={t("preferencesPage.title")} />
       <ColorSchemeSection />
       <LanguageSection />

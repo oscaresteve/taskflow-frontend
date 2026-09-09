@@ -19,7 +19,7 @@ export default function ProjectSettingsPage() {
 
   if (isLoading) {
     return (
-      <PageContainer className="flex flex-col gap-3">
+      <PageContainer className="max-w-5xl">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-40 w-full" />
       </PageContainer>
@@ -31,7 +31,7 @@ export default function ProjectSettingsPage() {
   }
 
   return (
-    <PageContainer className="flex flex-col gap-6 pb-20">
+    <PageContainer className="max-w-5xl">
       <PageHeader title={t("projectSettingsPage.title")} />
       <ProjectNameSection />
       <ProjectDescriptionSection />

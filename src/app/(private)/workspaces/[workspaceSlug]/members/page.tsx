@@ -208,7 +208,7 @@ export default function WorkspaceMembersPage() {
   }
 
   return (
-    <PageContainer className="flex flex-col gap-4">
+    <PageContainer>
       <PageHeader
         title={t("workspaceMembersPage.title")}
         actions={

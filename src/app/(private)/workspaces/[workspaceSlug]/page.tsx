@@ -24,7 +24,7 @@ export default function WorkspacePage() {
   const activeMembers = members?.filter((member) => member.status === "ACTIVE") ?? [];
 
   return (
-    <PageContainer className="flex flex-col gap-6">
+    <PageContainer>
       <WorkspaceHeader workspaceSlug={workspaceSlug} />
 
       <Card>

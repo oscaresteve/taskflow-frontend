@@ -30,7 +30,7 @@ export default function ProjectPage() {
 
   if (isLoading || !project) {
     return (
-      <PageContainer className="flex flex-col gap-3">
+      <PageContainer>
         <Skeleton className="h-8 w-full" />
         <Skeleton className="h-8 w-full" />
         <Skeleton className="h-8 w-full" />
@@ -39,7 +39,7 @@ export default function ProjectPage() {
   }
 
   return (
-    <PageContainer className="flex flex-col gap-4">
+    <PageContainer>
       <PageHeader
         title={t("kanbanPage.title")}
         actions={

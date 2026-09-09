@@ -151,7 +151,7 @@ export default function ProjectMembersPage() {
   }
 
   return (
-    <PageContainer className="flex flex-col gap-4">
+    <PageContainer>
       <PageHeader
         title={t("projectMembersPage.title")}
         actions={
