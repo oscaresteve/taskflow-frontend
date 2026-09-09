@@ -19,6 +19,7 @@ import { getTaskQuery } from "@/lib/queries/task.queries";
 import { UpdateTaskDto, taskPriorities, taskStatuses, updateTaskSchema } from "@/lib/schemas/task.schema";
 import { statusLabel } from "@/lib/task-labels";
 import { getFullName } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const UNASSIGNED = "unassigned";
 
@@ -29,6 +30,7 @@ export function EditTaskForm() {
     taskNumber: string;
   }>();
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
+  const t = useTranslations("tasks");
   const { data: projectMembers } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
   const members = projectMembers ?? [];
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
@@ -64,14 +66,14 @@ export function EditTaskForm() {
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
   }
 
   if (isError) {
-    return <p className="text-sm text-muted-foreground">Failed to load task.</p>;
+    return <p className="text-sm text-muted-foreground">{t("taskPage.failedToLoadTask")}</p>;
   }
 
   if (isLoading || !task) {
@@ -91,7 +93,7 @@ export function EditTaskForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="title">Title</FieldLabel>
+              <FieldLabel htmlFor="title">{t("fields.title")}</FieldLabel>
               <Input {...field} aria-invalid={fieldState.invalid} id="title" type="text" required />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -102,13 +104,13 @@ export function EditTaskForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="description">Description</FieldLabel>
+              <FieldLabel htmlFor="description">{t("fields.description")}</FieldLabel>
               <Textarea
                 {...field}
                 value={field.value ?? ""}
                 aria-invalid={fieldState.invalid}
                 id="description"
-                placeholder="Optional"
+                placeholder={t("fields.descriptionPlaceholder")}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
@@ -119,7 +121,7 @@ export function EditTaskForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="status">Status</FieldLabel>
+              <FieldLabel htmlFor="status">{t("fields.status")}</FieldLabel>
               <Select name={field.name} value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger id="status" aria-invalid={fieldState.invalid} className="w-full">
                   <SelectValue />
@@ -141,7 +143,7 @@ export function EditTaskForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="priority">Priority</FieldLabel>
+              <FieldLabel htmlFor="priority">{t("fields.priority")}</FieldLabel>
               <Select name={field.name} value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger id="priority" aria-invalid={fieldState.invalid} className="w-full">
                   <SelectValue />
@@ -163,7 +165,7 @@ export function EditTaskForm() {
           control={form.control}
           render={({ field }) => (
             <Field>
-              <FieldLabel htmlFor="assignee">Assignee</FieldLabel>
+              <FieldLabel htmlFor="assignee">{t("fields.assignee")}</FieldLabel>
               <Select
                 name={field.name}
                 value={field.value ?? UNASSIGNED}
@@ -173,7 +175,7 @@ export function EditTaskForm() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
+                  <SelectItem value={UNASSIGNED}>{t("fields.unassigned")}</SelectItem>
                   {members.map((member) => (
                     <SelectItem key={member.userId} value={member.userId}>
                       {getFullName(member.user.firstName, member.user.lastName)}
@@ -189,7 +191,7 @@ export function EditTaskForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="dueDate">Due date</FieldLabel>
+              <FieldLabel htmlFor="dueDate">{t("fields.dueDate")}</FieldLabel>
               <Input
                 aria-invalid={fieldState.invalid}
                 id="dueDate"
@@ -203,7 +205,7 @@ export function EditTaskForm() {
         />
         <Field>
           <Button type="submit" disabled={updateTask.isPending}>
-            Save changes
+            {t("editTaskForm.saveChanges")}
           </Button>
         </Field>
       </FieldGroup>

@@ -1,0 +1,73 @@
+{
+  "globalNav": {
+    "home": "Home"
+  },
+  "appNav": {
+    "preferences": "Preferences"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "preferences": "Preferences",
+    "manageWorkspaces": "Manage workspaces",
+    "settings": "Settings",
+    "members": "Members"
+  },
+  "globalSidebar": {
+    "global": "Global",
+    "app": "App"
+  },
+  "workspaceSidebar": {
+    "global": "Global",
+    "workspace": "Workspace",
+    "app": "App",
+    "overview": "Overview",
+    "members": "Members",
+    "settings": "Settings"
+  },
+  "projectNavTabs": {
+    "overview": "Overview",
+    "kanban": "Kanban",
+    "members": "Members",
+    "settings": "Settings"
+  },
+  "projectsNav": {
+    "title": "Projects",
+    "newProject": "New project",
+    "moreOptions": "More options",
+    "manageProjects": "Manage projects",
+    "searchPlaceholder": "Search projects",
+    "failedToLoad": "Failed to load projects",
+    "noneFound": "No projects found",
+    "noneYet": "No projects yet",
+    "loading": "Loading…",
+    "remaining": "{count} more"
+  },
+  "workspacesNav": {
+    "title": "Workspaces",
+    "newWorkspace": "New workspace",
+    "moreOptions": "More options",
+    "manageWorkspaces": "Manage workspaces",
+    "searchPlaceholder": "Search workspaces",
+    "failedToLoad": "Failed to load workspaces",
+    "noneFound": "No workspaces found",
+    "noneYet": "No workspaces yet",
+    "loading": "Loading…",
+    "remaining": "{count} more"
+  },
+  "workspaceSwitch": {
+    "workspaces": "Workspaces",
+    "searchPlaceholder": "Search workspaces",
+    "noneFound": "No workspaces found",
+    "noneYet": "No workspaces yet",
+    "loading": "Loading…",
+    "remaining": "{count} more",
+    "createWorkspace": "Create workspace",
+    "manageWorkspaces": "Manage workspaces"
+  },
+  "userNav": {
+    "logOut": "Log out",
+    "logOutConfirmTitle": "Log out",
+    "logOutConfirmDescription": "Are you sure you want to log out? You'll need to sign in again to access your account.",
+    "logOutError": "Something went wrong"
+  }
+}

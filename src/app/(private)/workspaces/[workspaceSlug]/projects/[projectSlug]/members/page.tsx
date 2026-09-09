@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { CircleCheckIcon, CircleMinusIcon, type LucideIcon, UserCog, UserPlus, UserX } from "lucide-react";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
@@ -32,12 +33,12 @@ import { roleLabel } from "@/lib/role-labels";
 
 type StatusTab = "ACTIVE" | "INACTIVE";
 
-const STATUS_TABS: { value: StatusTab; label: string; icon: LucideIcon }[] = [
-  { value: "ACTIVE", label: "Active", icon: CircleCheckIcon },
-  { value: "INACTIVE", label: "Inactive", icon: CircleMinusIcon },
-];
-
 export default function ProjectMembersPage() {
+  const t = useTranslations("members");
+  const STATUS_TABS: { value: StatusTab; label: string; icon: LucideIcon }[] = [
+    { value: "ACTIVE", label: t("projectMembersPage.tabActive"), icon: CircleCheckIcon },
+    { value: "INACTIVE", label: t("projectMembersPage.tabInactive"), icon: CircleMinusIcon },
+  ];
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
@@ -69,7 +70,7 @@ export default function ProjectMembersPage() {
   function reportError(error: unknown) {
     toast.add({
       type: "error",
-      description: error instanceof ApiError ? error.message : "Something went wrong",
+      description: error instanceof ApiError ? error.message : t("genericError"),
       priority: "high",
     });
   }
@@ -90,7 +91,10 @@ export default function ProjectMembersPage() {
           setRoleChangeDialogOpen(false);
           toast.add({
             type: "success",
-            description: `${getFullName(member.user.firstName, member.user.lastName)}'s role changed to ${role}.`,
+            description: t("projectMembersPage.roleChangedToast", {
+              name: getFullName(member.user.firstName, member.user.lastName),
+              role,
+            }),
           });
         },
         onError: reportError,
@@ -110,7 +114,9 @@ export default function ProjectMembersPage() {
         setDeactivateDialogOpen(false);
         toast.add({
           type: "success",
-          description: `${getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName)} deactivated on this project.`,
+          description: t("projectMembersPage.deactivatedToast", {
+            name: getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName),
+          }),
         });
       },
       onError: reportError,
@@ -139,7 +145,7 @@ export default function ProjectMembersPage() {
     return deactivatable ? (
       <DropdownMenuItem variant="destructive" onClick={() => handleRequestDeactivate(member)}>
         <UserX />
-        Deactivate
+        {t("projectMembersPage.deactivate")}
       </DropdownMenuItem>
     ) : null;
   }
@@ -147,12 +153,12 @@ export default function ProjectMembersPage() {
   return (
     <PageContainer className="flex flex-col gap-4">
       <PageHeader
-        title="Members"
+        title={t("projectMembersPage.title")}
         actions={
           isProjectManager(myRole) ? (
             <Button size="sm" onClick={() => setAddMemberOpen(true)}>
               <UserPlus />
-              Add member
+              {t("projectMembersPage.addMember")}
             </Button>
           ) : null
         }
@@ -198,13 +204,15 @@ export default function ProjectMembersPage() {
       <ConfirmDialog
         open={deactivateDialogOpen}
         onOpenChange={setDeactivateDialogOpen}
-        title="Deactivate member"
+        title={t("projectMembersPage.deactivateMemberTitle")}
         description={
           memberToDeactivate
-            ? `Deactivate ${getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName)} on this project? They'll lose access to it immediately.`
+            ? t("projectMembersPage.deactivateMemberDescription", {
+                name: getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName),
+              })
             : ""
         }
-        confirmLabel="Deactivate"
+        confirmLabel={t("projectMembersPage.deactivateConfirmLabel")}
         variant="destructive"
         onConfirm={handleConfirmDeactivate}
         pending={deactivateProjectMember.isPending}
@@ -213,13 +221,16 @@ export default function ProjectMembersPage() {
       <ConfirmDialog
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
-        title="Change role"
+        title={t("projectMembersPage.changeRoleTitle")}
         description={
           pendingRoleChange
-            ? `Change ${getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)}'s role? They'll get ${roleLabel[pendingRoleChange.role]} access to this project.`
+            ? t("projectMembersPage.changeRoleDescription", {
+                name: getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName),
+                role: roleLabel[pendingRoleChange.role],
+              })
             : ""
         }
-        confirmLabel="Change"
+        confirmLabel={t("projectMembersPage.changeRoleConfirmLabel")}
         onConfirm={handleConfirmChangeRole}
         pending={updateProjectMember.isPending}
         Icon={UserCog}

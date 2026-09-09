@@ -1,0 +1,60 @@
+{
+  "errors": {
+    "generic": "Something went wrong"
+  },
+  "fields": {
+    "title": "Title",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional",
+    "status": "Status",
+    "priority": "Priority",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "dueDate": "Due date"
+  },
+  "status": {
+    "TODO": "To do",
+    "IN_PROGRESS": "In progress",
+    "IN_REVIEW": "In review",
+    "DONE": "Done"
+  },
+  "validation": {
+    "titleMinLength": "Title must be at least 2 characters long",
+    "titleMaxLength": "Title cannot exceed 100 characters",
+    "atLeastOneField": "At least one field must be provided"
+  },
+  "kanbanPage": {
+    "failedToLoadProject": "Failed to load project.",
+    "title": "Kanban",
+    "createTask": "Create task"
+  },
+  "kanbanBoard": {
+    "failedToLoad": "Failed to load tasks."
+  },
+  "kanbanColumn": {
+    "noTasks": "No tasks"
+  },
+  "taskPage": {
+    "failedToLoadTask": "Failed to load task.",
+    "backToProject": "Back to project",
+    "archived": "Archived",
+    "dangerZone": "Danger zone"
+  },
+  "editTaskForm": {
+    "saveChanges": "Save changes"
+  },
+  "archiveTaskSection": {
+    "title": "Archive task",
+    "description": "Archived tasks are hidden from the task list and can no longer be edited.",
+    "archived": "Archived",
+    "archive": "Archive",
+    "confirmTitle": "Archive {taskTitle}?",
+    "confirmDescription": "This will archive the task and hide it from the task list. This action cannot be undone from the app."
+  },
+  "createTaskDialog": {
+    "title": "Create task",
+    "description": "Add a new task to this project.",
+    "submit": "Create task",
+    "titlePlaceholder": "Set up the staging environment"
+  }
+}

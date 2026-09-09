@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const SWITCHER_PAGE_SIZE = 5;
 
@@ -38,6 +39,7 @@ export default function WorkspaceSwitch() {
   const [createOpen, setCreateOpen] = useState(false);
   const workspaces = data?.pages.flatMap((page) => page.data) ?? [];
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - workspaces.length : 0;
+  const t = useTranslations("layout");
 
   if (isLoading || !activeWorkspace) {
     return (
@@ -84,15 +86,15 @@ export default function WorkspaceSwitch() {
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">Workspaces</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-muted-foreground">{t("workspaceSwitch.workspaces")}</DropdownMenuLabel>
               {/* Stops keydown from bubbling to the menu's typeahead handler, which would otherwise
                   hijack keystrokes (and move item focus) instead of letting them reach the input. */}
               <div onKeyDown={(e) => e.stopPropagation()} className="p-2">
-                <SearchInput value={search} onChange={setSearch} placeholder="Search workspaces" />
+                <SearchInput value={search} onChange={setSearch} placeholder={t("workspaceSwitch.searchPlaceholder")} />
               </div>
               {workspaces.length === 0 && (
                 <div className="flex h-9 items-center px-2 text-sm text-muted-foreground">
-                  {debouncedSearch ? "No workspaces found" : "No workspaces yet"}
+                  {debouncedSearch ? t("workspaceSwitch.noneFound") : t("workspaceSwitch.noneYet")}
                 </div>
               )}
               {workspaces.map((workspace) => (
@@ -115,7 +117,7 @@ export default function WorkspaceSwitch() {
                   aria-disabled={isFetchingNextPage}
                   className="gap-2 p-2 text-muted-foreground"
                 >
-                  {isFetchingNextPage ? "Loading…" : `${remaining} more`}
+                  {isFetchingNextPage ? t("workspaceSwitch.loading") : t("workspaceSwitch.remaining", { count: remaining })}
                 </DropdownMenuItem>
               )}
             </DropdownMenuGroup>
@@ -124,13 +126,13 @@ export default function WorkspaceSwitch() {
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>
-              Create workspace
+              {t("workspaceSwitch.createWorkspace")}
             </DropdownMenuItem>
             <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2 p-2">
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Settings className="size-4" />
               </div>
-              Manage workspaces
+              {t("workspaceSwitch.manageWorkspaces")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ColorDot } from "@/components/ui/color-dot";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { COLORS } from "@/lib/colors";
+import { useTranslations } from "next-intl";
 
 interface ColorPickerProps {
   value: string | null;
@@ -18,6 +19,7 @@ const colorButtonClassName =
 
 export function ColorPicker({ value, onChange }: ColorPickerProps) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("common");
 
   function handleSelect(color: string | null) {
     onChange(color);
@@ -36,7 +38,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
       </PopoverTrigger>
       <PopoverContent className="p-2 w-fit" align="end">
         <div className="grid grid-cols-4 gap-x-3 gap-y-2">
-          <button type="button" aria-label="No color" aria-pressed={value === null} onClick={() => handleSelect(null)}>
+          <button type="button" aria-label={t("colorPicker.noColor")} aria-pressed={value === null} onClick={() => handleSelect(null)}>
             <ColorDot className={cn(colorButtonClassName, value === null && "outline-ring")}>
               <XIcon className="size-4" />
             </ColorDot>

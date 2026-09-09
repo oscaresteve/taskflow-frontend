@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/compon
 import { MemberRole } from "@/lib/role-labels";
 import { formatDate, getFullName, getInitials } from "@/lib/utils";
 import { RoleBadge, RoleSelectItemContent } from "@/components/members/role-badge";
+import { useTranslations } from "next-intl";
 
 interface MemberLike {
   id: string;
@@ -35,6 +36,8 @@ export function MembersTable<TMember extends MemberLike>({
   emptyMessage: string;
   actorUserId?: string;
 }) {
+  const t = useTranslations("members");
+
   if (members.length === 0) {
     return <p className="px-1 py-6 text-center text-sm text-muted-foreground">{emptyMessage}</p>;
   }
@@ -43,11 +46,11 @@ export function MembersTable<TMember extends MemberLike>({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Joined</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead>{t("membersTable.columnName")}</TableHead>
+          <TableHead>{t("membersTable.columnEmail")}</TableHead>
+          <TableHead>{t("membersTable.columnJoined")}</TableHead>
+          <TableHead>{t("membersTable.columnRole")}</TableHead>
+          <TableHead>{t("membersTable.columnActions")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -65,13 +68,13 @@ export function MembersTable<TMember extends MemberLike>({
                   </Avatar>
                   <span className="truncate font-medium">
                     {memberName}
-                    {isActor && " (You)"}
+                    {isActor && t("membersTable.youSuffix")}
                   </span>
                 </div>
               </TableCell>
               <TableCell className="text-muted-foreground">{member.user.email}</TableCell>
               <TableCell className="text-muted-foreground">
-                {member.joinedAt ? formatDate(member.joinedAt) : "—"}
+                {member.joinedAt ? formatDate(member.joinedAt) : t("membersTable.noJoinDate")}
               </TableCell>
               <TableCell>
                 {roleChangeable(member) ? (
@@ -96,7 +99,7 @@ export function MembersTable<TMember extends MemberLike>({
                   <DropdownMenu>
                     <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
                       <MoreHorizontal />
-                      <span className="sr-only">Member actions</span>
+                      <span className="sr-only">{t("membersTable.actionsSrOnly")}</span>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">{actions}</DropdownMenuContent>
                   </DropdownMenu>

@@ -1,0 +1,90 @@
+{
+  "errors": {
+    "generic": "Something went wrong"
+  },
+  "validation": {
+    "nameMinLength": "Name must be at least 2 characters long",
+    "nameMaxLength": "Name cannot exceed 100 characters",
+    "logoUrlInvalid": "Logo URL must be a valid URL",
+    "atLeastOneField": "At least one field must be provided"
+  },
+  "workspacesPage": {
+    "title": "Manage workspaces",
+    "newWorkspace": "New workspace",
+    "searchPlaceholder": "Search workspaces",
+    "failedToLoad": "Failed to load workspaces.",
+    "noWorkspacesFound": "No workspaces found.",
+    "columns": {
+      "workspace": "Workspace",
+      "slug": "Slug",
+      "owners": "Owners",
+      "actions": "Actions"
+    },
+    "sort": {
+      "name": "Name",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    }
+  },
+  "workspaceActionsMenu": {
+    "ariaLabel": "Workspace actions",
+    "open": "Open",
+    "members": "Members",
+    "settings": "Settings",
+    "deactivate": "Deactivate",
+    "deactivateTitle": "Deactivate {name}?",
+    "deactivateDescription": "This will deactivate the workspace and hide it from all members. This action cannot be undone from the app.",
+    "deactivateConfirmLabel": "Deactivate"
+  },
+  "workspacePage": {
+    "projects": "Projects",
+    "noProjectsYet": "No projects yet.",
+    "members": "Members",
+    "noMembersYet": "No members yet."
+  },
+  "workspaceSettingsPage": {
+    "title": "Settings",
+    "noPermission": "You don't have permission to view this page."
+  },
+  "deactivateWorkspaceSection": {
+    "title": "Deactivate workspace",
+    "description": "This workspace will no longer be accessible to members.",
+    "actionLabel": "Deactivate",
+    "dialogTitle": "Deactivate {name}?",
+    "dialogDescription": "This will deactivate the workspace and hide it from all members. This action cannot be undone from the app.",
+    "confirmLabel": "Deactivate"
+  },
+  "workspaceDescriptionSection": {
+    "title": "Description",
+    "description": "A short description of your workspace.",
+    "footerHint": "Max 500 characters",
+    "failedToLoad": "Failed to load workspace.",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Acme Inc's main workspace",
+    "successMessage": "Workspace description updated."
+  },
+  "workspaceNameSection": {
+    "loadingTitle": "Workspace name",
+    "title": "Name",
+    "description": "This is your workspace's visible name.",
+    "footerHint": "Max 100 characters",
+    "failedToLoad": "Failed to load workspace.",
+    "nameLabel": "Workspace name",
+    "namePlaceholder": "Acme Inc",
+    "successMessage": "Workspace name updated."
+  },
+  "notFound": {
+    "title": "Workspace not found",
+    "description": "This workspace doesn't exist or you don't have access to it.",
+    "goToHome": "Go to home"
+  },
+  "createWorkspaceDialog": {
+    "title": "Create workspace",
+    "description": "Set up a new workspace to organize projects and tasks.",
+    "submitLabel": "Create workspace",
+    "nameLabel": "Name",
+    "namePlaceholder": "Acme Inc",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Acme Inc's main workspace"
+  }
+}

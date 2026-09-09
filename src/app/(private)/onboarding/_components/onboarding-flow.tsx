@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { OnboardingWorkspaceForm } from "./onboarding-workspace-form";
@@ -12,6 +13,7 @@ interface OnboardingFlowProps {
 }
 
 export function OnboardingFlow({ name }: OnboardingFlowProps) {
+  const t = useTranslations("onboarding");
   const router = useRouter();
   const [workspace, setWorkspace] = useState<WorkspaceResponseDto | null>(null);
   const step = workspace ? 2 : 1;
@@ -24,9 +26,9 @@ export function OnboardingFlow({ name }: OnboardingFlowProps) {
     <div className="flex w-md flex-col">
       {workspace ? (
         <>
-          <h1 className="text-3xl font-semibold text-balance">Create your first project</h1>
+          <h1 className="text-3xl font-semibold text-balance">{t("onboardingFlow.projectStepTitle")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Add a project so {workspace.name} can start tracking work.
+            {t("onboardingFlow.projectStepDescription", { workspaceName: workspace.name })}
           </p>
           <OnboardingProjectForm
             workspaceSlug={workspace.slug}
@@ -37,8 +39,8 @@ export function OnboardingFlow({ name }: OnboardingFlowProps) {
         </>
       ) : (
         <>
-          <h1 className="text-3xl font-semibold text-balance">Let&apos;s set up your workspace</h1>
-          <p className="mt-2 text-sm text-muted-foreground">This is where your projects and tasks will live.</p>
+          <h1 className="text-3xl font-semibold text-balance">{t("onboardingFlow.workspaceStepTitle")}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">{t("onboardingFlow.workspaceStepDescription")}</p>
           <OnboardingWorkspaceForm name={name} onCreated={setWorkspace} />
         </>
       )}

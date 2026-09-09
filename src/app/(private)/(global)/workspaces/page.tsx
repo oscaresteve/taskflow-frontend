@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ExternalLink, MoreHorizontal, Plus, Settings, ShieldMinus, Users } from "lucide-react";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
@@ -39,13 +40,8 @@ const PAGE_SIZE_OPTIONS = [5, 10, 15];
 
 type WorkspaceSortField = "name" | "createdAt" | "updatedAt";
 
-const SORT_OPTIONS: { value: WorkspaceSortField; label: string }[] = [
-  { value: "name", label: "Name" },
-  { value: "createdAt", label: "Created" },
-  { value: "updatedAt", label: "Updated" },
-];
-
 function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceResponseDto; canManage: boolean }) {
+  const t = useTranslations("workspaces");
   const [deactivateOpen, setDeactivateOpen] = useState(false);
   const deactivateWorkspace = useDeactivateWorkspace(workspace.slug);
 
@@ -56,7 +52,7 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
@@ -67,21 +63,21 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
       <DropdownMenu>
         <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
           <MoreHorizontal />
-          <span className="sr-only">Workspace actions</span>
+          <span className="sr-only">{t("workspaceActionsMenu.ariaLabel")}</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
             <ExternalLink />
-            Open
+            {t("workspaceActionsMenu.open")}
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/members`} />}>
             <Users />
-            Members
+            {t("workspaceActionsMenu.members")}
           </DropdownMenuItem>
           {canManage && (
             <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
               <Settings />
-              Settings
+              {t("workspaceActionsMenu.settings")}
             </DropdownMenuItem>
           )}
           {canManage && (
@@ -89,7 +85,7 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onClick={() => setDeactivateOpen(true)}>
                 <ShieldMinus />
-                Deactivate
+                {t("workspaceActionsMenu.deactivate")}
               </DropdownMenuItem>
             </>
           )}
@@ -98,9 +94,9 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
       <ConfirmDialog
         open={deactivateOpen}
         onOpenChange={setDeactivateOpen}
-        title={`Deactivate ${workspace.name}?`}
-        description="This will deactivate the workspace and hide it from all members. This action cannot be undone from the app."
-        confirmLabel="Deactivate"
+        title={t("workspaceActionsMenu.deactivateTitle", { name: workspace.name })}
+        description={t("workspaceActionsMenu.deactivateDescription")}
+        confirmLabel={t("workspaceActionsMenu.deactivateConfirmLabel")}
         variant="destructive"
         onConfirm={handleDeactivate}
         pending={deactivateWorkspace.isPending}
@@ -162,12 +158,20 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
 }
 
 export default function WorkspacesPage() {
+  const t = useTranslations("workspaces");
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<WorkspaceSortField>("name");
   const [order, setOrder] = useState<SortOrder>("asc");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
+
+  const sortOptions: { value: WorkspaceSortField; label: string }[] = [
+    { value: "name", label: t("workspacesPage.sort.name") },
+    { value: "createdAt", label: t("workspacesPage.sort.createdAt") },
+    { value: "updatedAt", label: t("workspacesPage.sort.updatedAt") },
+  ];
+
   const {
     data: workspaces,
     isLoading,
@@ -198,7 +202,7 @@ export default function WorkspacesPage() {
   }
 
   if (isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load workspaces.</p>;
+    return <p className="p-6 text-sm text-muted-foreground">{t("workspacesPage.failedToLoad")}</p>;
   }
 
   if (isLoading || !workspaces) {
@@ -217,22 +221,27 @@ export default function WorkspacesPage() {
   return (
     <PageContainer className="flex flex-col gap-4">
       <PageHeader
-        title="Manage workspaces"
+        title={t("workspacesPage.title")}
         actions={
           <Button size="sm" onClick={() => setCreateOpen(true)}>
             <Plus />
-            New workspace
+            {t("workspacesPage.newWorkspace")}
           </Button>
         }
       />
 
       <div className="flex items-center justify-between gap-2">
-        <SearchInput value={search} onChange={handleSearchChange} placeholder="Search workspaces" className="w-48" />
+        <SearchInput
+          value={search}
+          onChange={handleSearchChange}
+          placeholder={t("workspacesPage.searchPlaceholder")}
+          className="w-48"
+        />
         <div className="flex items-center gap-1">
           <SortControls
             field={sort}
             order={order}
-            options={SORT_OPTIONS}
+            options={sortOptions}
             onFieldChange={handleSortFieldChange}
             onOrderChange={handleSortOrderChange}
           />
@@ -241,15 +250,15 @@ export default function WorkspacesPage() {
       </div>
 
       {workspaces.data.length === 0 ? (
-        <p className="px-1 py-6 text-center text-sm text-muted-foreground">No workspaces found.</p>
+        <p className="px-1 py-6 text-center text-sm text-muted-foreground">{t("workspacesPage.noWorkspacesFound")}</p>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Workspace</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Owners</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>{t("workspacesPage.columns.workspace")}</TableHead>
+              <TableHead>{t("workspacesPage.columns.slug")}</TableHead>
+              <TableHead>{t("workspacesPage.columns.owners")}</TableHead>
+              <TableHead>{t("workspacesPage.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

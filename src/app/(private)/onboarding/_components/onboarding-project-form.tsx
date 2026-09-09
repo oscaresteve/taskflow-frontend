@@ -10,6 +10,7 @@ import { useCreateProject } from "@/hooks/use-create-project";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { CreateProjectDto, createProjectSchema } from "@/lib/schemas/project.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { underlineFieldLabelClassName, underlineInputClassName } from "./onboarding-styles";
 
@@ -21,14 +22,15 @@ interface OnboardingProjectFormProps {
 }
 
 export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated, onSkip }: OnboardingProjectFormProps) {
+  const t = useTranslations("onboarding");
   const createProject = useCreateProject(workspaceSlug);
 
   const form = useForm<CreateProjectDto>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
-      name: `${workspaceName}'s first project`,
+      name: t("onboardingProjectForm.defaultName", { workspaceName }),
       key: "MAIN",
-      description: `Where ${workspaceName}'s first tasks live.`,
+      description: t("onboardingProjectForm.defaultDescription", { workspaceName }),
     },
   });
 
@@ -39,7 +41,7 @@ export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated,
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("onboardingProjectForm.genericError"),
         priority: "high",
       });
     }
@@ -54,14 +56,14 @@ export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated,
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="project-name" className={underlineFieldLabelClassName}>
-                Name
+                {t("onboardingProjectForm.nameLabel")}
               </FieldLabel>
               <Input
                 {...field}
                 aria-invalid={fieldState.invalid}
                 id="project-name"
                 type="text"
-                placeholder="Website Redesign"
+                placeholder={t("onboardingProjectForm.namePlaceholder")}
                 required
                 autoFocus
                 className={`h-12 text-2xl ${underlineInputClassName}`}
@@ -76,7 +78,7 @@ export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated,
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="project-key" className={underlineFieldLabelClassName}>
-                Key
+                {t("onboardingProjectForm.keyLabel")}
               </FieldLabel>
               <Input
                 {...field}
@@ -84,7 +86,7 @@ export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated,
                 aria-invalid={fieldState.invalid}
                 id="project-key"
                 type="text"
-                placeholder="WEB"
+                placeholder={t("onboardingProjectForm.keyPlaceholder")}
                 required
                 className={underlineInputClassName}
               />
@@ -98,13 +100,13 @@ export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated,
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="project-description" className={underlineFieldLabelClassName}>
-                Description
+                {t("onboardingProjectForm.descriptionLabel")}
               </FieldLabel>
               <Textarea
                 {...field}
                 aria-invalid={fieldState.invalid}
                 id="project-description"
-                placeholder="Redesign of the marketing site"
+                placeholder={t("onboardingProjectForm.descriptionPlaceholder")}
                 className={`min-h-10 ${underlineInputClassName}`}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -113,10 +115,10 @@ export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated,
         />
         <Field className="mt-4 gap-2">
           <Button type="submit" size="lg" className="w-full" disabled={form.formState.isSubmitting}>
-            Create project
+            {t("onboardingProjectForm.submitButton")}
           </Button>
           <Button type="button" variant="ghost" className="w-full" onClick={onSkip}>
-            Skip for now
+            {t("onboardingProjectForm.skipButton")}
           </Button>
         </Field>
       </FieldGroup>

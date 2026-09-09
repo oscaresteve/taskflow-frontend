@@ -19,6 +19,7 @@ import { ProjectMemberWithUserResponseDto } from "@/lib/dtos/project-members.dto
 import { CreateTaskDto, createTaskSchema, taskPriorities } from "@/lib/schemas/task.schema";
 import { priorityVariant } from "@/lib/task-labels";
 import { getFullName } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const UNASSIGNED = "unassigned";
 
@@ -33,6 +34,7 @@ interface CreateTaskDialogProps {
 export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpenChange }: CreateTaskDialogProps) {
   const router = useRouter();
   const createTask = useCreateTask(workspaceSlug, project.slug);
+  const t = useTranslations("tasks");
 
   const form = useForm<CreateTaskDto>({
     resolver: zodResolver(createTaskSchema),
@@ -61,7 +63,7 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
@@ -71,10 +73,10 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Create task"
-      description="Add a new task to this project."
+      title={t("createTaskDialog.title")}
+      description={t("createTaskDialog.description")}
       formId="create-task-form"
-      submitLabel="Create task"
+      submitLabel={t("createTaskDialog.submit")}
       pending={createTask.isPending}
       media={<Badge variant={priorityVariant[priority]}>{priority}</Badge>}
     >
@@ -85,13 +87,13 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="task-title">Title</FieldLabel>
+                <FieldLabel htmlFor="task-title">{t("fields.title")}</FieldLabel>
                 <Input
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="task-title"
                   type="text"
-                  placeholder="Set up the staging environment"
+                  placeholder={t("createTaskDialog.titlePlaceholder")}
                   required
                   autoFocus
                 />
@@ -104,12 +106,12 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="task-description">Description</FieldLabel>
+                <FieldLabel htmlFor="task-description">{t("fields.description")}</FieldLabel>
                 <Textarea
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="task-description"
-                  placeholder="Optional"
+                  placeholder={t("fields.descriptionPlaceholder")}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
@@ -120,7 +122,7 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="task-priority">Priority</FieldLabel>
+                <FieldLabel htmlFor="task-priority">{t("fields.priority")}</FieldLabel>
                 <Select name={field.name} value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger id="task-priority" aria-invalid={fieldState.invalid} className="w-full">
                     <SelectValue />
@@ -142,7 +144,7 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel htmlFor="task-assignee">Assignee</FieldLabel>
+                <FieldLabel htmlFor="task-assignee">{t("fields.assignee")}</FieldLabel>
                 <Select
                   name={field.name}
                   value={field.value ?? UNASSIGNED}
@@ -152,7 +154,7 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
+                    <SelectItem value={UNASSIGNED}>{t("fields.unassigned")}</SelectItem>
                     {members.map((member) => (
                       <SelectItem key={member.userId} value={member.userId}>
                         {getFullName(member.user.firstName, member.user.lastName)}
@@ -168,7 +170,7 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="task-due-date">Due date</FieldLabel>
+                <FieldLabel htmlFor="task-due-date">{t("fields.dueDate")}</FieldLabel>
                 <Input
                   aria-invalid={fieldState.invalid}
                   id="task-due-date"

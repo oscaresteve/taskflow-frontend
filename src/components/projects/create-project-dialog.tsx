@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -24,6 +25,7 @@ interface CreateProjectDialogProps {
 
 export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: CreateProjectDialogProps) {
   const router = useRouter();
+  const t = useTranslations("projects");
   const createProject = useCreateProject(workspaceSlug);
 
   const form = useForm<CreateProjectDto>({
@@ -52,7 +54,7 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
@@ -62,12 +64,12 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Create project"
-      description="Set up a new project to organize tasks."
+      title={t("createProjectDialog.title")}
+      description={t("createProjectDialog.description")}
       formId="create-project-form"
-      submitLabel="Create project"
+      submitLabel={t("createProjectDialog.submit")}
       pending={createProject.isPending}
-      media={<Badge variant="secondary">{key.trim() || "KEY"}</Badge>}
+      media={<Badge variant="secondary">{key.trim() || t("createProjectDialog.keyDefault")}</Badge>}
     >
       <form id="create-project-form" onSubmit={form.handleSubmit(onSubmit)} noValidate>
         <FieldGroup>
@@ -76,13 +78,13 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="project-name">Name</FieldLabel>
+                <FieldLabel htmlFor="project-name">{t("createProjectDialog.nameLabel")}</FieldLabel>
                 <Input
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="project-name"
                   type="text"
-                  placeholder="Website Redesign"
+                  placeholder={t("createProjectDialog.namePlaceholder")}
                   required
                   autoFocus
                 />
@@ -95,14 +97,14 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="project-key">Key</FieldLabel>
+                <FieldLabel htmlFor="project-key">{t("createProjectDialog.keyLabel")}</FieldLabel>
                 <Input
                   {...field}
                   onChange={(e) => field.onChange(e.target.value.toUpperCase())}
                   aria-invalid={fieldState.invalid}
                   id="project-key"
                   type="text"
-                  placeholder="WEB"
+                  placeholder={t("createProjectDialog.keyPlaceholder")}
                   required
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -114,12 +116,12 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="project-description">Description</FieldLabel>
+                <FieldLabel htmlFor="project-description">{t("createProjectDialog.descriptionLabel")}</FieldLabel>
                 <Textarea
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="project-description"
-                  placeholder="Redesign of the marketing site"
+                  placeholder={t("createProjectDialog.descriptionPlaceholder")}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>
@@ -130,7 +132,7 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
             control={form.control}
             render={({ field }) => (
               <Field orientation="horizontal">
-                <FieldLabel>Color</FieldLabel>
+                <FieldLabel>{t("createProjectDialog.colorLabel")}</FieldLabel>
                 <ColorPicker value={field.value ?? null} onChange={(value) => field.onChange(value ?? undefined)} />
               </Field>
             )}

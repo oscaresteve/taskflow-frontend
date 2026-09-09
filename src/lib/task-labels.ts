@@ -1,11 +1,7 @@
 import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
+import tasks from "@/messages/en/tasks.json";
 
-export const statusLabel: Record<TaskStatus, string> = {
-  TODO: "To do",
-  IN_PROGRESS: "In progress",
-  IN_REVIEW: "In review",
-  DONE: "Done",
-};
+export const statusLabel: Record<TaskStatus, string> = tasks.status;
 
 export const priorityVariant: Record<TaskPriority, "outline" | "secondary" | "destructive"> = {
   LOW: "outline",

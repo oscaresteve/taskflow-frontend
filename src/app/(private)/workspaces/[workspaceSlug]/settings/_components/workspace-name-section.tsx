@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +19,8 @@ import { UpdateWorkspaceNameDto, updateWorkspaceNameSchema } from "@/lib/schemas
 import { Loader2Icon } from "lucide-react";
 
 export function WorkspaceNameSection() {
+  const t = useTranslations("workspaces");
+  const commonT = useTranslations("common");
   const router = useRouter();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
@@ -37,26 +40,26 @@ export function WorkspaceNameSection() {
   async function onSubmit(data: UpdateWorkspaceNameDto) {
     try {
       const updatedWorkspace = await updateWorkspace.mutateAsync(data);
-      toast.add({ type: "success", description: "Workspace name updated." });
+      toast.add({ type: "success", description: t("workspaceNameSection.successMessage") });
       if (updatedWorkspace.slug !== workspaceSlug) {
         router.replace(`/workspaces/${updatedWorkspace.slug}/settings`);
       }
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
   }
 
   if (isError) {
-    return <p className="text-sm text-muted-foreground">Failed to load workspace.</p>;
+    return <p className="text-sm text-muted-foreground">{t("workspaceNameSection.failedToLoad")}</p>;
   }
 
   if (isLoading || !workspace) {
     return (
-      <SettingCard title="Workspace name" description="This is your workspace's visible name.">
+      <SettingCard title={t("workspaceNameSection.loadingTitle")} description={t("workspaceNameSection.description")}>
         <Skeleton className="h-9 w-full" />
       </SettingCard>
     );
@@ -65,13 +68,13 @@ export function WorkspaceNameSection() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <SettingCard
-        title="Name"
-        description="This is your workspace's visible name."
-        footerHint="Max 100 characters"
+        title={t("workspaceNameSection.title")}
+        description={t("workspaceNameSection.description")}
+        footerHint={t("workspaceNameSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateWorkspace.isPending}>
             {updateWorkspace.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
-            Save
+            {commonT("actions.save")}
           </Button>
         }
       >
@@ -83,11 +86,11 @@ export function WorkspaceNameSection() {
               <Input
                 {...field}
                 aria-invalid={fieldState.invalid}
-                aria-label="Workspace name"
+                aria-label={t("workspaceNameSection.nameLabel")}
                 disabled={updateWorkspace.isPending}
                 id="name"
                 type="text"
-                placeholder="Acme Inc"
+                placeholder={t("workspaceNameSection.namePlaceholder")}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

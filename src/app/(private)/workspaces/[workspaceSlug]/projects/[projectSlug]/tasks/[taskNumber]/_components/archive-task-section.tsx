@@ -10,9 +10,11 @@ import { toast } from "@/components/ui/toast";
 import { useArchiveTask } from "@/hooks/use-archive-task";
 import { ApiError } from "@/lib/http/api-error";
 import { getTaskQuery } from "@/lib/queries/task.queries";
+import { useTranslations } from "next-intl";
 
 export function ArchiveTaskSection() {
   const router = useRouter();
+  const t = useTranslations("tasks");
   const { workspaceSlug, projectSlug, taskNumber } = useParams<{
     workspaceSlug: string;
     projectSlug: string;
@@ -29,7 +31,7 @@ export function ArchiveTaskSection() {
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
@@ -38,22 +40,22 @@ export function ArchiveTaskSection() {
   return (
     <div className="flex max-w-sm items-center justify-between gap-4 rounded-lg border border-destructive/30 p-4">
       <div className="grid gap-1">
-        <p className="text-sm font-medium">Archive task</p>
-        <p className="text-sm text-muted-foreground">Archived tasks are hidden from the task list and can no longer be edited.</p>
+        <p className="text-sm font-medium">{t("archiveTaskSection.title")}</p>
+        <p className="text-sm text-muted-foreground">{t("archiveTaskSection.description")}</p>
       </div>
       {task?.isArchived ? (
-        <span className="text-sm text-muted-foreground">Archived</span>
+        <span className="text-sm text-muted-foreground">{t("archiveTaskSection.archived")}</span>
       ) : (
         <Button variant="destructive" onClick={() => setArchiveOpen(true)}>
-          Archive
+          {t("archiveTaskSection.archive")}
         </Button>
       )}
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
-        title={`Archive ${task?.title}?`}
-        description="This will archive the task and hide it from the task list. This action cannot be undone from the app."
-        confirmLabel="Archive"
+        title={t("archiveTaskSection.confirmTitle", { taskTitle: task?.title ?? "" })}
+        description={t("archiveTaskSection.confirmDescription")}
+        confirmLabel={t("archiveTaskSection.archive")}
         variant="destructive"
         onConfirm={handleArchive}
         pending={archiveTask.isPending}

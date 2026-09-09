@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -23,6 +24,7 @@ interface CreateWorkspaceDialogProps {
 }
 
 export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDialogProps) {
+  const t = useTranslations("workspaces");
   const router = useRouter();
   const createWorkspace = useCreateWorkspace();
 
@@ -50,7 +52,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
@@ -60,10 +62,10 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Create workspace"
-      description="Set up a new workspace to organize projects and tasks."
+      title={t("createWorkspaceDialog.title")}
+      description={t("createWorkspaceDialog.description")}
       formId="create-workspace-form"
-      submitLabel="Create workspace"
+      submitLabel={t("createWorkspaceDialog.submitLabel")}
       pending={createWorkspace.isPending}
       media={
         <Avatar size="lg">
@@ -84,13 +86,13 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="workspace-name">Name</FieldLabel>
+                <FieldLabel htmlFor="workspace-name">{t("createWorkspaceDialog.nameLabel")}</FieldLabel>
                 <Input
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="workspace-name"
                   type="text"
-                  placeholder="Acme Inc"
+                  placeholder={t("createWorkspaceDialog.namePlaceholder")}
                   required
                   autoFocus
                 />
@@ -103,12 +105,12 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="workspace-description">Description</FieldLabel>
+                <FieldLabel htmlFor="workspace-description">{t("createWorkspaceDialog.descriptionLabel")}</FieldLabel>
                 <Textarea
                   {...field}
                   aria-invalid={fieldState.invalid}
                   id="workspace-description"
-                  placeholder="Acme Inc's main workspace"
+                  placeholder={t("createWorkspaceDialog.descriptionPlaceholder")}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>

@@ -9,9 +9,11 @@ import { signOut } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { LogOut } from "lucide-react";
 
 export function OnboardingLogoutButton() {
+  const t = useTranslations("onboarding");
   const router = useRouter();
   const queryClient = useQueryClient();
   const [logOutOpen, setLogOutOpen] = useState(false);
@@ -28,7 +30,7 @@ export function OnboardingLogoutButton() {
       setLoggingOut(false);
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("onboardingLogoutButton.genericError"),
         priority: "high",
       });
     }
@@ -44,20 +46,20 @@ export function OnboardingLogoutButton() {
               size="icon"
               className="absolute top-4 right-4"
               onClick={() => setLogOutOpen(true)}
-              aria-label="Log out"
+              aria-label={t("onboardingLogoutButton.logOut")}
             />
           }
         >
           <LogOut />
         </TooltipTrigger>
-        <TooltipContent>Log out</TooltipContent>
+        <TooltipContent>{t("onboardingLogoutButton.logOut")}</TooltipContent>
       </Tooltip>
       <ConfirmDialog
         open={logOutOpen}
         onOpenChange={setLogOutOpen}
-        title="Log out"
-        description="Are you sure you want to log out? You'll need to sign in again to access your account."
-        confirmLabel="Log out"
+        title={t("onboardingLogoutButton.logOut")}
+        description={t("onboardingLogoutButton.confirmDescription")}
+        confirmLabel={t("onboardingLogoutButton.logOut")}
         variant="destructive"
         onConfirm={handleLogOut}
         pending={loggingOut}

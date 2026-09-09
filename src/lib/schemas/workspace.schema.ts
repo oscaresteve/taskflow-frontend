@@ -1,14 +1,15 @@
 import z from "zod";
 import { descriptionSchema } from "./common.schema";
+import workspaces from "@/messages/en/workspaces.json";
 
 export const createWorkspaceSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Name must be at least 2 characters long")
-    .max(100, "Name cannot exceed 100 characters"),
+    .min(2, workspaces.validation.nameMinLength)
+    .max(100, workspaces.validation.nameMaxLength),
   description: descriptionSchema,
-  logoUrl: z.url("Logo URL must be a valid URL").optional(),
+  logoUrl: z.url(workspaces.validation.logoUrlInvalid).optional(),
 });
 
 export const updateWorkspaceSchema = z
@@ -16,21 +17,21 @@ export const updateWorkspaceSchema = z
     name: z
       .string()
       .trim()
-      .min(2, "Name must be at least 2 characters long")
-      .max(100, "Name cannot exceed 100 characters")
+      .min(2, workspaces.validation.nameMinLength)
+      .max(100, workspaces.validation.nameMaxLength)
       .optional(),
     description: descriptionSchema.nullable(),
     // Nullable para permitir borrar el contenido ya que este es opcional
-    logoUrl: z.url("Logo URL must be a valid URL").optional().nullable(),
+    logoUrl: z.url(workspaces.validation.logoUrlInvalid).optional().nullable(),
   })
-  .refine((data) => Object.keys(data).length > 0, "At least one field must be provided");
+  .refine((data) => Object.keys(data).length > 0, workspaces.validation.atLeastOneField);
 
 export const updateWorkspaceNameSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Name must be at least 2 characters long")
-    .max(100, "Name cannot exceed 100 characters"),
+    .min(2, workspaces.validation.nameMinLength)
+    .max(100, workspaces.validation.nameMaxLength),
 });
 
 export const updateWorkspaceDescriptionSchema = z.object({

@@ -38,17 +38,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useTranslations } from "next-intl";
 
 const MAX_VISIBLE_OWNERS = 4;
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
 
 type ProjectSortField = "name" | "createdAt" | "updatedAt";
-
-const SORT_OPTIONS: { value: ProjectSortField; label: string }[] = [
-  { value: "name", label: "Name" },
-  { value: "createdAt", label: "Created" },
-  { value: "updatedAt", label: "Updated" },
-];
 
 function ProjectActionsMenu({
   workspaceSlug,
@@ -59,6 +54,7 @@ function ProjectActionsMenu({
   project: ProjectResponseDto;
   canManage: boolean;
 }) {
+  const t = useTranslations("projects");
   const [archiveOpen, setArchiveOpen] = useState(false);
   const archiveProject = useArchiveProject(workspaceSlug, project.slug);
 
@@ -69,7 +65,7 @@ function ProjectActionsMenu({
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
@@ -80,21 +76,21 @@ function ProjectActionsMenu({
       <DropdownMenu>
         <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
           <MoreHorizontal />
-          <span className="sr-only">Project actions</span>
+          <span className="sr-only">{t("projectActionsMenu.ariaLabel")}</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}>
             <ExternalLink />
-            Open
+            {t("projectActionsMenu.open")}
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/members`} />}>
             <Users />
-            Members
+            {t("projectActionsMenu.members")}
           </DropdownMenuItem>
           {canManage && (
             <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/settings`} />}>
               <Settings />
-              Settings
+              {t("projectActionsMenu.settings")}
             </DropdownMenuItem>
           )}
           {canManage && (
@@ -102,7 +98,7 @@ function ProjectActionsMenu({
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
                 <Archive />
-                Archive
+                {t("projectActionsMenu.archive")}
               </DropdownMenuItem>
             </>
           )}
@@ -111,9 +107,9 @@ function ProjectActionsMenu({
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
-        title={`Archive ${project.name}?`}
-        description="This will archive the project and hide it from all members. This action cannot be undone from the app."
-        confirmLabel="Archive"
+        title={t("projectActionsMenu.confirmTitle", { projectName: project.name })}
+        description={t("projectActionsMenu.confirmDescription")}
+        confirmLabel={t("projectActionsMenu.archive")}
         variant="destructive"
         onConfirm={handleArchive}
         pending={archiveProject.isPending}
@@ -178,6 +174,7 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
 }
 
 export default function ProjectsPage() {
+  const t = useTranslations("projects");
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
   const [createOpen, setCreateOpen] = useState(false);
@@ -216,7 +213,7 @@ export default function ProjectsPage() {
   }
 
   if (isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load projects.</p>;
+    return <p className="p-6 text-sm text-muted-foreground">{t("projectsPage.failedToLoad")}</p>;
   }
 
   if (isLoading || !projects) {
@@ -232,27 +229,33 @@ export default function ProjectsPage() {
 
   const { pages: totalPages } = projects.pagination;
 
+  const sortOptions: { value: ProjectSortField; label: string }[] = [
+    { value: "name", label: t("projectsPage.sortOptions.name") },
+    { value: "createdAt", label: t("projectsPage.sortOptions.createdAt") },
+    { value: "updatedAt", label: t("projectsPage.sortOptions.updatedAt") },
+  ];
+
   return (
     <PageContainer className="flex flex-col gap-4">
       <PageHeader
-        title="Manage projects"
+        title={t("projectsPage.title")}
         actions={
           isWorkspaceManager(myWorkspaceRole) ? (
             <Button size="sm" onClick={() => setCreateOpen(true)}>
               <Plus />
-              New project
+              {t("projectsPage.newProject")}
             </Button>
           ) : null
         }
       />
 
       <div className="flex items-center justify-between gap-2">
-        <SearchInput value={search} onChange={handleSearchChange} placeholder="Search projects" className="w-48" />
+        <SearchInput value={search} onChange={handleSearchChange} placeholder={t("projectsPage.searchPlaceholder")} className="w-48" />
         <div className="flex items-center gap-1">
           <SortControls
             field={sort}
             order={order}
-            options={SORT_OPTIONS}
+            options={sortOptions}
             onFieldChange={handleSortFieldChange}
             onOrderChange={handleSortOrderChange}
           />
@@ -261,17 +264,17 @@ export default function ProjectsPage() {
       </div>
 
       {projects.data.length === 0 ? (
-        <p className="px-1 py-6 text-center text-sm text-muted-foreground">No projects found.</p>
+        <p className="px-1 py-6 text-center text-sm text-muted-foreground">{t("projectsPage.noProjectsFound")}</p>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Project</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Key</TableHead>
-              <TableHead>Owners</TableHead>
-              <TableHead>Created at</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>{t("projectsPage.columns.project")}</TableHead>
+              <TableHead>{t("projectsPage.columns.slug")}</TableHead>
+              <TableHead>{t("projectsPage.columns.key")}</TableHead>
+              <TableHead>{t("projectsPage.columns.owners")}</TableHead>
+              <TableHead>{t("projectsPage.columns.createdAt")}</TableHead>
+              <TableHead>{t("projectsPage.columns.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

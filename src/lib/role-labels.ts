@@ -1,18 +1,11 @@
 import { CrownIcon, ShieldIcon, UserIcon, UsersIcon, type LucideIcon } from "lucide-react";
+import members from "@/messages/en/members.json";
 
 export type MemberRole = "OWNER" | "ADMIN" | "MEMBER";
 
-export const roleLabel: Record<MemberRole, string> = {
-  OWNER: "Owner",
-  ADMIN: "Admin",
-  MEMBER: "Member",
-};
+export const roleLabel: Record<MemberRole, string> = members.roleLabel;
 
-export const roleDescription: Record<MemberRole, string> = {
-  OWNER: "Full control, including removing it and managing every member.",
-  ADMIN: "Manages members and settings, but can't remove it.",
-  MEMBER: "Can access and contribute, without management access.",
-};
+export const roleDescription: Record<MemberRole, string> = members.roleDescription;
 
 export const roleVariant: Record<MemberRole, "default" | "secondary" | "outline"> = {
   OWNER: "default",
@@ -30,7 +23,7 @@ export const roleFilters = ["ALL", "OWNER", "ADMIN", "MEMBER"] as const;
 export type RoleFilter = (typeof roleFilters)[number];
 
 export const roleFilterLabels: Record<RoleFilter, string> = {
-  ALL: "All roles",
+  ALL: members.roleFilter.all,
   ...roleLabel,
 };
 

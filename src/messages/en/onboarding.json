@@ -1,0 +1,36 @@
+{
+  "onboardingFlow": {
+    "workspaceStepTitle": "Let's set up your workspace",
+    "workspaceStepDescription": "This is where your projects and tasks will live.",
+    "projectStepTitle": "Create your first project",
+    "projectStepDescription": "Add a project so {workspaceName} can start tracking work."
+  },
+  "onboardingLogoutButton": {
+    "logOut": "Log out",
+    "confirmDescription": "Are you sure you want to log out? You'll need to sign in again to access your account.",
+    "genericError": "Something went wrong"
+  },
+  "onboardingProjectForm": {
+    "defaultName": "{workspaceName}'s first project",
+    "defaultDescription": "Where {workspaceName}'s first tasks live.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Website Redesign",
+    "keyLabel": "Key",
+    "keyPlaceholder": "WEB",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Redesign of the marketing site",
+    "submitButton": "Create project",
+    "skipButton": "Skip for now",
+    "genericError": "Something went wrong"
+  },
+  "onboardingWorkspaceForm": {
+    "defaultName": "{name}'s workspace",
+    "defaultDescription": "{name}'s main workspace",
+    "nameLabel": "Name",
+    "namePlaceholder": "Acme Inc",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Acme Inc's main workspace",
+    "submitButton": "Continue",
+    "genericError": "Something went wrong"
+  }
+}

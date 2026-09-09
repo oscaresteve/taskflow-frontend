@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useTranslations } from "next-intl";
 
 interface FormDialogProps {
   open: boolean;
@@ -33,11 +34,13 @@ export function FormDialog({
   description,
   media,
   formId,
-  submitLabel = "Save",
-  cancelLabel = "Cancel",
+  submitLabel,
+  cancelLabel,
   pending = false,
   children,
 }: FormDialogProps) {
+  const t = useTranslations("common");
+
   return (
     <Dialog open={open} onOpenChange={(next) => !pending && onOpenChange(next)}>
       <DialogContent showCloseButton={!pending}>
@@ -49,11 +52,11 @@ export function FormDialog({
         {children}
         <DialogFooter>
           <Button variant="outline" disabled={pending} onClick={() => onOpenChange(false)}>
-            {cancelLabel}
+            {cancelLabel ?? t("actions.cancel")}
           </Button>
           <Button type="submit" form={formId} disabled={pending}>
             {pending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
-            {submitLabel}
+            {submitLabel ?? t("actions.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

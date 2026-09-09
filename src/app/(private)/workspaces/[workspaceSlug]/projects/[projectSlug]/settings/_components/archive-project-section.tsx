@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Archive } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { DangerSettingCard } from "@/components/common/danger-setting-card";
 import { toast } from "@/components/ui/toast";
@@ -12,6 +13,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 
 export function ArchiveProjectSection() {
+  const t = useTranslations("projects");
   const router = useRouter();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
@@ -25,7 +27,7 @@ export function ArchiveProjectSection() {
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
@@ -35,18 +37,18 @@ export function ArchiveProjectSection() {
     <>
       <DangerSettingCard
         Icon={Archive}
-        title="Archive project"
-        description="This project will no longer be accessible to members."
-        actionLabel="Archive"
+        title={t("archiveProjectSection.title")}
+        description={t("archiveProjectSection.description")}
+        actionLabel={t("archiveProjectSection.archive")}
         onAction={() => setArchiveOpen(true)}
         pending={archiveProject.isPending}
       />
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
-        title={`Archive ${project?.name}?`}
-        description="This will archive the project and hide it from all members. This action cannot be undone from the app."
-        confirmLabel="Archive"
+        title={t("archiveProjectSection.confirmTitle", { projectName: project?.name ?? "" })}
+        description={t("archiveProjectSection.confirmDescription")}
+        confirmLabel={t("archiveProjectSection.archive")}
         variant="destructive"
         onConfirm={handleArchive}
         pending={archiveProject.isPending}

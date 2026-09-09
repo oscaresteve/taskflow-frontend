@@ -20,6 +20,7 @@ import { assignableWorkspaceRoles } from "@/lib/permissions/workspace-member-per
 import { getFullName } from "@/lib/utils";
 import { RoleIconLabel, RoleSelectItemContent } from "@/components/members/role-badge";
 import { MemberRole } from "@/lib/role-labels";
+import { useTranslations } from "next-intl";
 
 const PICKER_PAGE_SIZE = 10;
 
@@ -30,6 +31,7 @@ interface AddWorkspaceMemberDialogProps {
 }
 
 export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: AddWorkspaceMemberDialogProps) {
+  const t = useTranslations("members");
   const createWorkspaceMember = useCreateWorkspaceMember(workspaceSlug);
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
   const assignableRoles = assignableWorkspaceRoles(myRole);
@@ -88,12 +90,12 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
       handleOpenChange(false);
       toast.add({
         type: "success",
-        description: `${addedName} added, pending activation.`,
+        description: t("addWorkspaceMemberDialog.addedToast", { name: addedName ?? "" }),
       });
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("genericError"),
         priority: "high",
       });
     }
@@ -103,10 +105,10 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
     <FormDialog
       open={open}
       onOpenChange={handleOpenChange}
-      title="Add member"
-      description="Search for a person by name or email. They'll be added as pending until an owner or admin activates them."
+      title={t("addWorkspaceMemberDialog.title")}
+      description={t("addWorkspaceMemberDialog.description")}
       formId="add-member-form"
-      submitLabel="Add member"
+      submitLabel={t("addWorkspaceMemberDialog.submitLabel")}
       pending={createWorkspaceMember.isPending}
     >
       <form id="add-member-form" onSubmit={form.handleSubmit(onSubmit)} noValidate>
@@ -117,7 +119,7 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
             onSearchChange={setSearch}
             candidates={candidates}
             isLoading={isUsersLoading}
-            emptyMessage="No matching people found."
+            emptyMessage={t("addWorkspaceMemberDialog.emptyMessage")}
             selected={selected}
             onSelect={handleSelect}
             onClear={handleClear}
@@ -132,7 +134,7 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel htmlFor="member-role">Role</FieldLabel>
+                <FieldLabel htmlFor="member-role">{t("addWorkspaceMemberDialog.roleLabel")}</FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger id="member-role" className="w-full">
                     <SelectValue>{(role: MemberRole) => <RoleIconLabel role={role} />}</SelectValue>

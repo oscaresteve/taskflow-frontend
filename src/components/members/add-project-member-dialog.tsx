@@ -20,6 +20,7 @@ import { assignableProjectRoles } from "@/lib/permissions/project-member-permiss
 import { getFullName } from "@/lib/utils";
 import { RoleIconLabel, RoleSelectItemContent } from "@/components/members/role-badge";
 import { MemberRole } from "@/lib/role-labels";
+import { useTranslations } from "next-intl";
 
 const PICKER_PAGE_SIZE = 10;
 
@@ -36,6 +37,7 @@ export function AddProjectMemberDialog({
   open,
   onOpenChange,
 }: AddProjectMemberDialogProps) {
+  const t = useTranslations("members");
   const createProjectMember = useCreateProjectMember(workspaceSlug, projectSlug);
 
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
@@ -107,12 +109,12 @@ export function AddProjectMemberDialog({
       handleOpenChange(false);
       toast.add({
         type: "success",
-        description: `${addedName} added to the project.`,
+        description: t("addProjectMemberDialog.addedToast", { name: addedName ?? "" }),
       });
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("genericError"),
         priority: "high",
       });
     }
@@ -122,10 +124,10 @@ export function AddProjectMemberDialog({
     <FormDialog
       open={open}
       onOpenChange={handleOpenChange}
-      title="Add member"
-      description="Add a workspace member to this project."
+      title={t("addProjectMemberDialog.title")}
+      description={t("addProjectMemberDialog.description")}
       formId="add-project-member-form"
-      submitLabel="Add member"
+      submitLabel={t("addProjectMemberDialog.submitLabel")}
       pending={createProjectMember.isPending}
     >
       <form id="add-project-member-form" onSubmit={form.handleSubmit(onSubmit)} noValidate>
@@ -136,7 +138,7 @@ export function AddProjectMemberDialog({
             onSearchChange={setSearch}
             candidates={candidates}
             isLoading={isCandidatesLoading}
-            emptyMessage="No matching workspace members found."
+            emptyMessage={t("addProjectMemberDialog.emptyMessage")}
             selected={selected}
             onSelect={handleSelect}
             onClear={handleClear}
@@ -151,7 +153,7 @@ export function AddProjectMemberDialog({
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel htmlFor="project-member-role">Role</FieldLabel>
+                <FieldLabel htmlFor="project-member-role">{t("addProjectMemberDialog.roleLabel")}</FieldLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger id="project-member-role" className="w-full">
                     <SelectValue>{(role: MemberRole) => <RoleIconLabel role={role} />}</SelectValue>

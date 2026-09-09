@@ -20,8 +20,11 @@ import { WorkspacesNav } from "./workspaces-nav";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import TaskflowLogo from "./taskflow-logo";
+import { useTranslations } from "next-intl";
 
 export function GlobalSidebar() {
+  const t = useTranslations("layout");
+
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" collapsible="icon">
       <SidebarHeader>
@@ -36,7 +39,7 @@ export function GlobalSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Global</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("globalSidebar.global")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <GlobalNav />
           </SidebarGroupContent>
@@ -50,7 +53,7 @@ export function GlobalSidebar() {
         </SidebarGroup>
         <Separator />
         <SidebarGroup>
-          <SidebarGroupLabel>App</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("globalSidebar.app")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <AppNav />
           </SidebarGroupContent>

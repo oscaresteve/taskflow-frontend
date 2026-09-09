@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import {
   CircleCheckIcon,
@@ -45,13 +46,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { roleLabel } from "@/lib/role-labels";
 
-const STATUS_TABS: { value: WorkspaceMemberStatus; label: string; icon: LucideIcon }[] = [
-  { value: "ACTIVE", label: "Active", icon: CircleCheckIcon },
-  { value: "PENDING", label: "Pending", icon: ClockIcon },
-  { value: "REMOVED", label: "Removed", icon: UserXIcon },
-];
-
 export default function WorkspaceMembersPage() {
+  const t = useTranslations("members");
+  const STATUS_TABS: { value: WorkspaceMemberStatus; label: string; icon: LucideIcon }[] = [
+    { value: "ACTIVE", label: t("workspaceMembersPage.tabActive"), icon: CircleCheckIcon },
+    { value: "PENDING", label: t("workspaceMembersPage.tabPending"), icon: ClockIcon },
+    { value: "REMOVED", label: t("workspaceMembersPage.tabRemoved"), icon: UserXIcon },
+  ];
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
@@ -90,7 +91,7 @@ export default function WorkspaceMembersPage() {
   function reportError(error: unknown) {
     toast.add({
       type: "error",
-      description: error instanceof ApiError ? error.message : "Something went wrong",
+      description: error instanceof ApiError ? error.message : t("genericError"),
       priority: "high",
     });
   }
@@ -107,7 +108,9 @@ export default function WorkspaceMembersPage() {
         setActivateDialogOpen(false);
         toast.add({
           type: "success",
-          description: `${getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName)} activated.`,
+          description: t("workspaceMembersPage.activatedToast", {
+            name: getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName),
+          }),
         });
       },
       onError: reportError,
@@ -126,7 +129,9 @@ export default function WorkspaceMembersPage() {
         setRemoveDialogOpen(false);
         toast.add({
           type: "success",
-          description: `${getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName)} removed from the workspace.`,
+          description: t("workspaceMembersPage.removedToast", {
+            name: getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName),
+          }),
         });
       },
       onError: reportError,
@@ -149,7 +154,10 @@ export default function WorkspaceMembersPage() {
           setRoleChangeDialogOpen(false);
           toast.add({
             type: "success",
-            description: `${getFullName(member.user.firstName, member.user.lastName)}'s role changed to ${role}.`,
+            description: t("workspaceMembersPage.roleChangedToast", {
+              name: getFullName(member.user.firstName, member.user.lastName),
+              role,
+            }),
           });
         },
         onError: reportError,
@@ -185,14 +193,14 @@ export default function WorkspaceMembersPage() {
         {activatable && (
           <DropdownMenuItem onClick={() => handleRequestActivate(member)}>
             <UserCheck />
-            Activate
+            {t("workspaceMembersPage.activate")}
           </DropdownMenuItem>
         )}
         {activatable && removable && <DropdownMenuSeparator />}
         {removable && (
           <DropdownMenuItem variant="destructive" onClick={() => handleRequestRemove(member)}>
             <UserX />
-            Remove
+            {t("workspaceMembersPage.remove")}
           </DropdownMenuItem>
         )}
       </>
@@ -202,12 +210,12 @@ export default function WorkspaceMembersPage() {
   return (
     <PageContainer className="flex flex-col gap-4">
       <PageHeader
-        title="Members"
+        title={t("workspaceMembersPage.title")}
         actions={
           isWorkspaceManager(myRole) ? (
             <Button size="sm" onClick={() => setAddMemberOpen(true)}>
               <UserPlus />
-              Add member
+              {t("workspaceMembersPage.addMember")}
             </Button>
           ) : null
         }
@@ -247,13 +255,15 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={removeDialogOpen}
         onOpenChange={setRemoveDialogOpen}
-        title="Remove member"
+        title={t("workspaceMembersPage.removeMemberTitle")}
         description={
           memberToRemove
-            ? `Remove ${getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName)} from this workspace? They'll lose access immediately.`
+            ? t("workspaceMembersPage.removeMemberDescription", {
+                name: getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName),
+              })
             : ""
         }
-        confirmLabel="Remove"
+        confirmLabel={t("workspaceMembersPage.removeConfirmLabel")}
         variant="destructive"
         onConfirm={handleConfirmRemove}
         pending={removeWorkspaceMember.isPending}
@@ -262,13 +272,16 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
-        title="Change role"
+        title={t("workspaceMembersPage.changeRoleTitle")}
         description={
           pendingRoleChange
-            ? `Change ${getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)}'s role? They'll get ${roleLabel[pendingRoleChange.role]} access to this workspace.`
+            ? t("workspaceMembersPage.changeRoleDescription", {
+                name: getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName),
+                role: roleLabel[pendingRoleChange.role],
+              })
             : ""
         }
-        confirmLabel="Change"
+        confirmLabel={t("workspaceMembersPage.changeRoleConfirmLabel")}
         onConfirm={handleConfirmChangeRole}
         pending={updateWorkspaceMember.isPending}
         Icon={UserCog}
@@ -276,13 +289,15 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={activateDialogOpen}
         onOpenChange={setActivateDialogOpen}
-        title="Activate member"
+        title={t("workspaceMembersPage.activateMemberTitle")}
         description={
           memberToActivate
-            ? `Activate ${getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName)}? They'll get immediate access to this workspace.`
+            ? t("workspaceMembersPage.activateMemberDescription", {
+                name: getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName),
+              })
             : ""
         }
-        confirmLabel="Activate"
+        confirmLabel={t("workspaceMembersPage.activateConfirmLabel")}
         onConfirm={handleConfirmActivate}
         pending={activateWorkspaceMember.isPending}
         Icon={UserCheck}

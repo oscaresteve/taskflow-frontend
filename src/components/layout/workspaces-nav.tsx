@@ -29,6 +29,7 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { SearchInput } from "../common/search-input";
+import { useTranslations } from "next-intl";
 
 const NAV_PAGE_SIZE = 5;
 
@@ -41,6 +42,7 @@ export function WorkspacesNav() {
   const [createOpen, setCreateOpen] = useState(false);
   const activeWorkspaces = data?.pages.flatMap((page) => page.data) ?? [];
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - activeWorkspaces.length : 0;
+  const t = useTranslations("layout");
 
   return (
     <>
@@ -51,29 +53,29 @@ export function WorkspacesNav() {
               <Orbit className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/orbit:opacity-0" />
               <ChevronDown className="absolute inset-0 size-4 opacity-0 transition-all group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180" />
             </span>
-            Workspaces
+            {t("workspacesNav.title")}
           </CollapsibleTrigger>
 
-          <SidebarMenuAction onClick={() => setCreateOpen(true)} title="New workspace" className="right-7">
+          <SidebarMenuAction onClick={() => setCreateOpen(true)} title={t("workspacesNav.newWorkspace")} className="right-7">
             <Plus />
-            <span className="sr-only">New workspace</span>
+            <span className="sr-only">{t("workspacesNav.newWorkspace")}</span>
           </SidebarMenuAction>
 
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <SidebarMenuAction title="More options">
+                <SidebarMenuAction title={t("workspacesNav.moreOptions")}>
                   <MoreVertical />
-                  <span className="sr-only">More options</span>
+                  <span className="sr-only">{t("workspacesNav.moreOptions")}</span>
                 </SidebarMenuAction>
               }
             />
             <DropdownMenuContent align="start" className="min-w-56">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("workspacesNav.title")}</DropdownMenuLabel>
                 <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2">
                   <Settings />
-                  Manage workspaces
+                  {t("workspacesNav.manageWorkspaces")}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -81,11 +83,11 @@ export function WorkspacesNav() {
 
           <CollapsibleContent>
             <SidebarMenuSub>
-              <SearchInput value={search} onChange={setSearch} placeholder="Search workspaces" size="sm" />
+              <SearchInput value={search} onChange={setSearch} placeholder={t("workspacesNav.searchPlaceholder")} size="sm" />
               {isError ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
-                    Failed to load workspaces
+                    {t("workspacesNav.failedToLoad")}
                   </div>
                 </SidebarMenuSubItem>
               ) : isLoading ? (
@@ -100,7 +102,7 @@ export function WorkspacesNav() {
               ) : activeWorkspaces.length === 0 ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
-                    {debouncedSearch ? "No workspaces found" : "No workspaces yet"}
+                    {debouncedSearch ? t("workspacesNav.noneFound") : t("workspacesNav.noneYet")}
                   </div>
                 </SidebarMenuSubItem>
               ) : (
@@ -123,7 +125,7 @@ export function WorkspacesNav() {
                         aria-disabled={isFetchingNextPage}
                         className="text-muted-foreground cursor-pointer"
                       >
-                        {isFetchingNextPage ? "Loading…" : `${remaining} more`}
+                        {isFetchingNextPage ? t("workspacesNav.loading") : t("workspacesNav.remaining", { count: remaining })}
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   )}

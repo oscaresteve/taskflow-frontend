@@ -1,4 +1,5 @@
 import { z } from "zod";
+import auth from "@/messages/en/auth.json";
 
 // Usar los mismos esquemas que el backend
 
@@ -7,24 +8,24 @@ export const signUpSchema = z
     firstName: z
       .string()
       .trim()
-      .min(2, "First name must be at least 2 characters long")
-      .max(100, "First name cannot exceed 100 characters"),
+      .min(2, auth.signUpSchema.firstNameMin)
+      .max(100, auth.signUpSchema.firstNameMax),
 
     lastName: z
       .string()
       .trim()
-      .min(2, "Last name must be at least 2 characters long")
-      .max(100, "Last name cannot exceed 100 characters"),
+      .min(2, auth.signUpSchema.lastNameMin)
+      .max(100, auth.signUpSchema.lastNameMax),
 
-    email: z.string().trim().toLowerCase().email("Email must be a valid email address"),
+    email: z.string().trim().toLowerCase().email(auth.signUpSchema.emailInvalid),
 
     password: z
       .string()
-      .min(8, "Password must be at least 8 characters long")
-      .max(128, "Password cannot exceed 128 characters")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/\d/, "Password must contain at least one number"),
+      .min(8, auth.signUpSchema.passwordMin)
+      .max(128, auth.signUpSchema.passwordMax)
+      .regex(/[a-z]/, auth.signUpSchema.passwordLowercase)
+      .regex(/[A-Z]/, auth.signUpSchema.passwordUppercase)
+      .regex(/\d/, auth.signUpSchema.passwordNumber),
 
     confirmPassword: z.string(),
 
@@ -33,14 +34,14 @@ export const signUpSchema = z
     locale: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: auth.signUpSchema.passwordsMismatch,
     path: ["confirmPassword"],
   });
 
 export const signInSchema = z.object({
-  email: z.string().trim().toLowerCase().email("Email must be a valid email address"),
+  email: z.string().trim().toLowerCase().email(auth.signInSchema.emailInvalid),
 
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(1, auth.signInSchema.passwordRequired),
 });
 
 export type SignUpDto = z.infer<typeof signUpSchema>;

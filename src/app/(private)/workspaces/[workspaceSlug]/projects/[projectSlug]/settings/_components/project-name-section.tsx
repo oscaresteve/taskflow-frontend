@@ -16,8 +16,11 @@ import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { UpdateProjectNameDto, updateProjectNameSchema } from "@/lib/schemas/project.schema";
 import { Loader2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function ProjectNameSection() {
+  const t = useTranslations("projects");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
@@ -37,26 +40,26 @@ export function ProjectNameSection() {
   async function onSubmit(data: UpdateProjectNameDto) {
     try {
       const updatedProject = await updateProject.mutateAsync(data);
-      toast.add({ type: "success", description: "Project name updated." });
+      toast.add({ type: "success", description: t("projectNameSection.updated") });
       if (updatedProject.slug !== projectSlug) {
         router.replace(`/workspaces/${workspaceSlug}/projects/${updatedProject.slug}/settings`);
       }
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
   }
 
   if (isError) {
-    return <p className="text-sm text-muted-foreground">Failed to load project.</p>;
+    return <p className="text-sm text-muted-foreground">{t("projectNameSection.failedToLoad")}</p>;
   }
 
   if (isLoading || !project) {
     return (
-      <SettingCard title="Name" description="This is your project's visible name.">
+      <SettingCard title={t("projectNameSection.title")} description={t("projectNameSection.description")}>
         <Skeleton className="h-9 w-full" />
       </SettingCard>
     );
@@ -65,13 +68,13 @@ export function ProjectNameSection() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <SettingCard
-        title="Name"
-        description="This is your project's visible name."
-        footerHint="Max 100 characters"
+        title={t("projectNameSection.title")}
+        description={t("projectNameSection.description")}
+        footerHint={t("projectNameSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateProject.isPending}>
             {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
-            Save
+            {tCommon("actions.save")}
           </Button>
         }
       >
@@ -83,11 +86,11 @@ export function ProjectNameSection() {
               <Input
                 {...field}
                 aria-invalid={fieldState.invalid}
-                aria-label="Project name"
+                aria-label={t("projectNameSection.fieldLabel")}
                 disabled={updateProject.isPending}
                 id="name"
                 type="text"
-                placeholder="Website Redesign"
+                placeholder={t("projectNameSection.placeholder")}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

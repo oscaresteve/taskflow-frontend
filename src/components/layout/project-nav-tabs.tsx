@@ -6,18 +6,20 @@ import { Kanban, LayoutDashboard, Settings, Users } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
-
-const projectTabs = [
-  { label: "Overview", segment: "", Icon: LayoutDashboard },
-  { label: "Kanban", segment: "/kanban", Icon: Kanban },
-  { label: "Members", segment: "/members", Icon: Users },
-  { label: "Settings", segment: "/settings", Icon: Settings },
-];
+import { useTranslations } from "next-intl";
 
 export function ProjectNavTabs() {
   const pathname = usePathname();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
+  const t = useTranslations("layout");
+
+  const projectTabs = [
+    { label: t("projectNavTabs.overview"), segment: "", Icon: LayoutDashboard },
+    { label: t("projectNavTabs.kanban"), segment: "/kanban", Icon: Kanban },
+    { label: t("projectNavTabs.members"), segment: "/members", Icon: Users },
+    { label: t("projectNavTabs.settings"), segment: "/settings", Icon: Settings },
+  ];
   const base = `/workspaces/${workspaceSlug}/projects/${projectSlug}`;
 
   const tabs = isProjectManager(myRole) ? projectTabs : projectTabs.filter((tab) => tab.segment !== "/settings");

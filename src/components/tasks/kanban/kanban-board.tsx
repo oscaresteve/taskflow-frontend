@@ -11,6 +11,7 @@ import { useKanbanDrag } from "@/hooks/use-kanban-drag";
 import { Skeleton } from "@/components/ui/skeleton";
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";
+import { useTranslations } from "next-intl";
 
 interface KanbanBoardProps {
   workspaceSlug: string;
@@ -28,9 +29,10 @@ export function KanbanBoard({ workspaceSlug, project, members }: KanbanBoardProp
   });
 
   const assigneesById = useMemo(() => new Map(members.map((member) => [member.userId, member.user])), [members]);
+  const t = useTranslations("tasks");
 
   if (isError) {
-    return <p className="py-4 text-sm text-muted-foreground">Failed to load tasks.</p>;
+    return <p className="py-4 text-sm text-muted-foreground">{t("kanbanBoard.failedToLoad")}</p>;
   }
 
   if (isLoading) {

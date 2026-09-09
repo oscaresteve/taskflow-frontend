@@ -9,6 +9,7 @@ import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { statusLabel } from "@/lib/task-labels";
 import { cn } from "@/lib/utils";
 import { SortableKanbanCard } from "./kanban-card";
+import { useTranslations } from "next-intl";
 
 interface KanbanColumnProps {
   workspaceSlug: string;
@@ -33,6 +34,7 @@ export function KanbanColumn({
   // ultima o una columna vacia, donde no hay ningun sortable al que apuntar. Su `isOver` no se usa;
   // el resaltado lo decide el board, que sabe en que columna va a caer la tarjeta.
   const { setNodeRef } = useDroppable({ id: status });
+  const t = useTranslations("tasks");
 
   // SortableContext reacciona a `items` por identidad, asi que se memoiza: crearlo en cada render
   // le haria recalcular su estado interno continuamente durante el arrastre.
@@ -51,7 +53,7 @@ export function KanbanColumn({
       <div className="flex min-h-16 flex-col gap-2">
         <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
           {tasks.length === 0 ? (
-            <p className="px-1 py-4 text-center text-sm text-muted-foreground">No tasks</p>
+            <p className="px-1 py-4 text-center text-sm text-muted-foreground">{t("kanbanColumn.noTasks")}</p>
           ) : (
             tasks.map((task) => (
               <SortableKanbanCard

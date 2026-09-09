@@ -1,0 +1,10 @@
+{
+  "preferencesPage": {
+    "title": "Preferences"
+  },
+  "colorSchemeSection": {
+    "title": "Color scheme",
+    "description": "Choose how TaskFlow looks on this device.",
+    "footerHint": "Changes are applied immediately."
+  }
+}

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function ProjectPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
@@ -21,9 +22,10 @@ export default function ProjectPage() {
   // haria que el kanban se re-renderizara entero durante el arrastre.
   const members = useMemo(() => projectMembers ?? [], [projectMembers]);
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
+  const t = useTranslations("tasks");
 
   if (isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load project.</p>;
+    return <p className="p-6 text-sm text-muted-foreground">{t("kanbanPage.failedToLoadProject")}</p>;
   }
 
   if (isLoading || !project) {
@@ -39,11 +41,11 @@ export default function ProjectPage() {
   return (
     <PageContainer className="flex flex-col gap-4">
       <PageHeader
-        title="Kanban"
+        title={t("kanbanPage.title")}
         actions={
           <Button onClick={() => setCreateTaskOpen(true)}>
             <Plus />
-            Create task
+            {t("kanbanPage.createTask")}
           </Button>
         }
       />

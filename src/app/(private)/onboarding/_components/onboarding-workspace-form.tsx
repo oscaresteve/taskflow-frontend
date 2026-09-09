@@ -10,6 +10,7 @@ import { useCreateWorkspace } from "@/hooks/use-create-workspace";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { CreateWorkspaceDto, createWorkspaceSchema } from "@/lib/schemas/workspace.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { underlineFieldLabelClassName, underlineInputClassName } from "./onboarding-styles";
 
@@ -19,13 +20,14 @@ interface OnboardingWorkspaceFormProps {
 }
 
 export function OnboardingWorkspaceForm({ name, onCreated }: OnboardingWorkspaceFormProps) {
+  const t = useTranslations("onboarding");
   const createWorkspace = useCreateWorkspace();
 
   const form = useForm<CreateWorkspaceDto>({
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
-      name: `${name}'s workspace`,
-      description: `${name}'s main workspace`,
+      name: t("onboardingWorkspaceForm.defaultName", { name }),
+      description: t("onboardingWorkspaceForm.defaultDescription", { name }),
     },
   });
 
@@ -36,7 +38,7 @@ export function OnboardingWorkspaceForm({ name, onCreated }: OnboardingWorkspace
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("onboardingWorkspaceForm.genericError"),
         priority: "high",
       });
     }
@@ -51,14 +53,14 @@ export function OnboardingWorkspaceForm({ name, onCreated }: OnboardingWorkspace
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="name" className={underlineFieldLabelClassName}>
-                Name
+                {t("onboardingWorkspaceForm.nameLabel")}
               </FieldLabel>
               <Input
                 {...field}
                 aria-invalid={fieldState.invalid}
                 id="name"
                 type="text"
-                placeholder="Acme Inc"
+                placeholder={t("onboardingWorkspaceForm.namePlaceholder")}
                 required
                 autoFocus
                 className={`h-12 text-2xl ${underlineInputClassName}`}
@@ -73,13 +75,13 @@ export function OnboardingWorkspaceForm({ name, onCreated }: OnboardingWorkspace
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="description" className={underlineFieldLabelClassName}>
-                Description
+                {t("onboardingWorkspaceForm.descriptionLabel")}
               </FieldLabel>
               <Textarea
                 {...field}
                 aria-invalid={fieldState.invalid}
                 id="description"
-                placeholder="Acme Inc's main workspace"
+                placeholder={t("onboardingWorkspaceForm.descriptionPlaceholder")}
                 className={`min-h-10 ${underlineInputClassName}`}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -88,7 +90,7 @@ export function OnboardingWorkspaceForm({ name, onCreated }: OnboardingWorkspace
         />
         <Field className="mt-4">
           <Button type="submit" size="lg" className="w-full" disabled={form.formState.isSubmitting}>
-            Continue
+            {t("onboardingWorkspaceForm.submitButton")}
           </Button>
         </Field>
       </FieldGroup>

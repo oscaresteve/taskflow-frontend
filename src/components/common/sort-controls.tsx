@@ -4,6 +4,7 @@ import { ListSortAscending, ListSortDescending } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { useTranslations } from "next-intl";
 
 export function SortControls<TField extends string>({
   field,
@@ -18,6 +19,8 @@ export function SortControls<TField extends string>({
   onFieldChange: (value: TField) => void;
   onOrderChange: (value: SortOrder) => void;
 }) {
+  const t = useTranslations("common");
+
   return (
     <div className="flex items-center gap-1">
       <Select value={field} onValueChange={(value) => value && onFieldChange(value as TField)}>
@@ -36,7 +39,7 @@ export function SortControls<TField extends string>({
         type="button"
         variant="outline"
         size="icon"
-        aria-label={order === "asc" ? "Sort ascending" : "Sort descending"}
+        aria-label={order === "asc" ? t("sort.ascending") : t("sort.descending")}
         onClick={() => onOrderChange(order === "asc" ? "desc" : "asc")}
       >
         {order === "asc" ? <ListSortAscending /> : <ListSortDescending />}

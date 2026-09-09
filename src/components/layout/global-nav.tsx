@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, LucideIcon } from "lucide-react";
 import { isNavActive } from "@/lib/nav";
+import { useTranslations } from "next-intl";
 
 type NavigationItem = {
   name: string;
@@ -11,16 +12,18 @@ type NavigationItem = {
   href: string;
 };
 
-const globalNavigation: NavigationItem[] = [
-  {
-    name: "Home",
-    icon: Home,
-    href: "/home",
-  },
-];
-
 export default function GlobalNav() {
   const pathname = usePathname();
+  const t = useTranslations("layout");
+
+  const globalNavigation: NavigationItem[] = [
+    {
+      name: t("globalNav.home"),
+      icon: Home,
+      href: "/home",
+    },
+  ];
+
   return (
     <SidebarMenu>
       {globalNavigation.map((nav) => {

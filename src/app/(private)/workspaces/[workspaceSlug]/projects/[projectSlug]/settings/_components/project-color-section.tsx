@@ -15,8 +15,11 @@ import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { UpdateProjectColorDto, updateProjectColorSchema } from "@/lib/schemas/project.schema";
 import { Loader2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function ProjectColorSection() {
+  const t = useTranslations("projects");
+  const tCommon = useTranslations("common");
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
@@ -35,25 +38,25 @@ export function ProjectColorSection() {
   async function onSubmit(data: UpdateProjectColorDto) {
     try {
       await updateProject.mutateAsync(data);
-      toast.add({ type: "success", description: "Project color updated." });
+      toast.add({ type: "success", description: t("projectColorSection.updated") });
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
   }
 
   if (isError) {
-    return <p className="text-sm text-muted-foreground">Failed to load project.</p>;
+    return <p className="text-sm text-muted-foreground">{t("projectColorSection.failedToLoad")}</p>;
   }
 
   if (isLoading || !project) {
     return (
       <SettingCard
-        title="Color"
-        description="Used to tell this project apart at a glance."
+        title={t("projectColorSection.title")}
+        description={t("projectColorSection.description")}
         action={<Skeleton className="size-16 rounded-full" />}
       />
     );
@@ -62,13 +65,13 @@ export function ProjectColorSection() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <SettingCard
-        title="Color"
-        description="Used to tell this project apart at a glance."
-        footerHint="Choose no color to leave it unset."
+        title={t("projectColorSection.title")}
+        description={t("projectColorSection.description")}
+        footerHint={t("projectColorSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateProject.isPending}>
             {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
-            Save
+            {tCommon("actions.save")}
           </Button>
         }
         orientation="horizontal"

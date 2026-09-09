@@ -13,9 +13,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 
 export function SignInForm() {
+  const t = useTranslations("auth");
   const router = useRouter();
 
   const form = useForm<SignInDto>({
@@ -34,7 +36,7 @@ export function SignInForm() {
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("signInForm.genericError"),
         priority: "high",
       });
     }
@@ -43,8 +45,8 @@ export function SignInForm() {
   return (
     <Card className="w-xs">
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
-        <CardDescription>Enter your email below to login to your account</CardDescription>
+        <CardTitle>{t("signInForm.title")}</CardTitle>
+        <CardDescription>{t("signInForm.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
@@ -54,14 +56,14 @@ export function SignInForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <FieldLabel htmlFor="email">{t("signInForm.emailLabel")}</FieldLabel>
                   <Input
                     {...field}
                     aria-invalid={fieldState.invalid}
                     id="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="m@example.com"
+                    placeholder={t("signInForm.emailPlaceholder")}
                     required
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -73,7 +75,7 @@ export function SignInForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <FieldLabel htmlFor="password">{t("signInForm.passwordLabel")}</FieldLabel>
                   <PasswordInput
                     {...field}
                     aria-invalid={fieldState.invalid}
@@ -88,10 +90,10 @@ export function SignInForm() {
             <Field>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting && <Loader2Icon className="animate-spin" aria-hidden="true" />}
-                Sign In
+                {t("signInForm.submitButton")}
               </Button>
               <FieldDescription className="text-center">
-                Don&apos;t have an account? <Link href="/auth/sign-up">Sign up</Link>
+                {t("signInForm.signUpPrompt")} <Link href="/auth/sign-up">{t("signInForm.signUpLink")}</Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

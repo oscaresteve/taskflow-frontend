@@ -14,9 +14,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useTranslations } from "next-intl";
 
 export function BreadcrumbNav() {
   const pathname = usePathname();
+  const t = useTranslations("layout");
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug?: string; projectSlug?: string }>();
 
   const { data: workspace } = useQuery(getWorkspaceQuery(workspaceSlug ?? ""));
@@ -26,9 +28,9 @@ export function BreadcrumbNav() {
 
   if (!workspaceSlug) {
     const globalLabel =
-      pathname === "/home" ? "Home"
-      : pathname.startsWith("/preferences") ? "Preferences"
-      : pathname === "/workspaces" ? "Manage workspaces"
+      pathname === "/home" ? t("breadcrumb.home")
+      : pathname.startsWith("/preferences") ? t("breadcrumb.preferences")
+      : pathname === "/workspaces" ? t("breadcrumb.manageWorkspaces")
       : null;
 
     if (!globalLabel) {
@@ -80,7 +82,7 @@ export function BreadcrumbNav() {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Settings</BreadcrumbPage>
+              <BreadcrumbPage>{t("breadcrumb.settings")}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
@@ -88,7 +90,7 @@ export function BreadcrumbNav() {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Members</BreadcrumbPage>
+              <BreadcrumbPage>{t("breadcrumb.members")}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}

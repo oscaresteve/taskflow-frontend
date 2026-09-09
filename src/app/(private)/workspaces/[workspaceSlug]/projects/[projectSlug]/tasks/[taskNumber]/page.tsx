@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArchiveTaskSection } from "./_components/archive-task-section";
 import { EditTaskForm } from "./_components/edit-task-form";
+import { useTranslations } from "next-intl";
 
 export default function TaskPage() {
   const { workspaceSlug, projectSlug, taskNumber } = useParams<{
@@ -19,9 +20,10 @@ export default function TaskPage() {
   }>();
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
+  const t = useTranslations("tasks");
 
   if (isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load task.</p>;
+    return <p className="p-6 text-sm text-muted-foreground">{t("taskPage.failedToLoadTask")}</p>;
   }
 
   if (isLoading || !task) {
@@ -40,14 +42,14 @@ export default function TaskPage() {
         className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="size-4" />
-        Back to project
+        {t("taskPage.backToProject")}
       </Link>
 
       <div className="flex items-center gap-2">
         <span className="text-xs text-muted-foreground">
           {project?.key}-{task.taskNumber}
         </span>
-        {task.isArchived ? <Badge variant="outline">Archived</Badge> : null}
+        {task.isArchived ? <Badge variant="outline">{t("taskPage.archived")}</Badge> : null}
       </div>
 
       <div className="max-w-sm">
@@ -55,7 +57,7 @@ export default function TaskPage() {
       </div>
 
       <div className="grid gap-1">
-        <h2 className="text-sm font-semibold">Danger zone</h2>
+        <h2 className="text-sm font-semibold">{t("taskPage.dangerZone")}</h2>
         <ArchiveTaskSection />
       </div>
     </div>

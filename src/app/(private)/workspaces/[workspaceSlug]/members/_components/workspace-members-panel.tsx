@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { MembersFilterBar } from "@/components/members/members-filter-bar";
@@ -21,12 +22,6 @@ const PAGE_SIZE_OPTIONS = [5, 10, 15];
 
 type MemberSortField = "joinedAt" | "createdAt" | "updatedAt";
 
-const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
-  { value: "joinedAt", label: "Joined" },
-  { value: "createdAt", label: "Created" },
-  { value: "updatedAt", label: "Updated" },
-];
-
 interface WorkspaceMembersPanelProps {
   workspaceSlug: string;
   status: WorkspaceMemberStatus;
@@ -46,6 +41,12 @@ export function WorkspaceMembersPanel({
   renderActions,
   actorUserId,
 }: WorkspaceMembersPanelProps) {
+  const t = useTranslations("members");
+  const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
+    { value: "joinedAt", label: t("workspaceMembersPanel.sortJoined") },
+    { value: "createdAt", label: t("workspaceMembersPanel.sortCreated") },
+    { value: "updatedAt", label: t("workspaceMembersPanel.sortUpdated") },
+  ];
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
   const [sort, setSort] = useState<MemberSortField>("joinedAt");
@@ -95,7 +96,7 @@ export function WorkspaceMembersPanel({
   }
 
   if (membersQuery.isError) {
-    return <p className="p-6 text-sm text-muted-foreground">Failed to load members.</p>;
+    return <p className="p-6 text-sm text-muted-foreground">{t("workspaceMembersPanel.failedToLoad")}</p>;
   }
 
   if (!membersQuery.data) {
@@ -135,7 +136,7 @@ export function WorkspaceMembersPanel({
         roleChangeable={roleChangeable}
         onChangeRole={onChangeRole}
         renderActions={renderActions}
-        emptyMessage="No members found."
+        emptyMessage={t("workspaceMembersPanel.emptyMessage")}
         actorUserId={actorUserId}
       />
       <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />

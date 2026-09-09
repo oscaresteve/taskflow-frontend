@@ -32,6 +32,7 @@ import {
 import { ColorDot } from "../ui/color-dot";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
+import { useTranslations } from "next-intl";
 
 const NAV_PAGE_SIZE = 5;
 
@@ -47,6 +48,7 @@ export default function ProjectsNav() {
   const projects = data?.pages.flatMap((page) => page.data) ?? [];
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - projects.length : 0;
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
+  const t = useTranslations("layout");
 
   return (
     <>
@@ -57,31 +59,31 @@ export default function ProjectsNav() {
               <FolderKanban className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/folder:opacity-0" />
               <ChevronDown className="absolute inset-0 size-4 opacity-0 transition-all group-hover/folder:opacity-100 group-data-open/collapsible:rotate-180" />
             </span>
-            Projects
+            {t("projectsNav.title")}
           </CollapsibleTrigger>
 
           {isWorkspaceManager(myRole) && (
-            <SidebarMenuAction onClick={() => setCreateOpen(true)} title="New project" className="right-7">
+            <SidebarMenuAction onClick={() => setCreateOpen(true)} title={t("projectsNav.newProject")} className="right-7">
               <Plus />
-              <span className="sr-only">New project</span>
+              <span className="sr-only">{t("projectsNav.newProject")}</span>
             </SidebarMenuAction>
           )}
 
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <SidebarMenuAction title="More options">
+                <SidebarMenuAction title={t("projectsNav.moreOptions")}>
                   <MoreVertical />
-                  <span className="sr-only">More options</span>
+                  <span className="sr-only">{t("projectsNav.moreOptions")}</span>
                 </SidebarMenuAction>
               }
             />
             <DropdownMenuContent align="start" className="min-w-56">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Projects</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("projectsNav.title")}</DropdownMenuLabel>
                 <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects`} />} className="gap-2">
                   <Settings />
-                  Manage projects
+                  {t("projectsNav.manageProjects")}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
@@ -89,11 +91,11 @@ export default function ProjectsNav() {
 
           <CollapsibleContent>
             <SidebarMenuSub>
-              <SearchInput value={search} onChange={setSearch} placeholder="Search projects" size="sm" />
+              <SearchInput value={search} onChange={setSearch} placeholder={t("projectsNav.searchPlaceholder")} size="sm" />
               {isError ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
-                    Failed to load projects
+                    {t("projectsNav.failedToLoad")}
                   </div>
                 </SidebarMenuSubItem>
               ) : isLoading ? (
@@ -107,7 +109,7 @@ export default function ProjectsNav() {
               ) : projects.length === 0 ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
-                    {debouncedSearch ? "No projects found" : "No projects yet"}
+                    {debouncedSearch ? t("projectsNav.noneFound") : t("projectsNav.noneYet")}
                   </div>
                 </SidebarMenuSubItem>
               ) : (
@@ -130,7 +132,7 @@ export default function ProjectsNav() {
                         aria-disabled={isFetchingNextPage}
                         className="text-muted-foreground cursor-pointer"
                       >
-                        {isFetchingNextPage ? "Loading…" : `${remaining} more`}
+                        {isFetchingNextPage ? t("projectsNav.loading") : t("projectsNav.remaining", { count: remaining })}
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   )}

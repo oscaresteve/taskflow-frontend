@@ -22,12 +22,14 @@ import { ApiError } from "@/lib/http/api-error";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { getFullName, getInitials } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export default function UserNav() {
   const router = useRouter();
   const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
   const { data: user, isLoading } = useQuery(getMeQuery());
+  const t = useTranslations("layout");
   const userName = user ? getFullName(user.firstName, user.lastName) : undefined;
   const [logOutOpen, setLogOutOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -43,7 +45,7 @@ export default function UserNav() {
       setLoggingOut(false);
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("userNav.logOutError"),
         priority: "high",
       });
     }
@@ -103,7 +105,7 @@ export default function UserNav() {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setLogOutOpen(true)}>
                 <LogOut />
-                Log out
+                {t("userNav.logOut")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -112,9 +114,9 @@ export default function UserNav() {
       <ConfirmDialog
         open={logOutOpen}
         onOpenChange={setLogOutOpen}
-        title="Log out"
-        description="Are you sure you want to log out? You'll need to sign in again to access your account."
-        confirmLabel="Log out"
+        title={t("userNav.logOutConfirmTitle")}
+        description={t("userNav.logOutConfirmDescription")}
+        confirmLabel={t("userNav.logOut")}
         variant="destructive"
         onConfirm={handleLogOut}
         pending={loggingOut}

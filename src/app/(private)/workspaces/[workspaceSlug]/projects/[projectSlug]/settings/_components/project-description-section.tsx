@@ -16,8 +16,11 @@ import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { UpdateProjectDescriptionDto, updateProjectDescriptionSchema } from "@/lib/schemas/project.schema";
 import { Loader2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function ProjectDescriptionSection() {
+  const t = useTranslations("projects");
+  const tCommon = useTranslations("common");
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
@@ -36,23 +39,23 @@ export function ProjectDescriptionSection() {
   async function onSubmit(data: UpdateProjectDescriptionDto) {
     try {
       await updateProject.mutateAsync(data);
-      toast.add({ type: "success", description: "Project description updated." });
+      toast.add({ type: "success", description: t("projectDescriptionSection.updated") });
     } catch (error) {
       toast.add({
         type: "error",
-        description: error instanceof ApiError ? error.message : "Something went wrong",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
         priority: "high",
       });
     }
   }
 
   if (isError) {
-    return <p className="text-sm text-muted-foreground">Failed to load project.</p>;
+    return <p className="text-sm text-muted-foreground">{t("projectDescriptionSection.failedToLoad")}</p>;
   }
 
   if (isLoading || !project) {
     return (
-      <SettingCard title="Description" description="A short description of your project.">
+      <SettingCard title={t("projectDescriptionSection.title")} description={t("projectDescriptionSection.description")}>
         <Skeleton className="h-16 w-full" />
       </SettingCard>
     );
@@ -61,13 +64,13 @@ export function ProjectDescriptionSection() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <SettingCard
-        title="Description"
-        description="A short description of your project."
-        footerHint="Max 500 characters"
+        title={t("projectDescriptionSection.title")}
+        description={t("projectDescriptionSection.description")}
+        footerHint={t("projectDescriptionSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateProject.isPending}>
             {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
-            Save
+            {tCommon("actions.save")}
           </Button>
         }
       >
@@ -80,10 +83,10 @@ export function ProjectDescriptionSection() {
                 {...field}
                 value={field.value ?? ""}
                 aria-invalid={fieldState.invalid}
-                aria-label="Description"
+                aria-label={t("projectDescriptionSection.fieldLabel")}
                 disabled={updateProject.isPending}
                 id="description"
-                placeholder="Redesign of the marketing site"
+                placeholder={t("projectDescriptionSection.placeholder")}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

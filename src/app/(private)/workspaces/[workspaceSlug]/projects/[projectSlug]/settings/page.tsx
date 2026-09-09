@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArchiveProjectSection } from "./_components/archive-project-section";
 import { ProjectNameSection } from "./_components/project-name-section";
 import { ProjectDescriptionSection } from "./_components/project-description-section";
@@ -12,6 +13,7 @@ import { useProjectRole } from "@/hooks/use-project-role";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 
 export default function ProjectSettingsPage() {
+  const t = useTranslations("projects");
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { role: myRole, isLoading } = useProjectRole(workspaceSlug, projectSlug);
 
@@ -25,12 +27,12 @@ export default function ProjectSettingsPage() {
   }
 
   if (!isProjectManager(myRole)) {
-    return <p className="p-6 text-sm text-muted-foreground">You don&apos;t have permission to view this page.</p>;
+    return <p className="p-6 text-sm text-muted-foreground">{t("projectSettingsPage.noPermission")}</p>;
   }
 
   return (
     <PageContainer className="flex flex-col gap-6 pb-20">
-      <PageHeader title="Settings" />
+      <PageHeader title={t("projectSettingsPage.title")} />
       <ProjectNameSection />
       <ProjectDescriptionSection />
       <ProjectColorSection />

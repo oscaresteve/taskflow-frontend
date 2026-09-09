@@ -1,0 +1,102 @@
+{
+  "genericError": "Something went wrong",
+  "roleLabel": {
+    "OWNER": "Owner",
+    "ADMIN": "Admin",
+    "MEMBER": "Member"
+  },
+  "roleDescription": {
+    "OWNER": "Full control, including removing it and managing every member.",
+    "ADMIN": "Manages members and settings, but can't remove it.",
+    "MEMBER": "Can access and contribute, without management access."
+  },
+  "roleFilter": {
+    "all": "All roles"
+  },
+  "workspaceMembersPanel": {
+    "failedToLoad": "Failed to load members.",
+    "emptyMessage": "No members found.",
+    "sortJoined": "Joined",
+    "sortCreated": "Created",
+    "sortUpdated": "Updated"
+  },
+  "projectMembersPanel": {
+    "failedToLoad": "Failed to load members.",
+    "emptyMessage": "No members found.",
+    "sortJoined": "Joined",
+    "sortCreated": "Created",
+    "sortUpdated": "Updated"
+  },
+  "membersFilterBar": {
+    "searchPlaceholder": "Search members"
+  },
+  "membersTable": {
+    "columnName": "Name",
+    "columnEmail": "Email",
+    "columnJoined": "Joined",
+    "columnRole": "Role",
+    "columnActions": "Actions",
+    "youSuffix": " (You)",
+    "noJoinDate": "—",
+    "actionsSrOnly": "Member actions"
+  },
+  "memberPicker": {
+    "defaultLabel": "Member",
+    "searchPlaceholder": "Search by name or email",
+    "loadingMore": "Loading…",
+    "moreCandidates": "{count} more",
+    "selectPersonError": "Select a person to add"
+  },
+  "workspaceMembersPage": {
+    "title": "Members",
+    "addMember": "Add member",
+    "tabActive": "Active",
+    "tabPending": "Pending",
+    "tabRemoved": "Removed",
+    "activate": "Activate",
+    "remove": "Remove",
+    "activatedToast": "{name} activated.",
+    "removedToast": "{name} removed from the workspace.",
+    "roleChangedToast": "{name}'s role changed to {role}.",
+    "removeMemberTitle": "Remove member",
+    "removeMemberDescription": "Remove {name} from this workspace? They'll lose access immediately.",
+    "removeConfirmLabel": "Remove",
+    "changeRoleTitle": "Change role",
+    "changeRoleDescription": "Change {name}'s role? They'll get {role} access to this workspace.",
+    "changeRoleConfirmLabel": "Change",
+    "activateMemberTitle": "Activate member",
+    "activateMemberDescription": "Activate {name}? They'll get immediate access to this workspace.",
+    "activateConfirmLabel": "Activate"
+  },
+  "projectMembersPage": {
+    "title": "Members",
+    "addMember": "Add member",
+    "tabActive": "Active",
+    "tabInactive": "Inactive",
+    "deactivate": "Deactivate",
+    "roleChangedToast": "{name}'s role changed to {role}.",
+    "deactivatedToast": "{name} deactivated on this project.",
+    "deactivateMemberTitle": "Deactivate member",
+    "deactivateMemberDescription": "Deactivate {name} on this project? They'll lose access to it immediately.",
+    "deactivateConfirmLabel": "Deactivate",
+    "changeRoleTitle": "Change role",
+    "changeRoleDescription": "Change {name}'s role? They'll get {role} access to this project.",
+    "changeRoleConfirmLabel": "Change"
+  },
+  "addWorkspaceMemberDialog": {
+    "title": "Add member",
+    "description": "Search for a person by name or email. They'll be added as pending until an owner or admin activates them.",
+    "submitLabel": "Add member",
+    "roleLabel": "Role",
+    "emptyMessage": "No matching people found.",
+    "addedToast": "{name} added, pending activation."
+  },
+  "addProjectMemberDialog": {
+    "title": "Add member",
+    "description": "Add a workspace member to this project.",
+    "submitLabel": "Add member",
+    "roleLabel": "Role",
+    "emptyMessage": "No matching workspace members found.",
+    "addedToast": "{name} added to the project."
+  }
+}

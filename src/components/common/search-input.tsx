@@ -5,6 +5,7 @@ import { cva } from "class-variance-authority";
 
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export type SearchInputSize = "xs" | "sm" | "default" | "lg";
 
@@ -62,6 +63,8 @@ export function SearchInput({
   autoFocus,
   size = "default",
 }: SearchInputProps) {
+  const t = useTranslations("common");
+
   return (
     <div className={cn("relative", className)}>
       <SearchIcon
@@ -82,7 +85,7 @@ export function SearchInput({
       {value ? (
         <button
           type="button"
-          aria-label="Clear search"
+          aria-label={t("search.clear")}
           className={cn(
             "absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground",
             clearButtonClasses[size],

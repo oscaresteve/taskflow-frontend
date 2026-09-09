@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { DeactivateWorkspaceSection } from "./_components/deactivate-workspace-section";
 import { WorkspaceNameSection } from "./_components/workspace-name-section";
 import { WorkspaceDescriptionSection } from "./_components/workspace-description-section";
@@ -11,6 +12,7 @@ import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 
 export default function WorkspaceSettingsPage() {
+  const t = useTranslations("workspaces");
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { role: myRole, isLoading } = useWorkspaceRole(workspaceSlug);
 
@@ -24,12 +26,12 @@ export default function WorkspaceSettingsPage() {
   }
 
   if (!isWorkspaceManager(myRole)) {
-    return <p className="p-6 text-sm text-muted-foreground">You don&apos;t have permission to view this page.</p>;
+    return <p className="p-6 text-sm text-muted-foreground">{t("workspaceSettingsPage.noPermission")}</p>;
   }
 
   return (
     <PageContainer className="flex flex-col gap-6 pb-20">
-      <PageHeader title="Settings" />
+      <PageHeader title={t("workspaceSettingsPage.title")} />
       <WorkspaceNameSection />
       <WorkspaceDescriptionSection />
       <DeactivateWorkspaceSection />

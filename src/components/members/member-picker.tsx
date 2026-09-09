@@ -8,6 +8,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchInput } from "@/components/common/search-input";
 import { getInitials } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export interface MemberCandidate {
   id: string;
@@ -37,7 +38,7 @@ interface MemberPickerProps {
 
 export function MemberPicker({
   id,
-  label = "Member",
+  label,
   search,
   onSearchChange,
   candidates,
@@ -52,9 +53,11 @@ export function MemberPicker({
   remaining,
   onLoadMore,
 }: MemberPickerProps) {
+  const t = useTranslations("members");
+
   return (
     <Field>
-      <FieldLabel htmlFor={`${id}-search`}>{label}</FieldLabel>
+      <FieldLabel htmlFor={`${id}-search`}>{label ?? t("memberPicker.defaultLabel")}</FieldLabel>
       {selected ? (
         <div className="flex items-center gap-2 rounded-lg border border-input px-2.5 py-1.5">
           <Avatar size="sm">
@@ -75,7 +78,7 @@ export function MemberPicker({
             id={`${id}-search`}
             value={search}
             onChange={onSearchChange}
-            placeholder="Search by name or email"
+            placeholder={t("memberPicker.searchPlaceholder")}
             autoFocus
           />
           <div className="flex max-h-48 flex-col gap-1 overflow-y-auto">
@@ -115,7 +118,7 @@ export function MemberPicker({
                     aria-disabled={isLoadingMore}
                     className="rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted"
                   >
-                    {isLoadingMore ? "Loading…" : `${remaining} more`}
+                    {isLoadingMore ? t("memberPicker.loadingMore") : t("memberPicker.moreCandidates", { count: remaining ?? 0 })}
                   </button>
                 )}
               </>
@@ -123,7 +126,7 @@ export function MemberPicker({
           </div>
         </>
       )}
-      {error && <FieldError errors={[{ message: "Select a person to add" }]} />}
+      {error && <FieldError errors={[{ message: t("memberPicker.selectPersonError") }]} />}
     </Field>
   );
 }

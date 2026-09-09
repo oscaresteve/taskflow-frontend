@@ -1,0 +1,101 @@
+{
+  "errors": {
+    "generic": "Something went wrong"
+  },
+  "validation": {
+    "nameMinLength": "Name must be at least 2 characters long",
+    "nameMaxLength": "Name cannot exceed 100 characters",
+    "keyMinLength": "Key must be at least 2 characters long",
+    "keyMaxLength": "Key cannot exceed 10 characters",
+    "keyFormat": "Key must contain only uppercase letters and numbers",
+    "iconMustBeString": "Icon must be a string",
+    "colorMustBeString": "Color must be a string",
+    "atLeastOneField": "At least one field must be provided"
+  },
+  "projectsPage": {
+    "title": "Manage projects",
+    "newProject": "New project",
+    "searchPlaceholder": "Search projects",
+    "failedToLoad": "Failed to load projects.",
+    "noProjectsFound": "No projects found.",
+    "sortOptions": {
+      "name": "Name",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    },
+    "columns": {
+      "project": "Project",
+      "slug": "Slug",
+      "key": "Key",
+      "owners": "Owners",
+      "createdAt": "Created at",
+      "actions": "Actions"
+    }
+  },
+  "projectActionsMenu": {
+    "ariaLabel": "Project actions",
+    "open": "Open",
+    "members": "Members",
+    "settings": "Settings",
+    "archive": "Archive",
+    "confirmTitle": "Archive {projectName}?",
+    "confirmDescription": "This will archive the project and hide it from all members. This action cannot be undone from the app."
+  },
+  "projectNotFound": {
+    "title": "Project not found",
+    "description": "This project doesn't exist or you don't have access to it.",
+    "goToWorkspace": "Go to workspace"
+  },
+  "projectOverviewPage": {
+    "title": "Project Overview"
+  },
+  "projectSettingsPage": {
+    "title": "Settings",
+    "noPermission": "You don't have permission to view this page."
+  },
+  "archiveProjectSection": {
+    "title": "Archive project",
+    "description": "This project will no longer be accessible to members.",
+    "archive": "Archive",
+    "confirmTitle": "Archive {projectName}?",
+    "confirmDescription": "This will archive the project and hide it from all members. This action cannot be undone from the app."
+  },
+  "projectColorSection": {
+    "title": "Color",
+    "description": "Used to tell this project apart at a glance.",
+    "footerHint": "Choose no color to leave it unset.",
+    "failedToLoad": "Failed to load project.",
+    "updated": "Project color updated."
+  },
+  "projectDescriptionSection": {
+    "title": "Description",
+    "description": "A short description of your project.",
+    "footerHint": "Max 500 characters",
+    "fieldLabel": "Description",
+    "placeholder": "Redesign of the marketing site",
+    "failedToLoad": "Failed to load project.",
+    "updated": "Project description updated."
+  },
+  "projectNameSection": {
+    "title": "Name",
+    "description": "This is your project's visible name.",
+    "footerHint": "Max 100 characters",
+    "fieldLabel": "Project name",
+    "placeholder": "Website Redesign",
+    "failedToLoad": "Failed to load project.",
+    "updated": "Project name updated."
+  },
+  "createProjectDialog": {
+    "title": "Create project",
+    "description": "Set up a new project to organize tasks.",
+    "submit": "Create project",
+    "nameLabel": "Name",
+    "namePlaceholder": "Website Redesign",
+    "keyLabel": "Key",
+    "keyPlaceholder": "WEB",
+    "keyDefault": "KEY",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Redesign of the marketing site",
+    "colorLabel": "Color"
+  }
+}

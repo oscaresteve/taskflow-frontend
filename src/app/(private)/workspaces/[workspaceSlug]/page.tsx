@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { FolderKanban, Users } from "lucide-react";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
@@ -16,6 +17,7 @@ import { PageContainer } from "@/components/common/page-container";
 import { WorkspaceHeader } from "./_components/workspace-header";
 
 export default function WorkspacePage() {
+  const t = useTranslations("workspaces");
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: projects, isLoading: isProjectsLoading } = useQuery(getProjectsQuery(workspaceSlug));
   const { data: members, isLoading: isMembersLoading } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
@@ -29,7 +31,7 @@ export default function WorkspacePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FolderKanban className="size-4" />
-            Projects
+            {t("workspacePage.projects")}
             <Badge variant="secondary">{projects?.data.length ?? 0}</Badge>
           </CardTitle>
         </CardHeader>
@@ -40,7 +42,7 @@ export default function WorkspacePage() {
               <Skeleton className="h-8 w-full" />
             </>
           ) : projects.data.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No projects yet.</p>
+            <p className="text-sm text-muted-foreground">{t("workspacePage.noProjectsYet")}</p>
           ) : (
             projects.data.map((project) => (
               <Link
@@ -61,7 +63,7 @@ export default function WorkspacePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="size-4" />
-            Members
+            {t("workspacePage.members")}
             <Badge variant="secondary">{activeMembers.length}</Badge>
           </CardTitle>
         </CardHeader>
@@ -72,7 +74,7 @@ export default function WorkspacePage() {
               <Skeleton className="h-8 w-full" />
             </>
           ) : activeMembers.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No members yet.</p>
+            <p className="text-sm text-muted-foreground">{t("workspacePage.noMembersYet")}</p>
           ) : (
             activeMembers.map((member) => {
               const memberName = getFullName(member.user.firstName, member.user.lastName);

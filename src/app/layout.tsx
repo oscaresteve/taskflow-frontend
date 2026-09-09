@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { NextIntlClientProvider } from "next-intl";
 import { ColorSchemeProvider } from "@/components/providers/color-scheme-provider";
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,16 +33,18 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ColorSchemeProvider
-          attribute="class"
-          defaultTheme={colorScheme ?? "system"}
-          enableSystem
-        >
-          <QueryProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </QueryProvider>
-          <Toaster />
-        </ColorSchemeProvider>
+        <NextIntlClientProvider>
+          <ColorSchemeProvider
+            attribute="class"
+            defaultTheme={colorScheme ?? "system"}
+            enableSystem
+          >
+            <QueryProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </QueryProvider>
+            <Toaster />
+          </ColorSchemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

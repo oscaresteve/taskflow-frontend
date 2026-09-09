@@ -25,12 +25,14 @@ import { isNavActive } from "@/lib/nav";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { Separator } from "../ui/separator";
+import { useTranslations } from "next-intl";
 
 export function WorkspaceSidebar() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const overviewHref = `/workspaces/${workspaceSlug}`;
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
+  const t = useTranslations("layout");
 
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" collapsible="icon">
@@ -40,14 +42,14 @@ export function WorkspaceSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Global</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("workspaceSidebar.global")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <GlobalNav />
           </SidebarGroupContent>
         </SidebarGroup>
         <Separator />
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("workspaceSidebar.workspace")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -55,7 +57,7 @@ export function WorkspaceSidebar() {
                     with overviewHref, so a prefix match would keep this active everywhere. */}
                 <SidebarMenuButton render={<Link href={overviewHref} />} isActive={pathname === overviewHref}>
                   <LayoutDashboard />
-                  Overview
+                  {t("workspaceSidebar.overview")}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -68,7 +70,7 @@ export function WorkspaceSidebar() {
                   isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/members`)}
                 >
                   <Users />
-                  Members
+                  {t("workspaceSidebar.members")}
                 </SidebarMenuButton>
               </SidebarMenuItem>
               {isWorkspaceManager(myRole) && (
@@ -78,7 +80,7 @@ export function WorkspaceSidebar() {
                     isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
                   >
                     <Settings />
-                    Settings
+                    {t("workspaceSidebar.settings")}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
@@ -87,7 +89,7 @@ export function WorkspaceSidebar() {
         </SidebarGroup>
         <Separator />
         <SidebarGroup>
-          <SidebarGroupLabel>App</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("workspaceSidebar.app")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <AppNav />
           </SidebarGroupContent>
