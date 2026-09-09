@@ -76,7 +76,7 @@ export function MembersTable<TMember extends MemberLike>({
               <TableCell>
                 {roleChangeable(member) ? (
                   <Select value={member.role} onValueChange={(role) => onChangeRole(member, role as MemberRole)}>
-                    <SelectTrigger className="border-transparent bg-transparent p-0 ring-0! border-0">
+                    <SelectTrigger className="border-transparent bg-transparent! p-0 ring-0! border-0">
                       <SelectValue>{(role: MemberRole) => <RoleBadge role={role} />}</SelectValue>
                     </SelectTrigger>
                     <SelectContent className="w-64">
