@@ -9,7 +9,6 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { ApiError } from "@/lib/http/api-error";
@@ -38,8 +37,6 @@ export function EditTaskForm({ workspaceSlug, projectSlug, taskNumber }: EditTas
   const form = useForm<UpdateTaskDto>({
     resolver: zodResolver(updateTaskSchema),
     defaultValues: {
-      title: "",
-      description: "",
       priority: "MEDIUM",
       status: "TODO",
       assigneeId: null,
@@ -50,8 +47,6 @@ export function EditTaskForm({ workspaceSlug, projectSlug, taskNumber }: EditTas
   useEffect(() => {
     if (task) {
       form.reset({
-        title: task.title,
-        description: task.description ?? "",
         priority: task.priority,
         status: task.status,
         assigneeId: task.assigneeId,
@@ -80,8 +75,6 @@ export function EditTaskForm({ workspaceSlug, projectSlug, taskNumber }: EditTas
   if (isLoading || !task) {
     return (
       <FieldGroup>
-        <Skeleton className="h-9 w-2/3" />
-        <Skeleton className="h-16 w-full" />
         <Skeleton className="h-9 w-full" />
       </FieldGroup>
     );
@@ -90,41 +83,6 @@ export function EditTaskForm({ workspaceSlug, projectSlug, taskNumber }: EditTas
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <FieldGroup>
-        <Controller
-          name="title"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                aria-label={t("fields.title")}
-                id="title"
-                type="text"
-                required
-                className="border-none px-0 text-xl font-semibold shadow-none focus-visible:ring-0 md:text-xl"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name="description"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="description">{t("fields.description")}</FieldLabel>
-              <Textarea
-                {...field}
-                value={field.value ?? ""}
-                aria-invalid={fieldState.invalid}
-                id="description"
-                placeholder={t("fields.descriptionPlaceholder")}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
         <div className="flex flex-wrap gap-3">
           <Controller
             name="status"
@@ -215,7 +173,11 @@ export function EditTaskForm({ workspaceSlug, projectSlug, taskNumber }: EditTas
           />
         </div>
         <Field>
-          <Button type="submit" disabled={updateTask.isPending} className="self-start">
+          <Button
+            type="submit"
+            disabled={updateTask.isPending || !form.formState.isDirty}
+            className="self-start"
+          >
             {t("editTaskForm.saveChanges")}
           </Button>
         </Field>

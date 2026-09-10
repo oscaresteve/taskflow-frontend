@@ -28,5 +28,8 @@
   },
   "validation": {
     "descriptionMaxLength": "Description cannot exceed 500 characters"
+  },
+  "errors": {
+    "generic": "Something went wrong"
   }
 }

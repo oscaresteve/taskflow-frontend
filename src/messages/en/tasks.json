@@ -6,6 +6,7 @@
     "title": "Title",
     "description": "Description",
     "descriptionPlaceholder": "Optional",
+    "addDescription": "Add a description...",
     "status": "Status",
     "priority": "Priority",
     "assignee": "Assignee",

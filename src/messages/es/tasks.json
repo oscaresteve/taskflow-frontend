@@ -6,6 +6,7 @@
     "title": "Título",
     "description": "Descripción",
     "descriptionPlaceholder": "Opcional",
+    "addDescription": "Añadir una descripción...",
     "status": "Estado",
     "priority": "Prioridad",
     "assignee": "Asignado a",

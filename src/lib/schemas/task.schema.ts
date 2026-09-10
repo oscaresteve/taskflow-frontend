@@ -1,16 +1,21 @@
 import z from "zod";
 import { descriptionSchema } from "./common.schema";
 import tasks from "@/messages/en/tasks.json";
+import common from "@/messages/en/common.json";
 
 export const taskPriorities = ["LOW", "MEDIUM", "HIGH", "URGENT"] as const;
 export const taskStatuses = ["TODO", "IN_PROGRESS", "IN_REVIEW", "DONE"] as const;
 
+export const taskTitleSchema = z
+  .string()
+  .trim()
+  .min(2, tasks.validation.titleMinLength)
+  .max(100, tasks.validation.titleMaxLength);
+
+export const taskDescriptionFieldSchema = z.string().trim().max(500, common.validation.descriptionMaxLength);
+
 export const createTaskSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(2, tasks.validation.titleMinLength)
-    .max(100, tasks.validation.titleMaxLength),
+  title: taskTitleSchema,
   description: descriptionSchema,
   priority: z.enum(taskPriorities),
   assigneeId: z.cuid().optional(),
@@ -19,12 +24,7 @@ export const createTaskSchema = z.object({
 
 export const updateTaskSchema = z
   .object({
-    title: z
-      .string()
-      .trim()
-      .min(2, tasks.validation.titleMinLength)
-      .max(100, tasks.validation.titleMaxLength)
-      .optional(),
+    title: taskTitleSchema.optional(),
     description: descriptionSchema.nullable(),
     priority: z.enum(taskPriorities).optional(),
     status: z.enum(taskStatuses).optional(),
