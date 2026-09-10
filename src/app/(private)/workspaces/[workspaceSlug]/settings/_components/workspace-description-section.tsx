@@ -71,7 +71,7 @@ export function WorkspaceDescriptionSection() {
         description={t("workspaceDescriptionSection.description")}
         footerHint={t("workspaceDescriptionSection.footerHint")}
         footerAction={
-          <Button type="submit" disabled={updateWorkspace.isPending}>
+          <Button type="submit" disabled={updateWorkspace.isPending || !form.formState.isDirty}>
             {updateWorkspace.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             {commonT("actions.save")}
           </Button>

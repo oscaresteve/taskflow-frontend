@@ -72,7 +72,7 @@ export function ProjectNameSection() {
         description={t("projectNameSection.description")}
         footerHint={t("projectNameSection.footerHint")}
         footerAction={
-          <Button type="submit" disabled={updateProject.isPending}>
+          <Button type="submit" disabled={updateProject.isPending || !form.formState.isDirty}>
             {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
             {tCommon("actions.save")}
           </Button>
