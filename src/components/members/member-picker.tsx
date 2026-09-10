@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchInput } from "@/components/common/search-input";
-import { getInitials } from "@/lib/utils";
+import { getFullName, getInitials } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
 export interface MemberCandidate {
@@ -16,6 +16,27 @@ export interface MemberCandidate {
   name: string;
   email: string;
   avatarUrl: string | null;
+}
+
+interface MemberWithUser {
+  id: string;
+  userId: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatarUrl: string | null;
+  };
+}
+
+export function toMemberCandidate(member: MemberWithUser): MemberCandidate {
+  return {
+    id: member.id,
+    userId: member.userId,
+    name: getFullName(member.user.firstName, member.user.lastName),
+    email: member.user.email,
+    avatarUrl: member.user.avatarUrl,
+  };
 }
 
 interface MemberPickerProps {

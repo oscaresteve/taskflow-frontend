@@ -77,5 +77,8 @@
     "description": "Add a new task to this project.",
     "submit": "Create task",
     "titlePlaceholder": "Set up the staging environment"
+  },
+  "assigneePicker": {
+    "emptyMessage": "No matching members found."
   }
 }

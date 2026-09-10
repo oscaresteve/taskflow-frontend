@@ -77,5 +77,8 @@
     "description": "Añade una nueva tarea a este proyecto.",
     "submit": "Crear tarea",
     "titlePlaceholder": "Configurar el entorno de staging"
+  },
+  "assigneePicker": {
+    "emptyMessage": "No se encontraron miembros coincidentes."
   }
 }

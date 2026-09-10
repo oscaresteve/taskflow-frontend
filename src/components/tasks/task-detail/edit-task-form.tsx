@@ -10,16 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
+import { AssigneePicker } from "@/components/tasks/assignee-picker";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { ApiError } from "@/lib/http/api-error";
-import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getTaskQuery } from "@/lib/queries/task.queries";
 import { UpdateTaskDto, taskPriorities, taskStatuses, updateTaskSchema } from "@/lib/schemas/task.schema";
 import { statusLabel } from "@/lib/task-labels";
-import { getFullName } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-
-const UNASSIGNED = "unassigned";
 
 interface EditTaskFormProps {
   workspaceSlug: string;
@@ -30,8 +27,6 @@ interface EditTaskFormProps {
 export function EditTaskForm({ workspaceSlug, projectSlug, taskNumber }: EditTaskFormProps) {
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
   const t = useTranslations("tasks");
-  const { data: projectMembers } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
-  const members = projectMembers ?? [];
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
 
   const form = useForm<UpdateTaskDto>({
@@ -134,23 +129,13 @@ export function EditTaskForm({ workspaceSlug, projectSlug, taskNumber }: EditTas
             render={({ field }) => (
               <Field className="w-48">
                 <FieldLabel htmlFor="assignee">{t("fields.assignee")}</FieldLabel>
-                <Select
-                  name={field.name}
-                  value={field.value ?? UNASSIGNED}
-                  onValueChange={(value) => field.onChange(value === UNASSIGNED ? null : value)}
-                >
-                  <SelectTrigger id="assignee" className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={UNASSIGNED}>{t("fields.unassigned")}</SelectItem>
-                    {members.map((member) => (
-                      <SelectItem key={member.userId} value={member.userId}>
-                        {getFullName(member.user.firstName, member.user.lastName)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <AssigneePicker
+                  id="assignee"
+                  workspaceSlug={workspaceSlug}
+                  projectSlug={projectSlug}
+                  value={field.value ?? null}
+                  onChange={field.onChange}
+                />
               </Field>
             )}
           />

@@ -11,27 +11,23 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
+import { AssigneePicker } from "@/components/tasks/assignee-picker";
 import { FormDialog } from "@/components/common/form-dialog";
 import { useCreateTask } from "@/hooks/use-create-task";
 import { ApiError } from "@/lib/http/api-error";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
-import { ProjectMemberWithUserResponseDto } from "@/lib/dtos/project-members.dto";
 import { CreateTaskDto, createTaskSchema, taskPriorities } from "@/lib/schemas/task.schema";
 import { priorityVariant } from "@/lib/task-labels";
-import { getFullName } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-
-const UNASSIGNED = "unassigned";
 
 interface CreateTaskDialogProps {
   workspaceSlug: string;
   project: ProjectResponseDto;
-  members: ProjectMemberWithUserResponseDto[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpenChange }: CreateTaskDialogProps) {
+export function CreateTaskDialog({ workspaceSlug, project, open, onOpenChange }: CreateTaskDialogProps) {
   const router = useRouter();
   const createTask = useCreateTask(workspaceSlug, project.slug);
   const t = useTranslations("tasks");
@@ -145,23 +141,13 @@ export function CreateTaskDialog({ workspaceSlug, project, members, open, onOpen
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="task-assignee">{t("fields.assignee")}</FieldLabel>
-                <Select
-                  name={field.name}
-                  value={field.value ?? UNASSIGNED}
-                  onValueChange={(value) => field.onChange(value === UNASSIGNED ? undefined : value)}
-                >
-                  <SelectTrigger id="task-assignee" className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={UNASSIGNED}>{t("fields.unassigned")}</SelectItem>
-                    {members.map((member) => (
-                      <SelectItem key={member.userId} value={member.userId}>
-                        {getFullName(member.user.firstName, member.user.lastName)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <AssigneePicker
+                  id="task-assignee"
+                  workspaceSlug={workspaceSlug}
+                  projectSlug={project.slug}
+                  value={field.value ?? null}
+                  onChange={(userId) => field.onChange(userId ?? undefined)}
+                />
               </Field>
             )}
           />

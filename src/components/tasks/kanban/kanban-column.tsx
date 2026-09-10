@@ -5,7 +5,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Badge } from "@/components/ui/badge";
-import { UserResponseDto } from "@/lib/dtos/auth.dto";
 import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { statusLabel } from "@/lib/task-labels";
 import { cn } from "@/lib/utils";
@@ -20,7 +19,6 @@ interface KanbanColumnProps {
   status: TaskStatus;
   tasks: TaskResponseDto[];
   isDropTarget: boolean;
-  assigneesById: Map<string, UserResponseDto>;
 }
 
 export function KanbanColumn({
@@ -30,7 +28,6 @@ export function KanbanColumn({
   status,
   tasks,
   isDropTarget,
-  assigneesById,
 }: KanbanColumnProps) {
   // El droppable de la columna recoge lo que se suelta fuera de una tarjeta: el hueco bajo la
   // ultima o una columna vacia, donde no hay ningun sortable al que apuntar. Su `isOver` no se usa;
@@ -71,7 +68,8 @@ export function KanbanColumn({
                 })}
                 taskKey={`${projectKey}-${task.taskNumber}`}
                 task={task}
-                assignee={task.assigneeId ? assigneesById.get(task.assigneeId) : undefined}
+                workspaceSlug={workspaceSlug}
+                projectSlug={projectSlug}
               />
             ))
           )}
