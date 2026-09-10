@@ -1,6 +1,7 @@
-import { keepPreviousData, queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { projectMemberKeys } from "../query-keys/project-member.keys";
-import { getAllProjectMembers, getMyProjectMember, getProjectMembers } from "../api/project-members.api";
+import { getAllProjectMembers, getMyProjectMember, getProjectMember, getProjectMembers } from "../api/project-members.api";
+import { dedupeInfinitePages, getNextPageParam } from "./pagination";
 import { ProjectRole } from "../dtos/project-members.dto";
 import { SortOrder } from "../dtos/pagination.dto";
 
@@ -9,6 +10,21 @@ export const getMyProjectMemberQuery = (workspaceSlug: string, projectSlug: stri
     queryKey: projectMemberKeys.me(workspaceSlug, projectSlug),
     queryFn: () => getMyProjectMember({ workspaceSlug, projectSlug }),
     enabled: !!workspaceSlug && !!projectSlug,
+  });
+
+export const getProjectMemberQuery = ({
+  workspaceSlug,
+  projectSlug,
+  userId,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  userId: string | null;
+}) =>
+  queryOptions({
+    queryKey: projectMemberKeys.detail(workspaceSlug, projectSlug, userId ?? ""),
+    queryFn: () => getProjectMember({ workspaceSlug, projectSlug, userId: userId as string }),
+    enabled: !!workspaceSlug && !!projectSlug && !!userId,
   });
 
 export const getActiveProjectMembersQuery = ({
@@ -21,6 +37,34 @@ export const getActiveProjectMembersQuery = ({
   queryOptions({
     queryKey: projectMemberKeys.activeList(workspaceSlug, projectSlug),
     queryFn: () => getAllProjectMembers({ workspaceSlug, projectSlug, isActive: [true] }),
+    enabled: !!workspaceSlug && !!projectSlug,
+  });
+
+export const getActiveProjectMembersInfiniteQuery = ({
+  workspaceSlug,
+  projectSlug,
+  search,
+  limit,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  search: string;
+  limit: number;
+}) =>
+  infiniteQueryOptions({
+    queryKey: projectMemberKeys.activeInfiniteList(workspaceSlug, projectSlug, { search, limit }),
+    queryFn: ({ pageParam }) =>
+      getProjectMembers({
+        workspaceSlug,
+        projectSlug,
+        isActive: [true],
+        search: search || undefined,
+        page: pageParam,
+        limit,
+      }),
+    initialPageParam: 1,
+    getNextPageParam,
+    select: dedupeInfinitePages,
     enabled: !!workspaceSlug && !!projectSlug,
   });
 

@@ -64,6 +64,21 @@ export function getMyProjectMember({ workspaceSlug, projectSlug }: { workspaceSl
   });
 }
 
+export function getProjectMember({
+  workspaceSlug,
+  projectSlug,
+  userId,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  userId: string;
+}) {
+  return request<ProjectMemberWithUserResponseDto>(
+    `/workspaces/${workspaceSlug}/projects/${projectSlug}/members/${userId}`,
+    { method: "GET" },
+  );
+}
+
 export function createProjectMember({
   workspaceSlug,
   projectSlug,

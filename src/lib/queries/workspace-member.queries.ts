@@ -1,7 +1,7 @@
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { getAllWorkspaceMembers, getMyWorkspaceMember, getWorkspaceMembers } from "@/lib/api/workspace-members.api";
 import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
-import { getNextPageParam } from "@/lib/queries/pagination";
+import { dedupeInfinitePages, getNextPageParam } from "@/lib/queries/pagination";
 import { WorkspaceMemberStatus, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 
@@ -51,6 +51,7 @@ export const getActiveWorkspaceMembersInfiniteQuery = ({
       }),
     initialPageParam: 1,
     getNextPageParam,
+    select: dedupeInfinitePages,
     enabled: !!workspaceSlug,
   });
 
