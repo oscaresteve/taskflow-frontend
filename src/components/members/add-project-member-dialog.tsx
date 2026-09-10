@@ -9,7 +9,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/common/form-dialog";
-import { MemberCandidate, MemberPicker } from "@/components/members/member-picker";
+import { MemberCandidate, MemberPicker, toMemberCandidate } from "@/components/members/member-picker";
 import { useCreateProjectMember } from "@/hooks/use-create-project-member";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useProjectRole } from "@/hooks/use-project-role";
@@ -17,7 +17,6 @@ import { getActiveWorkspaceMembersInfiniteQuery } from "@/lib/queries/workspace-
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectMemberDto, createProjectMemberSchema } from "@/lib/schemas/project-member.schema";
 import { assignableProjectRoles } from "@/lib/permissions/project-member-permissions";
-import { getFullName } from "@/lib/utils";
 import { RoleIconLabel, RoleSelectItemContent } from "@/components/members/role-badge";
 import { MemberRole } from "@/lib/role-labels";
 import { useTranslations } from "next-intl";
@@ -53,23 +52,18 @@ export function AddProjectMemberDialog({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery(
-    getActiveWorkspaceMembersInfiniteQuery({
+  } = useInfiniteQuery({
+    ...getActiveWorkspaceMembersInfiniteQuery({
       workspaceSlug,
       excludeProjectSlug: projectSlug,
       search: debouncedSearch,
       limit: PICKER_PAGE_SIZE,
     }),
-  );
+    enabled: open,
+  });
 
   const candidates: MemberCandidate[] = (workspaceMembers?.pages.flatMap((page) => page.data) ?? []).map(
-    (member) => ({
-      id: member.id,
-      userId: member.userId,
-      name: getFullName(member.user.firstName, member.user.lastName),
-      email: member.user.email,
-      avatarUrl: member.user.avatarUrl,
-    }),
+    toMemberCandidate,
   );
   const remaining = workspaceMembers
     ? workspaceMembers.pages[workspaceMembers.pages.length - 1].pagination.total - candidates.length

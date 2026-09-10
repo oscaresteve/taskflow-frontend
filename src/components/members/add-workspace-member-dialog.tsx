@@ -63,7 +63,7 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery(getUsersInfiniteQuery(debouncedSearch, workspaceSlug, PICKER_PAGE_SIZE));
+  } = useInfiniteQuery({ ...getUsersInfiniteQuery(debouncedSearch, workspaceSlug, PICKER_PAGE_SIZE), enabled: open });
   const candidates: MemberCandidate[] = (users?.pages.flatMap((page) => page.data) ?? []).map((user) => ({
     id: user.id,
     userId: user.id,
