@@ -14,7 +14,7 @@ import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export default function ProjectPage() {
+export default function KanbanPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: project, isLoading, isError } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const { data: projectMembers } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));

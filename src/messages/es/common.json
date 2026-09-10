@@ -2,7 +2,8 @@
   "actions": {
     "confirm": "Confirmar",
     "cancel": "Cancelar",
-    "save": "Guardar"
+    "save": "Guardar",
+    "close": "Cerrar"
   },
   "search": {
     "clear": "Borrar búsqueda"

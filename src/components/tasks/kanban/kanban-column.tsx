@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +11,7 @@ import { statusLabel } from "@/lib/task-labels";
 import { cn } from "@/lib/utils";
 import { SortableKanbanCard } from "./kanban-card";
 import { useTranslations } from "next-intl";
+import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 
 interface KanbanColumnProps {
   workspaceSlug: string;
@@ -35,6 +37,8 @@ export function KanbanColumn({
   // el resaltado lo decide el board, que sabe en que columna va a caer la tarjeta.
   const { setNodeRef } = useDroppable({ id: status });
   const t = useTranslations("tasks");
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   // SortableContext reacciona a `items` por identidad, asi que se memoiza: crearlo en cada render
   // le haria recalcular su estado interno continuamente durante el arrastre.
@@ -58,7 +62,13 @@ export function KanbanColumn({
             tasks.map((task) => (
               <SortableKanbanCard
                 key={task.id}
-                href={`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${task.taskNumber}`}
+                href={buildTaskModalHref({
+                  pathname,
+                  searchParams,
+                  workspaceSlug,
+                  projectSlug,
+                  taskNumber: task.taskNumber,
+                })}
                 taskKey={`${projectKey}-${task.taskNumber}`}
                 task={task}
                 assignee={task.assigneeId ? assigneesById.get(task.assigneeId) : undefined}

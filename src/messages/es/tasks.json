@@ -36,20 +36,40 @@
   },
   "taskPage": {
     "failedToLoadTask": "No se pudo cargar la tarea.",
-    "backToProject": "Volver al proyecto",
-    "archived": "Archivada",
-    "dangerZone": "Zona de peligro"
+    "archived": "Archivada"
   },
   "editTaskForm": {
-    "saveChanges": "Guardar cambios"
+    "saveChanges": "Guardar cambios",
+    "saveSuccess": "Tarea actualizada."
   },
-  "archiveTaskSection": {
-    "title": "Archivar tarea",
-    "description": "Las tareas archivadas se ocultan de la lista de tareas y ya no se pueden editar.",
-    "archived": "Archivada",
+  "taskActionsMenu": {
+    "ariaLabel": "Acciones de la tarea",
     "archive": "Archivar",
     "confirmTitle": "¿Archivar {taskTitle}?",
     "confirmDescription": "Esto archivará la tarea y la ocultará de la lista de tareas. Esta acción no se puede deshacer desde la app."
+  },
+  "comments": {
+    "title": "Comentarios",
+    "composerPlaceholder": "Escribe un comentario…",
+    "submit": "Publicar comentario",
+    "empty": "Todavía no hay comentarios.",
+    "failedToLoad": "No se pudieron cargar los comentarios.",
+    "loading": "Cargando…",
+    "remaining": "{count} más",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleteConfirmTitle": "¿Eliminar comentario?",
+    "deleteConfirmDescription": "Esto eliminará el comentario de forma permanente. Esta acción no se puede deshacer.",
+    "edited": "(editado)",
+    "unknownAuthor": "Desconocido",
+    "actionsSrOnly": "Acciones del comentario",
+    "createSuccess": "Comentario publicado.",
+    "updateSuccess": "Comentario actualizado.",
+    "deleteSuccess": "Comentario eliminado.",
+    "validation": {
+      "contentRequired": "El comentario no puede estar vacío",
+      "contentMaxLength": "El comentario no puede superar los 5000 caracteres"
+    }
   },
   "createTaskDialog": {
     "title": "Crear tarea",

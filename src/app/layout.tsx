@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
@@ -7,6 +8,7 @@ import { ColorSchemeProvider } from "@/components/providers/color-scheme-provide
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { TaskDetailModal } from "@/components/tasks/task-detail/task-detail-modal";
 import { cookies } from "next/headers";
 
 const geistSans = Geist({
@@ -42,7 +44,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             enableSystem
           >
             <QueryProvider>
-              <TooltipProvider>{children}</TooltipProvider>
+              <TooltipProvider>
+                {children}
+                <Suspense fallback={null}>
+                  <TaskDetailModal />
+                </Suspense>
+              </TooltipProvider>
             </QueryProvider>
             <Toaster />
           </ColorSchemeProvider>
