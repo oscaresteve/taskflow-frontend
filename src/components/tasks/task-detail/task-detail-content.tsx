@@ -2,16 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { XIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTaskQuery } from "@/lib/queries/task.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { TaskActionsMenu } from "./task-actions-menu";
+import { TaskBreadcrumb } from "./task-breadcrumb";
+import { TaskDetailHeader } from "./task-detail-header";
 import { TaskNameSection } from "./task-name-section";
 import { TaskDescriptionSection } from "./task-description-section";
 import { TaskStatusSection } from "./task-status-section";
@@ -31,6 +30,7 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
+  const { data: workspace } = useQuery(getWorkspaceQuery(workspaceSlug));
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const { data: members } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
 
@@ -50,14 +50,20 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">
-            {project?.key}-{task.taskNumber}
-          </span>
-          {task.isArchived ? <Badge variant="outline">{t("taskPage.archived")}</Badge> : null}
-        </div>
-        <div className="flex items-center gap-1">
+      <TaskDetailHeader
+        breadcrumb={
+          <TaskBreadcrumb
+            workspaceName={workspace?.name ?? workspaceSlug}
+            workspaceSlug={workspaceSlug}
+            projectName={project?.name ?? projectSlug}
+            projectSlug={projectSlug}
+            taskLabel={`${project?.key ?? projectSlug}-${task.taskNumber}`}
+          />
+        }
+        isArchived={task.isArchived}
+        archivedLabel={t("taskPage.archived")}
+        closeLabel={tCommon("actions.close")}
+        actions={
           <TaskActionsMenu
             task={task}
             workspaceSlug={workspaceSlug}
@@ -65,12 +71,8 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
             taskNumber={taskNumber}
             onArchived={onClosePanel}
           />
-          <DialogClose render={<Button variant="outline" size="icon-sm" />}>
-            <XIcon />
-            <span className="sr-only">{tCommon("actions.close")}</span>
-          </DialogClose>
-        </div>
-      </div>
+        }
+      />
 
       <div className="flex flex-col gap-2">
         <TaskNameSection
