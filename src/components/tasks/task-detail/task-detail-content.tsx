@@ -49,7 +49,7 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">
@@ -72,7 +72,7 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
         </div>
       </div>
 
-      <FieldGroup>
+      <div className="flex flex-col gap-2">
         <InlineEditableInput
           value={task.title}
           onSave={(title) => updateTask.mutateAsync({ title })}
@@ -87,8 +87,9 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
           schema={taskDescriptionFieldSchema}
           placeholder={t("fields.descriptionPlaceholder")}
           emptyLabel={t("fields.addDescription")}
+          className="text-muted-foreground"
         />
-      </FieldGroup>
+      </div>
 
       <EditTaskForm workspaceSlug={workspaceSlug} projectSlug={projectSlug} taskNumber={taskNumber} />
 
