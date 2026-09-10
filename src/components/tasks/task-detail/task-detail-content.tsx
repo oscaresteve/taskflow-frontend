@@ -8,15 +8,16 @@ import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
-import { InlineEditableInput } from "@/components/common/inline-editable-input";
-import { InlineEditableTextarea } from "@/components/common/inline-editable-textarea";
-import { useUpdateTask } from "@/hooks/use-update-task";
 import { getTaskQuery } from "@/lib/queries/task.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
-import { taskDescriptionFieldSchema, taskTitleSchema } from "@/lib/schemas/task.schema";
-import { EditTaskForm } from "./edit-task-form";
 import { TaskActionsMenu } from "./task-actions-menu";
+import { TaskNameSection } from "./task-name-section";
+import { TaskDescriptionSection } from "./task-description-section";
+import { TaskStatusSection } from "./task-status-section";
+import { TaskPrioritySection } from "./task-priority-section";
+import { TaskAssigneeSection } from "./task-assignee-section";
+import { TaskDueDateSection } from "./task-due-date-section";
 import { CommentsSection } from "@/components/tasks/comments/comments-section";
 
 interface TaskDetailContentProps {
@@ -32,7 +33,6 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const { data: members } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
-  const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("taskPage.failedToLoadTask")}</p>;
@@ -73,25 +73,48 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
       </div>
 
       <div className="flex flex-col gap-2">
-        <InlineEditableInput
-          value={task.title}
-          onSave={(title) => updateTask.mutateAsync({ title })}
-          ariaLabel={t("fields.title")}
-          schema={taskTitleSchema}
-          className="text-xl! font-semibold"
+        <TaskNameSection
+          workspaceSlug={workspaceSlug}
+          projectSlug={projectSlug}
+          taskNumber={taskNumber}
+          title={task.title}
         />
-        <InlineEditableTextarea
-          value={task.description ?? ""}
-          onSave={(description) => updateTask.mutateAsync({ description: description || null })}
-          ariaLabel={t("fields.description")}
-          schema={taskDescriptionFieldSchema}
-          placeholder={t("fields.descriptionPlaceholder")}
-          emptyLabel={t("fields.addDescription")}
-          className="text-muted-foreground"
+        <TaskDescriptionSection
+          workspaceSlug={workspaceSlug}
+          projectSlug={projectSlug}
+          taskNumber={taskNumber}
+          description={task.description}
         />
       </div>
 
-      <EditTaskForm workspaceSlug={workspaceSlug} projectSlug={projectSlug} taskNumber={taskNumber} />
+      <FieldGroup>
+        <div className="flex flex-wrap gap-3">
+          <TaskStatusSection
+            workspaceSlug={workspaceSlug}
+            projectSlug={projectSlug}
+            taskNumber={taskNumber}
+            status={task.status}
+          />
+          <TaskPrioritySection
+            workspaceSlug={workspaceSlug}
+            projectSlug={projectSlug}
+            taskNumber={taskNumber}
+            priority={task.priority}
+          />
+          <TaskAssigneeSection
+            workspaceSlug={workspaceSlug}
+            projectSlug={projectSlug}
+            taskNumber={taskNumber}
+            assigneeId={task.assigneeId}
+          />
+          <TaskDueDateSection
+            workspaceSlug={workspaceSlug}
+            projectSlug={projectSlug}
+            taskNumber={taskNumber}
+            dueDate={task.dueDate}
+          />
+        </div>
+      </FieldGroup>
 
       <CommentsSection
         workspaceSlug={workspaceSlug}

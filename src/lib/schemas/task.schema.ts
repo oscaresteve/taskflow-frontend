@@ -33,5 +33,25 @@ export const updateTaskSchema = z
   })
   .refine((data) => Object.keys(data).length > 0, tasks.validation.atLeastOneField);
 
+export const updateTaskStatusSchema = z.object({
+  status: z.enum(taskStatuses),
+});
+
+export const updateTaskPrioritySchema = z.object({
+  priority: z.enum(taskPriorities),
+});
+
+export const updateTaskAssigneeSchema = z.object({
+  assigneeId: z.cuid().nullable(),
+});
+
+export const updateTaskDueDateSchema = z.object({
+  dueDate: z.iso.datetime().nullable(),
+});
+
 export type CreateTaskDto = z.infer<typeof createTaskSchema>;
 export type UpdateTaskDto = z.infer<typeof updateTaskSchema>;
+export type UpdateTaskStatusDto = z.infer<typeof updateTaskStatusSchema>;
+export type UpdateTaskPriorityDto = z.infer<typeof updateTaskPrioritySchema>;
+export type UpdateTaskAssigneeDto = z.infer<typeof updateTaskAssigneeSchema>;
+export type UpdateTaskDueDateDto = z.infer<typeof updateTaskDueDateSchema>;

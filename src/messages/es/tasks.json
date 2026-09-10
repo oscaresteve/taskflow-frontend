@@ -39,10 +39,6 @@
     "failedToLoadTask": "No se pudo cargar la tarea.",
     "archived": "Archivada"
   },
-  "editTaskForm": {
-    "saveChanges": "Guardar cambios",
-    "saveSuccess": "Tarea actualizada."
-  },
   "taskActionsMenu": {
     "ariaLabel": "Acciones de la tarea",
     "archive": "Archivar",

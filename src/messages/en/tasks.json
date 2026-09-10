@@ -39,10 +39,6 @@
     "failedToLoadTask": "Failed to load task.",
     "archived": "Archived"
   },
-  "editTaskForm": {
-    "saveChanges": "Save changes",
-    "saveSuccess": "Task updated."
-  },
   "taskActionsMenu": {
     "ariaLabel": "Task actions",
     "archive": "Archive",
