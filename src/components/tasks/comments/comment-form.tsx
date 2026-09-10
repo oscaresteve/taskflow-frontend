@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { useCreateComment } from "@/hooks/use-create-comment";
 import { useUpdateComment } from "@/hooks/use-update-comment";
+import { CreateCommentDto, createCommentSchema, updateCommentSchema } from "@/lib/schemas/comment.schema";
 
 const MAX_LENGTH = 5000;
 
@@ -31,24 +33,28 @@ export function CommentForm({
 }: CommentFormProps) {
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
-  const [content, setContent] = useState(initialContent ?? "");
   const createComment = useCreateComment(workspaceSlug, projectSlug, taskNumber);
   const updateComment = useUpdateComment(workspaceSlug, projectSlug, taskNumber);
   const isEditing = !!commentId;
-  const pending = isEditing ? updateComment.isPending : createComment.isPending;
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    const trimmed = content.trim();
-    if (!trimmed) return;
+  const form = useForm<CreateCommentDto>({
+    resolver: zodResolver(isEditing ? updateCommentSchema : createCommentSchema),
+    defaultValues: { content: initialContent ?? "" },
+  });
+
+  async function onSubmit(data: CreateCommentDto) {
+    if (isEditing && !form.formState.isDirty) {
+      onDone?.();
+      return;
+    }
 
     try {
       if (isEditing) {
-        await updateComment.mutateAsync({ commentId, data: { content: trimmed } });
+        await updateComment.mutateAsync({ commentId, data });
         toast.add({ type: "success", description: t("comments.updateSuccess") });
       } else {
-        await createComment.mutateAsync({ content: trimmed });
-        setContent("");
+        await createComment.mutateAsync(data);
+        form.reset({ content: "" });
         toast.add({ type: "success", description: t("comments.createSuccess") });
       }
       onDone?.();
@@ -62,24 +68,27 @@ export function CommentForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
       <Textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
+        {...form.register("content")}
         aria-label={t("comments.title")}
         placeholder={t("comments.composerPlaceholder")}
         maxLength={MAX_LENGTH}
-        disabled={pending}
+        disabled={form.formState.isSubmitting}
         autoFocus={isEditing}
       />
       <div className="flex justify-end gap-2">
         {isEditing && (
-          <Button type="button" variant="outline" size="sm" onClick={onDone} disabled={pending}>
+          <Button type="button" variant="outline" size="sm" onClick={onDone} disabled={form.formState.isSubmitting}>
             {tCommon("actions.cancel")}
           </Button>
         )}
-        <Button type="submit" size="sm" disabled={pending || !content.trim()}>
-          {pending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+        <Button
+          type="submit"
+          size="sm"
+          disabled={form.formState.isSubmitting || (isEditing && !form.formState.isDirty)}
+        >
+          {form.formState.isSubmitting && <Loader2Icon className="animate-spin" aria-hidden="true" />}
           {isEditing ? tCommon("actions.save") : t("comments.submit")}
         </Button>
       </div>
