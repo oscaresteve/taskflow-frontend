@@ -1,9 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ProjectMemberWithUserResponseDto } from "@/lib/dtos/project-members.dto";
 import { CommentItem } from "./comment-item";
 import { CommentResponseDto } from "@/lib/dtos/comments.dto";
 
@@ -11,7 +9,6 @@ interface CommentListProps {
   workspaceSlug: string;
   projectSlug: string;
   taskNumber: string;
-  members: ProjectMemberWithUserResponseDto[];
   meId: string | undefined;
   canManageAny: boolean;
   comments: CommentResponseDto[];
@@ -27,7 +24,6 @@ export function CommentList({
   workspaceSlug,
   projectSlug,
   taskNumber,
-  members,
   meId,
   canManageAny,
   comments,
@@ -39,8 +35,6 @@ export function CommentList({
   fetchNextPage,
 }: CommentListProps) {
   const t = useTranslations("tasks");
-
-  const membersById = useMemo(() => new Map(members.map((member) => [member.userId, member.user])), [members]);
 
   if (isError) {
     return <p className="text-sm text-muted-foreground">{t("comments.failedToLoad")}</p>;
@@ -65,7 +59,7 @@ export function CommentList({
         <CommentItem
           key={comment.id}
           comment={comment}
-          author={membersById.get(comment.authorId)}
+          authorId={comment.authorId}
           workspaceSlug={workspaceSlug}
           projectSlug={projectSlug}
           taskNumber={taskNumber}

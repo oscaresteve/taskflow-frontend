@@ -15,14 +15,15 @@ import {
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { CommentResponseDto } from "@/lib/dtos/comments.dto";
-import { UserResponseDto } from "@/lib/dtos/auth.dto";
 import { getFullName, getInitials } from "@/lib/utils";
 import { useDeleteComment } from "@/hooks/use-delete-comment";
 import { CommentForm } from "./comment-form";
+import { useQuery } from "@tanstack/react-query";
+import { getProjectMemberQuery } from "@/lib/queries/project-member.queries";
 
 interface CommentItemProps {
   comment: CommentResponseDto;
-  author: UserResponseDto | undefined;
+  authorId: string;
   workspaceSlug: string;
   projectSlug: string;
   taskNumber: string;
@@ -32,7 +33,7 @@ interface CommentItemProps {
 
 export function CommentItem({
   comment,
-  author,
+  authorId,
   workspaceSlug,
   projectSlug,
   taskNumber,
@@ -44,7 +45,8 @@ export function CommentItem({
   const [editing, setEditing] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const deleteComment = useDeleteComment(workspaceSlug, projectSlug, taskNumber);
-  const authorName = author ? getFullName(author.firstName, author.lastName) : undefined;
+  const { data: author } = useQuery(getProjectMemberQuery({ workspaceSlug, projectSlug, userId: authorId }));
+  const authorName = author ? getFullName(author.user.firstName, author.user.lastName) : undefined;
 
   function handleDelete() {
     deleteComment.mutate(comment.id, {
@@ -78,7 +80,7 @@ export function CommentItem({
   return (
     <div className="flex gap-2">
       <Avatar size="sm">
-        <AvatarImage src={author?.avatarUrl ?? undefined} alt={authorName} />
+        <AvatarImage src={author?.user.avatarUrl ?? undefined} alt={authorName} />
         <AvatarFallback>{authorName ? getInitials(authorName) : "?"}</AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1">

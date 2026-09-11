@@ -6,7 +6,6 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTaskQuery } from "@/lib/queries/task.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
-import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { TaskActionsMenu } from "./task-actions-menu";
 import { TaskBreadcrumb } from "./task-breadcrumb";
@@ -33,7 +32,6 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
   const { data: workspace } = useQuery(getWorkspaceQuery(workspaceSlug));
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
-  const { data: members } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
 
   if (isError) {
     return (
@@ -97,12 +95,7 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
             />
           </div>
           <Separator />
-          <CommentsSection
-            workspaceSlug={workspaceSlug}
-            projectSlug={projectSlug}
-            taskNumber={taskNumber}
-            members={members ?? []}
-          />
+          <CommentsSection workspaceSlug={workspaceSlug} projectSlug={projectSlug} taskNumber={taskNumber} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize="30%" minSize="30%" className="flex flex-col gap-4 p-4">
