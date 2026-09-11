@@ -47,7 +47,7 @@ export function TaskStatusSection({ workspaceSlug, projectSlug, taskNumber, stat
       name="status"
       control={form.control}
       render={({ field }) => (
-        <Field className="w-40">
+        <Field orientation="horizontal">
           <FieldLabel htmlFor="status">{t("fields.status")}</FieldLabel>
           <Select
             name={field.name}
@@ -57,7 +57,7 @@ export function TaskStatusSection({ workspaceSlug, projectSlug, taskNumber, stat
               form.handleSubmit(onSubmit)();
             }}
           >
-            <SelectTrigger id="status" className="w-full">
+            <SelectTrigger id="status">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

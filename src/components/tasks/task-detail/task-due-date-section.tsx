@@ -48,7 +48,7 @@ export function TaskDueDateSection({ workspaceSlug, projectSlug, taskNumber, due
       name="dueDate"
       control={form.control}
       render={({ field }) => (
-        <Field className="w-40">
+        <Field orientation="horizontal">
           <FieldLabel htmlFor="dueDate">{t("fields.dueDate")}</FieldLabel>
           <Input
             id="dueDate"

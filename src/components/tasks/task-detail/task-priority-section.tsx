@@ -49,7 +49,7 @@ export function TaskPrioritySection({ workspaceSlug, projectSlug, taskNumber, pr
       name="priority"
       control={form.control}
       render={({ field }) => (
-        <Field className="w-40">
+        <Field orientation="horizontal">
           <FieldLabel htmlFor="priority">{t("fields.priority")}</FieldLabel>
           <Select
             name={field.name}
@@ -59,7 +59,7 @@ export function TaskPrioritySection({ workspaceSlug, projectSlug, taskNumber, pr
               form.handleSubmit(onSubmit)();
             }}
           >
-            <SelectTrigger id="priority" className="w-full">
+            <SelectTrigger id="priority">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

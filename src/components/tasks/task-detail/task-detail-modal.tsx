@@ -31,7 +31,7 @@ export function TaskDetailModal() {
 
   return (
     <Dialog open onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent showCloseButton={false} className="sm:max-w-5xl max-h-[85vh] overflow-y-auto p-6">
+      <DialogContent showCloseButton={false} className="sm:max-w-7xl h-[85vh] p-2">
         <TaskDetailContent
           workspaceSlug={workspaceSlug}
           projectSlug={projectSlug}

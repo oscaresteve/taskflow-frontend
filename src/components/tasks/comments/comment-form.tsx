@@ -11,6 +11,10 @@ import { ApiError } from "@/lib/http/api-error";
 import { useCreateComment } from "@/hooks/use-create-comment";
 import { useUpdateComment } from "@/hooks/use-update-comment";
 import { CreateCommentDto, createCommentSchema, updateCommentSchema } from "@/lib/schemas/comment.schema";
+import { getFullName, getInitials } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { getMeQuery } from "@/lib/queries/auth.queries";
 
 const MAX_LENGTH = 5000;
 
@@ -36,6 +40,8 @@ export function CommentForm({
   const createComment = useCreateComment(workspaceSlug, projectSlug, taskNumber);
   const updateComment = useUpdateComment(workspaceSlug, projectSlug, taskNumber);
   const isEditing = !!commentId;
+  const { data: author } = useQuery(getMeQuery());
+  const authorName = author ? getFullName(author.firstName, author.lastName) : undefined;
 
   const form = useForm<CreateCommentDto>({
     resolver: zodResolver(isEditing ? updateCommentSchema : createCommentSchema),
@@ -69,14 +75,20 @@ export function CommentForm({
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
-      <Textarea
-        {...form.register("content")}
-        aria-label={t("comments.title")}
-        placeholder={t("comments.composerPlaceholder")}
-        maxLength={MAX_LENGTH}
-        disabled={form.formState.isSubmitting}
-        autoFocus={isEditing}
-      />
+      <div className="flex gap-2">
+        <Avatar size="sm">
+          <AvatarImage src={author?.avatarUrl ?? undefined} alt={authorName} />
+          <AvatarFallback>{authorName ? getInitials(authorName) : "?"}</AvatarFallback>
+        </Avatar>
+        <Textarea
+          {...form.register("content")}
+          aria-label={t("comments.title")}
+          placeholder={t("comments.composerPlaceholder")}
+          maxLength={MAX_LENGTH}
+          disabled={form.formState.isSubmitting}
+          autoFocus={isEditing}
+        />
+      </div>
       <div className="flex justify-end gap-2">
         {isEditing && (
           <Button type="button" variant="outline" size="sm" onClick={onDone} disabled={form.formState.isSubmitting}>

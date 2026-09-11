@@ -41,7 +41,12 @@ export function AssigneePicker({
   const { data: selectedMember } = useQuery(getProjectMemberQuery({ workspaceSlug, projectSlug, userId: value }));
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    ...getActiveProjectMembersInfiniteQuery({ workspaceSlug, projectSlug, search: debouncedSearch, limit: PICKER_PAGE_SIZE }),
+    ...getActiveProjectMembersInfiniteQuery({
+      workspaceSlug,
+      projectSlug,
+      search: debouncedSearch,
+      limit: PICKER_PAGE_SIZE,
+    }),
     enabled: open,
   });
 
@@ -79,18 +84,13 @@ export function AssigneePicker({
       ) : (
         <PopoverTrigger
           id={id}
-          className={cn(
-            "flex h-8 w-full items-center gap-2 rounded-lg border border-input bg-transparent px-2.5 text-sm hover:bg-accent",
-            className
-          )}
+          className={cn("flex items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm hover:bg-muted", className)}
         >
           <Avatar size="sm">
             <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
-            <AvatarFallback>
-              {selected ? getInitials(selected.name) : <UserIcon className="size-3.5" />}
-            </AvatarFallback>
+            <AvatarFallback>{selected ? getInitials(selected.name) : <UserIcon className="size-3.5" />}</AvatarFallback>
           </Avatar>
-          <span className="flex-1 truncate text-left">{selected?.name ?? t("fields.unassigned")}</span>
+          <span className="flex-1 truncate">{selected?.name ?? t("fields.unassigned")}</span>
           <ChevronDownIcon className="size-4 text-muted-foreground" />
         </PopoverTrigger>
       )}

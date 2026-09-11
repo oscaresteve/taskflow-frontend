@@ -18,12 +18,7 @@ interface TaskAssigneeSectionProps {
   assigneeId: string | null;
 }
 
-export function TaskAssigneeSection({
-  workspaceSlug,
-  projectSlug,
-  taskNumber,
-  assigneeId,
-}: TaskAssigneeSectionProps) {
+export function TaskAssigneeSection({ workspaceSlug, projectSlug, taskNumber, assigneeId }: TaskAssigneeSectionProps) {
   const t = useTranslations("tasks");
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
   const form = useForm<UpdateTaskAssigneeDto>({
@@ -53,7 +48,7 @@ export function TaskAssigneeSection({
       name="assigneeId"
       control={form.control}
       render={({ field }) => (
-        <Field className="w-48">
+        <Field orientation="horizontal">
           <FieldLabel htmlFor="assignee">{t("fields.assignee")}</FieldLabel>
           <AssigneePicker
             id="assignee"

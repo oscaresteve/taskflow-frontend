@@ -3,8 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { XIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TaskDetailHeaderProps {
+  className?: string;
   breadcrumb: ReactNode;
   isArchived: boolean;
   archivedLabel: string;
@@ -12,9 +14,16 @@ interface TaskDetailHeaderProps {
   actions?: ReactNode;
 }
 
-export function TaskDetailHeader({ breadcrumb, isArchived, archivedLabel, closeLabel, actions }: TaskDetailHeaderProps) {
+export function TaskDetailHeader({
+  className,
+  breadcrumb,
+  isArchived,
+  archivedLabel,
+  closeLabel,
+  actions,
+}: TaskDetailHeaderProps) {
   return (
-    <div className="flex items-center justify-between gap-2">
+    <div className={cn("flex items-center justify-between gap-2", className)}>
       <div className="flex items-center gap-2">
         {breadcrumb}
         {isArchived && <Badge variant="outline">{archivedLabel}</Badge>}

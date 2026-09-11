@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { FieldGroup } from "@/components/ui/field";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTaskQuery } from "@/lib/queries/task.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
@@ -18,6 +18,7 @@ import { TaskPrioritySection } from "./task-priority-section";
 import { TaskAssigneeSection } from "./task-assignee-section";
 import { TaskDueDateSection } from "./task-due-date-section";
 import { CommentsSection } from "@/components/tasks/comments/comments-section";
+import { Separator } from "@/components/ui/separator";
 
 interface TaskDetailContentProps {
   workspaceSlug: string;
@@ -35,12 +36,16 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
   const { data: members } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
 
   if (isError) {
-    return <p className="p-6 text-sm text-muted-foreground">{t("taskPage.failedToLoadTask")}</p>;
+    return (
+      <div className="flex h-full items-center justify-center p-4">
+        <p className="text-sm text-muted-foreground">{t("taskPage.failedToLoadTask")}</p>
+      </div>
+    );
   }
 
   if (isLoading || !task) {
     return (
-      <div className="flex flex-col gap-4 p-6">
+      <div className="flex flex-col gap-4 p-4">
         <Skeleton className="h-5 w-64" />
         <Skeleton className="h-9 w-2/3" />
         <Skeleton className="h-16 w-full" />
@@ -49,8 +54,9 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-h-0 flex-col">
       <TaskDetailHeader
+        className="p-4"
         breadcrumb={
           <TaskBreadcrumb
             workspaceName={workspace?.name ?? workspaceSlug}
@@ -74,23 +80,32 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
         }
       />
 
-      <div className="flex flex-col gap-2">
-        <TaskNameSection
-          workspaceSlug={workspaceSlug}
-          projectSlug={projectSlug}
-          taskNumber={taskNumber}
-          title={task.title}
-        />
-        <TaskDescriptionSection
-          workspaceSlug={workspaceSlug}
-          projectSlug={projectSlug}
-          taskNumber={taskNumber}
-          description={task.description}
-        />
-      </div>
-
-      <FieldGroup>
-        <div className="flex flex-wrap gap-3">
+      <ResizablePanelGroup orientation="horizontal" className="flex-1">
+        <ResizablePanel defaultSize="70%" minSize="50%" className="flex flex-col gap-4 p-4">
+          <div className="flex flex-col gap-2">
+            <TaskNameSection
+              workspaceSlug={workspaceSlug}
+              projectSlug={projectSlug}
+              taskNumber={taskNumber}
+              title={task.title}
+            />
+            <TaskDescriptionSection
+              workspaceSlug={workspaceSlug}
+              projectSlug={projectSlug}
+              taskNumber={taskNumber}
+              description={task.description}
+            />
+          </div>
+          <Separator />
+          <CommentsSection
+            workspaceSlug={workspaceSlug}
+            projectSlug={projectSlug}
+            taskNumber={taskNumber}
+            members={members ?? []}
+          />
+        </ResizablePanel>
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize="30%" minSize="30%" className="flex flex-col gap-4 p-4">
           <TaskStatusSection
             workspaceSlug={workspaceSlug}
             projectSlug={projectSlug}
@@ -115,15 +130,8 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
             taskNumber={taskNumber}
             dueDate={task.dueDate}
           />
-        </div>
-      </FieldGroup>
-
-      <CommentsSection
-        workspaceSlug={workspaceSlug}
-        projectSlug={projectSlug}
-        taskNumber={taskNumber}
-        members={members ?? []}
-      />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 }
