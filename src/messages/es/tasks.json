@@ -2,6 +2,7 @@
   "errors": {
     "generic": "Algo salió mal"
   },
+  "updateSuccess": "Tarea actualizada.",
   "fields": {
     "title": "Título",
     "description": "Descripción",
@@ -43,7 +44,8 @@
     "ariaLabel": "Acciones de la tarea",
     "archive": "Archivar",
     "confirmTitle": "¿Archivar {taskTitle}?",
-    "confirmDescription": "Esto archivará la tarea y la ocultará de la lista de tareas. Esta acción no se puede deshacer desde la app."
+    "confirmDescription": "Esto archivará la tarea y la ocultará de la lista de tareas. Esta acción no se puede deshacer desde la app.",
+    "archiveSuccess": "Tarea archivada."
   },
   "comments": {
     "title": "Comentarios",

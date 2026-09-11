@@ -2,6 +2,7 @@
   "errors": {
     "generic": "Something went wrong"
   },
+  "updateSuccess": "Task updated.",
   "fields": {
     "title": "Title",
     "description": "Description",
@@ -43,7 +44,8 @@
     "ariaLabel": "Task actions",
     "archive": "Archive",
     "confirmTitle": "Archive {taskTitle}?",
-    "confirmDescription": "This will archive the task and hide it from the task list. This action cannot be undone from the app."
+    "confirmDescription": "This will archive the task and hide it from the task list. This action cannot be undone from the app.",
+    "archiveSuccess": "Task archived."
   },
   "comments": {
     "title": "Comments",

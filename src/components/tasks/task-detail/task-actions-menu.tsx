@@ -33,6 +33,7 @@ export function TaskActionsMenu({ task, workspaceSlug, projectSlug, taskNumber, 
     try {
       await archiveTask.mutateAsync();
       setArchiveOpen(false);
+      toast.add({ type: "success", description: t("taskActionsMenu.archiveSuccess") });
       onArchived();
     } catch (error) {
       toast.add({

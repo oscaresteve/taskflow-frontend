@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { InlineEditableTextarea } from "@/components/common/inline-editable-textarea";
+import { toast } from "@/components/ui/toast";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { taskDescriptionFieldSchema } from "@/lib/schemas/task.schema";
 
@@ -24,7 +25,10 @@ export function TaskDescriptionSection({
   return (
     <InlineEditableTextarea
       value={description ?? ""}
-      onSave={(description) => updateTask.mutateAsync({ description: description || null })}
+      onSave={async (description) => {
+        await updateTask.mutateAsync({ description: description || null });
+        toast.add({ type: "success", description: t("updateSuccess") });
+      }}
       ariaLabel={t("fields.description")}
       schema={taskDescriptionFieldSchema}
       placeholder={t("fields.descriptionPlaceholder")}

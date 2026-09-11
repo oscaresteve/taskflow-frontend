@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { InlineEditableInput } from "@/components/common/inline-editable-input";
+import { toast } from "@/components/ui/toast";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { taskTitleSchema } from "@/lib/schemas/task.schema";
 
@@ -19,7 +20,10 @@ export function TaskNameSection({ workspaceSlug, projectSlug, taskNumber, title 
   return (
     <InlineEditableInput
       value={title}
-      onSave={(title) => updateTask.mutateAsync({ title })}
+      onSave={async (title) => {
+        await updateTask.mutateAsync({ title });
+        toast.add({ type: "success", description: t("updateSuccess") });
+      }}
       ariaLabel={t("fields.title")}
       schema={taskTitleSchema}
       className="text-xl! font-semibold"
