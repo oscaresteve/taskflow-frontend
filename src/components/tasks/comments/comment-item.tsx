@@ -84,7 +84,9 @@ export function CommentItem({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{authorName ?? t("comments.unknownAuthor")}</span>
-          <span className="text-xs text-muted-foreground">{format.dateTime(new Date(comment.createdAt), "short")}</span>
+          <span className="text-xs text-muted-foreground">
+            {format.relativeTime(new Date(comment.createdAt), new Date())}
+          </span>
           {comment.editedAt && <span className="text-xs text-muted-foreground">{t("comments.edited")}</span>}
         </div>
         <p className="text-sm whitespace-pre-wrap">{comment.content}</p>
