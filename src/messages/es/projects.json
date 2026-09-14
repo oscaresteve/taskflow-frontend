@@ -47,7 +47,33 @@
     "goToWorkspace": "Ir al espacio de trabajo"
   },
   "projectOverviewPage": {
-    "title": "Resumen del proyecto"
+    "title": "Resumen del proyecto",
+    "failedToLoad": "No se pudo cargar el resumen del proyecto.",
+    "progress": {
+      "title": "Progreso",
+      "complete": "Completado",
+      "taskCount": "{count} tareas",
+      "empty": "Todavía no hay tareas."
+    },
+    "stats": {
+      "overdue": "Vencidas",
+      "unassigned": "Sin asignar",
+      "completedThisWeek": "Completadas esta semana"
+    },
+    "byPriority": {
+      "title": "Tareas por prioridad",
+      "empty": "Todavía no hay tareas.",
+      "valueLabel": "Tareas"
+    },
+    "workload": {
+      "title": "Carga por miembro",
+      "empty": "No hay tareas abiertas asignadas.",
+      "valueLabel": "Tareas abiertas"
+    },
+    "recent": {
+      "title": "Actividad reciente",
+      "empty": "Todavía no hay tareas."
+    }
   },
   "projectSettingsPage": {
     "title": "Configuración",

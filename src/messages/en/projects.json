@@ -47,7 +47,33 @@
     "goToWorkspace": "Go to workspace"
   },
   "projectOverviewPage": {
-    "title": "Project Overview"
+    "title": "Project Overview",
+    "failedToLoad": "Failed to load the project overview.",
+    "progress": {
+      "title": "Progress",
+      "complete": "Complete",
+      "taskCount": "{count} tasks",
+      "empty": "No tasks yet."
+    },
+    "stats": {
+      "overdue": "Overdue",
+      "unassigned": "Unassigned",
+      "completedThisWeek": "Completed this week"
+    },
+    "byPriority": {
+      "title": "Tasks by priority",
+      "empty": "No tasks yet.",
+      "valueLabel": "Tasks"
+    },
+    "workload": {
+      "title": "Workload by member",
+      "empty": "No open tasks assigned.",
+      "valueLabel": "Open tasks"
+    },
+    "recent": {
+      "title": "Recent activity",
+      "empty": "No tasks yet."
+    }
   },
   "projectSettingsPage": {
     "title": "Settings",
