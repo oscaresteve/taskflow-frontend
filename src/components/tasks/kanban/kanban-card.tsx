@@ -27,6 +27,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
   async function handleAssigneeChange(userId: string | null) {
     try {
       await updateTask.mutateAsync({ assigneeId: userId });
+      toast.add({ type: "success", description: t("updateSuccess") });
     } catch (error) {
       toast.add({
         type: "error",

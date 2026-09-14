@@ -202,12 +202,11 @@ export function AssigneePicker({
               </AvatarFallback>
             )}
           </ComboboxPrimitive.Trigger>
-          <ComboboxContent align="start" className="w-64">
-            <div className="p-2">
+          <ComboboxContent align="start" className="w-min">
+            <div className="p-1 pb-2">
               <ComboboxInput
                 placeholder={t("assigneeSelect.searchPlaceholder")}
                 showTrigger={false}
-                showClear
                 autoFocus
                 onFocus={(e) => e.currentTarget.select()}
               />
@@ -234,9 +233,7 @@ export function AssigneePicker({
               <ComboboxPrimitive.Input id={id} render={<InputGroupInput />} onFocus={(e) => e.currentTarget.select()} />
             </InputGroup>
           </div>
-          <ComboboxContent anchor={anchor}>
-            {candidateList}
-          </ComboboxContent>
+          <ComboboxContent anchor={anchor}>{candidateList}</ComboboxContent>
         </>
       )}
     </Combobox>
