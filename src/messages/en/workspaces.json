@@ -37,10 +37,27 @@
     "deactivateConfirmLabel": "Deactivate"
   },
   "workspacePage": {
-    "projects": "Projects",
-    "noProjectsYet": "No projects yet.",
-    "members": "Members",
-    "noMembersYet": "No members yet."
+    "failedToLoad": "Failed to load the workspace overview.",
+    "stats": {
+      "openTasks": "Open tasks",
+      "overdue": "Overdue",
+      "completedThisWeek": "Completed this week",
+      "projects": "Projects"
+    },
+    "byStatus": {
+      "title": "Tasks by status",
+      "centerLabel": "Complete",
+      "empty": "No tasks yet."
+    },
+    "byProject": {
+      "title": "Open tasks by project",
+      "empty": "No open tasks in any project.",
+      "valueLabel": "Open tasks"
+    },
+    "recent": {
+      "title": "Recent activity",
+      "empty": "No tasks yet."
+    }
   },
   "workspaceSettingsPage": {
     "title": "Settings",

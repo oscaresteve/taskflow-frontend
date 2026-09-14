@@ -1,97 +1,124 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { FolderKanban, Users } from "lucide-react";
-import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
-import { getProjectsQuery } from "@/lib/queries/project.queries";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { ColorDot } from "@/components/ui/color-dot";
+import { AlertTriangle, CheckCircle2, FolderKanban, ListTodo } from "lucide-react";
+import { PageContainer } from "@/components/common/page-container";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getFullName, getInitials } from "@/lib/utils";
-import { PageContainer } from "@/components/common/page-container";
+import { StatCard } from "@/components/overview/stat-card";
+import { DonutChart } from "@/components/overview/donut-chart";
+import { RankedBarChart } from "@/components/overview/ranked-bar-chart";
+import { TaskListCard } from "@/components/overview/task-list-card";
+import { getWorkspaceOverviewQuery } from "@/lib/queries/overview.queries";
+import { taskStatuses } from "@/lib/schemas/task.schema";
+import { statusChartColor, statusLabel } from "@/lib/task-labels";
 import { WorkspaceHeader } from "./_components/workspace-header";
 
 export default function WorkspacePage() {
   const t = useTranslations("workspaces");
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: projects, isLoading: isProjectsLoading } = useQuery(getProjectsQuery(workspaceSlug));
-  const { data: members, isLoading: isMembersLoading } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
-  const activeMembers = members?.filter((member) => member.status === "ACTIVE") ?? [];
+  const { data: overview, isLoading, isError } = useQuery(getWorkspaceOverviewQuery(workspaceSlug));
+
+  const isPending = isLoading || !overview;
+
+  const statusSegments = taskStatuses.map((status) => ({
+    key: status.toLowerCase(),
+    label: statusLabel[status],
+    count: overview?.tasks.byStatus[status] ?? 0,
+    color: statusChartColor[status],
+  }));
+
+  const workloadRows = (overview?.workload ?? []).map((project) => ({
+    key: project.projectId,
+    label: project.name,
+    value: project.openTasksCount,
+  }));
 
   return (
     <PageContainer>
       <WorkspaceHeader workspaceSlug={workspaceSlug} />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FolderKanban className="size-4" />
-            {t("workspacePage.projects")}
-            <Badge variant="secondary">{projects?.data.length ?? 0}</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-1">
-          {isProjectsLoading || !projects ? (
-            <>
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </>
-          ) : projects.data.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("workspacePage.noProjectsYet")}</p>
+      {isError ? (
+        <p className="text-sm text-muted-foreground">{t("workspacePage.failedToLoad")}</p>
+      ) : (
+        <>
+          {isPending ? (
+            <div className="grid grid-cols-4 gap-4">
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
           ) : (
-            projects.data.map((project) => (
-              <Link
-                key={project.id}
-                href={`/workspaces/${workspaceSlug}/projects/${project.slug}`}
-                className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
-              >
-                <ColorDot color={project.color} />
-                <span className="flex-1 truncate">{project.name}</span>
-                <span className="text-xs text-muted-foreground">{project.key}</span>
-              </Link>
-            ))
+            <div className="grid grid-cols-4 gap-4">
+              <StatCard icon={ListTodo} label={t("workspacePage.stats.openTasks")} value={overview.tasks.open} />
+              <StatCard
+                icon={AlertTriangle}
+                label={t("workspacePage.stats.overdue")}
+                value={overview.tasks.overdue}
+                tone={overview.tasks.overdue > 0 ? "destructive" : "default"}
+              />
+              <StatCard
+                icon={CheckCircle2}
+                label={t("workspacePage.stats.completedThisWeek")}
+                value={overview.tasks.completedLast7Days}
+              />
+              <StatCard icon={FolderKanban} label={t("workspacePage.stats.projects")} value={overview.projectsCount} />
+            </div>
           )}
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="size-4" />
-            {t("workspacePage.members")}
-            <Badge variant="secondary">{activeMembers.length}</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-1">
-          {isMembersLoading ? (
-            <>
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </>
-          ) : activeMembers.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("workspacePage.noMembersYet")}</p>
-          ) : (
-            activeMembers.map((member) => {
-              const memberName = getFullName(member.user.firstName, member.user.lastName);
-              return (
-                <div key={member.id} className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm">
-                  <Avatar size="sm">
-                    <AvatarImage src={member.user.avatarUrl ?? undefined} alt={memberName} />
-                    <AvatarFallback>{getInitials(memberName)}</AvatarFallback>
-                  </Avatar>
-                  <span className="flex-1 truncate">{memberName}</span>
-                  <Badge variant="outline">{member.role}</Badge>
-                </div>
-              );
-            })
-          )}
-        </CardContent>
-      </Card>
+          {/* El reparto por estado (parte-todo, de un vistazo) al lado del ranking por proyecto
+              (comparar magnitudes), que es la pregunta principal de la pagina. */}
+          <div className="grid grid-cols-3 gap-4">
+            <Card className="overflow-visible">
+              <CardHeader>
+                <CardTitle>{t("workspacePage.byStatus.title")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isPending ? (
+                  <div className="flex justify-center">
+                    <Skeleton className="size-45 rounded-full" />
+                  </div>
+                ) : (
+                  <DonutChart
+                    segments={statusSegments}
+                    centerValue={`${overview.tasks.completionRate}%`}
+                    centerLabel={t("workspacePage.byStatus.centerLabel")}
+                    emptyLabel={t("workspacePage.byStatus.empty")}
+                  />
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="col-span-2 overflow-visible">
+              <CardHeader>
+                <CardTitle>{t("workspacePage.byProject.title")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isPending ? (
+                  <Skeleton className="h-40 w-full" />
+                ) : (
+                  <RankedBarChart
+                    rows={workloadRows}
+                    emptyLabel={t("workspacePage.byProject.empty")}
+                    valueLabel={t("workspacePage.byProject.valueLabel")}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <TaskListCard
+            title={t("workspacePage.recent.title")}
+            emptyLabel={t("workspacePage.recent.empty")}
+            tasks={overview?.recentTasks ?? []}
+            isLoading={isPending}
+            showProject
+          />
+        </>
+      )}
     </PageContainer>
   );
 }
