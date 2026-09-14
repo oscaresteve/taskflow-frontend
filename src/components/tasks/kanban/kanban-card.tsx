@@ -50,7 +50,12 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
           <span />
         )}
         {/* Se detiene la propagacion para que abrir el picker no dispare el drag ni la navegacion del Link. */}
-        <span onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
+        <span
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
           <AssigneePicker
             variant="avatar"
             workspaceSlug={workspaceSlug}
