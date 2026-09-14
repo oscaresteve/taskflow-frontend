@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
+import { DueDatePicker } from "@/components/tasks/due-date-picker";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { ApiError } from "@/lib/http/api-error";
 import { UpdateTaskDueDateDto, updateTaskDueDateSchema } from "@/lib/schemas/task.schema";
@@ -51,12 +51,10 @@ export function TaskDueDateSection({ workspaceSlug, projectSlug, taskNumber, due
       render={({ field }) => (
         <Field orientation="horizontal">
           <FieldLabel htmlFor="dueDate">{t("fields.dueDate")}</FieldLabel>
-          <Input
+          <DueDatePicker
             id="dueDate"
-            type="date"
-            value={field.value ? field.value.slice(0, 10) : ""}
-            onChange={(e) => {
-              const value = e.target.value ? new Date(e.target.value).toISOString() : null;
+            value={field.value}
+            onChange={(value) => {
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}

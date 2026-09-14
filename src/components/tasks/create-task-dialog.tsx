@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { AssigneePicker } from "@/components/tasks/assignee-picker";
+import { DueDatePicker } from "@/components/tasks/due-date-picker";
 import { FormDialog } from "@/components/common/form-dialog";
 import { useCreateTask } from "@/hooks/use-create-task";
 import { ApiError } from "@/lib/http/api-error";
@@ -157,12 +158,10 @@ export function CreateTaskDialog({ workspaceSlug, project, open, onOpenChange }:
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="task-due-date">{t("fields.dueDate")}</FieldLabel>
-                <Input
-                  aria-invalid={fieldState.invalid}
+                <DueDatePicker
                   id="task-due-date"
-                  type="date"
-                  value={field.value ? field.value.slice(0, 10) : ""}
-                  onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value).toISOString() : undefined)}
+                  value={field.value ?? null}
+                  onChange={(value) => field.onChange(value ?? undefined)}
                 />
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               </Field>

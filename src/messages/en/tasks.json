@@ -12,7 +12,8 @@
     "priority": "Priority",
     "assignee": "Assignee",
     "unassigned": "Unassigned",
-    "dueDate": "Due date"
+    "dueDate": "Due date",
+    "dueDatePlaceholder": "Pick a date"
   },
   "status": {
     "TODO": "To do",
