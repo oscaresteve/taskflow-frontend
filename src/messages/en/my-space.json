@@ -1,5 +1,22 @@
 {
   "mySpacePage": {
-    "title": "My space"
+    "title": "My space",
+    "failedToLoad": "Failed to load your overview.",
+    "focus": {
+      "title": "Focus",
+      "openTasks": "Open",
+      "completedThisWeek": "{count} completed in the last 7 days"
+    },
+    "urgency": {
+      "overdue": "Overdue",
+      "dueSoon": "Due this week",
+      "scheduled": "Scheduled",
+      "noDueDate": "No due date",
+      "empty": "Nothing assigned to you right now."
+    },
+    "queue": {
+      "title": "My queue",
+      "empty": "You're all caught up."
+    }
   }
 }

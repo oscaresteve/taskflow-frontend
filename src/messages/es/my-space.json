@@ -1,5 +1,22 @@
 {
   "mySpacePage": {
-    "title": "Mi espacio"
+    "title": "Mi espacio",
+    "failedToLoad": "No se pudo cargar tu resumen.",
+    "focus": {
+      "title": "Foco",
+      "openTasks": "Abiertas",
+      "completedThisWeek": "{count} completadas en los últimos 7 días"
+    },
+    "urgency": {
+      "overdue": "Vencidas",
+      "dueSoon": "Vencen esta semana",
+      "scheduled": "Programadas",
+      "noDueDate": "Sin fecha",
+      "empty": "Ahora mismo no tienes nada asignado."
+    },
+    "queue": {
+      "title": "Mi cola",
+      "empty": "Estás al día."
+    }
   }
 }
