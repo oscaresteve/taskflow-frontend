@@ -20,6 +20,12 @@
     "IN_REVIEW": "En revisión",
     "DONE": "Hecho"
   },
+  "priority": {
+    "LOW": "Baja",
+    "MEDIUM": "Media",
+    "HIGH": "Alta",
+    "URGENT": "Urgente"
+  },
   "validation": {
     "titleMinLength": "El título debe tener al menos 2 caracteres",
     "titleMaxLength": "El título no puede superar los 100 caracteres",
@@ -76,7 +82,10 @@
     "submit": "Crear tarea",
     "titlePlaceholder": "Configurar el entorno de staging"
   },
-  "assigneePicker": {
-    "emptyMessage": "No se encontraron miembros coincidentes."
+  "assigneeSelect": {
+    "searchPlaceholder": "Buscar miembros",
+    "emptyMessage": "No se encontraron miembros coincidentes.",
+    "loadingMore": "Cargando…",
+    "moreCandidates": "{count} más"
   }
 }
