@@ -73,6 +73,7 @@ export function CommentItem({
         commentId={comment.id}
         initialContent={comment.content}
         onDone={() => setEditing(false)}
+        onCancel={() => setEditing(false)}
       />
     );
   }

@@ -54,7 +54,7 @@ export function InlineEditableInput({
 
   function handleKeyDown(e: KeyboardEvent) {
     if (e.key === "Escape") {
-      e.preventDefault();
+      e.stopPropagation();
       cancel();
     }
   }
@@ -85,7 +85,7 @@ export function InlineEditableInput({
         className={cn(
           "-mx-2 block w-full rounded-md px-2 py-1 text-left hover:bg-accent",
           !value && "text-muted-foreground",
-          className
+          className,
         )}
       >
         {value || emptyLabel}
@@ -112,13 +112,7 @@ export function InlineEditableInput({
         {fieldState && <FieldError errors={[fieldState]} />}
       </Field>
       <div className="flex justify-end gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon-sm"
-          onClick={cancel}
-          disabled={form.formState.isSubmitting}
-        >
+        <Button type="button" variant="outline" size="icon-sm" onClick={cancel} disabled={form.formState.isSubmitting}>
           <XIcon aria-hidden="true" />
           <span className="sr-only">{t("actions.cancel")}</span>
         </Button>

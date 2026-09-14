@@ -15,6 +15,7 @@ import { getFullName, getInitials } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { getMeQuery } from "@/lib/queries/auth.queries";
+import { KeyboardEvent } from "react";
 
 const MAX_LENGTH = 5000;
 
@@ -25,6 +26,7 @@ interface CommentFormProps {
   commentId?: string;
   initialContent?: string;
   onDone?: () => void;
+  onCancel?: () => void;
 }
 
 export function CommentForm({
@@ -34,6 +36,7 @@ export function CommentForm({
   commentId,
   initialContent,
   onDone,
+  onCancel,
 }: CommentFormProps) {
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
@@ -73,6 +76,13 @@ export function CommentForm({
     }
   }
 
+  function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      onCancel?.();
+    }
+  }
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
       <div className="flex gap-2">
@@ -87,6 +97,7 @@ export function CommentForm({
           maxLength={MAX_LENGTH}
           disabled={form.formState.isSubmitting}
           autoFocus={isEditing}
+          onKeyDown={handleKeyDown}
         />
       </div>
       <div className="flex justify-end gap-2">
