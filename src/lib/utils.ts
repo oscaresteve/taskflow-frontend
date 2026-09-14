@@ -17,3 +17,7 @@ export function getInitials(name: string) {
 export function getFullName(firstName: string, lastName: string) {
   return `${firstName} ${lastName}`
 }
+
+export function isOverdue(date: string | Date) {
+  return new Date(date) < new Date()
+}
