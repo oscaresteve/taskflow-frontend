@@ -205,14 +205,12 @@ export default function ProjectMembersPage() {
       <ConfirmDialog
         open={deactivateDialogOpen}
         onOpenChange={setDeactivateDialogOpen}
-        title={t("projectMembersPage.deactivateMemberTitle")}
-        description={
-          memberToDeactivate
-            ? t("projectMembersPage.deactivateMemberDescription", {
-                name: getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName),
-              })
-            : ""
-        }
+        title={t("projectMembersPage.deactivateMemberTitle", {
+          name: memberToDeactivate
+            ? getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName)
+            : "",
+        })}
+        description={t("projectMembersPage.deactivateMemberDescription")}
         confirmLabel={t("projectMembersPage.deactivateConfirmLabel")}
         variant="destructive"
         onConfirm={handleConfirmDeactivate}
@@ -222,11 +220,14 @@ export default function ProjectMembersPage() {
       <ConfirmDialog
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
-        title={t("projectMembersPage.changeRoleTitle")}
+        title={t("projectMembersPage.changeRoleTitle", {
+          name: pendingRoleChange
+            ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)
+            : "",
+        })}
         description={
           pendingRoleChange
             ? t.rich("projectMembersPage.changeRoleDescription", {
-                name: getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName),
                 role: () => <EnumBadge className="align-middle" option={roleOptions[pendingRoleChange.role]} />,
               })
             : ""

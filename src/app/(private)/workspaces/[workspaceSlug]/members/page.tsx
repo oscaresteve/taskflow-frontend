@@ -256,14 +256,10 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={removeDialogOpen}
         onOpenChange={setRemoveDialogOpen}
-        title={t("workspaceMembersPage.removeMemberTitle")}
-        description={
-          memberToRemove
-            ? t("workspaceMembersPage.removeMemberDescription", {
-                name: getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName),
-              })
-            : ""
-        }
+        title={t("workspaceMembersPage.removeMemberTitle", {
+          name: memberToRemove ? getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName) : "",
+        })}
+        description={t("workspaceMembersPage.removeMemberDescription")}
         confirmLabel={t("workspaceMembersPage.removeConfirmLabel")}
         variant="destructive"
         onConfirm={handleConfirmRemove}
@@ -273,11 +269,14 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
-        title={t("workspaceMembersPage.changeRoleTitle")}
+        title={t("workspaceMembersPage.changeRoleTitle", {
+          name: pendingRoleChange
+            ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)
+            : "",
+        })}
         description={
           pendingRoleChange
             ? t.rich("workspaceMembersPage.changeRoleDescription", {
-                name: getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName),
                 role: () => <EnumBadge className="align-middle" option={roleOptions[pendingRoleChange.role]} />,
               })
             : ""
@@ -290,14 +289,10 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={activateDialogOpen}
         onOpenChange={setActivateDialogOpen}
-        title={t("workspaceMembersPage.activateMemberTitle")}
-        description={
-          memberToActivate
-            ? t("workspaceMembersPage.activateMemberDescription", {
-                name: getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName),
-              })
-            : ""
-        }
+        title={t("workspaceMembersPage.activateMemberTitle", {
+          name: memberToActivate ? getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName) : "",
+        })}
+        description={t("workspaceMembersPage.activateMemberDescription")}
         confirmLabel={t("workspaceMembersPage.activateConfirmLabel")}
         onConfirm={handleConfirmActivate}
         pending={activateWorkspaceMember.isPending}
