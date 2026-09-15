@@ -46,6 +46,21 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-severity-critical: var(--severity-critical);
+  --color-severity-critical-foreground: var(--severity-critical-foreground);
+  --color-severity-serious: var(--severity-serious);
+  --color-severity-serious-foreground: var(--severity-serious-foreground);
+  --color-severity-warning: var(--severity-warning);
+  --color-severity-warning-foreground: var(--severity-warning-foreground);
+  --color-severity-good: var(--severity-good);
+  --color-severity-good-foreground: var(--severity-good-foreground);
+  --color-role-owner: var(--role-owner);
+  --color-role-owner-foreground: var(--role-owner-foreground);
+  --color-role-admin: var(--role-admin);
+  --color-role-admin-foreground: var(--role-admin-foreground);
+  --color-role-member: var(--role-member);
+  --color-role-member-foreground: var(--role-member-foreground);
 }
 
 :root {
@@ -81,6 +96,21 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --severity-good: #0ca30c;
+  --severity-good-foreground: #007301;
+  --severity-warning: #fab219;
+  --severity-warning-foreground: #8f6400;
+  --severity-serious: #ec835a;
+  --severity-serious-foreground: #b44100;
+  --severity-critical: #d03b3b;
+  --severity-critical-foreground: #bc0c1f;
+  --role-owner: #4a3aa7;
+  --role-owner-foreground: #5842ca;
+  --role-admin: #eb6834;
+  --role-admin-foreground: #ae3c00;
+  --role-member: #1baf7a;
+  --role-member-foreground: #00744e;
 }
 
 .dark {
@@ -115,6 +145,21 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  --severity-good: #0ca30c;
+  --severity-good-foreground: #32b12e;
+  --severity-warning: #fab219;
+  --severity-warning-foreground: #e29f00;
+  --severity-serious: #ec835a;
+  --severity-serious-foreground: #ff7a43;
+  --severity-critical: #d03b3b;
+  --severity-critical-foreground: #fc5955;
+  --role-owner: #9085e9;
+  --role-owner-foreground: #9c8fff;
+  --role-admin: #d95926;
+  --role-admin-foreground: #ff6626;
+  --role-member: #199e70;
+  --role-member-foreground: #00b07b;
 }
 
 @layer base {
