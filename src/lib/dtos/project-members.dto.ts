@@ -1,6 +1,7 @@
 import { UserResponseDto } from "./auth.dto";
+import { MemberRole } from "./members.dto";
 
-export type ProjectRole = "OWNER" | "ADMIN" | "MEMBER";
+export type ProjectRole = MemberRole;
 
 export type ProjectMemberResponseDto = {
   id: string;

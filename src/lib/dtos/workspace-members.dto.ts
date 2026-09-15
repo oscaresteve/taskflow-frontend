@@ -1,6 +1,7 @@
 import { UserResponseDto } from "./auth.dto";
+import { MemberRole } from "./members.dto";
 
-export type WorkspaceRole = "OWNER" | "ADMIN" | "MEMBER";
+export type WorkspaceRole = MemberRole;
 
 export type WorkspaceMemberStatus = "PENDING" | "ACTIVE" | "REMOVED";
 
