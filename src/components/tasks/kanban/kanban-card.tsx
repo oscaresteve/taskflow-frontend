@@ -5,11 +5,10 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
 import { AssigneePicker } from "@/components/tasks/assignee-picker";
-import { EnumBadge } from "@/components/common/enum-display";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { ApiError } from "@/lib/http/api-error";
-import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
-import { priorityOptions } from "@/lib/task-enums";
+import { PrioritySelect } from "@/components/tasks/priority-select";
+import { TaskPriority, TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { cn } from "@/lib/utils";
 
 interface KanbanCardProps {
@@ -24,9 +23,22 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
   const t = useTranslations("tasks");
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, String(task.taskNumber));
 
-  async function handleAssigneeChange(userId: string | null) {
+  async function handleAssigneeChange(assigneeId: string | null) {
     try {
-      await updateTask.mutateAsync({ assigneeId: userId });
+      await updateTask.mutateAsync({ assigneeId });
+      toast.add({ type: "success", description: t("updateSuccess") });
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
+        priority: "high",
+      });
+    }
+  }
+
+  async function handlePriorityChange(priority: TaskPriority) {
+    try {
+      await updateTask.mutateAsync({ priority });
       toast.add({ type: "success", description: t("updateSuccess") });
     } catch (error) {
       toast.add({
@@ -41,7 +53,14 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
     <Card size="sm" className="gap-2 transition-colors hover:bg-muted/50">
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
         <span className="text-xs text-muted-foreground">{taskKey}</span>
-        <EnumBadge option={priorityOptions[task.priority]} />
+        <span
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <PrioritySelect variant="icon-badge" value={task.priority} onValueChange={handlePriorityChange} />
+        </span>
       </div>
       <p className="px-(--card-spacing) text-sm font-medium">{task.title}</p>
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">

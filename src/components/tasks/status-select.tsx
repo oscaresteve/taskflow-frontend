@@ -1,6 +1,6 @@
 "use client";
 
-import { EnumBadge, EnumControl, EnumIconLabel } from "@/components/common/enum-display";
+import { EnumBadge, EnumControl, EnumIconBadge, EnumIconLabel } from "@/components/common/enum-display";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 interface StatusSelectProps {
   id?: string;
-  variant?: "badge" | "control";
+  variant?: "badge" | "control" | "icon-badge";
   value: TaskStatus;
   onValueChange: (value: TaskStatus) => void;
   className?: string;
@@ -34,7 +34,11 @@ export function StatusSelect({ id, variant = "control", value, onValueChange, cl
             className,
           )}
         >
-          <EnumBadge option={statusOptions[value]} interactive />
+          {variant === "icon-badge" ? (
+            <EnumIconBadge option={statusOptions[value]} interactive />
+          ) : (
+            <EnumBadge option={statusOptions[value]} interactive />
+          )}
         </DropdownMenuTrigger>
       )}
 

@@ -30,6 +30,32 @@ export function EnumBadge({
   );
 }
 
+export function EnumIconBadge({
+  option,
+  interactive,
+  className,
+}: {
+  option: EnumOption;
+  className?: string;
+  interactive?: boolean;
+}) {
+  const Icon = option.icon;
+
+  return (
+    <span
+      className={cn(
+        "inline-flex size-6 shrink-0 items-center justify-center rounded-sm",
+        option.colors.text,
+        interactive && cn("transition-colors", option.colors.bgSoftHover),
+        className,
+      )}
+    >
+      <Icon className="size-5" />
+      <span className="sr-only">{option.label}</span>
+    </span>
+  );
+}
+
 export function EnumIconLabel({ option, className }: { option: EnumOption; className?: string }) {
   const Icon = option.icon;
 
