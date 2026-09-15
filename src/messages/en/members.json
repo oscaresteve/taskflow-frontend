@@ -63,7 +63,7 @@
     "removeMemberDescription": "Remove {name} from this workspace? They'll lose access immediately.",
     "removeConfirmLabel": "Remove",
     "changeRoleTitle": "Change role",
-    "changeRoleDescription": "Change {name}'s role? They'll get {role} access to this workspace.",
+    "changeRoleDescription": "Change {name}'s role? They'll get <role></role> access to this workspace.",
     "changeRoleConfirmLabel": "Change",
     "activateMemberTitle": "Activate member",
     "activateMemberDescription": "Activate {name}? They'll get immediate access to this workspace.",
@@ -81,7 +81,7 @@
     "deactivateMemberDescription": "Deactivate {name} on this project? They'll lose access to it immediately.",
     "deactivateConfirmLabel": "Deactivate",
     "changeRoleTitle": "Change role",
-    "changeRoleDescription": "Change {name}'s role? They'll get {role} access to this project.",
+    "changeRoleDescription": "Change {name}'s role? They'll get <role></role> access to this project.",
     "changeRoleConfirmLabel": "Change"
   },
   "addWorkspaceMemberDialog": {

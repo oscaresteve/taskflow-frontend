@@ -63,7 +63,7 @@
     "removeMemberDescription": "¿Eliminar a {name} de este espacio de trabajo? Perderá el acceso de inmediato.",
     "removeConfirmLabel": "Eliminar",
     "changeRoleTitle": "Cambiar rol",
-    "changeRoleDescription": "¿Cambiar el rol de {name}? Tendrá acceso de {role} a este espacio de trabajo.",
+    "changeRoleDescription": "¿Cambiar el rol de {name}? Tendrá acceso de <role></role> a este espacio de trabajo.",
     "changeRoleConfirmLabel": "Cambiar",
     "activateMemberTitle": "Activar miembro",
     "activateMemberDescription": "¿Activar a {name}? Tendrá acceso inmediato a este espacio de trabajo.",
@@ -81,7 +81,7 @@
     "deactivateMemberDescription": "¿Desactivar a {name} en este proyecto? Perderá el acceso de inmediato.",
     "deactivateConfirmLabel": "Desactivar",
     "changeRoleTitle": "Cambiar rol",
-    "changeRoleDescription": "¿Cambiar el rol de {name}? Tendrá acceso de {role} a este proyecto.",
+    "changeRoleDescription": "¿Cambiar el rol de {name}? Tendrá acceso de <role></role> a este proyecto.",
     "changeRoleConfirmLabel": "Cambiar"
   },
   "addWorkspaceMemberDialog": {

@@ -29,6 +29,7 @@ import {
   isProjectManager,
 } from "@/lib/permissions/project-member-permissions";
 import { Badge } from "@/components/ui/badge";
+import { EnumBadge } from "@/components/common/enum-display";
 import { roleOptions } from "@/lib/member-enums";
 
 type StatusTab = "ACTIVE" | "INACTIVE";
@@ -224,9 +225,9 @@ export default function ProjectMembersPage() {
         title={t("projectMembersPage.changeRoleTitle")}
         description={
           pendingRoleChange
-            ? t("projectMembersPage.changeRoleDescription", {
+            ? t.rich("projectMembersPage.changeRoleDescription", {
                 name: getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName),
-                role: roleOptions[pendingRoleChange.role].label,
+                role: () => <EnumBadge className="align-middle" option={roleOptions[pendingRoleChange.role]} />,
               })
             : ""
         }
