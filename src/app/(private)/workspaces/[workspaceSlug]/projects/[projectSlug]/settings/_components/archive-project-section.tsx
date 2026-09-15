@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Archive } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { DangerSettingCard } from "@/components/common/danger-setting-card";
 import { toast } from "@/components/ui/toast";
 import { useArchiveProject } from "@/hooks/use-archive-project";
@@ -46,7 +46,7 @@ export function ArchiveProjectSection() {
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
-        title={t("archiveProjectSection.confirmTitle", { projectName: project?.name ?? "" })}
+        title={t.rich("archiveProjectSection.confirmTitle", { projectName: project?.name ?? "", ...richTitleTags })}
         description={t("archiveProjectSection.confirmDescription")}
         confirmLabel={t("archiveProjectSection.archive")}
         variant="destructive"

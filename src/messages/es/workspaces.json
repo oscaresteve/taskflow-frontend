@@ -32,7 +32,7 @@
     "members": "Miembros",
     "settings": "Configuración",
     "deactivate": "Desactivar",
-    "deactivateTitle": "¿Desactivar {name}?",
+    "deactivateTitle": "¿Desactivar <b>{name}</b>?",
     "deactivateDescription": "Esto desactivará el espacio de trabajo y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
     "deactivateConfirmLabel": "Desactivar"
   },
@@ -67,7 +67,7 @@
     "title": "Desactivar espacio de trabajo",
     "description": "Este espacio de trabajo dejará de estar accesible para los miembros.",
     "actionLabel": "Desactivar",
-    "dialogTitle": "¿Desactivar {name}?",
+    "dialogTitle": "¿Desactivar <b>{name}</b>?",
     "dialogDescription": "Esto desactivará el espacio de trabajo y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
     "confirmLabel": "Desactivar"
   },

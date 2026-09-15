@@ -30,7 +30,7 @@ import { CreateProjectDialog } from "@/components/projects/create-project-dialog
 import { useArchiveProject } from "@/hooks/use-archive-project";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -107,7 +107,7 @@ function ProjectActionsMenu({
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
-        title={t("projectActionsMenu.confirmTitle", { projectName: project.name })}
+        title={t.rich("projectActionsMenu.confirmTitle", { projectName: project.name, ...richTitleTags })}
         description={t("projectActionsMenu.confirmDescription")}
         confirmLabel={t("projectActionsMenu.archive")}
         variant="destructive"

@@ -15,10 +15,18 @@ import type { ReactNode } from "react";
 import { LucideIcon, Info, Loader2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+/**
+ * Tag de resaltado para los titulos con identidad. El titulo va en `font-medium`, asi que el salto
+ * a `font-semibold` destaca el nombre sin meter un color que compita con la variante destructiva.
+ */
+export const richTitleTags = {
+  b: (chunks: ReactNode) => <span className="font-semibold">{chunks}</span>,
+};
+
 interface ConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  title: string;
+  title: ReactNode;
   description: ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;

@@ -50,7 +50,7 @@
   "taskActionsMenu": {
     "ariaLabel": "Task actions",
     "archive": "Archive",
-    "confirmTitle": "Archive {taskTitle}?",
+    "confirmTitle": "Archive <b>{taskTitle}</b>?",
     "confirmDescription": "This will archive the task and hide it from the task list. This action cannot be undone from the app.",
     "archiveSuccess": "Task archived."
   },

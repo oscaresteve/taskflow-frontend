@@ -11,7 +11,7 @@ import { useProjectRole } from "@/hooks/use-project-role";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { AddProjectMemberDialog } from "@/components/members/add-project-member-dialog";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
@@ -205,10 +205,11 @@ export default function ProjectMembersPage() {
       <ConfirmDialog
         open={deactivateDialogOpen}
         onOpenChange={setDeactivateDialogOpen}
-        title={t("projectMembersPage.deactivateMemberTitle", {
+        title={t.rich("projectMembersPage.deactivateMemberTitle", {
           name: memberToDeactivate
             ? getFullName(memberToDeactivate.user.firstName, memberToDeactivate.user.lastName)
             : "",
+          ...richTitleTags,
         })}
         description={t("projectMembersPage.deactivateMemberDescription")}
         confirmLabel={t("projectMembersPage.deactivateConfirmLabel")}
@@ -220,10 +221,11 @@ export default function ProjectMembersPage() {
       <ConfirmDialog
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
-        title={t("projectMembersPage.changeRoleTitle", {
+        title={t.rich("projectMembersPage.changeRoleTitle", {
           name: pendingRoleChange
             ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)
             : "",
+          ...richTitleTags,
         })}
         description={
           pendingRoleChange

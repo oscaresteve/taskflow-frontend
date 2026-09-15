@@ -7,7 +7,7 @@ import { toast } from "@/components/ui/toast";
 import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { DangerSettingCard } from "@/components/common/danger-setting-card";
 import { ShieldMinus } from "lucide-react";
 import { useState } from "react";
@@ -46,7 +46,7 @@ export function DeactivateWorkspaceSection() {
       <ConfirmDialog
         open={deactivateOpen}
         onOpenChange={setDeactivateOpen}
-        title={t("deactivateWorkspaceSection.dialogTitle", { name: workspace?.name ?? "" })}
+        title={t.rich("deactivateWorkspaceSection.dialogTitle", { name: workspace?.name ?? "", ...richTitleTags })}
         description={t("deactivateWorkspaceSection.dialogDescription")}
         confirmLabel={t("deactivateWorkspaceSection.confirmLabel")}
         variant="destructive"

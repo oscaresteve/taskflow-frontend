@@ -20,7 +20,7 @@ import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { AddWorkspaceMemberDialog } from "@/components/members/add-workspace-member-dialog";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
@@ -256,8 +256,9 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={removeDialogOpen}
         onOpenChange={setRemoveDialogOpen}
-        title={t("workspaceMembersPage.removeMemberTitle", {
+        title={t.rich("workspaceMembersPage.removeMemberTitle", {
           name: memberToRemove ? getFullName(memberToRemove.user.firstName, memberToRemove.user.lastName) : "",
+          ...richTitleTags,
         })}
         description={t("workspaceMembersPage.removeMemberDescription")}
         confirmLabel={t("workspaceMembersPage.removeConfirmLabel")}
@@ -269,10 +270,11 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={roleChangeDialogOpen}
         onOpenChange={setRoleChangeDialogOpen}
-        title={t("workspaceMembersPage.changeRoleTitle", {
+        title={t.rich("workspaceMembersPage.changeRoleTitle", {
           name: pendingRoleChange
             ? getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName)
             : "",
+          ...richTitleTags,
         })}
         description={
           pendingRoleChange
@@ -289,8 +291,9 @@ export default function WorkspaceMembersPage() {
       <ConfirmDialog
         open={activateDialogOpen}
         onOpenChange={setActivateDialogOpen}
-        title={t("workspaceMembersPage.activateMemberTitle", {
+        title={t.rich("workspaceMembersPage.activateMemberTitle", {
           name: memberToActivate ? getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName) : "",
+          ...richTitleTags,
         })}
         description={t("workspaceMembersPage.activateMemberDescription")}
         confirmLabel={t("workspaceMembersPage.activateConfirmLabel")}

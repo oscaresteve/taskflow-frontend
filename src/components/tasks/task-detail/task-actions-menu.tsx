@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Archive, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,7 +65,7 @@ export function TaskActionsMenu({ task, workspaceSlug, projectSlug, taskNumber, 
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}
-        title={t("taskActionsMenu.confirmTitle", { taskTitle: task.title })}
+        title={t.rich("taskActionsMenu.confirmTitle", { taskTitle: task.title, ...richTitleTags })}
         description={t("taskActionsMenu.confirmDescription")}
         confirmLabel={t("taskActionsMenu.archive")}
         variant="destructive"

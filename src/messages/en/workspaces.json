@@ -32,7 +32,7 @@
     "members": "Members",
     "settings": "Settings",
     "deactivate": "Deactivate",
-    "deactivateTitle": "Deactivate {name}?",
+    "deactivateTitle": "Deactivate <b>{name}</b>?",
     "deactivateDescription": "This will deactivate the workspace and hide it from all members. This action cannot be undone from the app.",
     "deactivateConfirmLabel": "Deactivate"
   },
@@ -67,7 +67,7 @@
     "title": "Deactivate workspace",
     "description": "This workspace will no longer be accessible to members.",
     "actionLabel": "Deactivate",
-    "dialogTitle": "Deactivate {name}?",
+    "dialogTitle": "Deactivate <b>{name}</b>?",
     "dialogDescription": "This will deactivate the workspace and hide it from all members. This action cannot be undone from the app.",
     "confirmLabel": "Deactivate"
   },

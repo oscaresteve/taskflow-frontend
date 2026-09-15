@@ -38,7 +38,7 @@
     "members": "Miembros",
     "settings": "Configuración",
     "archive": "Archivar",
-    "confirmTitle": "¿Archivar {projectName}?",
+    "confirmTitle": "¿Archivar <b>{projectName}</b>?",
     "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app."
   },
   "projectNotFound": {
@@ -83,7 +83,7 @@
     "title": "Archivar proyecto",
     "description": "Este proyecto dejará de estar accesible para los miembros.",
     "archive": "Archivar",
-    "confirmTitle": "¿Archivar {projectName}?",
+    "confirmTitle": "¿Archivar <b>{projectName}</b>?",
     "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app."
   },
   "projectColorSection": {

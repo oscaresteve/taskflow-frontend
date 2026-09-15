@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { toast } from "@/components/ui/toast";
@@ -94,7 +94,7 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
       <ConfirmDialog
         open={deactivateOpen}
         onOpenChange={setDeactivateOpen}
-        title={t("workspaceActionsMenu.deactivateTitle", { name: workspace.name })}
+        title={t.rich("workspaceActionsMenu.deactivateTitle", { name: workspace.name, ...richTitleTags })}
         description={t("workspaceActionsMenu.deactivateDescription")}
         confirmLabel={t("workspaceActionsMenu.deactivateConfirmLabel")}
         variant="destructive"

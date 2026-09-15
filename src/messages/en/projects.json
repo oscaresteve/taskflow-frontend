@@ -38,7 +38,7 @@
     "members": "Members",
     "settings": "Settings",
     "archive": "Archive",
-    "confirmTitle": "Archive {projectName}?",
+    "confirmTitle": "Archive <b>{projectName}</b>?",
     "confirmDescription": "This will archive the project and hide it from all members. This action cannot be undone from the app."
   },
   "projectNotFound": {
@@ -83,7 +83,7 @@
     "title": "Archive project",
     "description": "This project will no longer be accessible to members.",
     "archive": "Archive",
-    "confirmTitle": "Archive {projectName}?",
+    "confirmTitle": "Archive <b>{projectName}</b>?",
     "confirmDescription": "This will archive the project and hide it from all members. This action cannot be undone from the app."
   },
   "projectColorSection": {
