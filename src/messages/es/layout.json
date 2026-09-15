@@ -8,7 +8,7 @@
   "breadcrumb": {
     "mySpace": "Mi espacio",
     "preferences": "Preferencias",
-    "manageWorkspaces": "Gestionar espacios de trabajo",
+    "manageWorkspaces": "Gestionar espacios",
     "settings": "Configuración",
     "members": "Miembros"
   },
@@ -18,7 +18,7 @@
   },
   "workspaceSidebar": {
     "global": "Global",
-    "workspace": "Espacio de trabajo",
+    "workspace": "Espacio",
     "app": "Aplicación",
     "overview": "Resumen",
     "members": "Miembros",
@@ -43,26 +43,26 @@
     "remaining": "{count} más"
   },
   "workspacesNav": {
-    "title": "Espacios de trabajo",
-    "newWorkspace": "Nuevo espacio de trabajo",
+    "title": "Espacios",
+    "newWorkspace": "Nuevo espacio",
     "moreOptions": "Más opciones",
-    "manageWorkspaces": "Gestionar espacios de trabajo",
-    "searchPlaceholder": "Buscar espacios de trabajo",
-    "failedToLoad": "No se pudieron cargar los espacios de trabajo",
-    "noneFound": "No se encontraron espacios de trabajo",
-    "noneYet": "Todavía no hay espacios de trabajo",
+    "manageWorkspaces": "Gestionar espacios",
+    "searchPlaceholder": "Buscar espacios",
+    "failedToLoad": "No se pudieron cargar los espacios",
+    "noneFound": "No se encontraron espacios",
+    "noneYet": "Todavía no hay espacios",
     "loading": "Cargando…",
     "remaining": "{count} más"
   },
   "workspaceSwitch": {
-    "workspaces": "Espacios de trabajo",
-    "searchPlaceholder": "Buscar espacios de trabajo",
-    "noneFound": "No se encontraron espacios de trabajo",
-    "noneYet": "Todavía no hay espacios de trabajo",
+    "workspaces": "Espacios",
+    "searchPlaceholder": "Buscar espacios",
+    "noneFound": "No se encontraron espacios",
+    "noneYet": "Todavía no hay espacios",
     "loading": "Cargando…",
     "remaining": "{count} más",
-    "createWorkspace": "Crear espacio de trabajo",
-    "manageWorkspaces": "Gestionar espacios de trabajo"
+    "createWorkspace": "Crear espacio",
+    "manageWorkspaces": "Gestionar espacios"
   },
   "userNav": {
     "logOut": "Cerrar sesión",

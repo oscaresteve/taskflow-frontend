@@ -57,16 +57,16 @@
     "activate": "Activar",
     "remove": "Eliminar",
     "activatedToast": "{name} activado.",
-    "removedToast": "{name} eliminado del espacio de trabajo.",
+    "removedToast": "{name} eliminado del espacio.",
     "roleChangedToast": "El rol de {name} se cambió a {role}.",
     "removeMemberTitle": "¿Eliminar a <b>{name}</b>?",
-    "removeMemberDescription": "Esto eliminará al miembro del espacio de trabajo. Perderá el acceso de inmediato.",
+    "removeMemberDescription": "Esto eliminará al miembro del espacio. Perderá el acceso de inmediato.",
     "removeConfirmLabel": "Eliminar",
     "changeRoleTitle": "¿Cambiar el rol de <b>{name}</b>?",
-    "changeRoleDescription": "Tendrá acceso de <role></role> a este espacio de trabajo.",
+    "changeRoleDescription": "Tendrá acceso de <role></role> a este espacio.",
     "changeRoleConfirmLabel": "Cambiar",
     "activateMemberTitle": "¿Activar a <b>{name}</b>?",
-    "activateMemberDescription": "Esto activará al miembro. Tendrá acceso inmediato al espacio de trabajo.",
+    "activateMemberDescription": "Esto activará al miembro. Tendrá acceso inmediato al espacio.",
     "activateConfirmLabel": "Activar"
   },
   "projectMembersPage": {
@@ -94,10 +94,10 @@
   },
   "addProjectMemberDialog": {
     "title": "Añadir miembro",
-    "description": "Añade un miembro del espacio de trabajo a este proyecto.",
+    "description": "Añade un miembro del espacio a este proyecto.",
     "submitLabel": "Añadir miembro",
     "roleLabel": "Rol",
-    "emptyMessage": "No se encontraron miembros del espacio de trabajo coincidentes.",
+    "emptyMessage": "No se encontraron miembros del espacio coincidentes.",
     "addedToast": "{name} añadido al proyecto."
   }
 }

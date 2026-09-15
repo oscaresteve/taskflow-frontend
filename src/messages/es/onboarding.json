@@ -1,6 +1,6 @@
 {
   "onboardingFlow": {
-    "workspaceStepTitle": "Configuremos tu espacio de trabajo",
+    "workspaceStepTitle": "Configuremos tu espacio",
     "workspaceStepDescription": "Aquí vivirán tus proyectos y tareas.",
     "projectStepTitle": "Crea tu primer proyecto",
     "projectStepDescription": "Añade un proyecto para que {workspaceName} pueda empezar a organizar el trabajo."
@@ -24,12 +24,12 @@
     "genericError": "Algo salió mal"
   },
   "onboardingWorkspaceForm": {
-    "defaultName": "Espacio de trabajo de {name}",
-    "defaultDescription": "Espacio de trabajo principal de {name}",
+    "defaultName": "Espacio de {name}",
+    "defaultDescription": "Espacio principal de {name}",
     "nameLabel": "Nombre",
     "namePlaceholder": "Acme Inc",
     "descriptionLabel": "Descripción",
-    "descriptionPlaceholder": "Espacio de trabajo principal de Acme Inc",
+    "descriptionPlaceholder": "Espacio principal de Acme Inc",
     "submitButton": "Continuar",
     "genericError": "Algo salió mal"
   }

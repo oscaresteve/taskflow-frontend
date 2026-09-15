@@ -9,13 +9,13 @@
     "atLeastOneField": "Debe proporcionarse al menos un campo"
   },
   "workspacesPage": {
-    "title": "Gestionar espacios de trabajo",
-    "newWorkspace": "Nuevo espacio de trabajo",
-    "searchPlaceholder": "Buscar espacios de trabajo",
-    "failedToLoad": "No se pudieron cargar los espacios de trabajo.",
-    "noWorkspacesFound": "No se encontraron espacios de trabajo.",
+    "title": "Gestionar espacios",
+    "newWorkspace": "Nuevo espacio",
+    "searchPlaceholder": "Buscar espacios",
+    "failedToLoad": "No se pudieron cargar los espacios.",
+    "noWorkspacesFound": "No se encontraron espacios.",
     "columns": {
-      "workspace": "Espacio de trabajo",
+      "workspace": "Espacio",
       "slug": "Slug",
       "owners": "Propietarios",
       "actions": "Acciones"
@@ -27,17 +27,17 @@
     }
   },
   "workspaceActionsMenu": {
-    "ariaLabel": "Acciones del espacio de trabajo",
+    "ariaLabel": "Acciones del espacio",
     "open": "Abrir",
     "members": "Miembros",
     "settings": "Configuración",
     "deactivate": "Desactivar",
     "deactivateTitle": "¿Desactivar <b>{name}</b>?",
-    "deactivateDescription": "Esto desactivará el espacio de trabajo y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
+    "deactivateDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
     "deactivateConfirmLabel": "Desactivar"
   },
   "workspacePage": {
-    "failedToLoad": "No se pudo cargar el resumen del espacio de trabajo.",
+    "failedToLoad": "No se pudo cargar el resumen del espacio.",
     "stats": {
       "openTasks": "Tareas abiertas",
       "overdue": "Vencidas",
@@ -64,44 +64,44 @@
     "noPermission": "No tienes permiso para ver esta página."
   },
   "deactivateWorkspaceSection": {
-    "title": "Desactivar espacio de trabajo",
-    "description": "Este espacio de trabajo dejará de estar accesible para los miembros.",
+    "title": "Desactivar espacio",
+    "description": "Este espacio dejará de estar accesible para los miembros.",
     "actionLabel": "Desactivar",
     "dialogTitle": "¿Desactivar <b>{name}</b>?",
-    "dialogDescription": "Esto desactivará el espacio de trabajo y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
+    "dialogDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
     "confirmLabel": "Desactivar"
   },
   "workspaceDescriptionSection": {
     "title": "Descripción",
-    "description": "Una breve descripción de tu espacio de trabajo.",
+    "description": "Una breve descripción de tu espacio.",
     "footerHint": "Máximo 500 caracteres",
-    "failedToLoad": "No se pudo cargar el espacio de trabajo.",
+    "failedToLoad": "No se pudo cargar el espacio.",
     "descriptionLabel": "Descripción",
-    "descriptionPlaceholder": "Espacio de trabajo principal de Acme Inc",
-    "successMessage": "Descripción del espacio de trabajo actualizada."
+    "descriptionPlaceholder": "Espacio principal de Acme Inc",
+    "successMessage": "Descripción del espacio actualizada."
   },
   "workspaceNameSection": {
-    "loadingTitle": "Nombre del espacio de trabajo",
+    "loadingTitle": "Nombre del espacio",
     "title": "Nombre",
-    "description": "Este es el nombre visible de tu espacio de trabajo.",
+    "description": "Este es el nombre visible de tu espacio.",
     "footerHint": "Máximo 100 caracteres",
-    "failedToLoad": "No se pudo cargar el espacio de trabajo.",
-    "nameLabel": "Nombre del espacio de trabajo",
+    "failedToLoad": "No se pudo cargar el espacio.",
+    "nameLabel": "Nombre del espacio",
     "namePlaceholder": "Acme Inc",
-    "successMessage": "Nombre del espacio de trabajo actualizado."
+    "successMessage": "Nombre del espacio actualizado."
   },
   "notFound": {
-    "title": "Espacio de trabajo no encontrado",
-    "description": "Este espacio de trabajo no existe o no tienes acceso a él.",
+    "title": "Espacio no encontrado",
+    "description": "Este espacio no existe o no tienes acceso a él.",
     "goToMySpace": "Ir a mi espacio"
   },
   "createWorkspaceDialog": {
-    "title": "Crear espacio de trabajo",
-    "description": "Configura un nuevo espacio de trabajo para organizar proyectos y tareas.",
-    "submitLabel": "Crear espacio de trabajo",
+    "title": "Crear espacio",
+    "description": "Configura un nuevo espacio para organizar proyectos y tareas.",
+    "submitLabel": "Crear espacio",
     "nameLabel": "Nombre",
     "namePlaceholder": "Acme Inc",
     "descriptionLabel": "Descripción",
-    "descriptionPlaceholder": "Espacio de trabajo principal de Acme Inc"
+    "descriptionPlaceholder": "Espacio principal de Acme Inc"
   }
 }
