@@ -13,7 +13,7 @@ import { RankedBarChart } from "@/components/overview/ranked-bar-chart";
 import { TaskListCard } from "@/components/overview/task-list-card";
 import { getWorkspaceOverviewQuery } from "@/lib/queries/overview.queries";
 import { taskStatuses } from "@/lib/schemas/task.schema";
-import { statusChartColor, statusLabel } from "@/lib/task-labels";
+import { statusOptions } from "@/lib/task-enums";
 import { WorkspaceHeader } from "./_components/workspace-header";
 
 export default function WorkspacePage() {
@@ -25,9 +25,9 @@ export default function WorkspacePage() {
 
   const statusSegments = taskStatuses.map((status) => ({
     key: status.toLowerCase(),
-    label: statusLabel[status],
+    label: statusOptions[status].label,
     count: overview?.tasks.byStatus[status] ?? 0,
-    color: statusChartColor[status],
+    color: statusOptions[status].chartColor,
   }));
 
   const workloadRows = (overview?.workload ?? []).map((project) => ({

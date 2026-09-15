@@ -16,7 +16,7 @@ import {
   WorkspaceMemberWithUserResponseDto,
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
-import { RoleFilter } from "@/lib/role-labels";
+import { RoleFilter } from "@/lib/member-enums";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
 

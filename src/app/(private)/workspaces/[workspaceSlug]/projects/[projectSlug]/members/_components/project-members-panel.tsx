@@ -12,7 +12,7 @@ import { SortControls } from "@/components/common/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
-import { RoleFilter } from "@/lib/role-labels";
+import { RoleFilter } from "@/lib/member-enums";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
 

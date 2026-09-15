@@ -2,15 +2,15 @@ import Link from "next/link";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useFormatter, useTranslations } from "next-intl";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
 import { AssigneePicker } from "@/components/tasks/assignee-picker";
+import { EnumBadge } from "@/components/common/enum-display";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { ApiError } from "@/lib/http/api-error";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
+import { priorityOptions } from "@/lib/task-enums";
 import { cn } from "@/lib/utils";
-import { priorityVariant } from "@/lib/task-labels";
 
 interface KanbanCardProps {
   taskKey: string;
@@ -41,7 +41,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
     <Card size="sm" className="gap-2 transition-colors hover:bg-muted/50">
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
         <span className="text-xs text-muted-foreground">{taskKey}</span>
-        <Badge variant={priorityVariant[task.priority]}>{task.priority}</Badge>
+        <EnumBadge option={priorityOptions[task.priority]} />
       </div>
       <p className="px-(--card-spacing) text-sm font-medium">{task.title}</p>
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">

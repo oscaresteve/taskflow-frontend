@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/common/form-dialog";
 import { MemberCandidate, MemberPicker, toMemberCandidate } from "@/components/members/member-picker";
@@ -17,8 +16,7 @@ import { getActiveWorkspaceMembersInfiniteQuery } from "@/lib/queries/workspace-
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectMemberDto, createProjectMemberSchema } from "@/lib/schemas/project-member.schema";
 import { assignableProjectRoles } from "@/lib/permissions/project-member-permissions";
-import { RoleIconLabel, RoleSelectItemContent } from "@/components/members/role-badge";
-import { MemberRole } from "@/lib/role-labels";
+import { RoleSelect } from "@/components/members/role-select";
 import { useTranslations } from "next-intl";
 
 const PICKER_PAGE_SIZE = 10;
@@ -148,18 +146,13 @@ export function AddProjectMemberDialog({
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="project-member-role">{t("addProjectMemberDialog.roleLabel")}</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="project-member-role" className="w-full">
-                    <SelectValue>{(role: MemberRole) => <RoleIconLabel role={role} />}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {assignableRoles.map((role) => (
-                      <SelectItem key={role} value={role}>
-                        <RoleSelectItemContent role={role} />
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <RoleSelect
+                  id="project-member-role"
+                  className="w-full"
+                  value={field.value}
+                  values={assignableRoles}
+                  onValueChange={field.onChange}
+                />
               </Field>
             )}
           />

@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
 import { FormDialog } from "@/components/common/form-dialog";
 import { MemberCandidate, MemberPicker } from "@/components/members/member-picker";
@@ -18,8 +17,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { CreateWorkspaceMemberDto, createWorkspaceMemberSchema } from "@/lib/schemas/workspace-member.schema";
 import { assignableWorkspaceRoles } from "@/lib/permissions/workspace-member-permissions";
 import { getFullName } from "@/lib/utils";
-import { RoleIconLabel, RoleSelectItemContent } from "@/components/members/role-badge";
-import { MemberRole } from "@/lib/role-labels";
+import { RoleSelect } from "@/components/members/role-select";
 import { useTranslations } from "next-intl";
 
 const PICKER_PAGE_SIZE = 10;
@@ -135,18 +133,13 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
             render={({ field }) => (
               <Field>
                 <FieldLabel htmlFor="member-role">{t("addWorkspaceMemberDialog.roleLabel")}</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="member-role" className="w-full">
-                    <SelectValue>{(role: MemberRole) => <RoleIconLabel role={role} />}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {assignableRoles.map((role) => (
-                      <SelectItem key={role} value={role}>
-                        <RoleSelectItemContent role={role} />
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <RoleSelect
+                  id="member-role"
+                  className="w-full"
+                  value={field.value}
+                  values={assignableRoles}
+                  onValueChange={field.onChange}
+                />
               </Field>
             )}
           />

@@ -44,7 +44,7 @@ import {
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
 import { Badge } from "@/components/ui/badge";
-import { roleLabel } from "@/lib/role-labels";
+import { roleOptions } from "@/lib/member-enums";
 
 export default function WorkspaceMembersPage() {
   const t = useTranslations("members");
@@ -277,7 +277,7 @@ export default function WorkspaceMembersPage() {
           pendingRoleChange
             ? t("workspaceMembersPage.changeRoleDescription", {
                 name: getFullName(pendingRoleChange.member.user.firstName, pendingRoleChange.member.user.lastName),
-                role: roleLabel[pendingRoleChange.role],
+                role: roleOptions[pendingRoleChange.role].label,
               })
             : ""
         }

@@ -5,13 +5,12 @@ import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
+import { StatusSelect } from "@/components/tasks/status-select";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { TaskStatus } from "@/lib/dtos/tasks.dto";
 import { ApiError } from "@/lib/http/api-error";
-import { UpdateTaskStatusDto, taskStatuses, updateTaskStatusSchema } from "@/lib/schemas/task.schema";
-import { statusLabel } from "@/lib/task-labels";
+import { UpdateTaskStatusDto, updateTaskStatusSchema } from "@/lib/schemas/task.schema";
 
 interface TaskStatusSectionProps {
   workspaceSlug: string;
@@ -50,25 +49,14 @@ export function TaskStatusSection({ workspaceSlug, projectSlug, taskNumber, stat
       render={({ field }) => (
         <Field orientation="horizontal">
           <FieldLabel htmlFor="status">{t("fields.status")}</FieldLabel>
-          <Select
-            name={field.name}
+          <StatusSelect
+            id="status"
             value={field.value}
             onValueChange={(value) => {
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}
-          >
-            <SelectTrigger id="status">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {taskStatuses.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {statusLabel[s]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          />
         </Field>
       )}
     />

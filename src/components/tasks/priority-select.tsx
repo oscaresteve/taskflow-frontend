@@ -1,0 +1,56 @@
+"use client";
+
+import { EnumBadge, EnumControl, EnumIconLabel } from "@/components/common/enum-display";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { TaskPriority } from "@/lib/dtos/tasks.dto";
+import { taskPriorities } from "@/lib/schemas/task.schema";
+import { priorityOptions } from "@/lib/task-enums";
+import { cn } from "@/lib/utils";
+
+interface PrioritySelectProps {
+  id?: string;
+  variant?: "badge" | "control";
+  value: TaskPriority;
+  onValueChange: (value: TaskPriority) => void;
+  className?: string;
+}
+
+export function PrioritySelect({ id, variant = "control", value, onValueChange, className }: PrioritySelectProps) {
+  return (
+    <DropdownMenu>
+      {variant === "control" ? (
+        <DropdownMenuTrigger id={id} render={<EnumControl option={priorityOptions[value]} className={className} />} />
+      ) : (
+        <DropdownMenuTrigger
+          id={id}
+          className={cn(
+            "flex w-fit cursor-pointer rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            className,
+          )}
+        >
+          <EnumBadge option={priorityOptions[value]} interactive />
+        </DropdownMenuTrigger>
+      )}
+      <DropdownMenuContent className="w-max">
+        <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as TaskPriority)}>
+          {taskPriorities.map((priority) => (
+            <DropdownMenuRadioItem
+              key={priority}
+              value={priority}
+              closeOnClick
+              className={priorityOptions[priority].colors.menuHighlight}
+            >
+              <EnumIconLabel option={priorityOptions[priority]} />
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

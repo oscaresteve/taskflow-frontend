@@ -5,8 +5,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Badge } from "@/components/ui/badge";
+import { EnumIconLabel } from "@/components/common/enum-display";
 import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
-import { statusLabel } from "@/lib/task-labels";
+import { statusOptions } from "@/lib/task-enums";
 import { cn } from "@/lib/utils";
 import { SortableKanbanCard } from "./kanban-card";
 import { useTranslations } from "next-intl";
@@ -46,9 +47,11 @@ export function KanbanColumn({
       ref={setNodeRef}
       className={cn("flex flex-col gap-3 rounded-lg bg-muted/30 p-2", isDropTarget && "bg-muted/60")}
     >
-      <div className="flex items-center gap-2 px-1">
-        <span className="text-sm font-medium">{statusLabel[status]}</span>
-        <Badge variant="outline">{tasks.length}</Badge>
+      <div className="flex items-center gap-2 px-1 text-sm font-medium jus">
+        <EnumIconLabel option={statusOptions[status]} className="text-muted-foreground" />
+        <Badge variant="outline" className="ml-auto">
+          {tasks.length}
+        </Badge>
       </div>
 
       <div className="flex min-h-16 flex-col gap-2">

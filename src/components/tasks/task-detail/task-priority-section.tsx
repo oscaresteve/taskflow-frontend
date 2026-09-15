@@ -5,12 +5,12 @@ import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
+import { PrioritySelect } from "@/components/tasks/priority-select";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { TaskPriority } from "@/lib/dtos/tasks.dto";
 import { ApiError } from "@/lib/http/api-error";
-import { UpdateTaskPriorityDto, taskPriorities, updateTaskPrioritySchema } from "@/lib/schemas/task.schema";
+import { UpdateTaskPriorityDto, updateTaskPrioritySchema } from "@/lib/schemas/task.schema";
 
 interface TaskPrioritySectionProps {
   workspaceSlug: string;
@@ -52,25 +52,14 @@ export function TaskPrioritySection({ workspaceSlug, projectSlug, taskNumber, pr
       render={({ field }) => (
         <Field orientation="horizontal">
           <FieldLabel htmlFor="priority">{t("fields.priority")}</FieldLabel>
-          <Select
-            name={field.name}
+          <PrioritySelect
+            id="priority"
             value={field.value}
             onValueChange={(value) => {
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}
-          >
-            <SelectTrigger id="priority">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {taskPriorities.map((p) => (
-                <SelectItem key={p} value={p}>
-                  {p}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          />
         </Field>
       )}
     />

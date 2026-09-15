@@ -4,12 +4,13 @@ import { ReactNode } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
-import { MemberRole } from "@/lib/role-labels";
+import { MemberRole } from "@/lib/dtos/members.dto";
+import { roleOptions } from "@/lib/member-enums";
 import { getFullName, getInitials } from "@/lib/utils";
-import { RoleBadge, RoleSelectItemContent } from "@/components/members/role-badge";
+import { EnumBadge } from "@/components/common/enum-display";
+import { RoleSelect } from "@/components/members/role-select";
 import { useFormatter, useTranslations } from "next-intl";
 
 interface MemberLike {
@@ -79,20 +80,14 @@ export function MembersTable<TMember extends MemberLike>({
               </TableCell>
               <TableCell>
                 {roleChangeable(member) ? (
-                  <Select value={member.role} onValueChange={(role) => onChangeRole(member, role as MemberRole)}>
-                    <SelectTrigger className="border-transparent bg-transparent! p-0 ring-0! border-0">
-                      <SelectValue>{(role: MemberRole) => <RoleBadge role={role} />}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="w-64">
-                      {assignableRoles.map((role) => (
-                        <SelectItem key={role} value={role}>
-                          <RoleSelectItemContent role={role} />
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <RoleSelect
+                    value={member.role}
+                    variant="badge"
+                    values={assignableRoles}
+                    onValueChange={(role) => onChangeRole(member, role)}
+                  />
                 ) : (
-                  <RoleBadge role={member.role} />
+                  <EnumBadge option={roleOptions[member.role]} />
                 )}
               </TableCell>
               <TableCell>

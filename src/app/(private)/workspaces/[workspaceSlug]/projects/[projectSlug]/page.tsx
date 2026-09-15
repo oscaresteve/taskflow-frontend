@@ -13,7 +13,7 @@ import { RankedBarChart } from "@/components/overview/ranked-bar-chart";
 import { TaskListCard } from "@/components/overview/task-list-card";
 import { getProjectOverviewQuery } from "@/lib/queries/overview.queries";
 import { taskPriorities, taskStatuses } from "@/lib/schemas/task.schema";
-import { priorityChartColor, priorityLabel, statusChartColor, statusLabel } from "@/lib/task-labels";
+import { priorityOptions, statusOptions } from "@/lib/task-enums";
 import { getFullName } from "@/lib/utils";
 
 export default function ProjectPage() {
@@ -30,17 +30,18 @@ export default function ProjectPage() {
 
   const statusSegments = taskStatuses.map((status) => ({
     key: status.toLowerCase(),
-    label: statusLabel[status],
+    label: statusOptions[status].label,
     count: overview?.tasks.byStatus[status] ?? 0,
-    color: statusChartColor[status],
+    color: statusOptions[status].chartColor,
   }));
 
-  // La prioridad si tiene orden propio, asi que cada barra lleva su paso de la rampa ordinal.
+  // La prioridad usa el mismo color semantico que el resto de la app (badges, selects): LOW=good
+  // ... URGENT=critical, no una rampa ordinal aparte.
   const priorityRows = taskPriorities.map((priority) => ({
     key: priority,
-    label: priorityLabel[priority],
+    label: priorityOptions[priority].label,
     value: overview?.tasks.byPriority[priority] ?? 0,
-    color: priorityChartColor[priority],
+    color: priorityOptions[priority].chartColor,
   }));
 
   const workloadRows = (overview?.workload ?? []).map((member) => ({

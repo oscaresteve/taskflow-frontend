@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarIcon, CircleAlert } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { overdueIcon } from "@/lib/task-enums";
 import { cn, isOverdue } from "@/lib/utils";
 import { LocalizedCalendar } from "@/components/common/localized-calendar";
 
@@ -18,6 +19,7 @@ interface DueDatePickerProps {
 export function DueDatePicker({ value, onChange, id, className }: DueDatePickerProps) {
   const t = useTranslations("tasks");
   const format = useFormatter();
+  const OverdueIcon = overdueIcon;
 
   const [open, setOpen] = useState(false);
 
@@ -39,13 +41,13 @@ export function DueDatePicker({ value, onChange, id, className }: DueDatePickerP
             className={cn(
               "justify-start font-normal",
               !date && "text-muted-foreground",
-              overdue && "text-destructive",
+              overdue && "text-severity-critical-foreground",
               className,
             )}
           />
         }
       >
-        {overdue ? <CircleAlert data-icon="inline-start" /> : <CalendarIcon data-icon="inline-start" />}
+        {overdue ? <OverdueIcon data-icon="inline-start" /> : <CalendarIcon data-icon="inline-start" />}
         {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-auto p-0">
