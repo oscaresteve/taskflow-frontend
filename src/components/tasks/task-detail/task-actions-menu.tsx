@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ComponentProps } from "react";
 import { Archive, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -16,15 +17,27 @@ import { useArchiveTask } from "@/hooks/use-archive-task";
 import { ApiError } from "@/lib/http/api-error";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
 
+// Prop derivada directamente con ComponentProps.
+// Asi nos aseguramos que se le pasa exactamente lo que el componente pide
+type TriggerRenderProp = ComponentProps<typeof DropdownMenuTrigger>["render"];
+
 interface TaskActionsMenuProps {
   task: TaskResponseDto;
   workspaceSlug: string;
   projectSlug: string;
   taskNumber: string;
-  onArchived: () => void;
+  onArchived?: () => void;
+  triggerRender?: TriggerRenderProp;
 }
 
-export function TaskActionsMenu({ task, workspaceSlug, projectSlug, taskNumber, onArchived }: TaskActionsMenuProps) {
+export function TaskActionsMenu({
+  task,
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+  onArchived,
+  triggerRender,
+}: TaskActionsMenuProps) {
   const t = useTranslations("tasks");
   const archiveTask = useArchiveTask(workspaceSlug, projectSlug, taskNumber);
   const [archiveOpen, setArchiveOpen] = useState(false);
@@ -34,7 +47,7 @@ export function TaskActionsMenu({ task, workspaceSlug, projectSlug, taskNumber, 
       await archiveTask.mutateAsync();
       setArchiveOpen(false);
       toast.add({ type: "success", description: t("taskActionsMenu.archiveSuccess") });
-      onArchived();
+      onArchived?.();
     } catch (error) {
       toast.add({
         type: "error",
@@ -51,10 +64,16 @@ export function TaskActionsMenu({ task, workspaceSlug, projectSlug, taskNumber, 
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger render={<Button variant="outline" size="icon-sm" />}>
-          <MoreHorizontal />
-          <span className="sr-only">{t("taskActionsMenu.ariaLabel")}</span>
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger
+          render={
+            triggerRender ?? (
+              <Button variant="outline" size="icon-sm">
+                <MoreHorizontal />
+                <span className="sr-only">{t("taskActionsMenu.ariaLabel")}</span>
+              </Button>
+            )
+          }
+        />
         <DropdownMenuContent align="end">
           <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
             <Archive />
