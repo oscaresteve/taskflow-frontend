@@ -34,7 +34,7 @@ export function TaskPrioritySection({ workspaceSlug, projectSlug, taskNumber, pr
   async function onSubmit(data: UpdateTaskPriorityDto) {
     try {
       await updateTask.mutateAsync(data);
-      toast.add({ type: "success", description: t("updateSuccess") });
+      toast.add({ type: "success", description: t("priorityUpdated", { priority: t(`priority.${data.priority}`) }) });
     } catch (error) {
       form.reset({ priority });
       toast.add({

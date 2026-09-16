@@ -3,6 +3,12 @@
     "generic": "Algo salió mal"
   },
   "updateSuccess": "Tarea actualizada.",
+  "statusUpdated": "Estado cambiado a {status}.",
+  "priorityUpdated": "Prioridad cambiada a {priority}.",
+  "assigneeUpdated": "Asignación actualizada.",
+  "dueDateUpdated": "Fecha límite actualizada.",
+  "titleUpdated": "Título actualizado.",
+  "descriptionUpdated": "Descripción actualizada.",
   "fields": {
     "title": "Título",
     "description": "Descripción",

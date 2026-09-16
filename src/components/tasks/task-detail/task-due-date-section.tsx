@@ -33,7 +33,7 @@ export function TaskDueDateSection({ workspaceSlug, projectSlug, taskNumber, due
   async function onSubmit(data: UpdateTaskDueDateDto) {
     try {
       await updateTask.mutateAsync(data);
-      toast.add({ type: "success", description: t("updateSuccess") });
+      toast.add({ type: "success", description: t("dueDateUpdated") });
     } catch (error) {
       form.reset({ dueDate });
       toast.add({

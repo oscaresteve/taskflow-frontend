@@ -22,7 +22,7 @@ export function TaskNameSection({ workspaceSlug, projectSlug, taskNumber, title 
       value={title}
       onSave={async (title) => {
         await updateTask.mutateAsync({ title });
-        toast.add({ type: "success", description: t("updateSuccess") });
+        toast.add({ type: "success", description: t("titleUpdated") });
       }}
       ariaLabel={t("fields.title")}
       schema={taskTitleSchema}

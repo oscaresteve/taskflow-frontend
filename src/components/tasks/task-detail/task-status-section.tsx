@@ -31,7 +31,7 @@ export function TaskStatusSection({ workspaceSlug, projectSlug, taskNumber, stat
   async function onSubmit(data: UpdateTaskStatusDto) {
     try {
       await updateTask.mutateAsync(data);
-      toast.add({ type: "success", description: t("updateSuccess") });
+      toast.add({ type: "success", description: t("statusUpdated", { status: t(`status.${data.status}`) }) });
     } catch (error) {
       form.reset({ status });
       toast.add({

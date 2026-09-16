@@ -27,7 +27,7 @@ export function TaskDescriptionSection({
       value={description ?? ""}
       onSave={async (description) => {
         await updateTask.mutateAsync({ description: description || null });
-        toast.add({ type: "success", description: t("updateSuccess") });
+        toast.add({ type: "success", description: t("descriptionUpdated") });
       }}
       ariaLabel={t("fields.description")}
       schema={taskDescriptionFieldSchema}

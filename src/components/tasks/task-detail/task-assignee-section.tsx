@@ -33,7 +33,7 @@ export function TaskAssigneeSection({ workspaceSlug, projectSlug, taskNumber, as
   async function onSubmit(data: UpdateTaskAssigneeDto) {
     try {
       await updateTask.mutateAsync(data);
-      toast.add({ type: "success", description: t("updateSuccess") });
+      toast.add({ type: "success", description: t("assigneeUpdated") });
     } catch (error) {
       form.reset({ assigneeId });
       toast.add({

@@ -3,6 +3,12 @@
     "generic": "Something went wrong"
   },
   "updateSuccess": "Task updated.",
+  "statusUpdated": "Status set to {status}.",
+  "priorityUpdated": "Priority set to {priority}.",
+  "assigneeUpdated": "Assignee updated.",
+  "dueDateUpdated": "Due date updated.",
+  "titleUpdated": "Title updated.",
+  "descriptionUpdated": "Description updated.",
   "fields": {
     "title": "Title",
     "description": "Description",
