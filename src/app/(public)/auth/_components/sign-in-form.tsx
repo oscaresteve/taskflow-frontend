@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 
-export function SignInForm() {
+export function SignInForm({ next }: { next: string }) {
   const t = useTranslations("auth");
   const router = useRouter();
 
@@ -31,7 +31,7 @@ export function SignInForm() {
   async function onSubmit(data: SignInDto) {
     try {
       await signIn(data);
-      router.push("/");
+      router.replace(next);
       router.refresh();
     } catch (error) {
       toast.add({
