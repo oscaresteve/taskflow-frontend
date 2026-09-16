@@ -18,6 +18,7 @@ import { getFullName } from "@/lib/utils";
 
 export default function ProjectPage() {
   const t = useTranslations("projects");
+  const tEnum = useTranslations();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: overview, isLoading, isError } = useQuery(getProjectOverviewQuery({ workspaceSlug, projectSlug }));
 
@@ -30,7 +31,7 @@ export default function ProjectPage() {
 
   const statusSegments = taskStatuses.map((status) => ({
     key: status.toLowerCase(),
-    label: statusOptions[status].label,
+    label: tEnum(statusOptions[status].labelKey),
     count: overview?.tasks.byStatus[status] ?? 0,
     color: statusOptions[status].chartColor,
   }));
@@ -39,7 +40,7 @@ export default function ProjectPage() {
   // ... URGENT=critical, no una rampa ordinal aparte.
   const priorityRows = taskPriorities.map((priority) => ({
     key: priority,
-    label: priorityOptions[priority].label,
+    label: tEnum(priorityOptions[priority].labelKey),
     value: overview?.tasks.byPriority[priority] ?? 0,
     color: priorityOptions[priority].chartColor,
   }));

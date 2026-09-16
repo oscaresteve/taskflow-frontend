@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import { ChevronDownIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { EnumOption } from "@/lib/enum-option";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +13,7 @@ export function EnumBadge({
   className?: string;
   interactive?: boolean;
 }) {
+  const t = useTranslations();
   const Icon = option.icon;
 
   return (
@@ -25,7 +27,7 @@ export function EnumBadge({
       )}
     >
       <Icon className="size-3" />
-      {option.label}
+      {t(option.labelKey)}
     </span>
   );
 }
@@ -39,6 +41,7 @@ export function EnumIconBadge({
   className?: string;
   interactive?: boolean;
 }) {
+  const t = useTranslations();
   const Icon = option.icon;
 
   return (
@@ -51,18 +54,19 @@ export function EnumIconBadge({
       )}
     >
       <Icon className="size-5" />
-      <span className="sr-only">{option.label}</span>
+      <span className="sr-only">{t(option.labelKey)}</span>
     </span>
   );
 }
 
 export function EnumIconLabel({ option, className }: { option: EnumOption; className?: string }) {
+  const t = useTranslations();
   const Icon = option.icon;
 
   return (
     <span className={cn("flex items-center gap-1.5 font-mono uppercase", option.colors.text, className)}>
       <Icon className="size-4" />
-      {option.label}
+      {t(option.labelKey)}
     </span>
   );
 }

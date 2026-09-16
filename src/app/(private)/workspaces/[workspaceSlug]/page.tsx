@@ -18,6 +18,7 @@ import { WorkspaceHeader } from "./_components/workspace-header";
 
 export default function WorkspacePage() {
   const t = useTranslations("workspaces");
+  const tEnum = useTranslations();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: overview, isLoading, isError } = useQuery(getWorkspaceOverviewQuery(workspaceSlug));
 
@@ -25,7 +26,7 @@ export default function WorkspacePage() {
 
   const statusSegments = taskStatuses.map((status) => ({
     key: status.toLowerCase(),
-    label: statusOptions[status].label,
+    label: tEnum(statusOptions[status].labelKey),
     count: overview?.tasks.byStatus[status] ?? 0,
     color: statusOptions[status].chartColor,
   }));

@@ -2,25 +2,24 @@ import { CrownIcon, ShieldIcon, UserIcon, UsersIcon } from "lucide-react";
 import { roleAdminColors, roleMemberColors, neutralColors, roleOwnerColors } from "@/lib/enum-colors";
 import type { EnumOption } from "@/lib/enum-option";
 import { MemberRole } from "@/lib/dtos/members.dto";
-import members from "@/messages/en/members.json";
 
 export const roleOptions: Record<MemberRole, EnumOption> = {
   OWNER: {
-    label: members.roleLabel.OWNER,
+    labelKey: "members.roleLabel.OWNER",
     icon: CrownIcon,
-    description: members.roleDescription.OWNER,
+    descriptionKey: "members.roleDescription.OWNER",
     colors: roleOwnerColors,
   },
   ADMIN: {
-    label: members.roleLabel.ADMIN,
+    labelKey: "members.roleLabel.ADMIN",
     icon: ShieldIcon,
-    description: members.roleDescription.ADMIN,
+    descriptionKey: "members.roleDescription.ADMIN",
     colors: roleAdminColors,
   },
   MEMBER: {
-    label: members.roleLabel.MEMBER,
+    labelKey: "members.roleLabel.MEMBER",
     icon: UserIcon,
-    description: members.roleDescription.MEMBER,
+    descriptionKey: "members.roleDescription.MEMBER",
     colors: roleMemberColors,
   },
 };
@@ -30,7 +29,7 @@ export type RoleFilter = (typeof roleFilters)[number];
 
 export const roleFilterOptions: Record<RoleFilter, EnumOption> = {
   ALL: {
-    label: members.roleFilter.all,
+    labelKey: "members.roleFilter.all",
     icon: UsersIcon,
     colors: neutralColors,
   },

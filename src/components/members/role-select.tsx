@@ -8,6 +8,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslations } from "next-intl";
 import { MemberRole } from "@/lib/dtos/members.dto";
 import { RoleFilter, roleFilterOptions, roleFilters, roleOptions } from "@/lib/member-enums";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,8 @@ interface RoleSelectProps {
 }
 
 export function RoleSelect({ id, variant = "control", className, value, values, onValueChange }: RoleSelectProps) {
+  const t = useTranslations();
+
   return (
     <DropdownMenu>
       {variant === "control" ? (
@@ -48,7 +51,11 @@ export function RoleSelect({ id, variant = "control", className, value, values, 
             >
               <div className="flex min-w-0 flex-col gap-0.5 py-0.5">
                 <EnumIconLabel option={roleOptions[role]} />
-                <span className="text-xs text-wrap text-muted-foreground">{roleOptions[role].description}</span>
+                {roleOptions[role].descriptionKey ? (
+                  <span className="text-xs text-wrap text-muted-foreground">
+                    {t(roleOptions[role].descriptionKey)}
+                  </span>
+                ) : null}
               </div>
             </DropdownMenuRadioItem>
           ))}

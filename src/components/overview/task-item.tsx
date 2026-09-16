@@ -29,7 +29,7 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
       className="flex items-stretch gap-3 rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/50"
     >
       <span aria-hidden className={cn("w-[3px] shrink-0 rounded-full", priorityOptions[task.priority].colors.bg)} />
-      <span className="sr-only">{`${t("fields.priority")}: ${priorityOptions[task.priority].label}`}</span>
+      <span className="sr-only">{`${t("fields.priority")}: ${t(`priority.${task.priority}`)}`}</span>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex min-w-0 items-center gap-2">
