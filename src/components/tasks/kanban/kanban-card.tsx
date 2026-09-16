@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react";
 import Link from "next/link";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -10,6 +11,9 @@ import { ApiError } from "@/lib/http/api-error";
 import { PrioritySelect } from "@/components/tasks/priority-select";
 import { TaskPriority, TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { cn } from "@/lib/utils";
+import { TaskActionsMenu } from "../task-detail/task-actions-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
 
 interface KanbanCardProps {
   taskKey: string;
@@ -22,6 +26,12 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
   const format = useFormatter();
   const t = useTranslations("tasks");
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, String(task.taskNumber));
+  const taskNumber = task.taskNumber.toString();
+
+  function stopPropagation(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
   async function handleAssigneeChange(assigneeId: string | null) {
     try {
@@ -50,32 +60,37 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
   }
 
   return (
-    <Card size="sm" className="gap-2 transition-colors hover:bg-muted/50">
+    <Card size="sm" className="gap-2 transition-colors hover:bg-muted/50 group">
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
         <span className="text-xs text-muted-foreground">{taskKey}</span>
-        <span
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <PrioritySelect variant="icon-badge" value={task.priority} onValueChange={handlePriorityChange} />
+        <span onClick={stopPropagation}>
+          <TaskActionsMenu
+            task={task}
+            workspaceSlug={workspaceSlug}
+            projectSlug={projectSlug}
+            taskNumber={taskNumber}
+            triggerRender={
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity"
+              >
+                <MoreHorizontal />
+                <span className="sr-only">{t("taskActionsMenu.ariaLabel")}</span>
+              </Button>
+            }
+          />
         </span>
       </div>
       <p className="px-(--card-spacing) text-sm font-medium">{task.title}</p>
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
-        {task.dueDate ? (
-          <span className="text-xs text-muted-foreground">{format.dateTime(new Date(task.dueDate), "short")}</span>
-        ) : (
-          <span />
-        )}
-        {/* Se detiene la propagacion para que abrir el picker no dispare el drag ni la navegacion del Link. */}
-        <span
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
+        <span className="flex items-center gap-2" onClick={stopPropagation}>
+          <PrioritySelect variant="icon-badge" value={task.priority} onValueChange={handlePriorityChange} />
+          {task.dueDate && (
+            <span className="text-xs text-muted-foreground">{format.dateTime(new Date(task.dueDate), "short")}</span>
+          )}
+        </span>
+        <span onClick={stopPropagation}>
           <AssigneePicker
             variant="avatar"
             workspaceSlug={workspaceSlug}
