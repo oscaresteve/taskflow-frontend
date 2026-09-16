@@ -73,7 +73,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
               <Button
                 variant="ghost"
                 size="icon-xs"
-                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity"
+                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
               >
                 <MoreHorizontal />
                 <span className="sr-only">{t("taskActionsMenu.ariaLabel")}</span>
