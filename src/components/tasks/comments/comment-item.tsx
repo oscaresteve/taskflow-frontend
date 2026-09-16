@@ -79,7 +79,7 @@ export function CommentItem({
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 group">
       <Avatar size="sm">
         <AvatarImage src={author?.user.avatarUrl ?? undefined} alt={authorName} />
         <AvatarFallback>{authorName ? getInitials(authorName) : "?"}</AvatarFallback>
@@ -96,7 +96,15 @@ export function CommentItem({
       </div>
       {(canEdit || canDelete) && (
         <DropdownMenu>
-          <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="opacity-0 group-hover:opacity-100 transition-opacity data-popup-open:opacity-100 focus-visible:opacity-100"
+              />
+            }
+          >
             <MoreHorizontal />
             <span className="sr-only">{t("comments.actionsSrOnly")}</span>
           </DropdownMenuTrigger>
