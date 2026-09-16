@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -91,33 +91,37 @@ export function CommentItem({
             {format.relativeTime(new Date(comment.createdAt), new Date())}
           </span>
           {comment.editedAt && <span className="text-xs text-muted-foreground">{t("comments.edited")}</span>}
+          {canEdit && (
+            <Button onClick={() => setEditing(true)} variant="ghost" size="icon-xs" className="text-muted-foreground">
+              <SquarePen />
+              <span className="sr-only">{t("comments.edit")}</span>
+            </Button>
+          )}
+          {canDelete && (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    className="ml-auto text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
+                  />
+                }
+              >
+                <MoreHorizontal />
+                <span className="sr-only">{t("comments.actionsSrOnly")}</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
+                  <Trash2 />
+                  {t("comments.delete")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
-        <p className="text-sm whitespace-pre-wrap">{comment.content}</p>
+        <p className="mt-1 text-sm whitespace-pre-wrap">{comment.content}</p>
       </div>
-      {(canEdit || canDelete) && (
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className="opacity-0 group-hover:opacity-100 transition-opacity data-popup-open:opacity-100 focus-visible:opacity-100"
-              />
-            }
-          >
-            <MoreHorizontal />
-            <span className="sr-only">{t("comments.actionsSrOnly")}</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {canEdit && <DropdownMenuItem onClick={() => setEditing(true)}>{t("comments.edit")}</DropdownMenuItem>}
-            {canDelete && (
-              <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
-                {t("comments.delete")}
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
