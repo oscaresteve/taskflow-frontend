@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, CalendarPlus } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,9 +14,10 @@ interface DueDatePickerProps {
   onChange: (value: string | null) => void;
   id?: string;
   className?: string;
+  variant?: "icon" | "control";
 }
 
-export function DueDatePicker({ value, onChange, id, className }: DueDatePickerProps) {
+export function DueDatePicker({ value, onChange, id, className, variant = "control" }: DueDatePickerProps) {
   const t = useTranslations("tasks");
   const format = useFormatter();
   const OverdueIcon = overdueIcon;
@@ -33,23 +34,33 @@ export function DueDatePicker({ value, onChange, id, className }: DueDatePickerP
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        id={id}
-        render={
-          <Button
-            variant="outline"
-            className={cn(
-              "justify-start font-normal",
-              !date && "text-muted-foreground",
-              overdue && "text-severity-critical-foreground",
-              className,
-            )}
-          />
-        }
-      >
-        {overdue ? <OverdueIcon data-icon="inline-start" /> : <CalendarIcon data-icon="inline-start" />}
-        {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
-      </PopoverTrigger>
+      {variant === "icon" ? (
+        <PopoverTrigger
+          id={id}
+          render={
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className={cn("text-muted-foreground", overdue && "text-severity-critical-foreground", className)}
+            />
+          }
+        >
+          {overdue ? <OverdueIcon /> : !date ? <CalendarPlus /> : <CalendarIcon />}
+        </PopoverTrigger>
+      ) : (
+        <PopoverTrigger
+          id={id}
+          render={
+            <Button
+              variant="outline"
+              className={cn("justify-start font-normal", overdue && "text-severity-critical-foreground", className)}
+            />
+          }
+        >
+          {overdue ? <OverdueIcon /> : !date ? <CalendarPlus /> : <CalendarIcon />}
+          {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
+        </PopoverTrigger>
+      )}
       <PopoverContent align="end" className="w-auto p-0">
         <LocalizedCalendar mode="single" selected={date} onSelect={handleSelect} />
       </PopoverContent>

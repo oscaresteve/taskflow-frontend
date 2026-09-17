@@ -2,7 +2,7 @@ import type { MouseEvent } from "react";
 import Link from "next/link";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/toast";
 import { AssigneePicker } from "@/components/tasks/assignee-picker";
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { TaskActionsMenu } from "../task-detail/task-actions-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { DueDatePicker } from "../due-date-picker";
 
 interface KanbanCardProps {
   taskKey: string;
@@ -23,7 +24,6 @@ interface KanbanCardProps {
 }
 
 export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: KanbanCardProps) {
-  const format = useFormatter();
   const t = useTranslations("tasks");
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, String(task.taskNumber));
   const taskNumber = task.taskNumber.toString();
@@ -59,6 +59,19 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
     }
   }
 
+  async function handleDueDateChange(dueDate: string | null) {
+    try {
+      await updateTask.mutateAsync({ dueDate });
+      toast.add({ type: "success", description: t("dueDateUpdated") });
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
+        priority: "high",
+      });
+    }
+  }
+
   return (
     <Card size="sm" className="gap-2 transition-colors hover:bg-muted/50 group">
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
@@ -84,11 +97,9 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
       </div>
       <p className="px-(--card-spacing) text-sm font-medium">{task.title}</p>
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
-        <span className="flex items-center gap-2" onClick={stopPropagation}>
+        <span className="flex items-center gap-1" onClick={stopPropagation}>
           <PrioritySelect variant="icon-badge" value={task.priority} onValueChange={handlePriorityChange} />
-          {task.dueDate && (
-            <span className="text-xs text-muted-foreground">{format.dateTime(new Date(task.dueDate), "short")}</span>
-          )}
+          <DueDatePicker variant="icon" value={task.dueDate} onChange={handleDueDateChange} />
         </span>
         <span onClick={stopPropagation}>
           <AssigneePicker
