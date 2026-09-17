@@ -99,6 +99,7 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize="30%" minSize="30%" className="flex flex-col gap-4 p-4">
+          <h2 className="text-sm font-semibold">{t("taskPage.details")}</h2>
           <TaskStatusSection
             workspaceSlug={workspaceSlug}
             projectSlug={projectSlug}

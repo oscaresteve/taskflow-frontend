@@ -54,7 +54,8 @@
   },
   "taskPage": {
     "failedToLoadTask": "No se pudo cargar la tarea.",
-    "archived": "Archivada"
+    "archived": "Archivada",
+    "details": "Detalles"
   },
   "taskActionsMenu": {
     "ariaLabel": "Acciones de la tarea",
@@ -66,7 +67,7 @@
   "comments": {
     "title": "Comentarios",
     "composerPlaceholder": "Escribe un comentario…",
-    "submit": "Publicar comentario",
+    "submit": "Publicar",
     "empty": "Todavía no hay comentarios.",
     "failedToLoad": "No se pudieron cargar los comentarios.",
     "loading": "Cargando…",

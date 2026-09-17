@@ -51,7 +51,9 @@ export function TaskPrioritySection({ workspaceSlug, projectSlug, taskNumber, pr
       control={form.control}
       render={({ field }) => (
         <Field orientation="horizontal">
-          <FieldLabel htmlFor="priority">{t("fields.priority")}</FieldLabel>
+          <FieldLabel htmlFor="priority" className="flex-none! w-28">
+            {t("fields.priority")}
+          </FieldLabel>
           <PrioritySelect
             id="priority"
             value={field.value}

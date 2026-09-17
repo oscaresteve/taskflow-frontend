@@ -50,7 +50,9 @@ export function TaskAssigneeSection({ workspaceSlug, projectSlug, taskNumber, as
       control={form.control}
       render={({ field }) => (
         <Field orientation="horizontal">
-          <FieldLabel htmlFor="assignee">{t("fields.assignee")}</FieldLabel>
+          <FieldLabel htmlFor="assignee" className="flex-none! w-28">
+            {t("fields.assignee")}
+          </FieldLabel>
           <AssigneePicker
             id="assignee"
             workspaceSlug={workspaceSlug}
@@ -60,6 +62,7 @@ export function TaskAssigneeSection({ workspaceSlug, projectSlug, taskNumber, as
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}
+            className="flex-1"
           />
         </Field>
       )}

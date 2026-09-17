@@ -68,7 +68,7 @@ export function DueDatePicker({ value, onChange, id, className, variant = "defau
           {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
         </PopoverTrigger>
       )}
-      <PopoverContent align="end" className="w-auto p-0">
+      <PopoverContent align="start" className="w-auto p-0">
         <LocalizedCalendar mode="single" selected={date} onSelect={handleSelect} />
       </PopoverContent>
     </Popover>

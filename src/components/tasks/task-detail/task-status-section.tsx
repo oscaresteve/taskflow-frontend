@@ -22,7 +22,10 @@ interface TaskStatusSectionProps {
 export function TaskStatusSection({ workspaceSlug, projectSlug, taskNumber, status }: TaskStatusSectionProps) {
   const t = useTranslations("tasks");
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
-  const form = useForm<UpdateTaskStatusDto>({ resolver: zodResolver(updateTaskStatusSchema), defaultValues: { status } });
+  const form = useForm<UpdateTaskStatusDto>({
+    resolver: zodResolver(updateTaskStatusSchema),
+    defaultValues: { status },
+  });
 
   useEffect(() => {
     form.reset({ status });
@@ -48,7 +51,9 @@ export function TaskStatusSection({ workspaceSlug, projectSlug, taskNumber, stat
       control={form.control}
       render={({ field }) => (
         <Field orientation="horizontal">
-          <FieldLabel htmlFor="status">{t("fields.status")}</FieldLabel>
+          <FieldLabel htmlFor="status" className="flex-none! w-28">
+            {t("fields.status")}
+          </FieldLabel>
           <StatusSelect
             id="status"
             value={field.value}

@@ -50,7 +50,9 @@ export function TaskDueDateSection({ workspaceSlug, projectSlug, taskNumber, due
       control={form.control}
       render={({ field }) => (
         <Field orientation="horizontal">
-          <FieldLabel htmlFor="dueDate">{t("fields.dueDate")}</FieldLabel>
+          <FieldLabel htmlFor="dueDate" className="flex-none! w-28">
+            {t("fields.dueDate")}
+          </FieldLabel>
           <DueDatePicker
             id="dueDate"
             value={field.value}
@@ -58,6 +60,7 @@ export function TaskDueDateSection({ workspaceSlug, projectSlug, taskNumber, due
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}
+            className="flex-1"
           />
         </Field>
       )}

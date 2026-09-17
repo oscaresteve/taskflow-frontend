@@ -54,7 +54,8 @@
   },
   "taskPage": {
     "failedToLoadTask": "Failed to load task.",
-    "archived": "Archived"
+    "archived": "Archived",
+    "details": "Details"
   },
   "taskActionsMenu": {
     "ariaLabel": "Task actions",
@@ -66,7 +67,7 @@
   "comments": {
     "title": "Comments",
     "composerPlaceholder": "Write a comment…",
-    "submit": "Post comment",
+    "submit": "Post",
     "empty": "No comments yet.",
     "failedToLoad": "Failed to load comments.",
     "loading": "Loading…",
