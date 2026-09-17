@@ -26,7 +26,7 @@ export function WorkspaceDescriptionSection() {
   const updateWorkspace = useUpdateWorkspace(workspaceSlug);
 
   const form = useForm<UpdateWorkspaceDescriptionDto>({
-    resolver: zodResolver(updateWorkspaceDescriptionSchema),
+    resolver: zodResolver(updateWorkspaceDescriptionSchema(t)),
     defaultValues: { description: "" },
   });
 

@@ -26,9 +26,6 @@
     "show": "Mantén pulsado para mostrar la contraseña",
     "hide": "Suelta para ocultar la contraseña"
   },
-  "validation": {
-    "descriptionMaxLength": "La descripción no puede superar los 500 caracteres"
-  },
   "errors": {
     "generic": "Algo salió mal"
   }

@@ -21,10 +21,11 @@ interface OnboardingWorkspaceFormProps {
 
 export function OnboardingWorkspaceForm({ name, onCreated }: OnboardingWorkspaceFormProps) {
   const t = useTranslations("onboarding");
+  const tWorkspace = useTranslations("workspaces");
   const createWorkspace = useCreateWorkspace();
 
   const form = useForm<CreateWorkspaceDto>({
-    resolver: zodResolver(createWorkspaceSchema),
+    resolver: zodResolver(createWorkspaceSchema(tWorkspace)),
     defaultValues: {
       name: t("onboardingWorkspaceForm.defaultName", { name }),
       description: t("onboardingWorkspaceForm.defaultDescription", { name }),

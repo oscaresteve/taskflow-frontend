@@ -26,9 +26,6 @@
     "show": "Hold to show password",
     "hide": "Release to hide password"
   },
-  "validation": {
-    "descriptionMaxLength": "Description cannot exceed 500 characters"
-  },
   "errors": {
     "generic": "Something went wrong"
   }

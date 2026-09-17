@@ -26,7 +26,7 @@ export function ProjectDescriptionSection() {
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
 
   const form = useForm<UpdateProjectDescriptionDto>({
-    resolver: zodResolver(updateProjectDescriptionSchema),
+    resolver: zodResolver(updateProjectDescriptionSchema(t)),
     defaultValues: { description: "" },
   });
 

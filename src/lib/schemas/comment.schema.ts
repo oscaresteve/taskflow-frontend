@@ -1,21 +1,23 @@
 import z from "zod";
-import tasks from "@/messages/en/tasks.json";
+import type { Translator } from "./common.schema";
 
-export const createCommentSchema = z.object({
-  content: z
-    .string()
-    .trim()
-    .min(1, tasks.comments.validation.contentRequired)
-    .max(5000, tasks.comments.validation.contentMaxLength),
-});
+export const createCommentSchema = (t: Translator) =>
+  z.object({
+    content: z
+      .string()
+      .trim()
+      .min(1, t("comments.validation.contentRequired"))
+      .max(5000, t("comments.validation.contentMaxLength")),
+  });
 
-export const updateCommentSchema = z.object({
-  content: z
-    .string()
-    .trim()
-    .min(1, tasks.comments.validation.contentRequired)
-    .max(5000, tasks.comments.validation.contentMaxLength),
-});
+export const updateCommentSchema = (t: Translator) =>
+  z.object({
+    content: z
+      .string()
+      .trim()
+      .min(1, t("comments.validation.contentRequired"))
+      .max(5000, t("comments.validation.contentMaxLength")),
+  });
 
-export type CreateCommentDto = z.infer<typeof createCommentSchema>;
-export type UpdateCommentDto = z.infer<typeof updateCommentSchema>;
+export type CreateCommentDto = z.infer<ReturnType<typeof createCommentSchema>>;
+export type UpdateCommentDto = z.infer<ReturnType<typeof updateCommentSchema>>;

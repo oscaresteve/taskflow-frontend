@@ -25,7 +25,7 @@ export function TaskNameSection({ workspaceSlug, projectSlug, taskNumber, title 
         toast.add({ type: "success", description: t("titleUpdated") });
       }}
       ariaLabel={t("fields.title")}
-      schema={taskTitleSchema}
+      schema={taskTitleSchema(t)}
       className="text-xl! font-semibold"
     />
   );

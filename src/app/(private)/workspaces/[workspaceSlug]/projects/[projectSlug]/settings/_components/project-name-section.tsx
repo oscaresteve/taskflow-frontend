@@ -27,7 +27,7 @@ export function ProjectNameSection() {
   const updateProject = useUpdateProject(workspaceSlug, projectSlug);
 
   const form = useForm<UpdateProjectNameDto>({
-    resolver: zodResolver(updateProjectNameSchema),
+    resolver: zodResolver(updateProjectNameSchema(t)),
     defaultValues: { name: "" },
   });
 

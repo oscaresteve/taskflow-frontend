@@ -21,7 +21,7 @@ export function SignInForm({ next }: { next: string }) {
   const router = useRouter();
 
   const form = useForm<SignInDto>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(signInSchema(t)),
     defaultValues: {
       email: "",
       password: "",

@@ -29,7 +29,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
   const createWorkspace = useCreateWorkspace();
 
   const form = useForm<CreateWorkspaceDto>({
-    resolver: zodResolver(createWorkspaceSchema),
+    resolver: zodResolver(createWorkspaceSchema(t)),
     defaultValues: {
       name: "",
       description: "",

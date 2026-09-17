@@ -23,10 +23,11 @@ interface OnboardingProjectFormProps {
 
 export function OnboardingProjectForm({ workspaceSlug, workspaceName, onCreated, onSkip }: OnboardingProjectFormProps) {
   const t = useTranslations("onboarding");
+  const tProject = useTranslations("projects");
   const createProject = useCreateProject(workspaceSlug);
 
   const form = useForm<CreateProjectDto>({
-    resolver: zodResolver(createProjectSchema),
+    resolver: zodResolver(createProjectSchema(tProject)),
     defaultValues: {
       name: t("onboardingProjectForm.defaultName", { workspaceName }),
       key: "MAIN",

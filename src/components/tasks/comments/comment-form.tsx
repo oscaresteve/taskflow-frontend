@@ -47,7 +47,7 @@ export function CommentForm({
   const authorName = author ? getFullName(author.firstName, author.lastName) : undefined;
 
   const form = useForm<CreateCommentDto>({
-    resolver: zodResolver(isEditing ? updateCommentSchema : createCommentSchema),
+    resolver: zodResolver(isEditing ? updateCommentSchema(t) : createCommentSchema(t)),
     defaultValues: { content: initialContent ?? "" },
   });
 

@@ -29,7 +29,7 @@ export function CreateProjectDialog({ workspaceSlug, open, onOpenChange }: Creat
   const createProject = useCreateProject(workspaceSlug);
 
   const form = useForm<CreateProjectDto>({
-    resolver: zodResolver(createProjectSchema),
+    resolver: zodResolver(createProjectSchema(t)),
     defaultValues: {
       name: "",
       key: "",

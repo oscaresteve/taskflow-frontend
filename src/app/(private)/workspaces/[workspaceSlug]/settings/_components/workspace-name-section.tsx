@@ -27,7 +27,7 @@ export function WorkspaceNameSection() {
   const updateWorkspace = useUpdateWorkspace(workspaceSlug);
 
   const form = useForm<UpdateWorkspaceNameDto>({
-    resolver: zodResolver(updateWorkspaceNameSchema),
+    resolver: zodResolver(updateWorkspaceNameSchema(t)),
     defaultValues: { name: "" },
   });
 

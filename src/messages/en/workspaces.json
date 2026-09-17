@@ -6,6 +6,7 @@
     "nameMinLength": "Name must be at least 2 characters long",
     "nameMaxLength": "Name cannot exceed 100 characters",
     "logoUrlInvalid": "Logo URL must be a valid URL",
+    "descriptionMaxLength": "Description cannot exceed 500 characters",
     "atLeastOneField": "At least one field must be provided"
   },
   "workspacesPage": {

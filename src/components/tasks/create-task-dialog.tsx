@@ -34,7 +34,7 @@ export function CreateTaskDialog({ workspaceSlug, project, open, onOpenChange }:
   const t = useTranslations("tasks");
 
   const form = useForm<CreateTaskDto>({
-    resolver: zodResolver(createTaskSchema),
+    resolver: zodResolver(createTaskSchema(t)),
     defaultValues: {
       title: "",
       description: "",

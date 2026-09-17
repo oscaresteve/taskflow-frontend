@@ -21,7 +21,7 @@ export function SignUpForm() {
   const t = useTranslations("auth");
   const router = useRouter();
   const form = useForm<SignUpDto>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(signUpSchema(t)),
     mode: "onTouched",
     defaultValues: {
       firstName: "",

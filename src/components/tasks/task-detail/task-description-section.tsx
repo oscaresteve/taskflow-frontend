@@ -30,7 +30,7 @@ export function TaskDescriptionSection({
         toast.add({ type: "success", description: t("descriptionUpdated") });
       }}
       ariaLabel={t("fields.description")}
-      schema={taskDescriptionFieldSchema}
+      schema={taskDescriptionFieldSchema(t)}
       placeholder={t("fields.descriptionPlaceholder")}
       emptyLabel={t("fields.addDescription")}
       className="text-muted-foreground"
