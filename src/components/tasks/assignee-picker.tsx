@@ -239,7 +239,11 @@ export function AssigneePicker({
                 )}
               </Avatar>
             </InputGroupAddon>
-            <ComboboxPrimitive.Input id={id} render={<InputGroupInput />} onFocus={(e) => e.currentTarget.select()} />
+            <ComboboxPrimitive.Input
+              id={id}
+              render={<InputGroupInput placeholder={t("assigneeSelect.searchPlaceholder")} />}
+              onFocus={(e) => e.currentTarget.select()}
+            />
           </InputGroup>
           <ComboboxContent anchor={anchor}>{candidateList}</ComboboxContent>
         </>
