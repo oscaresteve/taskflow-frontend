@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarIcon, CalendarPlus } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { overdueIcon } from "@/lib/task-enums";
+import { ICONS } from "@/lib/icons";
 import { cn, isOverdue } from "@/lib/utils";
 import { LocalizedCalendar } from "@/components/common/localized-calendar";
 
@@ -20,8 +19,6 @@ interface DueDatePickerProps {
 export function DueDatePicker({ value, onChange, id, className, variant = "control" }: DueDatePickerProps) {
   const t = useTranslations("tasks");
   const format = useFormatter();
-  const OverdueIcon = overdueIcon;
-
   const [open, setOpen] = useState(false);
 
   const date = value ? new Date(value) : undefined;
@@ -45,7 +42,7 @@ export function DueDatePicker({ value, onChange, id, className, variant = "contr
             />
           }
         >
-          {overdue ? <OverdueIcon /> : !date ? <CalendarPlus /> : <CalendarIcon />}
+          {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
         </PopoverTrigger>
       ) : (
         <PopoverTrigger
@@ -57,7 +54,7 @@ export function DueDatePicker({ value, onChange, id, className, variant = "contr
             />
           }
         >
-          {overdue ? <OverdueIcon /> : !date ? <CalendarPlus /> : <CalendarIcon />}
+          {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
           {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
         </PopoverTrigger>
       )}

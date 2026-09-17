@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useFormatter, useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -105,7 +105,7 @@ export function CommentItem({
                   />
                 }
               >
-                <SquarePen />
+                <ICONS.edit />
               </TooltipTrigger>
               <TooltipContent>{t("comments.edit")}</TooltipContent>
             </Tooltip>
@@ -127,13 +127,13 @@ export function CommentItem({
                     />
                   }
                 >
-                  <MoreHorizontal />
+                  <ICONS.moreActions />
                 </TooltipTrigger>
                 <TooltipContent>{t("comments.actionsSrOnly")}</TooltipContent>
               </Tooltip>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
-                  <Trash2 />
+                  <ICONS.delete />
                   {t("comments.delete")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -151,7 +151,7 @@ export function CommentItem({
         variant="destructive"
         onConfirm={handleDelete}
         pending={deleteComment.isPending}
-        Icon={Trash2}
+        Icon={ICONS.delete}
       />
     </div>
   );

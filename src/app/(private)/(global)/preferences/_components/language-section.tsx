@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Loader2Icon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { SettingCard } from "@/components/common/setting-card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -77,7 +77,7 @@ function LanguagePicker({ savedLocale }: { savedLocale: Locale }) {
       description={t("languageSection.description")}
       footerAction={
         <Button onClick={handleSave} disabled={updateMe.isPending || locale === savedLocale}>
-          {updateMe.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+          {updateMe.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
           {tCommon("actions.save")}
         </Button>
       }

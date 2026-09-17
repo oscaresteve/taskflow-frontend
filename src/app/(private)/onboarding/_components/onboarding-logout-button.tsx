@@ -10,7 +10,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { LogOut } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 
 export function OnboardingLogoutButton() {
   const t = useTranslations("onboarding");
@@ -50,7 +50,7 @@ export function OnboardingLogoutButton() {
             />
           }
         >
-          <LogOut />
+          <ICONS.logOut />
         </TooltipTrigger>
         <TooltipContent>{t("onboardingLogoutButton.logOut")}</TooltipContent>
       </Tooltip>
@@ -63,7 +63,7 @@ export function OnboardingLogoutButton() {
         variant="destructive"
         onConfirm={handleLogOut}
         pending={loggingOut}
-        Icon={LogOut}
+        Icon={ICONS.logOut}
       />
     </>
   );

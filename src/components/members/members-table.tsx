@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -102,7 +102,7 @@ export function MembersTable<TMember extends MemberLike>({
                           />
                         }
                       >
-                        <MoreHorizontal />
+                        <ICONS.moreActions />
                       </TooltipTrigger>
                       <TooltipContent>{t("membersTable.actionsSrOnly")}</TooltipContent>
                     </Tooltip>

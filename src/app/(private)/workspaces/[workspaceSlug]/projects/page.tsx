@@ -8,7 +8,7 @@ import { SearchInput } from "@/components/common/search-input";
 import { SortControls } from "@/components/common/sort-controls";
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table";
 
-import { Archive, ExternalLink, MoreHorizontal, Plus, Settings, Users } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState } from "react";
@@ -83,22 +83,22 @@ function ProjectActionsMenu({
               />
             }
           >
-            <MoreHorizontal />
+            <ICONS.moreActions />
           </TooltipTrigger>
           <TooltipContent>{t("projectActionsMenu.ariaLabel")}</TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end">
           <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}>
-            <ExternalLink />
+            <ICONS.openExternal />
             {t("projectActionsMenu.open")}
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/members`} />}>
-            <Users />
+            <ICONS.members />
             {t("projectActionsMenu.members")}
           </DropdownMenuItem>
           {canManage && (
             <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/settings`} />}>
-              <Settings />
+              <ICONS.settings />
               {t("projectActionsMenu.settings")}
             </DropdownMenuItem>
           )}
@@ -106,7 +106,7 @@ function ProjectActionsMenu({
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
-                <Archive />
+                <ICONS.archive />
                 {t("projectActionsMenu.archive")}
               </DropdownMenuItem>
             </>
@@ -122,7 +122,7 @@ function ProjectActionsMenu({
         variant="destructive"
         onConfirm={handleArchive}
         pending={archiveProject.isPending}
-        Icon={Archive}
+        Icon={ICONS.archive}
       />
     </>
   );
@@ -252,7 +252,7 @@ export default function ProjectsPage() {
         actions={
           isWorkspaceManager(myWorkspaceRole) ? (
             <Button size="sm" onClick={() => setCreateOpen(true)}>
-              <Plus />
+              <ICONS.addNew />
               {t("projectsPage.newProject")}
             </Button>
           ) : null

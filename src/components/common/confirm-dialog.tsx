@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import type { ReactNode } from "react";
-import { LucideIcon, Info, Loader2Icon } from "lucide-react";
+import { ICONS, type Icon } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 
 /**
@@ -32,7 +32,7 @@ interface ConfirmDialogProps {
   cancelLabel?: string;
   onConfirm: () => void;
   variant?: "default" | "destructive";
-  Icon?: LucideIcon;
+  Icon?: Icon;
   pending?: boolean;
 }
 
@@ -45,7 +45,7 @@ export function ConfirmDialog({
   cancelLabel,
   onConfirm,
   variant = "default",
-  Icon = Info,
+  Icon = ICONS.info,
   pending = false,
 }: ConfirmDialogProps) {
   const t = useTranslations("common");
@@ -63,7 +63,7 @@ export function ConfirmDialog({
         <AlertDialogFooter>
           <AlertDialogCancel disabled={pending}>{cancelLabel ?? t("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction variant={variant} onClick={onConfirm} disabled={pending}>
-            {pending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+            {pending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
             {confirmLabel ?? t("actions.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>

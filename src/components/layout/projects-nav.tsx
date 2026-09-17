@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { ChevronDown, FolderKanban, MoreVertical, Plus, Settings } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getProjectsInfiniteQuery } from "@/lib/queries/project.queries";
@@ -57,8 +57,8 @@ export default function ProjectsNav() {
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
           <CollapsibleTrigger render={<SidebarMenuButton className="group/folder" />}>
             <span className="relative size-4 shrink-0">
-              <FolderKanban className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/folder:opacity-0" />
-              <ChevronDown className="absolute inset-0 size-4 opacity-0 transition-all group-hover/folder:opacity-100 group-data-open/collapsible:rotate-180" />
+              <ICONS.project className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/folder:opacity-0" />
+              <ICONS.expand className="absolute inset-0 size-4 opacity-0 transition-all group-hover/folder:opacity-100 group-data-open/collapsible:rotate-180" />
             </span>
             {t("projectsNav.title")}
           </CollapsibleTrigger>
@@ -74,7 +74,7 @@ export default function ProjectsNav() {
                   />
                 }
               >
-                <Plus />
+                <ICONS.addNew />
               </TooltipTrigger>
               <TooltipContent>{t("projectsNav.newProject")}</TooltipContent>
             </Tooltip>
@@ -89,7 +89,7 @@ export default function ProjectsNav() {
                   />
                 }
               >
-                <MoreVertical />
+                <ICONS.moreOptions />
               </TooltipTrigger>
               <TooltipContent>{t("projectsNav.moreOptions")}</TooltipContent>
             </Tooltip>
@@ -97,7 +97,7 @@ export default function ProjectsNav() {
               <DropdownMenuGroup>
                 <DropdownMenuLabel>{t("projectsNav.title")}</DropdownMenuLabel>
                 <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects`} />} className="gap-2">
-                  <Settings />
+                  <ICONS.settings />
                   {t("projectsNav.manageProjects")}
                 </DropdownMenuItem>
               </DropdownMenuGroup>

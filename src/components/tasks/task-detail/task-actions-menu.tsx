@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { ComponentProps } from "react";
-import { Archive, MoreHorizontal } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -77,13 +77,13 @@ export function TaskActionsMenu({
               />
             }
           >
-            <MoreHorizontal />
+            <ICONS.moreActions />
           </TooltipTrigger>
           <TooltipContent>{t("taskActionsMenu.ariaLabel")}</TooltipContent>
 
           <DropdownMenuContent align="end">
             <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
-              <Archive />
+              <ICONS.archive />
               {t("taskActionsMenu.archive")}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -98,7 +98,7 @@ export function TaskActionsMenu({
         variant="destructive"
         onConfirm={handleArchive}
         pending={archiveTask.isPending}
-        Icon={Archive}
+        Icon={ICONS.archive}
       />
     </>
   );

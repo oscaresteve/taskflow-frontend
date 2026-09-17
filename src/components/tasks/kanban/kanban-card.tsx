@@ -13,7 +13,7 @@ import { TaskPriority, TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { cn } from "@/lib/utils";
 import { TaskActionsMenu } from "../task-detail/task-actions-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { DueDatePicker } from "../due-date-picker";
 
 interface KanbanCardProps {
@@ -88,7 +88,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
                 size="icon-xs"
                 className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
               >
-                <MoreHorizontal />
+                <ICONS.moreActions />
                 <span className="sr-only">{t("taskActionsMenu.ariaLabel")}</span>
               </Button>
             }

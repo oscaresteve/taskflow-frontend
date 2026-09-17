@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ExternalLink, MoreHorizontal, Plus, Settings, ShieldMinus, Users } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
@@ -70,22 +70,22 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
               />
             }
           >
-            <MoreHorizontal />
+            <ICONS.moreActions />
           </TooltipTrigger>
           <TooltipContent>{t("workspaceActionsMenu.ariaLabel")}</TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end">
           <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
-            <ExternalLink />
+            <ICONS.openExternal />
             {t("workspaceActionsMenu.open")}
           </DropdownMenuItem>
           <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/members`} />}>
-            <Users />
+            <ICONS.members />
             {t("workspaceActionsMenu.members")}
           </DropdownMenuItem>
           {canManage && (
             <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
-              <Settings />
+              <ICONS.settings />
               {t("workspaceActionsMenu.settings")}
             </DropdownMenuItem>
           )}
@@ -93,7 +93,7 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onClick={() => setDeactivateOpen(true)}>
-                <ShieldMinus />
+                <ICONS.deactivate />
                 {t("workspaceActionsMenu.deactivate")}
               </DropdownMenuItem>
             </>
@@ -109,7 +109,7 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
         variant="destructive"
         onConfirm={handleDeactivate}
         pending={deactivateWorkspace.isPending}
-        Icon={ShieldMinus}
+        Icon={ICONS.deactivate}
       />
     </>
   );
@@ -233,7 +233,7 @@ export default function WorkspacesPage() {
         title={t("workspacesPage.title")}
         actions={
           <Button size="sm" onClick={() => setCreateOpen(true)}>
-            <Plus />
+            <ICONS.addNew />
             {t("workspacesPage.newWorkspace")}
           </Button>
         }

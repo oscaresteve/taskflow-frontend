@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ function PasswordInput({ className, ...props }: React.ComponentProps<"input">) {
         onPointerLeave={() => setVisible(false)}
         onPointerCancel={() => setVisible(false)}
       >
-        {visible ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+        {visible ? <ICONS.passwordHide className="size-4" /> : <ICONS.passwordShow className="size-4" />}
       </button>
     </div>
   );

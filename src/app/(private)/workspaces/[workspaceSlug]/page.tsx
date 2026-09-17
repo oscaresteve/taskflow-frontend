@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, CheckCircle2, FolderKanban, ListTodo } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { PageContainer } from "@/components/common/page-container";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -54,19 +54,19 @@ export default function WorkspacePage() {
             </div>
           ) : (
             <div className="grid grid-cols-4 gap-4">
-              <StatCard icon={ListTodo} label={t("workspacePage.stats.openTasks")} value={overview.tasks.open} />
+              <StatCard icon={ICONS.statOpenTasks} label={t("workspacePage.stats.openTasks")} value={overview.tasks.open} />
               <StatCard
-                icon={AlertTriangle}
+                icon={ICONS.statOverdue}
                 label={t("workspacePage.stats.overdue")}
                 value={overview.tasks.overdue}
                 tone={overview.tasks.overdue > 0 ? "destructive" : "default"}
               />
               <StatCard
-                icon={CheckCircle2}
+                icon={ICONS.statCompleted}
                 label={t("workspacePage.stats.completedThisWeek")}
                 value={overview.tasks.completedLast7Days}
               />
-              <StatCard icon={FolderKanban} label={t("workspacePage.stats.projects")} value={overview.projectsCount} />
+              <StatCard icon={ICONS.project} label={t("workspacePage.stats.projects")} value={overview.projectsCount} />
             </div>
           )}
 

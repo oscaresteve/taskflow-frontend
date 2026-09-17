@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { Kanban, LayoutDashboard, Settings, Users } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
@@ -15,10 +15,10 @@ export function ProjectNavTabs() {
   const t = useTranslations("layout");
 
   const projectTabs = [
-    { label: t("projectNavTabs.overview"), segment: "", Icon: LayoutDashboard },
-    { label: t("projectNavTabs.kanban"), segment: "/kanban", Icon: Kanban },
-    { label: t("projectNavTabs.members"), segment: "/members", Icon: Users },
-    { label: t("projectNavTabs.settings"), segment: "/settings", Icon: Settings },
+    { label: t("projectNavTabs.overview"), segment: "", Icon: ICONS.overview },
+    { label: t("projectNavTabs.kanban"), segment: "/kanban", Icon: ICONS.kanban },
+    { label: t("projectNavTabs.members"), segment: "/members", Icon: ICONS.members },
+    { label: t("projectNavTabs.settings"), segment: "/settings", Icon: ICONS.settings },
   ];
   const base = `/workspaces/${workspaceSlug}/projects/${projectSlug}`;
 

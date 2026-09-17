@@ -1,6 +1,6 @@
 "use client";
 
-import { ListSortAscending, ListSortDescending } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -49,7 +49,7 @@ export function SortControls<TField extends string>({
             />
           }
         >
-          {order === "asc" ? <ListSortAscending /> : <ListSortDescending />}
+          {order === "asc" ? <ICONS.sortAsc /> : <ICONS.sortDesc />}
         </TooltipTrigger>
         <TooltipContent>{orderLabel}</TooltipContent>
       </Tooltip>

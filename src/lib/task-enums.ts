@@ -1,15 +1,4 @@
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ChevronsUpIcon,
-  CircleAlertIcon,
-  CircleCheckBigIcon,
-  CircleDashedIcon,
-  CircleDotDashedIcon,
-  CircleEllipsisIcon,
-  EqualIcon,
-  type LucideIcon,
-} from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
 import {
   neutralColors,
@@ -23,25 +12,25 @@ import type { EnumOption } from "@/lib/enum-option";
 export const statusOptions: Record<TaskStatus, EnumOption & { chartColor: string }> = {
   TODO: {
     labelKey: "tasks.status.TODO",
-    icon: CircleDashedIcon,
+    icon: ICONS.statusTodo,
     colors: neutralColors,
     chartColor: "var(--chart-1)",
   },
   IN_PROGRESS: {
     labelKey: "tasks.status.IN_PROGRESS",
-    icon: CircleDotDashedIcon,
+    icon: ICONS.statusInProgress,
     colors: neutralColors,
     chartColor: "var(--chart-2)",
   },
   IN_REVIEW: {
     labelKey: "tasks.status.IN_REVIEW",
-    icon: CircleEllipsisIcon,
+    icon: ICONS.statusInReview,
     colors: neutralColors,
     chartColor: "var(--chart-3)",
   },
   DONE: {
     labelKey: "tasks.status.DONE",
-    icon: CircleCheckBigIcon,
+    icon: ICONS.statusDone,
     colors: neutralColors,
     chartColor: "var(--chart-4)",
   },
@@ -50,28 +39,26 @@ export const statusOptions: Record<TaskStatus, EnumOption & { chartColor: string
 export const priorityOptions: Record<TaskPriority, EnumOption & { chartColor: string }> = {
   LOW: {
     labelKey: "tasks.priority.LOW",
-    icon: ChevronDownIcon,
+    icon: ICONS.priorityLow,
     colors: severityGoodColors,
     chartColor: "var(--severity-good)",
   },
   MEDIUM: {
     labelKey: "tasks.priority.MEDIUM",
-    icon: EqualIcon,
+    icon: ICONS.priorityMedium,
     colors: severityWarningColors,
     chartColor: "var(--severity-warning)",
   },
   HIGH: {
     labelKey: "tasks.priority.HIGH",
-    icon: ChevronUpIcon,
+    icon: ICONS.priorityHigh,
     colors: severitySeriousColors,
     chartColor: "var(--severity-serious)",
   },
   URGENT: {
     labelKey: "tasks.priority.URGENT",
-    icon: ChevronsUpIcon,
+    icon: ICONS.priorityUrgent,
     colors: severityCriticalColors,
     chartColor: "var(--severity-critical)",
   },
 };
-
-export const overdueIcon: LucideIcon = CircleAlertIcon;

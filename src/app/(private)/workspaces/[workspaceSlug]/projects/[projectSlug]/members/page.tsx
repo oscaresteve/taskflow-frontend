@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { CircleCheckIcon, CircleMinusIcon, type LucideIcon, UserCog, UserPlus, UserX } from "lucide-react";
+import { ICONS, type Icon } from "@/lib/icons";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useProjectRole } from "@/hooks/use-project-role";
@@ -36,9 +36,9 @@ type StatusTab = "ACTIVE" | "INACTIVE";
 
 export default function ProjectMembersPage() {
   const t = useTranslations("members");
-  const STATUS_TABS: { value: StatusTab; label: string; icon: LucideIcon }[] = [
-    { value: "ACTIVE", label: t("projectMembersPage.tabActive"), icon: CircleCheckIcon },
-    { value: "INACTIVE", label: t("projectMembersPage.tabInactive"), icon: CircleMinusIcon },
+  const STATUS_TABS: { value: StatusTab; label: string; icon: Icon }[] = [
+    { value: "ACTIVE", label: t("projectMembersPage.tabActive"), icon: ICONS.memberActive },
+    { value: "INACTIVE", label: t("projectMembersPage.tabInactive"), icon: ICONS.memberInactive },
   ];
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
@@ -145,7 +145,7 @@ export default function ProjectMembersPage() {
 
     return deactivatable ? (
       <DropdownMenuItem variant="destructive" onClick={() => handleRequestDeactivate(member)}>
-        <UserX />
+        <ICONS.removeMember />
         {t("projectMembersPage.deactivate")}
       </DropdownMenuItem>
     ) : null;
@@ -158,7 +158,7 @@ export default function ProjectMembersPage() {
         actions={
           isProjectManager(myRole) ? (
             <Button size="sm" onClick={() => setAddMemberOpen(true)}>
-              <UserPlus />
+              <ICONS.memberAdd />
               {t("projectMembersPage.addMember")}
             </Button>
           ) : null
@@ -216,7 +216,7 @@ export default function ProjectMembersPage() {
         variant="destructive"
         onConfirm={handleConfirmDeactivate}
         pending={deactivateProjectMember.isPending}
-        Icon={UserX}
+        Icon={ICONS.removeMember}
       />
       <ConfirmDialog
         open={roleChangeDialogOpen}
@@ -237,7 +237,7 @@ export default function ProjectMembersPage() {
         confirmLabel={t("projectMembersPage.changeRoleConfirmLabel")}
         onConfirm={handleConfirmChangeRole}
         pending={updateProjectMember.isPending}
-        Icon={UserCog}
+        Icon={ICONS.memberChangeRole}
       />
     </PageContainer>
   );

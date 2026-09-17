@@ -2,13 +2,13 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserCircle, LucideIcon } from "lucide-react";
+import { ICONS, type Icon } from "@/lib/icons";
 import { isNavActive } from "@/lib/nav";
 import { useTranslations } from "next-intl";
 
 type NavigationItem = {
   name: string;
-  icon: LucideIcon;
+  icon: Icon;
   href: string;
 };
 
@@ -19,7 +19,7 @@ export default function GlobalNav() {
   const globalNavigation: NavigationItem[] = [
     {
       name: t("globalNav.mySpace"),
-      icon: UserCircle,
+      icon: ICONS.mySpace,
       href: "/my-space",
     },
   ];

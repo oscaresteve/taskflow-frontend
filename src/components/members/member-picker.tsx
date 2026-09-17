@@ -1,6 +1,6 @@
 "use client";
 
-import { UserIcon, XIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -90,7 +90,7 @@ export function MemberPicker({
             <span className="truncate text-xs text-muted-foreground">{selected.email}</span>
           </div>
           <Button type="button" variant="ghost" size="icon-sm" onClick={onClear} aria-label={t("memberPicker.clearSelection")}>
-            <XIcon />
+            <ICONS.removeChip />
           </Button>
         </div>
       ) : (
@@ -110,7 +110,7 @@ export function MemberPicker({
               </>
             ) : candidates.length === 0 ? (
               <p className="flex items-center gap-2 px-1 py-2 text-sm text-muted-foreground">
-                <UserIcon className="size-4" />
+                <ICONS.person className="size-4" />
                 {emptyMessage}
               </p>
             ) : (

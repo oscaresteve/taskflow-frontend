@@ -16,7 +16,7 @@ import { useUpdateWorkspace } from "@/hooks/use-update-workspace";
 import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { UpdateWorkspaceDescriptionDto, updateWorkspaceDescriptionSchema } from "@/lib/schemas/workspace.schema";
-import { Loader2Icon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 
 export function WorkspaceDescriptionSection() {
   const t = useTranslations("workspaces");
@@ -72,7 +72,7 @@ export function WorkspaceDescriptionSection() {
         footerHint={t("workspaceDescriptionSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateWorkspace.isPending || !form.formState.isDirty}>
-            {updateWorkspace.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+            {updateWorkspace.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
             {commonT("actions.save")}
           </Button>
         }

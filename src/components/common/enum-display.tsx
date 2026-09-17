@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { ChevronDownIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 import type { EnumOption } from "@/lib/enum-option";
 import { cn } from "@/lib/utils";
@@ -89,7 +89,7 @@ export function EnumControl({ option, className, ...props }: ComponentProps<"but
       {...props}
     >
       <EnumIconLabel option={option} />
-      <ChevronDownIcon className="size-4 shrink-0 opacity-60" />
+      <ICONS.expand className="size-4 shrink-0 opacity-60" />
     </button>
   );
 }

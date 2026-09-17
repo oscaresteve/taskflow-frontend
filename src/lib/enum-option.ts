@@ -1,10 +1,10 @@
-import type { LucideIcon } from "lucide-react";
+import type { Icon } from "@/lib/icons";
 import type { EnumColors } from "@/lib/enum-colors";
 
 export interface EnumOption {
   /** Clave completa de next-intl (ej. "tasks.priority.URGENT"): se traduce al pintar. */
   labelKey: string;
-  icon: LucideIcon;
+  icon: Icon;
   descriptionKey?: string;
   colors: EnumColors;
   chartColor?: string;

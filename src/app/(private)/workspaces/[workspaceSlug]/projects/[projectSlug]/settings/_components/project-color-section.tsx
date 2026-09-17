@@ -14,7 +14,7 @@ import { useUpdateProject } from "@/hooks/use-update-project";
 import { ApiError } from "@/lib/http/api-error";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { UpdateProjectColorDto, updateProjectColorSchema } from "@/lib/schemas/project.schema";
-import { Loader2Icon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 
 export function ProjectColorSection() {
@@ -70,7 +70,7 @@ export function ProjectColorSection() {
         footerHint={t("projectColorSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateProject.isPending || !form.formState.isDirty}>
-            {updateProject.isPending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+            {updateProject.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
             {tCommon("actions.save")}
           </Button>
         }

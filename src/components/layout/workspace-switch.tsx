@@ -10,7 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
 import { SearchInput } from "@/components/common/search-input";
-import { ChevronsUpDown, Plus, Settings } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -77,7 +77,7 @@ export default function WorkspaceSwitch() {
               <span className="truncate font-medium">{activeWorkspace.name}</span>
               <span className="truncate text-xs">{activeWorkspace.slug}</span>
             </div>
-            <ChevronsUpDown className="ml-auto size-4" />
+            <ICONS.chevronUpDown className="ml-auto size-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -124,13 +124,13 @@ export default function WorkspaceSwitch() {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setCreateOpen(true)} className="gap-2 p-2">
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                <Plus className="size-4" />
+                <ICONS.addNew className="size-4" />
               </div>
               {t("workspaceSwitch.createWorkspace")}
             </DropdownMenuItem>
             <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2 p-2">
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                <Settings className="size-4" />
+                <ICONS.settings className="size-4" />
               </div>
               {t("workspaceSwitch.manageWorkspaces")}
             </DropdownMenuItem>

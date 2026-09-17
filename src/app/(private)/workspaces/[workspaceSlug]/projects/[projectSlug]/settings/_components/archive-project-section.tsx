@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Archive } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { DangerSettingCard } from "@/components/common/danger-setting-card";
@@ -36,7 +36,7 @@ export function ArchiveProjectSection() {
   return (
     <>
       <DangerSettingCard
-        Icon={Archive}
+        Icon={ICONS.archive}
         title={t("archiveProjectSection.title")}
         description={t("archiveProjectSection.description")}
         actionLabel={t("archiveProjectSection.archive")}
@@ -52,7 +52,7 @@ export function ArchiveProjectSection() {
         variant="destructive"
         onConfirm={handleArchive}
         pending={archiveProject.isPending}
-        Icon={Archive}
+        Icon={ICONS.archive}
       />
     </>
   );

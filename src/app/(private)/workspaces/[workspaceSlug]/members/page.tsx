@@ -4,16 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import {
-  CircleCheckIcon,
-  ClockIcon,
-  type LucideIcon,
-  UserCheck,
-  UserCog,
-  UserPlus,
-  UserX,
-  UserXIcon,
-} from "lucide-react";
+import { ICONS, type Icon } from "@/lib/icons";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -49,10 +40,10 @@ import { roleOptions } from "@/lib/member-enums";
 
 export default function WorkspaceMembersPage() {
   const t = useTranslations("members");
-  const STATUS_TABS: { value: WorkspaceMemberStatus; label: string; icon: LucideIcon }[] = [
-    { value: "ACTIVE", label: t("workspaceMembersPage.tabActive"), icon: CircleCheckIcon },
-    { value: "PENDING", label: t("workspaceMembersPage.tabPending"), icon: ClockIcon },
-    { value: "REMOVED", label: t("workspaceMembersPage.tabRemoved"), icon: UserXIcon },
+  const STATUS_TABS: { value: WorkspaceMemberStatus; label: string; icon: Icon }[] = [
+    { value: "ACTIVE", label: t("workspaceMembersPage.tabActive"), icon: ICONS.memberActive },
+    { value: "PENDING", label: t("workspaceMembersPage.tabPending"), icon: ICONS.memberPending },
+    { value: "REMOVED", label: t("workspaceMembersPage.tabRemoved"), icon: ICONS.removeMember },
   ];
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
@@ -193,14 +184,14 @@ export default function WorkspaceMembersPage() {
       <>
         {activatable && (
           <DropdownMenuItem onClick={() => handleRequestActivate(member)}>
-            <UserCheck />
+            <ICONS.memberActivate />
             {t("workspaceMembersPage.activate")}
           </DropdownMenuItem>
         )}
         {activatable && removable && <DropdownMenuSeparator />}
         {removable && (
           <DropdownMenuItem variant="destructive" onClick={() => handleRequestRemove(member)}>
-            <UserX />
+            <ICONS.removeMember />
             {t("workspaceMembersPage.remove")}
           </DropdownMenuItem>
         )}
@@ -215,7 +206,7 @@ export default function WorkspaceMembersPage() {
         actions={
           isWorkspaceManager(myRole) ? (
             <Button size="sm" onClick={() => setAddMemberOpen(true)}>
-              <UserPlus />
+              <ICONS.memberAdd />
               {t("workspaceMembersPage.addMember")}
             </Button>
           ) : null
@@ -265,7 +256,7 @@ export default function WorkspaceMembersPage() {
         variant="destructive"
         onConfirm={handleConfirmRemove}
         pending={removeWorkspaceMember.isPending}
-        Icon={UserX}
+        Icon={ICONS.removeMember}
       />
       <ConfirmDialog
         open={roleChangeDialogOpen}
@@ -286,7 +277,7 @@ export default function WorkspaceMembersPage() {
         confirmLabel={t("workspaceMembersPage.changeRoleConfirmLabel")}
         onConfirm={handleConfirmChangeRole}
         pending={updateWorkspaceMember.isPending}
-        Icon={UserCog}
+        Icon={ICONS.memberChangeRole}
       />
       <ConfirmDialog
         open={activateDialogOpen}
@@ -299,7 +290,7 @@ export default function WorkspaceMembersPage() {
         confirmLabel={t("workspaceMembersPage.activateConfirmLabel")}
         onConfirm={handleConfirmActivate}
         pending={activateWorkspaceMember.isPending}
-        Icon={UserCheck}
+        Icon={ICONS.memberActivate}
       />
     </PageContainer>
   );

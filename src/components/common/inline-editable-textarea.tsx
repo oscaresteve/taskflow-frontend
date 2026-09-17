@@ -4,7 +4,7 @@ import { KeyboardEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { CheckIcon, Loader2Icon, XIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -124,7 +124,7 @@ export function InlineEditableTextarea({
               />
             }
           >
-            <XIcon aria-hidden="true" />
+            <ICONS.cancel aria-hidden="true" />
           </TooltipTrigger>
           <TooltipContent>{t("actions.cancel")}</TooltipContent>
         </Tooltip>
@@ -140,9 +140,9 @@ export function InlineEditableTextarea({
             }
           >
             {form.formState.isSubmitting ? (
-              <Loader2Icon className="animate-spin" aria-hidden="true" />
+              <ICONS.loading className="animate-spin" aria-hidden="true" />
             ) : (
-              <CheckIcon aria-hidden="true" />
+              <ICONS.confirm aria-hidden="true" />
             )}
           </TooltipTrigger>
           <TooltipContent>{t("actions.save")}</TooltipContent>

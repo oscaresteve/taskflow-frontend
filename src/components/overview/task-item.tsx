@@ -5,7 +5,8 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EnumBadge } from "@/components/common/enum-display";
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
-import { overdueIcon, priorityOptions, statusOptions } from "@/lib/task-enums";
+import { priorityOptions, statusOptions } from "@/lib/task-enums";
+import { ICONS } from "@/lib/icons";
 import { cn, getFullName, getInitials, isOverdue } from "@/lib/utils";
 
 interface TaskItemProps {
@@ -17,7 +18,6 @@ interface TaskItemProps {
 export function TaskItem({ task, href, showProject }: TaskItemProps) {
   const t = useTranslations("tasks");
   const format = useFormatter();
-  const OverdueIcon = overdueIcon;
 
   const taskIsOverdue = !!task.dueDate && task.status !== "DONE" && isOverdue(task.dueDate);
   const assigneeName = task.assignee ? getFullName(task.assignee.firstName, task.assignee.lastName) : null;
@@ -47,7 +47,7 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
               <span
                 className={cn("flex shrink-0 items-center gap-1", taskIsOverdue && "text-severity-critical-foreground")}
               >
-                {taskIsOverdue && <OverdueIcon className="size-3" />}
+                {taskIsOverdue ? <ICONS.overdue className="size-3" /> : <ICONS.dueDate className="size-3" />}
                 {format.dateTime(new Date(task.dueDate), "short")}
               </span>
             )}

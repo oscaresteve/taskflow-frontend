@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Loader2Icon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -55,7 +55,7 @@ export function FormDialog({
             {cancelLabel ?? t("actions.cancel")}
           </Button>
           <Button type="submit" form={formId} disabled={pending}>
-            {pending && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+            {pending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
             {submitLabel ?? t("actions.save")}
           </Button>
         </DialogFooter>

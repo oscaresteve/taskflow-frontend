@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
-import { UserIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -124,7 +124,7 @@ export function AssigneePicker({
       <ComboboxItem value={null} className={ITEM_CLASSNAME}>
         <Avatar size="sm">
           <AvatarFallback>
-            <UserIcon />
+            <ICONS.person />
           </AvatarFallback>
         </Avatar>
         <span className="text-muted-foreground">{t("fields.unassigned")}</span>
@@ -136,7 +136,7 @@ export function AssigneePicker({
         </>
       ) : candidates.length === 0 ? (
         <p className="flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground">
-          <UserIcon className="size-4" />
+          <ICONS.person className="size-4" />
           {t("assigneeSelect.emptyMessage")}
         </p>
       ) : (
@@ -196,7 +196,7 @@ export function AssigneePicker({
               <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
             ) : (
               <AvatarFallback>
-                <UserIcon className="size-4" />
+                <ICONS.person className="size-4" />
               </AvatarFallback>
             )}
           </ComboboxPrimitive.Trigger>
@@ -223,7 +223,7 @@ export function AssigneePicker({
                     <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
                   ) : (
                     <AvatarFallback>
-                      <UserIcon className="size-4" />
+                      <ICONS.person className="size-4" />
                     </AvatarFallback>
                   )}
                 </Avatar>

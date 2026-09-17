@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
-import { XIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 interface TaskDetailHeaderProps {
@@ -31,7 +31,7 @@ export function TaskDetailHeader({
       <div className="flex items-center gap-1">
         {actions}
         <DialogClose render={<Button variant="outline" size="icon-sm" />}>
-          <XIcon />
+          <ICONS.close />
           <span className="sr-only">{closeLabel}</span>
         </DialogClose>
       </div>

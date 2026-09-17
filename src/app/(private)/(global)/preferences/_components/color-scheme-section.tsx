@@ -1,7 +1,7 @@
 "use client";
 
 import { SettingCard } from "@/components/common/setting-card";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useHasMounted } from "@/hooks/use-has-mounted";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -27,30 +27,30 @@ export function ColorSchemeSection() {
           onValueChange={([next]) => next && setColorScheme(next)}
         >
           <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.light")} value="light">
-            <Sun />
+            <ICONS.themeLight />
             {tCommon("colorSchemeToggle.light")}
           </ToggleGroupItem>
           <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.dark")} value="dark">
-            <Moon />
+            <ICONS.themeDark />
             {tCommon("colorSchemeToggle.dark")}
           </ToggleGroupItem>
           <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.system")} value="system">
-            <Monitor />
+            <ICONS.themeSystem />
             {tCommon("colorSchemeToggle.system")}
           </ToggleGroupItem>
         </ToggleGroup>
       ) : (
         <ToggleGroup variant="outline" value={[]}>
           <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.light")} value="light">
-            <Sun />
+            <ICONS.themeLight />
             {tCommon("colorSchemeToggle.light")}
           </ToggleGroupItem>
           <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.dark")} value="dark">
-            <Moon />
+            <ICONS.themeDark />
             {tCommon("colorSchemeToggle.dark")}
           </ToggleGroupItem>
           <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.system")} value="system">
-            <Monitor />
+            <ICONS.themeSystem />
             {tCommon("colorSchemeToggle.system")}
           </ToggleGroupItem>
         </ToggleGroup>

@@ -18,7 +18,7 @@ import WorkspaceSwitch from "@/components/layout/workspace-switch";
 import { AppNav } from "./app-nav";
 import GlobalNav from "./global-nav";
 import ProjectsNav from "@/components/layout/projects-nav";
-import { LayoutDashboard, Settings, Users } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
@@ -56,7 +56,7 @@ export function WorkspaceSidebar() {
                 {/* Exact match, not isNavActive: every workspace subpage's pathname starts
                     with overviewHref, so a prefix match would keep this active everywhere. */}
                 <SidebarMenuButton render={<Link href={overviewHref} />} isActive={pathname === overviewHref}>
-                  <LayoutDashboard />
+                  <ICONS.overview />
                   {t("workspaceSidebar.overview")}
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -69,7 +69,7 @@ export function WorkspaceSidebar() {
                   render={<Link href={`/workspaces/${workspaceSlug}/members`} />}
                   isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/members`)}
                 >
-                  <Users />
+                  <ICONS.members />
                   {t("workspaceSidebar.members")}
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -79,7 +79,7 @@ export function WorkspaceSidebar() {
                     render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}
                     isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
                   >
-                    <Settings />
+                    <ICONS.settings />
                     {t("workspaceSidebar.settings")}
                   </SidebarMenuButton>
                 </SidebarMenuItem>

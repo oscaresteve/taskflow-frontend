@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Palette, XIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ColorDot } from "@/components/ui/color-dot";
@@ -33,14 +33,14 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
         render={<Avatar size="lg" className="size-16! cursor-pointer transition-opacity hover:opacity-80" />}
       >
         <AvatarFallback style={value ? { backgroundColor: value } : undefined}>
-          {!value && <Palette className="size-6 text-muted-foreground" />}
+          {!value && <ICONS.colorSwatch className="size-6 text-muted-foreground" />}
         </AvatarFallback>
       </PopoverTrigger>
       <PopoverContent className="p-2 w-fit" align="end">
         <div className="grid grid-cols-4 gap-x-3 gap-y-2">
           <button type="button" aria-label={t("colorPicker.noColor")} aria-pressed={value === null} onClick={() => handleSelect(null)}>
             <ColorDot className={cn(colorButtonClassName, value === null && "outline-ring")}>
-              <XIcon className="size-4" />
+              <ICONS.clear className="size-4" />
             </ColorDot>
           </button>
           {COLORS.map((color) => (

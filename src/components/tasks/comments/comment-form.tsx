@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { Loader2Icon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
@@ -111,7 +111,7 @@ export function CommentForm({
           size="sm"
           disabled={form.formState.isSubmitting || (isEditing && !form.formState.isDirty)}
         >
-          {form.formState.isSubmitting && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+          {form.formState.isSubmitting && <ICONS.loading className="animate-spin" aria-hidden="true" />}
           {isEditing ? tCommon("actions.save") : t("comments.submit")}
         </Button>
       </div>

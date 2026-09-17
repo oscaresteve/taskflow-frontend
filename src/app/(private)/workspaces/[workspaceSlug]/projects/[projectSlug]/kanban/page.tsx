@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 
 export default function KanbanPage() {
@@ -39,7 +39,7 @@ export default function KanbanPage() {
         title={t("kanbanPage.title")}
         actions={
           <Button onClick={() => setCreateTaskOpen(true)}>
-            <Plus />
+            <ICONS.addNew />
             {t("kanbanPage.createTask")}
           </Button>
         }

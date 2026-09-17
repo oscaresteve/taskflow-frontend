@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, MoreVertical, Orbit, Plus, Settings } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
@@ -51,8 +51,8 @@ export function WorkspacesNav() {
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
           <CollapsibleTrigger render={<SidebarMenuButton className="group/orbit" />}>
             <span className="relative size-4 shrink-0">
-              <Orbit className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/orbit:opacity-0" />
-              <ChevronDown className="absolute inset-0 size-4 opacity-0 transition-all group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180" />
+              <ICONS.workspace className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/orbit:opacity-0" />
+              <ICONS.expand className="absolute inset-0 size-4 opacity-0 transition-all group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180" />
             </span>
             {t("workspacesNav.title")}
           </CollapsibleTrigger>
@@ -67,7 +67,7 @@ export function WorkspacesNav() {
                 />
               }
             >
-              <Plus />
+              <ICONS.addNew />
             </TooltipTrigger>
             <TooltipContent>{t("workspacesNav.newWorkspace")}</TooltipContent>
           </Tooltip>
@@ -81,7 +81,7 @@ export function WorkspacesNav() {
                   />
                 }
               >
-                <MoreVertical />
+                <ICONS.moreOptions />
               </TooltipTrigger>
               <TooltipContent>{t("workspacesNav.moreOptions")}</TooltipContent>
             </Tooltip>
@@ -89,7 +89,7 @@ export function WorkspacesNav() {
               <DropdownMenuGroup>
                 <DropdownMenuLabel>{t("workspacesNav.title")}</DropdownMenuLabel>
                 <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2">
-                  <Settings />
+                  <ICONS.settings />
                   {t("workspacesNav.manageWorkspaces")}
                 </DropdownMenuItem>
               </DropdownMenuGroup>

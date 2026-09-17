@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchIcon, XIcon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { cva } from "class-variance-authority";
 
 import { Input } from "@/components/ui/input";
@@ -67,7 +67,7 @@ export function SearchInput({
 
   return (
     <div className={cn("relative", className)}>
-      <SearchIcon
+      <ICONS.search
         className={cn(
           "pointer-events-none absolute top-1/2 -translate-y-1/2 text-muted-foreground",
           iconClasses[size],
@@ -92,7 +92,7 @@ export function SearchInput({
           )}
           onClick={() => onChange("")}
         >
-          <XIcon className={clearIconClasses[size]} />
+          <ICONS.clear className={clearIconClasses[size]} />
         </button>
       ) : null}
     </div>

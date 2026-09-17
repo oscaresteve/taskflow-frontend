@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -80,7 +80,7 @@ export default function UserNav() {
                 <span className="truncate font-medium">{userName}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ICONS.chevronUpDown className="ml-auto size-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -104,7 +104,7 @@ export default function UserNav() {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setLogOutOpen(true)}>
-                <LogOut />
+                <ICONS.logOut />
                 {t("userNav.logOut")}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -120,7 +120,7 @@ export default function UserNav() {
         variant="destructive"
         onConfirm={handleLogOut}
         pending={loggingOut}
-        Icon={LogOut}
+        Icon={ICONS.logOut}
       />
     </SidebarMenu>
   );

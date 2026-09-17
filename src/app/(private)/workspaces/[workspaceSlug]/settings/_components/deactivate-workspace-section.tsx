@@ -9,7 +9,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { DangerSettingCard } from "@/components/common/danger-setting-card";
-import { ShieldMinus } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useState } from "react";
 
 export function DeactivateWorkspaceSection() {
@@ -36,7 +36,7 @@ export function DeactivateWorkspaceSection() {
   return (
     <>
       <DangerSettingCard
-        Icon={ShieldMinus}
+        Icon={ICONS.deactivate}
         title={t("deactivateWorkspaceSection.title")}
         description={t("deactivateWorkspaceSection.description")}
         actionLabel={t("deactivateWorkspaceSection.actionLabel")}
@@ -52,7 +52,7 @@ export function DeactivateWorkspaceSection() {
         variant="destructive"
         onConfirm={handleDeactivate}
         pending={deactivateWorkspace.isPending}
-        Icon={ShieldMinus}
+        Icon={ICONS.deactivate}
       />
     </>
   );

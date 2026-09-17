@@ -10,7 +10,7 @@ import { signIn } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
 import { SignInDto, signInSchema } from "@/lib/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2Icon } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -89,7 +89,7 @@ export function SignInForm({ next }: { next: string }) {
             />
             <Field>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+                {form.formState.isSubmitting && <ICONS.loading className="animate-spin" aria-hidden="true" />}
                 {t("signInForm.submitButton")}
               </Button>
               <FieldDescription className="text-center">

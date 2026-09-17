@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Building2 } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -73,7 +73,7 @@ export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDia
             <AvatarFallback>{getInitials(name)}</AvatarFallback>
           ) : (
             <AvatarFallback>
-              <Building2 />
+              <ICONS.createWorkspace />
             </AvatarFallback>
           )}
         </Avatar>

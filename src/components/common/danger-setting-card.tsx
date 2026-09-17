@@ -1,9 +1,9 @@
-import { LucideIcon } from "lucide-react";
+import type { Icon } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { SettingCard } from "@/components/common/setting-card";
 
 interface DangerSettingCardProps {
-  Icon: LucideIcon;
+  Icon: Icon;
   title: string;
   description: string;
   actionLabel: string;

@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, CheckCircle2, UserX } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { PageContainer } from "@/components/common/page-container";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -62,14 +62,14 @@ export default function ProjectPage() {
       ) : (
         <div className="grid grid-cols-3 gap-4">
           <StatCard
-            icon={AlertTriangle}
+            icon={ICONS.statOverdue}
             label={t("projectOverviewPage.stats.overdue")}
             value={overview.tasks.overdue}
             tone={overview.tasks.overdue > 0 ? "destructive" : "default"}
           />
-          <StatCard icon={UserX} label={t("projectOverviewPage.stats.unassigned")} value={overview.tasks.unassigned} />
+          <StatCard icon={ICONS.statUnassigned} label={t("projectOverviewPage.stats.unassigned")} value={overview.tasks.unassigned} />
           <StatCard
-            icon={CheckCircle2}
+            icon={ICONS.statCompleted}
             label={t("projectOverviewPage.stats.completedThisWeek")}
             value={overview.tasks.completedLast7Days}
           />

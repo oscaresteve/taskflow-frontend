@@ -1,6 +1,6 @@
 "use client";
 
-import { Monitor, Moon, Sun } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,22 +26,22 @@ export function ColorSchemeToggle() {
             />
           }
         >
-          <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          <ICONS.themeLight className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+          <ICONS.themeDark className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
         </TooltipTrigger>
         <TooltipContent>{t("colorSchemeToggle.toggleTheme")}</TooltipContent>
       </Tooltip>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setColorScheme("light")}>
-          <Sun />
+          <ICONS.themeLight />
           {t("colorSchemeToggle.light")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setColorScheme("dark")}>
-          <Moon />
+          <ICONS.themeDark />
           {t("colorSchemeToggle.dark")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setColorScheme("system")}>
-          <Monitor />
+          <ICONS.themeSystem />
           {t("colorSchemeToggle.system")}
         </DropdownMenuItem>
       </DropdownMenuContent>

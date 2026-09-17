@@ -2,13 +2,13 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LucideIcon, Settings2 } from "lucide-react";
+import { ICONS, type Icon } from "@/lib/icons";
 import { isNavActive } from "@/lib/nav";
 import { useTranslations } from "next-intl";
 
 type NavigationItem = {
   name: string;
-  icon: LucideIcon;
+  icon: Icon;
   href: string;
 };
 
@@ -19,7 +19,7 @@ export function AppNav() {
   const appNavigation: NavigationItem[] = [
     {
       name: t("appNav.preferences"),
-      icon: Settings2,
+      icon: ICONS.preferences,
       href: "/preferences",
     },
   ];
