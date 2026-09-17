@@ -40,7 +40,7 @@ export function StatusSelect({ id, variant = "default", value, onValueChange, cl
         <DropdownMenuTrigger id={id} render={<EnumControl option={statusOptions[value]} className={className} />} />
       )}
 
-      <DropdownMenuContent className="w-max">
+      <DropdownMenuContent>
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as TaskStatus)}>
           {taskStatuses.map((status) => (
             <DropdownMenuRadioItem
