@@ -226,7 +226,14 @@ export function AssigneePicker({
         </>
       ) : (
         <>
-          <InputGroup ref={anchor} className={className}>
+          <InputGroup
+            ref={anchor}
+            className={cn(
+              className,
+              "hover:bg-muted!",
+              selected ?? "text-muted-foreground hover:text-foreground focus-within:text-foreground",
+            )}
+          >
             <InputGroupAddon>
               <Avatar size="sm">
                 <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />

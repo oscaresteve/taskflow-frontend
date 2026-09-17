@@ -60,7 +60,12 @@ export function DueDatePicker({ value, onChange, id, className, variant = "defau
           render={
             <Button
               variant="outline"
-              className={cn("justify-start font-normal", overdue && "text-severity-critical-foreground", className)}
+              className={cn(
+                "justify-start font-normal",
+                overdue && "text-severity-critical-foreground",
+                date ?? "text-muted-foreground hover:text-foreground focus-within:text-foreground",
+                className,
+              )}
             />
           }
         >
