@@ -226,23 +226,21 @@ export function AssigneePicker({
         </>
       ) : (
         <>
-          <div ref={anchor}>
-            <InputGroup className={className}>
-              <InputGroupAddon>
-                <Avatar size="sm">
-                  <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
-                  {selected ? (
-                    <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
-                  ) : (
-                    <AvatarFallback>
-                      <ICONS.person className="size-4" />
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-              </InputGroupAddon>
-              <ComboboxPrimitive.Input id={id} render={<InputGroupInput />} onFocus={(e) => e.currentTarget.select()} />
-            </InputGroup>
-          </div>
+          <InputGroup ref={anchor} className={className}>
+            <InputGroupAddon>
+              <Avatar size="sm">
+                <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
+                {selected ? (
+                  <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
+                ) : (
+                  <AvatarFallback>
+                    <ICONS.person className="size-4" />
+                  </AvatarFallback>
+                )}
+              </Avatar>
+            </InputGroupAddon>
+            <ComboboxPrimitive.Input id={id} render={<InputGroupInput />} onFocus={(e) => e.currentTarget.select()} />
+          </InputGroup>
           <ComboboxContent anchor={anchor}>{candidateList}</ComboboxContent>
         </>
       )}
