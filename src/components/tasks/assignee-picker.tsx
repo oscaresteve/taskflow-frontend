@@ -36,7 +36,7 @@ interface AssigneePickerProps {
   projectSlug: string;
   value: string | null;
   onChange: (userId: string | null) => void;
-  variant?: "avatar" | "avatar-name";
+  variant?: "avatar" | "default";
   id?: string;
   className?: string;
 }
@@ -46,7 +46,7 @@ export function AssigneePicker({
   projectSlug,
   value,
   onChange,
-  variant = "avatar-name",
+  variant = "default",
   id,
   className,
 }: AssigneePickerProps) {
