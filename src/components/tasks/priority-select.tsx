@@ -61,7 +61,7 @@ export function PrioritySelect({ id, variant = "default", value, onValueChange, 
         <DropdownMenuTrigger id={id} render={<EnumControl option={priorityOptions[value]} className={className} />} />
       )}
 
-      <DropdownMenuContent>
+      <DropdownMenuContent className="min-w-max">
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as TaskPriority)}>
           {taskPriorities.map((priority) => (
             <DropdownMenuRadioItem

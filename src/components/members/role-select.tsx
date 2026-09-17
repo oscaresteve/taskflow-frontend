@@ -75,7 +75,7 @@ export function RoleFilterSelect({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={<EnumControl option={roleFilterOptions[value]} />} />
-      <DropdownMenuContent className="w-max">
+      <DropdownMenuContent className="min-w-max">
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as RoleFilter)}>
           {roleFilters.map((role) => (
             <DropdownMenuRadioItem
