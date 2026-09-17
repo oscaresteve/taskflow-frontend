@@ -99,7 +99,7 @@ export function CommentItem({
                   <Button
                     onClick={() => setEditing(true)}
                     variant="ghost"
-                    size="icon-xs"
+                    size="icon-sm"
                     className="text-muted-foreground"
                     aria-label={t("comments.edit")}
                   />
@@ -119,7 +119,7 @@ export function CommentItem({
                       render={
                         <Button
                           variant="ghost"
-                          size="icon-xs"
+                          size="icon-sm"
                           className="ml-auto text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
                           aria-label={t("comments.actionsSrOnly")}
                         />
