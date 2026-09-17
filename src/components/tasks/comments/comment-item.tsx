@@ -5,6 +5,7 @@ import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import {
   DropdownMenu,
@@ -92,25 +93,44 @@ export function CommentItem({
           </span>
           {comment.editedAt && <span className="text-xs text-muted-foreground">{t("comments.edited")}</span>}
           {canEdit && (
-            <Button onClick={() => setEditing(true)} variant="ghost" size="icon-xs" className="text-muted-foreground">
-              <SquarePen />
-              <span className="sr-only">{t("comments.edit")}</span>
-            </Button>
-          )}
-          {canDelete && (
-            <DropdownMenu>
-              <DropdownMenuTrigger
+            <Tooltip>
+              <TooltipTrigger
                 render={
                   <Button
+                    onClick={() => setEditing(true)}
                     variant="ghost"
                     size="icon-xs"
-                    className="ml-auto text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
+                    className="text-muted-foreground"
+                    aria-label={t("comments.edit")}
                   />
                 }
               >
-                <MoreHorizontal />
-                <span className="sr-only">{t("comments.actionsSrOnly")}</span>
-              </DropdownMenuTrigger>
+                <SquarePen />
+              </TooltipTrigger>
+              <TooltipContent>{t("comments.edit")}</TooltipContent>
+            </Tooltip>
+          )}
+          {canDelete && (
+            <DropdownMenu>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <DropdownMenuTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          className="ml-auto text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100"
+                          aria-label={t("comments.actionsSrOnly")}
+                        />
+                      }
+                    />
+                  }
+                >
+                  <MoreHorizontal />
+                </TooltipTrigger>
+                <TooltipContent>{t("comments.actionsSrOnly")}</TooltipContent>
+              </Tooltip>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
                   <Trash2 />

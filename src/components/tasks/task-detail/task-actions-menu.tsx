@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import type { ComponentProps } from "react";
+import { cloneElement, useState } from "react";
+import type { ComponentProps, ReactElement } from "react";
 import { Archive, MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import {
   DropdownMenu,
@@ -63,24 +64,31 @@ export function TaskActionsMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            triggerRender ?? (
-              <Button variant="outline" size="icon-sm">
-                <MoreHorizontal />
-                <span className="sr-only">{t("taskActionsMenu.ariaLabel")}</span>
-              </Button>
-            )
-          }
-        />
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
-            <Archive />
-            {t("taskActionsMenu.archive")}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Tooltip>
+        <DropdownMenu>
+          <TooltipTrigger
+            render={
+              <DropdownMenuTrigger
+                render={
+                  triggerRender ?? (
+                    <Button aria-label={t("taskActionsMenu.ariaLabel")} variant="outline" size="icon-sm" />
+                  )
+                }
+              />
+            }
+          >
+            <MoreHorizontal />
+          </TooltipTrigger>
+          <TooltipContent>{t("taskActionsMenu.ariaLabel")}</TooltipContent>
+
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
+              <Archive />
+              {t("taskActionsMenu.archive")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </Tooltip>
       <ConfirmDialog
         open={archiveOpen}
         onOpenChange={setArchiveOpen}

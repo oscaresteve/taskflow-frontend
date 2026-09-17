@@ -34,6 +34,7 @@ import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { getFullName, getInitials } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const MAX_VISIBLE_OWNERS = 4;
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
@@ -61,10 +62,18 @@ function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceRe
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
-          <MoreHorizontal />
-          <span className="sr-only">{t("workspaceActionsMenu.ariaLabel")}</span>
-        </DropdownMenuTrigger>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <DropdownMenuTrigger
+                render={<Button aria-label={t("workspaceActionsMenu.ariaLabel")} variant="ghost" size="icon-sm" />}
+              />
+            }
+          >
+            <MoreHorizontal />
+          </TooltipTrigger>
+          <TooltipContent>{t("workspaceActionsMenu.ariaLabel")}</TooltipContent>
+        </Tooltip>
         <DropdownMenuContent align="end">
           <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
             <ExternalLink />

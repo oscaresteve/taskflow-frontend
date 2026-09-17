@@ -29,6 +29,7 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { SearchInput } from "../common/search-input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
 
 const NAV_PAGE_SIZE = 5;
@@ -56,20 +57,34 @@ export function WorkspacesNav() {
             {t("workspacesNav.title")}
           </CollapsibleTrigger>
 
-          <SidebarMenuAction onClick={() => setCreateOpen(true)} title={t("workspacesNav.newWorkspace")} className="right-7">
-            <Plus />
-            <span className="sr-only">{t("workspacesNav.newWorkspace")}</span>
-          </SidebarMenuAction>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <SidebarMenuAction
+                  onClick={() => setCreateOpen(true)}
+                  className="right-7"
+                  aria-label={t("workspacesNav.newWorkspace")}
+                />
+              }
+            >
+              <Plus />
+            </TooltipTrigger>
+            <TooltipContent>{t("workspacesNav.newWorkspace")}</TooltipContent>
+          </Tooltip>
 
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <SidebarMenuAction title={t("workspacesNav.moreOptions")}>
-                  <MoreVertical />
-                  <span className="sr-only">{t("workspacesNav.moreOptions")}</span>
-                </SidebarMenuAction>
-              }
-            />
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <DropdownMenuTrigger
+                    render={<SidebarMenuAction aria-label={t("workspacesNav.moreOptions")} />}
+                  />
+                }
+              >
+                <MoreVertical />
+              </TooltipTrigger>
+              <TooltipContent>{t("workspacesNav.moreOptions")}</TooltipContent>
+            </Tooltip>
             <DropdownMenuContent align="start" className="min-w-56">
               <DropdownMenuGroup>
                 <DropdownMenuLabel>{t("workspacesNav.title")}</DropdownMenuLabel>

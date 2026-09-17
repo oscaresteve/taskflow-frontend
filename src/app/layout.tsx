@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             enableSystem
           >
             <QueryProvider>
-              <TooltipProvider>
+              <TooltipProvider delay={600}>
                 {children}
                 <Suspense fallback={null}>
                   <TaskDetailModal />

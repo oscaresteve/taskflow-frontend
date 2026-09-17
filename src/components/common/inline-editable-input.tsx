@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { CheckIcon, Loader2Icon, XIcon } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
@@ -112,18 +113,42 @@ export function InlineEditableInput({
         {fieldState && <FieldError errors={[fieldState]} />}
       </Field>
       <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" size="icon-sm" onClick={cancel} disabled={form.formState.isSubmitting}>
-          <XIcon aria-hidden="true" />
-          <span className="sr-only">{t("actions.cancel")}</span>
-        </Button>
-        <Button type="submit" size="icon-sm" disabled={form.formState.isSubmitting || !form.formState.isDirty}>
-          {form.formState.isSubmitting ? (
-            <Loader2Icon className="animate-spin" aria-hidden="true" />
-          ) : (
-            <CheckIcon aria-hidden="true" />
-          )}
-          <span className="sr-only">{t("actions.save")}</span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                onClick={cancel}
+                disabled={form.formState.isSubmitting}
+                aria-label={t("actions.cancel")}
+              />
+            }
+          >
+            <XIcon aria-hidden="true" />
+          </TooltipTrigger>
+          <TooltipContent>{t("actions.cancel")}</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="submit"
+                size="icon-sm"
+                disabled={form.formState.isSubmitting || !form.formState.isDirty}
+                aria-label={t("actions.save")}
+              />
+            }
+          >
+            {form.formState.isSubmitting ? (
+              <Loader2Icon className="animate-spin" aria-hidden="true" />
+            ) : (
+              <CheckIcon aria-hidden="true" />
+            )}
+          </TooltipTrigger>
+          <TooltipContent>{t("actions.save")}</TooltipContent>
+        </Tooltip>
       </div>
     </form>
   );

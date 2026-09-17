@@ -10,6 +10,7 @@ import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@
 
 import { Archive, ExternalLink, MoreHorizontal, Plus, Settings, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState } from "react";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -74,10 +75,18 @@ function ProjectActionsMenu({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
-          <MoreHorizontal />
-          <span className="sr-only">{t("projectActionsMenu.ariaLabel")}</span>
-        </DropdownMenuTrigger>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <DropdownMenuTrigger
+                render={<Button variant="ghost" size="icon-sm" aria-label={t("projectActionsMenu.ariaLabel")} />}
+              />
+            }
+          >
+            <MoreHorizontal />
+          </TooltipTrigger>
+          <TooltipContent>{t("projectActionsMenu.ariaLabel")}</TooltipContent>
+        </Tooltip>
         <DropdownMenuContent align="end">
           <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}>
             <ExternalLink />
@@ -251,7 +260,12 @@ export default function ProjectsPage() {
       />
 
       <div className="flex items-center justify-between gap-2">
-        <SearchInput value={search} onChange={handleSearchChange} placeholder={t("projectsPage.searchPlaceholder")} className="w-48" />
+        <SearchInput
+          value={search}
+          onChange={handleSearchChange}
+          placeholder={t("projectsPage.searchPlaceholder")}
+          className="w-48"
+        />
         <div className="flex items-center gap-1">
           <SortControls
             field={sort}

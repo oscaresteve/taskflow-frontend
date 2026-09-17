@@ -33,6 +33,7 @@ import { ColorDot } from "../ui/color-dot";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { useTranslations } from "next-intl";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const NAV_PAGE_SIZE = 5;
 
@@ -63,21 +64,35 @@ export default function ProjectsNav() {
           </CollapsibleTrigger>
 
           {isWorkspaceManager(myRole) && (
-            <SidebarMenuAction onClick={() => setCreateOpen(true)} title={t("projectsNav.newProject")} className="right-7">
-              <Plus />
-              <span className="sr-only">{t("projectsNav.newProject")}</span>
-            </SidebarMenuAction>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <SidebarMenuAction
+                    onClick={() => setCreateOpen(true)}
+                    className="right-7"
+                    aria-label={t("projectsNav.newProject")}
+                  />
+                }
+              >
+                <Plus />
+              </TooltipTrigger>
+              <TooltipContent>{t("projectsNav.newProject")}</TooltipContent>
+            </Tooltip>
           )}
 
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <SidebarMenuAction title={t("projectsNav.moreOptions")}>
-                  <MoreVertical />
-                  <span className="sr-only">{t("projectsNav.moreOptions")}</span>
-                </SidebarMenuAction>
-              }
-            />
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <DropdownMenuTrigger
+                    render={<SidebarMenuAction aria-label={t("projectsNav.moreOptions")} />}
+                  />
+                }
+              >
+                <MoreVertical />
+              </TooltipTrigger>
+              <TooltipContent>{t("projectsNav.moreOptions")}</TooltipContent>
+            </Tooltip>
             <DropdownMenuContent align="start" className="min-w-56">
               <DropdownMenuGroup>
                 <DropdownMenuLabel>{t("projectsNav.title")}</DropdownMenuLabel>

@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { MemberRole } from "@/lib/dtos/members.dto";
@@ -93,10 +94,18 @@ export function MembersTable<TMember extends MemberLike>({
               <TableCell>
                 {actions ? (
                   <DropdownMenu>
-                    <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
-                      <MoreHorizontal />
-                      <span className="sr-only">{t("membersTable.actionsSrOnly")}</span>
-                    </DropdownMenuTrigger>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <DropdownMenuTrigger
+                            render={<Button variant="ghost" size="icon-sm" aria-label={t("membersTable.actionsSrOnly")} />}
+                          />
+                        }
+                      >
+                        <MoreHorizontal />
+                      </TooltipTrigger>
+                      <TooltipContent>{t("membersTable.actionsSrOnly")}</TooltipContent>
+                    </Tooltip>
                     <DropdownMenuContent align="end">{actions}</DropdownMenuContent>
                   </DropdownMenu>
                 ) : null}
