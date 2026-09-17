@@ -36,13 +36,20 @@ export function EnumBadge({
 export function EnumIconControl({
   option,
   className,
+  variant = "ghost",
+  size = "icon-sm",
   ...props
-}: Omit<ComponentProps<typeof Button>, "variant" | "size"> & { option: EnumOption }) {
+}: ComponentProps<typeof Button> & { option: EnumOption }) {
   const t = useTranslations();
   const Icon = option.icon;
 
   return (
-    <Button variant="ghost" size="icon-sm" className={cn(option.colors.text, className)} {...props}>
+    <Button
+      variant={variant}
+      size={size}
+      className={cn(option.colors.text, option.colors.bgSoftHover, className)}
+      {...props}
+    >
       <Icon />
       <span className="sr-only">{t(option.labelKey)}</span>
     </Button>
@@ -61,15 +68,18 @@ export function EnumIconLabel({ option, className }: { option: EnumOption; class
   );
 }
 
-export function EnumControl({ option, className, ...props }: ComponentProps<"button"> & { option: EnumOption }) {
+export function EnumControl({
+  option,
+  className,
+  variant = "outline",
+  size = "default",
+  ...props
+}: ComponentProps<typeof Button> & { option: EnumOption }) {
   return (
-    <button
-      type="button"
+    <Button
+      variant={variant}
+      size={size}
       className={cn(
-        "flex h-8 w-fit cursor-pointer items-center justify-between gap-1.5 rounded-lg border py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none",
-        "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        "aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
         option.colors.border,
         option.colors.bgSoft,
         option.colors.text,
@@ -80,6 +90,6 @@ export function EnumControl({ option, className, ...props }: ComponentProps<"but
     >
       <EnumIconLabel option={option} />
       <ICONS.expand className="size-4 shrink-0 opacity-60" />
-    </button>
+    </Button>
   );
 }
