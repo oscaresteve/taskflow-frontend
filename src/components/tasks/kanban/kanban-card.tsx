@@ -85,7 +85,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
             triggerRender={
               <Button
                 variant="ghost"
-                size="icon-xs"
+                size="icon-sm"
                 className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
               >
                 <ICONS.moreActions />
@@ -98,7 +98,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
       <p className="px-(--card-spacing) text-sm font-medium">{task.title}</p>
       <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
         <span className="flex items-center gap-1" onClick={stopPropagation}>
-          <PrioritySelect variant="icon-badge" value={task.priority} onValueChange={handlePriorityChange} />
+          <PrioritySelect variant="icon" value={task.priority} onValueChange={handlePriorityChange} />
           <DueDatePicker variant="icon" value={task.dueDate} onChange={handleDueDateChange} />
         </span>
         <span onClick={stopPropagation}>

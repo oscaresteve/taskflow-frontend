@@ -1,6 +1,6 @@
 "use client";
 
-import { EnumBadge, EnumControl, EnumIconBadge, EnumIconLabel } from "@/components/common/enum-display";
+import { EnumBadge, EnumControl, EnumIconControl, EnumIconLabel } from "@/components/common/enum-display";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,20 +17,30 @@ import { useTranslations } from "next-intl";
 
 interface PrioritySelectProps {
   id?: string;
-  variant?: "badge" | "control" | "icon-badge";
+  variant?: "badge" | "default" | "icon";
   value: TaskPriority;
   onValueChange: (value: TaskPriority) => void;
   className?: string;
 }
 
-export function PrioritySelect({ id, variant = "control", value, onValueChange, className }: PrioritySelectProps) {
+export function PrioritySelect({ id, variant = "default", value, onValueChange, className }: PrioritySelectProps) {
   const t = useTranslations("tasks");
   const tEnum = useTranslations();
   return (
     <DropdownMenu>
-      {variant === "control" ? (
-        <DropdownMenuTrigger id={id} render={<EnumControl option={priorityOptions[value]} className={className} />} />
-      ) : (
+      {variant === "icon" ? (
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <DropdownMenuTrigger
+                id={id}
+                render={<EnumIconControl option={priorityOptions[value]} className={className} />}
+              />
+            }
+          />
+          <TooltipContent>{`${t("fields.priority")}: ${tEnum(priorityOptions[value].labelKey)}`}</TooltipContent>
+        </Tooltip>
+      ) : variant === "badge" ? (
         <Tooltip>
           <TooltipTrigger
             render={
@@ -43,14 +53,12 @@ export function PrioritySelect({ id, variant = "control", value, onValueChange, 
               />
             }
           >
-            {variant === "icon-badge" ? (
-              <EnumIconBadge option={priorityOptions[value]} interactive />
-            ) : (
-              <EnumBadge option={priorityOptions[value]} interactive />
-            )}
+            <EnumBadge option={priorityOptions[value]} interactive />
           </TooltipTrigger>
           <TooltipContent>{`${t("fields.priority")}: ${tEnum(priorityOptions[value].labelKey)}`}</TooltipContent>
         </Tooltip>
+      ) : (
+        <DropdownMenuTrigger id={id} render={<EnumControl option={priorityOptions[value]} className={className} />} />
       )}
 
       <DropdownMenuContent className="w-max">

@@ -1,6 +1,6 @@
 "use client";
 
-import { EnumBadge, EnumControl, EnumIconLabel } from "@/components/common/enum-display";
+import { EnumBadge, EnumControl, EnumIconControl, EnumIconLabel } from "@/components/common/enum-display";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,21 +15,21 @@ import { cn } from "@/lib/utils";
 
 interface RoleSelectProps {
   id?: string;
-  variant?: "badge" | "control";
+  variant?: "badge" | "default" | "icon";
   className?: string;
   value: MemberRole;
   values: MemberRole[];
   onValueChange: (value: MemberRole) => void;
 }
 
-export function RoleSelect({ id, variant = "control", className, value, values, onValueChange }: RoleSelectProps) {
+export function RoleSelect({ id, variant = "default", className, value, values, onValueChange }: RoleSelectProps) {
   const t = useTranslations();
 
   return (
     <DropdownMenu>
-      {variant === "control" ? (
-        <DropdownMenuTrigger id={id} render={<EnumControl option={roleOptions[value]} className={className} />} />
-      ) : (
+      {variant === "icon" ? (
+        <DropdownMenuTrigger id={id} render={<EnumIconControl option={roleOptions[value]} className={className} />} />
+      ) : variant === "badge" ? (
         <DropdownMenuTrigger
           id={id}
           className={cn(
@@ -39,6 +39,8 @@ export function RoleSelect({ id, variant = "control", className, value, values, 
         >
           <EnumBadge option={roleOptions[value]} interactive />
         </DropdownMenuTrigger>
+      ) : (
+        <DropdownMenuTrigger id={id} render={<EnumControl option={roleOptions[value]} className={className} />} />
       )}
       <DropdownMenuContent className="w-64">
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as MemberRole)}>
@@ -52,9 +54,7 @@ export function RoleSelect({ id, variant = "control", className, value, values, 
               <div className="flex min-w-0 flex-col gap-0.5 py-0.5">
                 <EnumIconLabel option={roleOptions[role]} />
                 {roleOptions[role].descriptionKey ? (
-                  <span className="text-xs text-wrap text-muted-foreground">
-                    {t(roleOptions[role].descriptionKey)}
-                  </span>
+                  <span className="text-xs text-wrap text-muted-foreground">{t(roleOptions[role].descriptionKey)}</span>
                 ) : null}
               </div>
             </DropdownMenuRadioItem>

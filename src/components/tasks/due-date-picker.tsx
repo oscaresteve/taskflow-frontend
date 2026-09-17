@@ -14,10 +14,10 @@ interface DueDatePickerProps {
   onChange: (value: string | null) => void;
   id?: string;
   className?: string;
-  variant?: "icon" | "control";
+  variant?: "icon" | "default";
 }
 
-export function DueDatePicker({ value, onChange, id, className, variant = "control" }: DueDatePickerProps) {
+export function DueDatePicker({ value, onChange, id, className, variant = "default" }: DueDatePickerProps) {
   const t = useTranslations("tasks");
   const format = useFormatter();
   const [open, setOpen] = useState(false);

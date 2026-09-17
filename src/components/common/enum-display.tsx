@@ -3,6 +3,7 @@ import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 import type { EnumOption } from "@/lib/enum-option";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export function EnumBadge({
   option,
@@ -32,30 +33,19 @@ export function EnumBadge({
   );
 }
 
-export function EnumIconBadge({
+export function EnumIconControl({
   option,
-  interactive,
   className,
-}: {
-  option: EnumOption;
-  className?: string;
-  interactive?: boolean;
-}) {
+  ...props
+}: Omit<ComponentProps<typeof Button>, "variant" | "size"> & { option: EnumOption }) {
   const t = useTranslations();
   const Icon = option.icon;
 
   return (
-    <span
-      className={cn(
-        "inline-flex size-6 shrink-0 items-center justify-center rounded-sm",
-        option.colors.text,
-        interactive && cn("transition-colors", option.colors.bgSoftHover),
-        className,
-      )}
-    >
-      <Icon className="size-5" />
+    <Button variant="ghost" size="icon-sm" className={cn(option.colors.text, className)} {...props}>
+      <Icon />
       <span className="sr-only">{t(option.labelKey)}</span>
-    </span>
+    </Button>
   );
 }
 
