@@ -189,9 +189,7 @@ export function AssigneePicker({
             id={id}
             nativeButton={false}
             aria-label={label}
-            render={
-              <Avatar size="sm" className={cn("cursor-pointer transition-opacity hover:opacity-80", className)} />
-            }
+            render={<Avatar size="sm" className={cn("cursor-pointer outline-offset-1 hover:outline-2", className)} />}
           >
             <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
             {selected ? (
