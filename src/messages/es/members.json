@@ -6,7 +6,7 @@
     "MEMBER": "Miembro"
   },
   "roleDescription": {
-    "OWNER": "Control total, incluida la eliminación y la gestión de todos los miembros.",
+    "OWNER": "Control total, incluida la posibilidad de eliminarlo y de gestionar a todos los miembros.",
     "ADMIN": "Gestiona miembros y configuración, pero no puede eliminarlo.",
     "MEMBER": "Puede acceder y contribuir, sin acceso de gestión."
   },
