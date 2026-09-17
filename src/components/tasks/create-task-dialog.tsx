@@ -122,7 +122,7 @@ export function CreateTaskDialog({ workspaceSlug, project, open, onOpenChange }:
                 <FieldLabel htmlFor="task-priority">{t("fields.priority")}</FieldLabel>
                 <PrioritySelect
                   id="task-priority"
-                  className="w-full"
+                  className="justify-between"
                   value={field.value}
                   onValueChange={field.onChange}
                 />
