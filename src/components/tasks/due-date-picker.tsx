@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ICONS } from "@/lib/icons";
 import { cn, isOverdue } from "@/lib/utils";
 import { LocalizedCalendar } from "@/components/common/localized-calendar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DueDatePickerProps {
   value: string | null;
@@ -32,18 +33,27 @@ export function DueDatePicker({ value, onChange, id, className, variant = "contr
   return (
     <Popover open={open} onOpenChange={setOpen}>
       {variant === "icon" ? (
-        <PopoverTrigger
-          id={id}
-          render={
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              className={cn("text-muted-foreground", overdue && "text-severity-critical-foreground", className)}
-            />
-          }
-        >
-          {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
-        </PopoverTrigger>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <PopoverTrigger
+                id={id}
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className={cn("text-muted-foreground", overdue && "text-severity-critical-foreground", className)}
+                  />
+                }
+              />
+            }
+          >
+            {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
+          </TooltipTrigger>
+          <TooltipContent>
+            {date ? `${t("fields.dueDate")}: ${format.dateTime(date, "short")}` : t("fields.addDueDate")}
+          </TooltipContent>
+        </Tooltip>
       ) : (
         <PopoverTrigger
           id={id}

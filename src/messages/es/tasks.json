@@ -18,8 +18,10 @@
     "priority": "Prioridad",
     "assignee": "Asignado a",
     "unassigned": "Sin asignar",
+    "addAssignee": "Añadir asignación",
     "dueDate": "Fecha límite",
-    "dueDatePlaceholder": "Elegir fecha"
+    "dueDatePlaceholder": "Elegir fecha",
+    "addDueDate": "Añadir fecha límite"
   },
   "status": {
     "TODO": "Por hacer",

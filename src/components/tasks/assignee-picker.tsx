@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getActiveProjectMembersInfiniteQuery, getProjectMemberQuery } from "@/lib/queries/project-member.queries";
 import { cn, getFullName, getInitials } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const PICKER_PAGE_SIZE = 10;
 const ITEM_CLASSNAME = "gap-1.5 py-1 pl-2";
@@ -185,21 +186,32 @@ export function AssigneePicker({
     >
       {variant === "avatar" ? (
         <>
-          <ComboboxPrimitive.Trigger
-            id={id}
-            nativeButton={false}
-            aria-label={label}
-            render={<Avatar size="sm" className={cn("cursor-pointer outline-offset-1 hover:outline-2", className)} />}
-          >
-            <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
-            {selected ? (
-              <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
-            ) : (
-              <AvatarFallback>
-                <ICONS.person className="size-4" />
-              </AvatarFallback>
-            )}
-          </ComboboxPrimitive.Trigger>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <ComboboxPrimitive.Trigger
+                  id={id}
+                  nativeButton={false}
+                  aria-label={label}
+                  render={
+                    <Avatar size="sm" className={cn("cursor-pointer outline-offset-1 hover:outline-2", className)} />
+                  }
+                />
+              }
+            >
+              <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
+              {selected ? (
+                <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
+              ) : (
+                <AvatarFallback>
+                  <ICONS.person className="size-4" />
+                </AvatarFallback>
+              )}
+            </TooltipTrigger>
+            <TooltipContent>
+              {selected ? `${t("fields.assignee")}: ${selected.name}` : t("fields.addAssignee")}
+            </TooltipContent>
+          </Tooltip>
           <ComboboxContent align="start" className="w-min">
             <div className="p-1 pb-2">
               <ComboboxInput

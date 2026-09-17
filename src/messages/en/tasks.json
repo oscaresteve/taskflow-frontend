@@ -18,8 +18,10 @@
     "priority": "Priority",
     "assignee": "Assignee",
     "unassigned": "Unassigned",
+    "addAssignee": "Add assignee",
     "dueDate": "Due date",
-    "dueDatePlaceholder": "Pick a date"
+    "dueDatePlaceholder": "Pick a date",
+    "addDueDate": "Add due date"
   },
   "status": {
     "TODO": "To do",

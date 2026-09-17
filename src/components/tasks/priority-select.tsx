@@ -12,6 +12,8 @@ import { TaskPriority } from "@/lib/dtos/tasks.dto";
 import { taskPriorities } from "@/lib/schemas/task.schema";
 import { priorityOptions } from "@/lib/task-enums";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTranslations } from "next-intl";
 
 interface PrioritySelectProps {
   id?: string;
@@ -22,24 +24,33 @@ interface PrioritySelectProps {
 }
 
 export function PrioritySelect({ id, variant = "control", value, onValueChange, className }: PrioritySelectProps) {
+  const t = useTranslations("tasks");
+  const tEnum = useTranslations();
   return (
     <DropdownMenu>
       {variant === "control" ? (
         <DropdownMenuTrigger id={id} render={<EnumControl option={priorityOptions[value]} className={className} />} />
       ) : (
-        <DropdownMenuTrigger
-          id={id}
-          className={cn(
-            "flex w-fit cursor-pointer rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            className,
-          )}
-        >
-          {variant === "icon-badge" ? (
-            <EnumIconBadge option={priorityOptions[value]} interactive />
-          ) : (
-            <EnumBadge option={priorityOptions[value]} interactive />
-          )}
-        </DropdownMenuTrigger>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <DropdownMenuTrigger
+                id={id}
+                className={cn(
+                  "flex w-fit cursor-pointer rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  className,
+                )}
+              />
+            }
+          >
+            {variant === "icon-badge" ? (
+              <EnumIconBadge option={priorityOptions[value]} interactive />
+            ) : (
+              <EnumBadge option={priorityOptions[value]} interactive />
+            )}
+          </TooltipTrigger>
+          <TooltipContent>{`${t("fields.priority")}: ${tEnum(priorityOptions[value].labelKey)}`}</TooltipContent>
+        </Tooltip>
       )}
 
       <DropdownMenuContent className="w-max">
