@@ -6,8 +6,8 @@
     "MEMBER": "Member"
   },
   "roleDescription": {
-    "OWNER": "Full control, including removing it and managing every member.",
-    "ADMIN": "Manages members and settings, but can't remove it.",
+    "OWNER": "Full control — manages every member, including other owners, and can assign any role.",
+    "ADMIN": "Manages members and settings, but can't manage owners or assign the owner role.",
     "MEMBER": "Can access and contribute, without management access."
   },
   "roleFilter": {
