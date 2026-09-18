@@ -75,7 +75,7 @@ export default function WorkspaceSwitch() {
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{activeWorkspace.name}</span>
-              <span className="truncate text-xs">{activeWorkspace.slug}</span>
+              <span className="truncate text-muted-foreground text-xs">{activeWorkspace.slug}</span>
             </div>
             <ICONS.chevronUpDown className="ml-auto size-4" />
           </DropdownMenuTrigger>
