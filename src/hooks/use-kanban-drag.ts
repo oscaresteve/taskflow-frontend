@@ -4,6 +4,8 @@ import { useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   closestCorners,
+  pointerWithin,
+  CollisionDetection,
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
@@ -26,6 +28,17 @@ import { useMoveTask } from "@/hooks/use-move-task";
 
 // Referencia estable para cuando la query aun no ha traido nada, para no rehacer los useMemo.
 const NO_TASKS: TaskResponseDto[] = [];
+
+// closestCorners por si sola solo compara contra los rects de droppables que ya tienen contenido:
+// una columna vacia (filtrada o no) no aporta ninguna tarjeta que "atraiga" la colision, asi que el
+// puntero puede seguir resolviendo hacia la columna de origen si esta es mas alta. pointerWithin no
+// tiene ese problema porque solo mira si el puntero cae dentro del rect del droppable, asi que se
+// prueba primero y se cae a closestCorners para el resto de casos (reordenar dentro de una columna
+// con tarjetas).
+const collisionDetection: CollisionDetection = (args) => {
+  const pointerCollisions = pointerWithin(args);
+  return pointerCollisions.length > 0 ? pointerCollisions : closestCorners(args);
+};
 
 // El hueco se abre por encima o por debajo del elemento apuntado segun por donde vaya la tarjeta
 // arrastrada respecto a su mitad.
@@ -210,7 +223,7 @@ export function useKanbanDrag({
     // al pasar por encima de una tarjeta se apagaba y el resaltado parpadeaba.
     dropStatus: activeTask ? findColumn(columns, activeTask.id) : null,
     sensors,
-    collisionDetection: closestCorners,
+    collisionDetection,
     handlers: { onDragStart, onDragOver, onDragEnd, onDragCancel },
   };
 }
