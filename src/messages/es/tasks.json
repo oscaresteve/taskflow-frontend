@@ -35,6 +35,18 @@
     "HIGH": "Alta",
     "URGENT": "Urgente"
   },
+  "priorityFilter": {
+    "all": "Toda prioridad"
+  },
+  "dueDateFilter": {
+    "all": "Toda fecha",
+    "overdue": "Vencidas",
+    "thisWeek": "Vence esta semana",
+    "none": "Sin fecha"
+  },
+  "assigneeFilter": {
+    "all": "Todos"
+  },
   "validation": {
     "titleMinLength": "El título debe tener al menos 2 caracteres",
     "titleMaxLength": "El título no puede superar los 100 caracteres",
@@ -48,6 +60,9 @@
   },
   "kanbanBoard": {
     "failedToLoad": "No se pudieron cargar las tareas."
+  },
+  "kanbanFilterBar": {
+    "searchPlaceholder": "Buscar tareas"
   },
   "kanbanColumn": {
     "noTasks": "Sin tareas"

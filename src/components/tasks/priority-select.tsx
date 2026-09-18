@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TaskPriority } from "@/lib/dtos/tasks.dto";
 import { taskPriorities } from "@/lib/schemas/task.schema";
-import { priorityOptions } from "@/lib/task-enums";
+import { PriorityFilter, priorityFilterOptions, priorityFilters, priorityOptions } from "@/lib/task-enums";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
@@ -71,6 +71,34 @@ export function PrioritySelect({ id, variant = "default", value, onValueChange, 
               className={priorityOptions[priority].colors.menuHighlight}
             >
               <EnumIconLabel option={priorityOptions[priority]} />
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+export function PriorityFilterSelect({
+  value,
+  onValueChange,
+}: {
+  value: PriorityFilter;
+  onValueChange: (value: PriorityFilter) => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger render={<EnumControl option={priorityFilterOptions[value]} />} />
+      <DropdownMenuContent className="min-w-max">
+        <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as PriorityFilter)}>
+          {priorityFilters.map((priority) => (
+            <DropdownMenuRadioItem
+              key={priority}
+              value={priority}
+              closeOnClick
+              className={priorityFilterOptions[priority].colors.menuHighlight}
+            >
+              <EnumIconLabel option={priorityFilterOptions[priority]} />
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>

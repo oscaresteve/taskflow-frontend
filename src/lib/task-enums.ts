@@ -1,5 +1,6 @@
 import { ICONS } from "@/lib/icons";
 import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
+import { taskPriorities } from "@/lib/schemas/task.schema";
 import {
   neutralColors,
   severityCriticalColors,
@@ -62,3 +63,44 @@ export const priorityOptions: Record<TaskPriority, EnumOption & { chartColor: st
     chartColor: "var(--severity-critical)",
   },
 };
+
+export const priorityFilters = ["ALL", ...taskPriorities] as const;
+export type PriorityFilter = (typeof priorityFilters)[number];
+
+export const priorityFilterOptions: Record<PriorityFilter, EnumOption> = {
+  ALL: {
+    labelKey: "tasks.priorityFilter.all",
+    icon: ICONS.priorityAll,
+    colors: neutralColors,
+  },
+  ...priorityOptions,
+};
+
+export const dueDateFilters = ["ALL", "OVERDUE", "THIS_WEEK", "NONE"] as const;
+export type DueDateFilter = (typeof dueDateFilters)[number];
+
+export const dueDateFilterOptions: Record<DueDateFilter, EnumOption> = {
+  ALL: {
+    labelKey: "tasks.dueDateFilter.all",
+    icon: ICONS.dueDate,
+    colors: neutralColors,
+  },
+  OVERDUE: {
+    labelKey: "tasks.dueDateFilter.overdue",
+    icon: ICONS.overdue,
+    colors: severityCriticalColors,
+  },
+  THIS_WEEK: {
+    labelKey: "tasks.dueDateFilter.thisWeek",
+    icon: ICONS.dueDateThisWeek,
+    colors: severityWarningColors,
+  },
+  NONE: {
+    labelKey: "tasks.dueDateFilter.none",
+    icon: ICONS.dueDateEmpty,
+    colors: neutralColors,
+  },
+};
+
+export const ALL_ASSIGNEES = "ALL";
+export const UNASSIGNED = "UNASSIGNED";

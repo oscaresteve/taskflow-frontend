@@ -35,6 +35,18 @@
     "HIGH": "High",
     "URGENT": "Urgent"
   },
+  "priorityFilter": {
+    "all": "Any priority"
+  },
+  "dueDateFilter": {
+    "all": "Any date",
+    "overdue": "Overdue",
+    "thisWeek": "Due this week",
+    "none": "No due date"
+  },
+  "assigneeFilter": {
+    "all": "Everyone"
+  },
   "validation": {
     "titleMinLength": "Title must be at least 2 characters long",
     "titleMaxLength": "Title cannot exceed 100 characters",
@@ -48,6 +60,9 @@
   },
   "kanbanBoard": {
     "failedToLoad": "Failed to load tasks."
+  },
+  "kanbanFilterBar": {
+    "searchPlaceholder": "Search tasks"
   },
   "kanbanColumn": {
     "noTasks": "No tasks"

@@ -58,6 +58,8 @@ import {
   CrownIcon,
   ShieldIcon,
   UsersIcon,
+  ListFilter,
+  CalendarClock,
   type LucideIcon,
 } from "lucide-react";
 
@@ -145,6 +147,8 @@ export const ICONS = {
   priorityMedium: EqualIcon,
   priorityHigh: ChevronUpIcon,
   priorityUrgent: ChevronsUpIcon,
+  priorityAll: ListFilter,
+  dueDateThisWeek: CalendarClock,
 
   // Member enums
   roleOwner: CrownIcon,
