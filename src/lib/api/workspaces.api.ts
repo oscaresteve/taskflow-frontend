@@ -3,6 +3,7 @@ import { buildQueryString } from "@/lib/http/query-string";
 import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../schemas/workspace.schema";
+import { WorkspaceSortField } from "../workspace-enums";
 
 export function getWorkspaces({
   page,
@@ -16,7 +17,7 @@ export function getWorkspaces({
   limit?: number;
   isActive?: boolean | boolean[];
   search?: string;
-  sort?: "name" | "createdAt" | "updatedAt";
+  sort?: WorkspaceSortField;
   order?: SortOrder;
 } = {}) {
   const queryString = buildQueryString({ page, limit, isActive, search, sort, order });

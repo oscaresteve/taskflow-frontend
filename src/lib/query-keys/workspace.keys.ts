@@ -1,10 +1,11 @@
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { WorkspaceSortField } from "../workspace-enums";
 
 type WorkspaceListParams = {
   page?: number;
   limit?: number;
   search?: string;
-  sort?: "name" | "createdAt" | "updatedAt";
+  sort?: WorkspaceSortField;
   order?: SortOrder;
 };
 

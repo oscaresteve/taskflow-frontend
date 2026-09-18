@@ -35,11 +35,10 @@ import { ApiError } from "@/lib/http/api-error";
 import { getFullName, getInitials } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { WorkspaceSortField } from "@/lib/workspace-enums";
 
 const MAX_VISIBLE_OWNERS = 4;
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
-
-type WorkspaceSortField = "name" | "createdAt" | "updatedAt";
 
 function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceResponseDto; canManage: boolean }) {
   const t = useTranslations("workspaces");
