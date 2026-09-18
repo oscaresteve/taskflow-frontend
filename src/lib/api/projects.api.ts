@@ -3,6 +3,7 @@ import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { request } from "@/lib/http/client";
 import { buildQueryString } from "@/lib/http/query-string";
 import { CreateProjectDto, UpdateProjectDto } from "@/lib/schemas/project.schema";
+import { ProjectSortField } from "../project-enums";
 
 export function getProjects({
   workspaceSlug,
@@ -18,7 +19,7 @@ export function getProjects({
   limit?: number;
   isArchived?: boolean;
   search?: string;
-  sort?: "name" | "createdAt" | "updatedAt";
+  sort?: ProjectSortField;
   order?: SortOrder;
 }) {
   const queryString = buildQueryString({ page, limit, isArchived, search, sort, order });

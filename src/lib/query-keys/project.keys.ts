@@ -1,11 +1,12 @@
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { ProjectSortField } from "../project-enums";
 
 type ProjectListParams = {
   page?: number;
   limit?: number;
   isArchived?: boolean;
   search?: string;
-  sort?: "name" | "createdAt" | "updatedAt";
+  sort?: ProjectSortField;
   order?: SortOrder;
 };
 

@@ -3,6 +3,7 @@ import { getProject, getProjects } from "@/lib/api/projects.api";
 import { projectKeys } from "@/lib/query-keys/project.keys";
 import { getNextPageParam } from "@/lib/queries/pagination";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { ProjectSortField } from "../project-enums";
 
 // "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
 // getNextPageParam helper can back any other list that outgrows a "load more" button later.
@@ -31,7 +32,7 @@ export const getProjectsQuery = (
     limit?: number;
     isArchived?: boolean;
     search?: string;
-    sort?: "name" | "createdAt" | "updatedAt";
+    sort?: ProjectSortField;
     order?: SortOrder;
   } = {},
 ) =>

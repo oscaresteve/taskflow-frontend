@@ -40,11 +40,10 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useFormatter, useTranslations } from "next-intl";
+import { ProjectSortField } from "@/lib/project-enums";
 
 const MAX_VISIBLE_OWNERS = 4;
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
-
-type ProjectSortField = "name" | "createdAt" | "updatedAt";
 
 function ProjectActionsMenu({
   workspaceSlug,
