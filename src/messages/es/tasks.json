@@ -65,7 +65,8 @@
     "searchPlaceholder": "Buscar tareas"
   },
   "kanbanColumn": {
-    "noTasks": "Sin tareas"
+    "noTasks": "Sin tareas",
+    "addTask": "Añadir tarea"
   },
   "taskPage": {
     "failedToLoadTask": "No se pudo cargar la tarea.",

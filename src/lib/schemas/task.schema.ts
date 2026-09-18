@@ -16,6 +16,7 @@ export const createTaskSchema = (t: Translator) =>
     title: taskTitleSchema(t),
     description: descriptionSchema(t),
     priority: z.enum(taskPriorities),
+    status: z.enum(taskStatuses).optional(),
     assigneeId: z.cuid().optional(),
     dueDate: z.iso.datetime().optional(),
   });

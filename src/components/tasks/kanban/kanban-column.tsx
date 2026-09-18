@@ -10,6 +10,7 @@ import { TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { statusOptions } from "@/lib/task-enums";
 import { cn } from "@/lib/utils";
 import { SortableKanbanCard } from "./kanban-card";
+import { KanbanInlineCreateTask } from "./kanban-inline-create-task";
 import { useTranslations } from "next-intl";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 
@@ -78,6 +79,8 @@ export function KanbanColumn({
           )}
         </SortableContext>
       </div>
+
+      <KanbanInlineCreateTask workspaceSlug={workspaceSlug} projectSlug={projectSlug} status={status} />
     </div>
   );
 }

@@ -76,7 +76,7 @@ export function KanbanBoard({ workspaceSlug, project }: KanbanBoardProps) {
       />
 
       <DndContext sensors={sensors} collisionDetection={collisionDetection} {...handlers}>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-4 items-start gap-3">
           {taskStatuses.map((status) => (
             <KanbanColumn
               key={status}

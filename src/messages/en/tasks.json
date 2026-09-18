@@ -65,7 +65,8 @@
     "searchPlaceholder": "Search tasks"
   },
   "kanbanColumn": {
-    "noTasks": "No tasks"
+    "noTasks": "No tasks",
+    "addTask": "Add task"
   },
   "taskPage": {
     "failedToLoadTask": "Failed to load task.",
