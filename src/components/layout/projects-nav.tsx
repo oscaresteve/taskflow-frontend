@@ -133,10 +133,15 @@ export default function ProjectsNav() {
                     const href = `/workspaces/${workspaceSlug}/projects/${project.slug}`;
                     return (
                       <SidebarMenuSubItem key={project.id}>
-                        <SidebarMenuSubButton isActive={isNavActive(pathname, href)} render={<Link href={href} />}>
-                          <ColorDot color={project.color}></ColorDot>
-                          {project.name}
-                        </SidebarMenuSubButton>
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={<SidebarMenuSubButton isActive={isNavActive(pathname, href)} render={<Link href={href} />} />}
+                          >
+                            <ColorDot color={project.color}></ColorDot>
+                            <span className="truncate">{project.name}</span>
+                          </TooltipTrigger>
+                          <TooltipContent side="inline-end">{project.name}</TooltipContent>
+                        </Tooltip>
                       </SidebarMenuSubItem>
                     );
                   })}

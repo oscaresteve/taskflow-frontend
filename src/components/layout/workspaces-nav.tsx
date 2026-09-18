@@ -124,13 +124,16 @@ export function WorkspacesNav() {
                 <>
                   {activeWorkspaces.map((workspace) => (
                     <SidebarMenuSubItem key={workspace.id}>
-                      <SidebarMenuSubButton render={<Link href={`/workspaces/${workspace.slug}`} />}>
-                        <Avatar size="sm">
-                          <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
-                          <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-                        </Avatar>
-                        {workspace.name}
-                      </SidebarMenuSubButton>
+                      <Tooltip>
+                        <TooltipTrigger render={<SidebarMenuSubButton render={<Link href={`/workspaces/${workspace.slug}`} />} />}>
+                          <Avatar size="sm">
+                            <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+                            <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
+                          </Avatar>
+                          <span className="truncate">{workspace.name}</span>
+                        </TooltipTrigger>
+                        <TooltipContent side="inline-end">{workspace.name}</TooltipContent>
+                      </Tooltip>
                     </SidebarMenuSubItem>
                   ))}
                   {hasNextPage && (
