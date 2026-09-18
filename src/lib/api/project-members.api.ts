@@ -3,6 +3,7 @@ import { ProjectMemberResponseDto, ProjectMemberWithUserResponseDto, ProjectRole
 import { request } from "../http/client";
 import { buildQueryString } from "../http/query-string";
 import { CreateProjectMemberDto, UpdateProjectMemberDto } from "../schemas/project-member.schema";
+import { MemberSortField } from "../member-enums";
 
 export function getProjectMembers({
   workspaceSlug,
@@ -22,7 +23,7 @@ export function getProjectMembers({
   isActive?: boolean | boolean[];
   role?: ProjectRole;
   search?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
 }) {
   const queryString = buildQueryString({ page, limit, isActive, role, search, sort, order });
@@ -47,7 +48,7 @@ export function getAllProjectMembers({
   isActive?: boolean | boolean[];
   role?: ProjectRole;
   search?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
 }) {
   const queryString = buildQueryString({ isActive, role, search, sort, order });

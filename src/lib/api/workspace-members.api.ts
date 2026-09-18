@@ -8,6 +8,7 @@ import {
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
 import { CreateWorkspaceMemberDto, UpdateWorkspaceMemberDto } from "../schemas/workspace-member.schema";
+import { MemberSortField } from "../member-enums";
 
 export function getWorkspaceMembers({
   workspaceSlug,
@@ -27,7 +28,7 @@ export function getWorkspaceMembers({
   status?: WorkspaceMemberStatus | WorkspaceMemberStatus[];
   search?: string;
   excludeProjectSlug?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
 }) {
   const queryString = buildQueryString({ page, limit, role, status, search, excludeProjectSlug, sort, order });
@@ -52,7 +53,7 @@ export function getAllWorkspaceMembers({
   status?: WorkspaceMemberStatus | WorkspaceMemberStatus[];
   search?: string;
   excludeProjectSlug?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
 }) {
   const queryString = buildQueryString({ role, status, search, excludeProjectSlug, sort, order });

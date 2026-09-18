@@ -4,6 +4,7 @@ import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 import { dedupeInfinitePages, getNextPageParam } from "@/lib/queries/pagination";
 import { WorkspaceMemberStatus, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { MemberSortField } from "@/lib/member-enums";
 
 export const getMyWorkspaceMemberQuery = (workspaceSlug: string) =>
   queryOptions({
@@ -71,7 +72,7 @@ export const getWorkspaceMembersPageQuery = ({
   status: WorkspaceMemberStatus[];
   role?: WorkspaceRole;
   search?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
   page?: number;
   limit?: number;

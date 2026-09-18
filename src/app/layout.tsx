@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ColorSchemeProvider } from "@/components/providers/color-scheme-provider";
 import { Toaster } from "@/components/ui/toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -37,23 +38,25 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>
-          <ColorSchemeProvider
-            attribute="class"
-            defaultTheme={colorScheme ?? "system"}
-            enableSystem
-          >
-            <QueryProvider>
-              <TooltipProvider delay={600}>
-                {children}
-                <Suspense fallback={null}>
-                  <TaskDetailModal />
-                </Suspense>
-              </TooltipProvider>
-            </QueryProvider>
-            <Toaster />
-          </ColorSchemeProvider>
-        </NextIntlClientProvider>
+        <NuqsAdapter>
+          <NextIntlClientProvider>
+            <ColorSchemeProvider
+              attribute="class"
+              defaultTheme={colorScheme ?? "system"}
+              enableSystem
+            >
+              <QueryProvider>
+                <TooltipProvider delay={600}>
+                  {children}
+                  <Suspense fallback={null}>
+                    <TaskDetailModal />
+                  </Suspense>
+                </TooltipProvider>
+              </QueryProvider>
+              <Toaster />
+            </ColorSchemeProvider>
+          </NextIntlClientProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

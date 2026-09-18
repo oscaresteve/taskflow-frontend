@@ -1,11 +1,12 @@
 import { ProjectRole } from "@/lib/dtos/project-members.dto";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { MemberSortField } from "@/lib/member-enums";
 
 type ProjectMemberListParams = {
   isActive?: boolean | boolean[];
   role?: ProjectRole;
   search?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
   page?: number;
   limit?: number;

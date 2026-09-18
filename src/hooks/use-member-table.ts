@@ -1,48 +1,45 @@
-import { useState } from "react";
+import { debounce, parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { SortOrder } from "@/lib/dtos/pagination.dto";
-import { RoleFilter } from "@/lib/member-enums";
+import { SortOrder, sortOrders } from "@/lib/dtos/pagination.dto";
+import { MemberSortField, RoleFilter, memberSortFields, roleFilters } from "@/lib/member-enums";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
 
-export type MemberSortField = "joinedAt" | "createdAt" | "updatedAt";
-
 export function useMemberTable() {
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
-  const [sort, setSort] = useState<MemberSortField>("joinedAt");
-  const [order, setOrder] = useState<SortOrder>("asc");
-  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
-  const [page, setPage] = useState(1);
-
-  const debouncedSearch = useDebouncedValue(search);
+  const [{ search, role: roleFilter, sort, order, limit, page }, setQuery] = useQueryStates({
+    search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
+    role: parseAsStringLiteral(roleFilters).withDefault("ALL"),
+    sort: parseAsStringLiteral(memberSortFields).withDefault("joinedAt"),
+    order: parseAsStringLiteral(sortOrders).withDefault("asc"),
+    limit: parseAsInteger.withDefault(PAGE_SIZE_OPTIONS[0]),
+    page: parseAsInteger.withDefault(1),
+  });
 
   const role = roleFilter === "ALL" ? undefined : roleFilter;
-  const searchParam = debouncedSearch || undefined;
+  const searchParam = useDebouncedValue(search) || undefined;
 
   function onSearchChange(value: string) {
-    setSearch(value);
-    setPage(1);
+    setQuery({ search: value, page: 1 });
   }
 
   function onRoleFilterChange(value: RoleFilter) {
-    setRoleFilter(value);
-    setPage(1);
+    setQuery({ role: value, page: 1 });
   }
 
   function onSortFieldChange(value: MemberSortField) {
-    setSort(value);
-    setPage(1);
+    setQuery({ sort: value, page: 1 });
   }
 
   function onSortOrderChange(value: SortOrder) {
-    setOrder(value);
-    setPage(1);
+    setQuery({ order: value, page: 1 });
   }
 
   function onLimitChange(value: number) {
-    setLimit(value);
-    setPage(1);
+    setQuery({ limit: value, page: 1 });
+  }
+
+  function onPageChange(value: number) {
+    setQuery({ page: value });
   }
 
   return {
@@ -60,6 +57,6 @@ export function useMemberTable() {
     onSortFieldChange,
     onSortOrderChange,
     onLimitChange,
-    onPageChange: setPage,
+    onPageChange,
   };
 }

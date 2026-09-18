@@ -4,6 +4,7 @@ import { getAllProjectMembers, getMyProjectMember, getProjectMember, getProjectM
 import { dedupeInfinitePages, getNextPageParam } from "./pagination";
 import { ProjectRole } from "../dtos/project-members.dto";
 import { SortOrder } from "../dtos/pagination.dto";
+import { MemberSortField } from "../member-enums";
 
 export const getMyProjectMemberQuery = (workspaceSlug: string, projectSlug: string) =>
   queryOptions({
@@ -86,7 +87,7 @@ export const getProjectMembersPageQuery = ({
   isActive: boolean[];
   role?: ProjectRole;
   search?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
   page?: number;
   limit?: number;

@@ -1,11 +1,12 @@
 import { WorkspaceMemberStatus, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { MemberSortField } from "@/lib/member-enums";
 
 type WorkspaceMemberListParams = {
   status?: WorkspaceMemberStatus | WorkspaceMemberStatus[];
   role?: WorkspaceRole;
   search?: string;
-  sort?: "joinedAt" | "createdAt" | "updatedAt";
+  sort?: MemberSortField;
   order?: SortOrder;
   page?: number;
   limit?: number;

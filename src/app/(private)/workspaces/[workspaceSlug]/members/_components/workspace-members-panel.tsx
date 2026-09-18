@@ -15,7 +15,8 @@ import {
   WorkspaceMemberWithUserResponseDto,
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
-import { useMemberTable, MemberSortField } from "@/hooks/use-member-table";
+import { useMemberTable } from "@/hooks/use-member-table";
+import { MemberSortField } from "@/lib/member-enums";
 
 interface WorkspaceMembersPanelProps {
   workspaceSlug: string;

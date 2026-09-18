@@ -35,3 +35,6 @@ export const roleFilterOptions: Record<RoleFilter, EnumOption> = {
   },
   ...roleOptions,
 };
+
+export const memberSortFields = ["joinedAt", "createdAt", "updatedAt"] as const;
+export type MemberSortField = (typeof memberSortFields)[number];

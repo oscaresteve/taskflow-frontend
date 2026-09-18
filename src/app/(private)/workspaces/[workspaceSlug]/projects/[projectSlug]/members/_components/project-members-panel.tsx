@@ -11,7 +11,8 @@ import { PaginationControls } from "@/components/common/pagination-controls";
 import { SortControls } from "@/components/common/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
-import { useMemberTable, MemberSortField } from "@/hooks/use-member-table";
+import { useMemberTable } from "@/hooks/use-member-table";
+import { MemberSortField } from "@/lib/member-enums";
 
 interface ProjectMembersPanelProps {
   workspaceSlug: string;

@@ -1,4 +1,5 @@
-export type SortOrder = "asc" | "desc";
+export const sortOrders = ["asc", "desc"] as const;
+export type SortOrder = (typeof sortOrders)[number];
 
 export interface PaginationDto {
   page: number;
