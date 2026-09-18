@@ -16,7 +16,6 @@ import { SearchInput } from "@/components/common/search-input";
 import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SortControls } from "@/components/common/sort-controls";
-import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -36,9 +35,9 @@ import { getFullName, getInitials } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { WorkspaceSortField } from "@/lib/workspace-enums";
+import { useWorkspacesTable } from "@/hooks/use-workspaces-table";
 
 const MAX_VISIBLE_OWNERS = 4;
-const PAGE_SIZE_OPTIONS = [5, 10, 15];
 
 function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceResponseDto; canManage: boolean }) {
   const t = useTranslations("workspaces");
@@ -168,12 +167,6 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
 export default function WorkspacesPage() {
   const t = useTranslations("workspaces");
   const [createOpen, setCreateOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<WorkspaceSortField>("name");
-  const [order, setOrder] = useState<SortOrder>("asc");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
-
   const sortOptions: { value: WorkspaceSortField; label: string }[] = [
     { value: "name", label: t("workspacesPage.sort.name") },
     { value: "createdAt", label: t("workspacesPage.sort.createdAt") },
@@ -181,33 +174,28 @@ export default function WorkspacesPage() {
   ];
 
   const {
+    search,
+    sort,
+    order,
+    limit,
+    page,
+    searchParam,
+    pageSizeOptions,
+    onSearchChange,
+    onSortFieldChange,
+    onSortOrderChange,
+    onLimitChange,
+    onPageChange,
+  } = useWorkspacesTable();
+
+  const {
     data: workspaces,
     isLoading,
     isError,
   } = useQuery({
-    ...getWorkspacesQuery({ page, search: search || undefined, limit, sort, order }),
+    ...getWorkspacesQuery({ page, search: searchParam, limit, sort, order }),
     placeholderData: keepPreviousData,
   });
-
-  function handleSearchChange(value: string) {
-    setSearch(value);
-    setPage(1);
-  }
-
-  function handleSortFieldChange(value: WorkspaceSortField) {
-    setSort(value);
-    setPage(1);
-  }
-
-  function handleSortOrderChange(value: SortOrder) {
-    setOrder(value);
-    setPage(1);
-  }
-
-  function handleLimitChange(value: number) {
-    setLimit(value);
-    setPage(1);
-  }
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("workspacesPage.failedToLoad")}</p>;
@@ -241,7 +229,7 @@ export default function WorkspacesPage() {
       <div className="flex items-center justify-between gap-2">
         <SearchInput
           value={search}
-          onChange={handleSearchChange}
+          onChange={onSearchChange}
           placeholder={t("workspacesPage.searchPlaceholder")}
           className="w-48"
         />
@@ -250,10 +238,10 @@ export default function WorkspacesPage() {
             field={sort}
             order={order}
             options={sortOptions}
-            onFieldChange={handleSortFieldChange}
-            onOrderChange={handleSortOrderChange}
+            onFieldChange={onSortFieldChange}
+            onOrderChange={onSortOrderChange}
           />
-          <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
         </div>
       </div>
 
@@ -277,7 +265,7 @@ export default function WorkspacesPage() {
         </Table>
       )}
 
-      <PaginationControls page={page} totalPages={totalPages} onPageChange={setPage} />
+      <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
 
       <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
     </PageContainer>
