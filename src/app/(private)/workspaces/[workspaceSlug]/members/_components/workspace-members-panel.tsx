@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
@@ -10,17 +10,12 @@ import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SortControls } from "@/components/common/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
-import { SortOrder } from "@/lib/dtos/pagination.dto";
 import {
   WorkspaceMemberStatus,
   WorkspaceMemberWithUserResponseDto,
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
-import { RoleFilter } from "@/lib/member-enums";
-
-const PAGE_SIZE_OPTIONS = [5, 10, 15];
-
-type MemberSortField = "joinedAt" | "createdAt" | "updatedAt";
+import { useMemberTable, MemberSortField } from "@/hooks/use-member-table";
 
 interface WorkspaceMembersPanelProps {
   workspaceSlug: string;
@@ -47,15 +42,24 @@ export function WorkspaceMembersPanel({
     { value: "createdAt", label: t("workspaceMembersPanel.sortCreated") },
     { value: "updatedAt", label: t("workspaceMembersPanel.sortUpdated") },
   ];
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("ALL");
-  const [sort, setSort] = useState<MemberSortField>("joinedAt");
-  const [order, setOrder] = useState<SortOrder>("asc");
-  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
-  const [page, setPage] = useState(1);
 
-  const role = roleFilter === "ALL" ? undefined : roleFilter;
-  const searchParam = search || undefined;
+  const {
+    search,
+    roleFilter,
+    sort,
+    order,
+    limit,
+    page,
+    role,
+    searchParam,
+    pageSizeOptions,
+    onSearchChange,
+    onRoleFilterChange,
+    onSortFieldChange,
+    onSortOrderChange,
+    onLimitChange,
+    onPageChange,
+  } = useMemberTable();
 
   const membersQuery = useQuery(
     getWorkspaceMembersPageQuery({
@@ -69,31 +73,6 @@ export function WorkspaceMembersPanel({
       limit,
     }),
   );
-
-  function handleSearchChange(value: string) {
-    setSearch(value);
-    setPage(1);
-  }
-
-  function handleRoleFilterChange(value: RoleFilter) {
-    setRoleFilter(value);
-    setPage(1);
-  }
-
-  function handleSortFieldChange(value: MemberSortField) {
-    setSort(value);
-    setPage(1);
-  }
-
-  function handleSortOrderChange(value: SortOrder) {
-    setOrder(value);
-    setPage(1);
-  }
-
-  function handleLimitChange(value: number) {
-    setLimit(value);
-    setPage(1);
-  }
 
   if (membersQuery.isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("workspaceMembersPanel.failedToLoad")}</p>;
@@ -114,19 +93,19 @@ export function WorkspaceMembersPanel({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <MembersFilterBar
           search={search}
-          onSearchChange={handleSearchChange}
+          onSearchChange={onSearchChange}
           roleFilter={roleFilter}
-          onRoleFilterChange={handleRoleFilterChange}
+          onRoleFilterChange={onRoleFilterChange}
         />
         <div className="flex items-center gap-2">
           <SortControls
             field={sort}
             order={order}
             options={SORT_OPTIONS}
-            onFieldChange={handleSortFieldChange}
-            onOrderChange={handleSortOrderChange}
+            onFieldChange={onSortFieldChange}
+            onOrderChange={onSortOrderChange}
           />
-          <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
         </div>
       </div>
 
@@ -139,7 +118,7 @@ export function WorkspaceMembersPanel({
         emptyMessage={t("workspaceMembersPanel.emptyMessage")}
         actorUserId={actorUserId}
       />
-      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={setPage} />
+      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={onPageChange} />
     </div>
   );
 }
