@@ -42,7 +42,7 @@ export function RoleSelect({ id, variant = "default", className, value, values, 
       ) : (
         <DropdownMenuTrigger id={id} render={<EnumControl option={roleOptions[value]} className={className} />} />
       )}
-      <DropdownMenuContent className="w-64">
+      <DropdownMenuContent className="min-w-64">
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as MemberRole)}>
           {values.map((role) => (
             <DropdownMenuRadioItem

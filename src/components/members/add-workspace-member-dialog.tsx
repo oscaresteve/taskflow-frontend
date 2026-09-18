@@ -135,7 +135,7 @@ export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: 
                 <FieldLabel htmlFor="member-role">{t("addWorkspaceMemberDialog.roleLabel")}</FieldLabel>
                 <RoleSelect
                   id="member-role"
-                  className="w-full"
+                  className="justify-between"
                   value={field.value}
                   values={assignableRoles}
                   onValueChange={field.onChange}

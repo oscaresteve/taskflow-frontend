@@ -148,7 +148,7 @@ export function AddProjectMemberDialog({
                 <FieldLabel htmlFor="project-member-role">{t("addProjectMemberDialog.roleLabel")}</FieldLabel>
                 <RoleSelect
                   id="project-member-role"
-                  className="w-full"
+                  className="justify-between"
                   value={field.value}
                   values={assignableRoles}
                   onValueChange={field.onChange}
