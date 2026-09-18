@@ -12,7 +12,6 @@ import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState } from "react";
-import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { Skeleton } from "@/components/ui/skeleton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
@@ -41,9 +40,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useFormatter, useTranslations } from "next-intl";
 import { ProjectSortField } from "@/lib/project-enums";
+import useProjectsTable from "@/hooks/use-projects-table";
 
 const MAX_VISIBLE_OWNERS = 4;
-const PAGE_SIZE_OPTIONS = [5, 10, 15];
 
 function ProjectActionsMenu({
   workspaceSlug,
@@ -187,39 +186,30 @@ export default function ProjectsPage() {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
   const [createOpen, setCreateOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<ProjectSortField>("name");
-  const [order, setOrder] = useState<SortOrder>("asc");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(PAGE_SIZE_OPTIONS[0]);
+
+  const {
+    search,
+    sort,
+    order,
+    limit,
+    page,
+    searchParam,
+    pageSizeOptions,
+    onSearchChange,
+    onSortFieldChange,
+    onSortOrderChange,
+    onLimitChange,
+    onPageChange,
+  } = useProjectsTable();
+
   const {
     data: projects,
     isLoading,
     isError,
   } = useQuery({
-    ...getProjectsQuery(workspaceSlug, { page, search: search || undefined, limit, sort, order }),
+    ...getProjectsQuery(workspaceSlug, { page, search: searchParam, limit, sort, order }),
     placeholderData: keepPreviousData,
   });
-
-  function handleSearchChange(value: string) {
-    setSearch(value);
-    setPage(1);
-  }
-
-  function handleSortFieldChange(value: ProjectSortField) {
-    setSort(value);
-    setPage(1);
-  }
-
-  function handleSortOrderChange(value: SortOrder) {
-    setOrder(value);
-    setPage(1);
-  }
-
-  function handleLimitChange(value: number) {
-    setLimit(value);
-    setPage(1);
-  }
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("projectsPage.failedToLoad")}</p>;
@@ -261,7 +251,7 @@ export default function ProjectsPage() {
       <div className="flex items-center justify-between gap-2">
         <SearchInput
           value={search}
-          onChange={handleSearchChange}
+          onChange={onSearchChange}
           placeholder={t("projectsPage.searchPlaceholder")}
           className="w-48"
         />
@@ -270,10 +260,10 @@ export default function ProjectsPage() {
             field={sort}
             order={order}
             options={sortOptions}
-            onFieldChange={handleSortFieldChange}
-            onOrderChange={handleSortOrderChange}
+            onFieldChange={onSortFieldChange}
+            onOrderChange={onSortOrderChange}
           />
-          <PageSizeSelect value={limit} options={PAGE_SIZE_OPTIONS} onChange={handleLimitChange} />
+          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
         </div>
       </div>
 
@@ -299,7 +289,7 @@ export default function ProjectsPage() {
         </Table>
       )}
 
-      <PaginationControls page={page} totalPages={totalPages} onPageChange={setPage} />
+      <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
 
       <CreateProjectDialog open={createOpen} workspaceSlug={workspaceSlug} onOpenChange={setCreateOpen} />
     </PageContainer>
