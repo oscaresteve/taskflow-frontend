@@ -76,6 +76,7 @@
   "listTable": {
     "failedToLoad": "No se pudieron cargar las tareas.",
     "noTasks": "Sin tareas",
+    "favoritesFilter": "Favoritas",
     "columns": {
       "task": "Tarea",
       "status": "Estado",

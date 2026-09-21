@@ -12,8 +12,11 @@ import { useUpdateTask } from "@/hooks/use-update-task";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { ApiError } from "@/lib/http/api-error";
 import { TaskSortField, taskSortFields } from "@/lib/task-enums";
+import { cn } from "@/lib/utils";
+import { ICONS } from "@/lib/icons";
 import { toast } from "@/components/ui/toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { SortControls } from "@/components/common/sort-controls";
 import { PageSizeSelect } from "@/components/common/page-size-select";
@@ -148,6 +151,7 @@ export function TaskListTable({ workspaceSlug, project }: TaskListTableProps) {
     assigneeId,
     priority,
     dueDate,
+    isFavorite,
     sort,
     order,
     limit,
@@ -158,6 +162,7 @@ export function TaskListTable({ workspaceSlug, project }: TaskListTableProps) {
     onAssigneeChange,
     onPriorityChange,
     onDueDateChange,
+    onFavoriteChange,
     onSortFieldChange,
     onSortOrderChange,
     onLimitChange,
@@ -183,6 +188,7 @@ export function TaskListTable({ workspaceSlug, project }: TaskListTableProps) {
       assigneeId,
       priority,
       dueDate,
+      isFavorite,
       sort,
       order,
     }),
@@ -196,18 +202,29 @@ export function TaskListTable({ workspaceSlug, project }: TaskListTableProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <KanbanFilterBar
-          workspaceSlug={workspaceSlug}
-          projectSlug={project.slug}
-          search={search}
-          onSearchChange={onSearchChange}
-          assigneeId={assigneeId}
-          onAssigneeChange={onAssigneeChange}
-          priority={priority}
-          onPriorityChange={onPriorityChange}
-          dueDate={dueDate}
-          onDueDateChange={onDueDateChange}
-        />
+        <div className="flex flex-wrap items-center gap-2">
+          <KanbanFilterBar
+            workspaceSlug={workspaceSlug}
+            projectSlug={project.slug}
+            search={search}
+            onSearchChange={onSearchChange}
+            assigneeId={assigneeId}
+            onAssigneeChange={onAssigneeChange}
+            priority={priority}
+            onPriorityChange={onPriorityChange}
+            dueDate={dueDate}
+            onDueDateChange={onDueDateChange}
+          />
+          <Button
+            type="button"
+            variant={isFavorite ? "secondary" : "outline"}
+            onClick={() => onFavoriteChange(!isFavorite)}
+            aria-pressed={isFavorite}
+          >
+            <ICONS.favorite className={cn(isFavorite && "fill-current")} />
+            {t("listTable.favoritesFilter")}
+          </Button>
+        </div>
         <div className="flex items-center gap-1">
           <SortControls
             field={sort}

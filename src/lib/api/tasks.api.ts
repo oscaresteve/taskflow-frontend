@@ -35,6 +35,7 @@ export function getTasks({
   priority,
   assigneeId,
   dueDate,
+  isFavorite,
   sort,
   order,
 }: {
@@ -46,10 +47,11 @@ export function getTasks({
   priority?: TaskPriority;
   assigneeId?: string;
   dueDate?: Exclude<DueDateFilter, "ALL">;
+  isFavorite?: boolean;
   sort?: TaskSortField;
   order?: SortOrder;
 }) {
-  const queryString = buildQueryString({ page, limit, search, priority, assigneeId, dueDate, sort, order });
+  const queryString = buildQueryString({ page, limit, search, priority, assigneeId, dueDate, isFavorite, sort, order });
 
   return request<PaginatedResponseDto<TaskResponseDto>>(
     `/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks${queryString}`,

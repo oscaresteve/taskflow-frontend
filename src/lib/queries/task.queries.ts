@@ -20,6 +20,7 @@ export const getTasksQuery = ({
   assigneeId,
   priority,
   dueDate,
+  isFavorite,
   sort,
   order,
 }: {
@@ -31,6 +32,7 @@ export const getTasksQuery = ({
   assigneeId?: string;
   priority?: PriorityFilter;
   dueDate?: DueDateFilter;
+  isFavorite?: boolean;
   sort?: TaskSortField;
   order?: SortOrder;
 }) =>
@@ -42,6 +44,7 @@ export const getTasksQuery = ({
       assigneeId,
       priority,
       dueDate,
+      isFavorite,
       sort,
       order,
     }),
@@ -55,6 +58,7 @@ export const getTasksQuery = ({
         assigneeId: assigneeId && assigneeId !== ALL_ASSIGNEES ? assigneeId : undefined,
         priority: priority && priority !== "ALL" ? priority : undefined,
         dueDate: dueDate && dueDate !== "ALL" ? dueDate : undefined,
+        isFavorite: isFavorite || undefined,
         sort,
         order,
       }),

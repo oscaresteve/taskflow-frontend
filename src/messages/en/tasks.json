@@ -76,6 +76,7 @@
   "listTable": {
     "failedToLoad": "Failed to load tasks.",
     "noTasks": "No tasks",
+    "favoritesFilter": "Favorites",
     "columns": {
       "task": "Task",
       "status": "Status",
