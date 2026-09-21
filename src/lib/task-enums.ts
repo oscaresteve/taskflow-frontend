@@ -104,3 +104,6 @@ export const dueDateFilterOptions: Record<DueDateFilter, EnumOption> = {
 
 export const ALL_ASSIGNEES = "ALL";
 export const UNASSIGNED = "UNASSIGNED";
+
+export const taskSortFields = ["rank", "title", "status", "priority", "dueDate", "createdAt", "updatedAt"] as const;
+export type TaskSortField = (typeof taskSortFields)[number];

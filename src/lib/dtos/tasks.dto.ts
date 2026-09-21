@@ -1,5 +1,7 @@
-export type TaskStatus = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+import { taskPriorities, taskStatuses } from "@/lib/schemas/task.schema";
+
+export type TaskStatus = (typeof taskStatuses)[number];
+export type TaskPriority = (typeof taskPriorities)[number];
 
 export type MoveTaskDto = {
   status: TaskStatus;

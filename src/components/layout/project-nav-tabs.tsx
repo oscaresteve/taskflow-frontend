@@ -17,6 +17,7 @@ export function ProjectNavTabs() {
   const projectTabs = [
     { label: t("projectNavTabs.overview"), segment: "", Icon: ICONS.overview },
     { label: t("projectNavTabs.kanban"), segment: "/kanban", Icon: ICONS.kanban },
+    { label: t("projectNavTabs.list"), segment: "/list", Icon: ICONS.list },
     { label: t("projectNavTabs.members"), segment: "/members", Icon: ICONS.members },
     { label: t("projectNavTabs.settings"), segment: "/settings", Icon: ICONS.settings },
   ];

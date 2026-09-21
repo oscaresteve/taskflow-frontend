@@ -68,6 +68,32 @@
     "noTasks": "No tasks",
     "addTask": "Add task"
   },
+  "listPage": {
+    "failedToLoadProject": "Failed to load project.",
+    "title": "List",
+    "createTask": "Create task"
+  },
+  "listTable": {
+    "failedToLoad": "Failed to load tasks.",
+    "noTasks": "No tasks",
+    "columns": {
+      "task": "Task",
+      "status": "Status",
+      "priority": "Priority",
+      "assignee": "Assignee",
+      "dueDate": "Due date",
+      "actions": "Actions"
+    },
+    "sortOptions": {
+      "rank": "Board order",
+      "title": "Title",
+      "status": "Status",
+      "priority": "Priority",
+      "dueDate": "Due date",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    }
+  },
   "taskPage": {
     "failedToLoadTask": "Failed to load task.",
     "archived": "Archived",

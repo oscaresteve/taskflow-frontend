@@ -1,6 +1,9 @@
 import { request } from "@/lib/http/client";
-import { MoveTaskDto, TaskResponseDto } from "@/lib/dtos/tasks.dto";
+import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
+import { MoveTaskDto, TaskPriority, TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { CreateTaskDto, UpdateTaskDto } from "@/lib/schemas/task.schema";
+import { buildQueryString } from "@/lib/http/query-string";
+import { DueDateFilter, TaskSortField } from "@/lib/task-enums";
 
 export function createTask({
   workspaceSlug,
@@ -21,6 +24,37 @@ export function getBoardTasks({ workspaceSlug, projectSlug }: { workspaceSlug: s
   return request<TaskResponseDto[]>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/board`, {
     method: "GET",
   });
+}
+
+export function getTasks({
+  workspaceSlug,
+  projectSlug,
+  page,
+  limit,
+  search,
+  priority,
+  assigneeId,
+  dueDate,
+  sort,
+  order,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+  priority?: TaskPriority;
+  assigneeId?: string;
+  dueDate?: Exclude<DueDateFilter, "ALL">;
+  sort?: TaskSortField;
+  order?: SortOrder;
+}) {
+  const queryString = buildQueryString({ page, limit, search, priority, assigneeId, dueDate, sort, order });
+
+  return request<PaginatedResponseDto<TaskResponseDto>>(
+    `/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks${queryString}`,
+    { method: "GET" },
+  );
 }
 
 export function getTask({

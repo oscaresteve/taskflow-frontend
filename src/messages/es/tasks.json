@@ -68,6 +68,32 @@
     "noTasks": "Sin tareas",
     "addTask": "Añadir tarea"
   },
+  "listPage": {
+    "failedToLoadProject": "No se pudo cargar el proyecto.",
+    "title": "Lista",
+    "createTask": "Crear tarea"
+  },
+  "listTable": {
+    "failedToLoad": "No se pudieron cargar las tareas.",
+    "noTasks": "Sin tareas",
+    "columns": {
+      "task": "Tarea",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "assignee": "Asignado a",
+      "dueDate": "Fecha límite",
+      "actions": "Acciones"
+    },
+    "sortOptions": {
+      "rank": "Orden del tablero",
+      "title": "Título",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "dueDate": "Fecha límite",
+      "createdAt": "Creación",
+      "updatedAt": "Actualización"
+    }
+  },
   "taskPage": {
     "failedToLoadTask": "No se pudo cargar la tarea.",
     "archived": "Archivada",

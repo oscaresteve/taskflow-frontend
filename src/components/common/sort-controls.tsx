@@ -26,7 +26,7 @@ export function SortControls<TField extends string>({
   return (
     <div className="flex items-center gap-1">
       <Select value={field} onValueChange={(value) => value && onFieldChange(value as TField)}>
-        <SelectTrigger className="w-32">
+        <SelectTrigger>
           <SelectValue>{(selected: TField) => options.find((option) => option.value === selected)?.label}</SelectValue>
         </SelectTrigger>
         <SelectContent>

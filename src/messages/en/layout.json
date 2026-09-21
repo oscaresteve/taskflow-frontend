@@ -27,6 +27,7 @@
   "projectNavTabs": {
     "overview": "Overview",
     "kanban": "Kanban",
+    "list": "List",
     "members": "Members",
     "settings": "Settings"
   },

@@ -11,6 +11,7 @@ export function useArchiveTask(workspaceSlug: string, projectSlug: string, taskN
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: taskKeys.detail(workspaceSlug, projectSlug, taskNumber) }),
         queryClient.invalidateQueries({ queryKey: taskKeys.board(workspaceSlug, projectSlug) }),
+        queryClient.invalidateQueries({ queryKey: taskKeys.lists(workspaceSlug, projectSlug) }),
       ]);
     },
   });

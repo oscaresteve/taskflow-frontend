@@ -10,6 +10,7 @@ export function useCreateTask(workspaceSlug: string, projectSlug: string) {
     mutationFn: (data: CreateTaskDto) => createTask({ workspaceSlug, projectSlug, data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.board(workspaceSlug, projectSlug) });
+      queryClient.invalidateQueries({ queryKey: taskKeys.lists(workspaceSlug, projectSlug) });
     },
   });
 }
