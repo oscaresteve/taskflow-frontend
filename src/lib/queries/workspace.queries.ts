@@ -7,11 +7,19 @@ import { WorkspaceSortField } from "../workspace-enums";
 
 // "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
 // getNextPageParam helper can back any other list that outgrows a "load more" button later.
-export const getWorkspacesInfiniteQuery = ({ limit, search }: { limit: number; search?: string }) =>
+export const getWorkspacesInfiniteQuery = ({
+  limit,
+  search,
+  isFavorite,
+}: {
+  limit: number;
+  search?: string;
+  isFavorite?: boolean;
+}) =>
   infiniteQueryOptions({
-    queryKey: workspaceKeys.infiniteList({ limit, search }),
+    queryKey: workspaceKeys.infiniteList({ limit, search, isFavorite }),
     queryFn: ({ pageParam }) =>
-      getWorkspaces({ page: pageParam, limit, sort: "name", order: "asc", search: search || undefined }),
+      getWorkspaces({ page: pageParam, limit, sort: "name", order: "asc", search: search || undefined, isFavorite }),
     initialPageParam: 1,
     getNextPageParam,
   });

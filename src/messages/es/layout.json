@@ -44,6 +44,8 @@
   },
   "workspacesNav": {
     "title": "Espacios",
+    "favorites": "Espacios favoritos",
+    "noFavorites": "Todavía no hay favoritos",
     "newWorkspace": "Nuevo espacio",
     "moreOptions": "Más opciones",
     "manageWorkspaces": "Gestionar espacios",

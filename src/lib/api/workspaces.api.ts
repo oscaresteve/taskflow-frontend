@@ -9,6 +9,7 @@ export function getWorkspaces({
   page,
   limit,
   isActive,
+  isFavorite,
   search,
   sort,
   order,
@@ -16,11 +17,12 @@ export function getWorkspaces({
   page?: number;
   limit?: number;
   isActive?: boolean | boolean[];
+  isFavorite?: boolean;
   search?: string;
   sort?: WorkspaceSortField;
   order?: SortOrder;
 } = {}) {
-  const queryString = buildQueryString({ page, limit, isActive, search, sort, order });
+  const queryString = buildQueryString({ page, limit, isActive, isFavorite, search, sort, order });
 
   return request<PaginatedResponseDto<WorkspaceResponseDto>>(`/workspaces${queryString}`, {
     method: "GET",
@@ -50,5 +52,17 @@ export function updateWorkspace({ workspaceSlug, data }: { workspaceSlug: string
 export function deactivateWorkspace(workspaceSlug: string) {
   return request<void>(`/workspaces/${workspaceSlug}/deactivate`, {
     method: "PATCH",
+  });
+}
+
+export function favoriteWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/favorite`, {
+    method: "POST",
+  });
+}
+
+export function unfavoriteWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/favorite`, {
+    method: "DELETE",
   });
 }

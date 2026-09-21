@@ -7,7 +7,6 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ICONS } from "@/lib/icons";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
-import { useDeactivateWorkspace } from "@/hooks/use-deactivate-workspace";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
@@ -18,100 +17,16 @@ import { PaginationControls } from "@/components/common/pagination-controls";
 import { SortControls } from "@/components/common/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
-import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
+import { WorkspaceActionsMenu } from "@/components/workspaces/workspace-actions-menu";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
-import { toast } from "@/components/ui/toast";
-import { ApiError } from "@/lib/http/api-error";
 import { getFullName, getInitials } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { WorkspaceSortField } from "@/lib/workspace-enums";
 import { useWorkspacesTable } from "@/hooks/use-workspaces-table";
 
 const MAX_VISIBLE_OWNERS = 4;
-
-function WorkspaceActionsMenu({ workspace, canManage }: { workspace: WorkspaceResponseDto; canManage: boolean }) {
-  const t = useTranslations("workspaces");
-  const [deactivateOpen, setDeactivateOpen] = useState(false);
-  const deactivateWorkspace = useDeactivateWorkspace(workspace.slug);
-
-  async function handleDeactivate() {
-    try {
-      await deactivateWorkspace.mutateAsync();
-      setDeactivateOpen(false);
-    } catch (error) {
-      toast.add({
-        type: "error",
-        description: error instanceof ApiError ? error.message : t("errors.generic"),
-        priority: "high",
-      });
-    }
-  }
-
-  return (
-    <>
-      <DropdownMenu>
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <DropdownMenuTrigger
-                render={<Button aria-label={t("workspaceActionsMenu.ariaLabel")} variant="ghost" size="icon-sm" />}
-              />
-            }
-          >
-            <ICONS.moreActions />
-          </TooltipTrigger>
-          <TooltipContent>{t("workspaceActionsMenu.ariaLabel")}</TooltipContent>
-        </Tooltip>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
-            <ICONS.openExternal />
-            {t("workspaceActionsMenu.open")}
-          </DropdownMenuItem>
-          <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/members`} />}>
-            <ICONS.members />
-            {t("workspaceActionsMenu.members")}
-          </DropdownMenuItem>
-          {canManage && (
-            <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
-              <ICONS.settings />
-              {t("workspaceActionsMenu.settings")}
-            </DropdownMenuItem>
-          )}
-          {canManage && (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" onClick={() => setDeactivateOpen(true)}>
-                <ICONS.deactivate />
-                {t("workspaceActionsMenu.deactivate")}
-              </DropdownMenuItem>
-            </>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <ConfirmDialog
-        open={deactivateOpen}
-        onOpenChange={setDeactivateOpen}
-        title={t.rich("workspaceActionsMenu.deactivateTitle", { name: workspace.name, ...richTitleTags })}
-        description={t("workspaceActionsMenu.deactivateDescription")}
-        confirmLabel={t("workspaceActionsMenu.deactivateConfirmLabel")}
-        variant="destructive"
-        onConfirm={handleDeactivate}
-        pending={deactivateWorkspace.isPending}
-        Icon={ICONS.deactivate}
-      />
-    </>
-  );
-}
 
 function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
   const { data: members, isLoading, isError } = useQuery(getWorkspaceMembersQuery(workspace.slug));

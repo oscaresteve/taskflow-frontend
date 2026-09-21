@@ -60,6 +60,8 @@ import {
   UsersIcon,
   ListFilter,
   CalendarClock,
+  Star,
+  ChevronRightIcon,
   type LucideIcon,
 } from "lucide-react";
 
@@ -109,6 +111,7 @@ export const ICONS = {
 
   // Navegacion / chrome
   expand: ChevronDown,
+  chevronRight: ChevronRightIcon,
   chevronUpDown: ChevronsUpDown,
   settings: Settings,
   preferences: Settings2,
@@ -118,6 +121,7 @@ export const ICONS = {
   workspace: Orbit,
   project: FolderKanban,
   addNew: Plus,
+  favorite: Star,
   openExternal: ExternalLink,
   logo: Workflow,
   createWorkspace: Building2,

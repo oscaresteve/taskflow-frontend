@@ -3,7 +3,9 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "save": "Save",
-    "close": "Close"
+    "close": "Close",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites"
   },
   "search": {
     "clear": "Clear search"
