@@ -10,7 +10,6 @@ import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@
 
 import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -27,104 +26,12 @@ import { ColorDot } from "@/components/ui/color-dot";
 import { getFullName, getInitials } from "@/lib/utils";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
-import { useArchiveProject } from "@/hooks/use-archive-project";
-import { toast } from "@/components/ui/toast";
-import { ApiError } from "@/lib/http/api-error";
-import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import { ProjectActionsMenu } from "@/components/projects/project-actions-menu";
 import { useFormatter, useTranslations } from "next-intl";
 import { ProjectSortField } from "@/lib/project-enums";
 import useProjectsTable from "@/hooks/use-projects-table";
 
 const MAX_VISIBLE_OWNERS = 4;
-
-function ProjectActionsMenu({
-  workspaceSlug,
-  project,
-  canManage,
-}: {
-  workspaceSlug: string;
-  project: ProjectResponseDto;
-  canManage: boolean;
-}) {
-  const t = useTranslations("projects");
-  const [archiveOpen, setArchiveOpen] = useState(false);
-  const archiveProject = useArchiveProject(workspaceSlug, project.slug);
-
-  async function handleArchive() {
-    try {
-      await archiveProject.mutateAsync();
-      setArchiveOpen(false);
-    } catch (error) {
-      toast.add({
-        type: "error",
-        description: error instanceof ApiError ? error.message : t("errors.generic"),
-        priority: "high",
-      });
-    }
-  }
-
-  return (
-    <>
-      <DropdownMenu>
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <DropdownMenuTrigger
-                render={<Button variant="ghost" size="icon-sm" aria-label={t("projectActionsMenu.ariaLabel")} />}
-              />
-            }
-          >
-            <ICONS.moreActions />
-          </TooltipTrigger>
-          <TooltipContent>{t("projectActionsMenu.ariaLabel")}</TooltipContent>
-        </Tooltip>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}>
-            <ICONS.openExternal />
-            {t("projectActionsMenu.open")}
-          </DropdownMenuItem>
-          <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/members`} />}>
-            <ICONS.members />
-            {t("projectActionsMenu.members")}
-          </DropdownMenuItem>
-          {canManage && (
-            <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/settings`} />}>
-              <ICONS.settings />
-              {t("projectActionsMenu.settings")}
-            </DropdownMenuItem>
-          )}
-          {canManage && (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
-                <ICONS.archive />
-                {t("projectActionsMenu.archive")}
-              </DropdownMenuItem>
-            </>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <ConfirmDialog
-        open={archiveOpen}
-        onOpenChange={setArchiveOpen}
-        title={t.rich("projectActionsMenu.confirmTitle", { projectName: project.name, ...richTitleTags })}
-        description={t("projectActionsMenu.confirmDescription")}
-        confirmLabel={t("projectActionsMenu.archive")}
-        variant="destructive"
-        onConfirm={handleArchive}
-        pending={archiveProject.isPending}
-        Icon={ICONS.archive}
-      />
-    </>
-  );
-}
 
 function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project: ProjectResponseDto }) {
   const format = useFormatter();

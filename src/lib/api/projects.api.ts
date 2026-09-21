@@ -10,6 +10,7 @@ export function getProjects({
   page,
   limit,
   isArchived,
+  isFavorite,
   search,
   sort,
   order,
@@ -18,11 +19,12 @@ export function getProjects({
   page?: number;
   limit?: number;
   isArchived?: boolean;
+  isFavorite?: boolean;
   search?: string;
   sort?: ProjectSortField;
   order?: SortOrder;
 }) {
-  const queryString = buildQueryString({ page, limit, isArchived, search, sort, order });
+  const queryString = buildQueryString({ page, limit, isArchived, isFavorite, search, sort, order });
 
   return request<PaginatedResponseDto<ProjectResponseDto>>(`/workspaces/${workspaceSlug}/projects${queryString}`, {
     method: "GET",
@@ -60,5 +62,17 @@ export function updateProject({
 export function archiveProject({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
   return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/archive`, {
     method: "PATCH",
+  });
+}
+
+export function favoriteProject({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/favorite`, {
+    method: "POST",
+  });
+}
+
+export function unfavoriteProject({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/favorite`, {
+    method: "DELETE",
   });
 }

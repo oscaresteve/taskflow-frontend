@@ -11,15 +11,25 @@ export const getProjectsInfiniteQuery = ({
   workspaceSlug,
   limit,
   search,
+  isFavorite,
 }: {
   workspaceSlug: string;
   limit: number;
   search?: string;
+  isFavorite?: boolean;
 }) =>
   infiniteQueryOptions({
-    queryKey: projectKeys.infiniteList(workspaceSlug, { limit, search }),
+    queryKey: projectKeys.infiniteList(workspaceSlug, { limit, search, isFavorite }),
     queryFn: ({ pageParam }) =>
-      getProjects({ workspaceSlug, page: pageParam, limit, sort: "name", order: "asc", search: search || undefined }),
+      getProjects({
+        workspaceSlug,
+        page: pageParam,
+        limit,
+        sort: "name",
+        order: "asc",
+        search: search || undefined,
+        isFavorite,
+      }),
     initialPageParam: 1,
     getNextPageParam,
     enabled: !!workspaceSlug,

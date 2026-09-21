@@ -32,6 +32,8 @@
   },
   "projectsNav": {
     "title": "Projects",
+    "favorites": "Favorite proyects",
+    "noFavorites": "No favorites yet",
     "newProject": "New project",
     "moreOptions": "More options",
     "manageProjects": "Manage projects",
