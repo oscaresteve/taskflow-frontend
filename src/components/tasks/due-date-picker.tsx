@@ -14,7 +14,7 @@ interface DueDatePickerProps {
   onChange: (value: string | null) => void;
   id?: string;
   className?: string;
-  variant?: "icon" | "default";
+  variant?: "icon" | "icon-label" | "default";
 }
 
 export function DueDatePicker({ value, onChange, id, className, variant = "default" }: DueDatePickerProps) {
@@ -54,6 +54,24 @@ export function DueDatePicker({ value, onChange, id, className, variant = "defau
             {date ? `${t("fields.dueDate")}: ${format.dateTime(date, "short")}` : t("fields.addDueDate")}
           </TooltipContent>
         </Tooltip>
+      ) : variant === "icon-label" ? (
+        <PopoverTrigger
+          id={id}
+          render={
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "font-normal text-muted-foreground hover:text-foreground",
+                overdue && "text-severity-critical-foreground",
+                className,
+              )}
+            />
+          }
+        >
+          {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
+          {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
+        </PopoverTrigger>
       ) : (
         <PopoverTrigger
           id={id}

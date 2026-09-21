@@ -123,7 +123,7 @@ function TaskListRow({
         />
       </TableCell>
       <TableCell>
-        <DueDatePicker variant="icon" value={task.dueDate} onChange={handleDueDateChange} />
+        <DueDatePicker variant="icon-label" value={task.dueDate} onChange={handleDueDateChange} />
       </TableCell>
       <TableCell>
         <TaskActionsMenu
