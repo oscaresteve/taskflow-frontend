@@ -80,7 +80,7 @@ export default function WorkspaceSwitch() {
             <ICONS.chevronUpDown className="ml-auto size-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            className="min-w-56"
             align="start"
             side={isMobile ? "bottom" : "right"}
             sideOffset={4}

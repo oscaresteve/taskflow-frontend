@@ -7,12 +7,11 @@ import { ICONS } from "@/lib/icons";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
-  DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuGroup,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/components/ui/toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -82,15 +81,14 @@ export default function UserNav() {
               </div>
               <ICONS.chevronUpDown className="ml-auto size-4" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            <ActionsMenuContent
               side={isMobile ? "bottom" : "right"}
               align="end"
               sideOffset={4}
             >
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                  <div className="flex items-center gap-2 px-3 py-1.5 text-left text-sm">
                     <Avatar>
                       <AvatarImage src={user.avatarUrl ?? undefined} alt={userName!} />
                       <AvatarFallback>{getInitials(userName!)}</AvatarFallback>
@@ -103,11 +101,11 @@ export default function UserNav() {
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setLogOutOpen(true)}>
+              <ActionsMenuItem onClick={() => setLogOutOpen(true)}>
                 <ICONS.logOut />
                 {t("userNav.logOut")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
+              </ActionsMenuItem>
+            </ActionsMenuContent>
           </DropdownMenu>
         )}
       </SidebarMenuItem>

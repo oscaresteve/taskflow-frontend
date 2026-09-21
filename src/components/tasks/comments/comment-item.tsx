@@ -7,12 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { CommentResponseDto } from "@/lib/dtos/comments.dto";
@@ -131,12 +127,12 @@ export function CommentItem({
                 </TooltipTrigger>
                 <TooltipContent>{t("comments.actionsSrOnly")}</TooltipContent>
               </Tooltip>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
+              <ActionsMenuContent align="end">
+                <ActionsMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
                   <ICONS.delete />
                   {t("comments.delete")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                </ActionsMenuItem>
+              </ActionsMenuContent>
             </DropdownMenu>
           )}
         </div>

@@ -6,7 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent } from "@/components/common/actions-menu";
 import { MemberRole } from "@/lib/dtos/members.dto";
 import { roleOptions } from "@/lib/member-enums";
 import { getFullName, getInitials } from "@/lib/utils";
@@ -106,7 +107,7 @@ export function MembersTable<TMember extends MemberLike>({
                       </TooltipTrigger>
                       <TooltipContent>{t("membersTable.actionsSrOnly")}</TooltipContent>
                     </Tooltip>
-                    <DropdownMenuContent align="end">{actions}</DropdownMenuContent>
+                    <ActionsMenuContent align="end">{actions}</ActionsMenuContent>
                   </DropdownMenu>
                 ) : null}
               </TableCell>

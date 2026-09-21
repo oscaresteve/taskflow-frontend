@@ -7,12 +7,8 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
 import { toast } from "@/components/ui/toast";
 import { useArchiveTask } from "@/hooks/use-archive-task";
 import { ApiError } from "@/lib/http/api-error";
@@ -87,16 +83,17 @@ export function TaskActionsMenu({
           </TooltipTrigger>
           <TooltipContent>{t("taskActionsMenu.ariaLabel")}</TooltipContent>
 
-          <DropdownMenuContent align="end" className="min-w-max">
-            <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
-              <ICONS.archive />
-              {t("taskActionsMenu.archive")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => toggleFavorite.mutate(!task.isFavorite)}>
+          <ActionsMenuContent align="end">
+            <ActionsMenuItem onClick={() => toggleFavorite.mutate(!task.isFavorite)}>
               <ICONS.favorite className={cn(task.isFavorite && "fill-current")} />
               {task.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
+            </ActionsMenuItem>
+            <DropdownMenuSeparator />
+            <ActionsMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
+              <ICONS.archive />
+              {t("taskActionsMenu.archive")}
+            </ActionsMenuItem>
+          </ActionsMenuContent>
         </DropdownMenu>
       </Tooltip>
       <ConfirmDialog

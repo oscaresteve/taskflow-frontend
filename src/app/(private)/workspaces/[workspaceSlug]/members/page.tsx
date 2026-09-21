@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { AddWorkspaceMemberDialog } from "@/components/members/add-workspace-member-dialog";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
-import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { ActionsMenuItem } from "@/components/common/actions-menu";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -183,17 +184,17 @@ export default function WorkspaceMembersPage() {
     return (
       <>
         {activatable && (
-          <DropdownMenuItem onClick={() => handleRequestActivate(member)}>
+          <ActionsMenuItem onClick={() => handleRequestActivate(member)}>
             <ICONS.memberActivate />
             {t("workspaceMembersPage.activate")}
-          </DropdownMenuItem>
+          </ActionsMenuItem>
         )}
         {activatable && removable && <DropdownMenuSeparator />}
         {removable && (
-          <DropdownMenuItem variant="destructive" onClick={() => handleRequestRemove(member)}>
+          <ActionsMenuItem variant="destructive" onClick={() => handleRequestRemove(member)}>
             <ICONS.removeMember />
             {t("workspaceMembersPage.remove")}
-          </DropdownMenuItem>
+          </ActionsMenuItem>
         )}
       </>
     );

@@ -2,12 +2,8 @@
 
 import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useTranslations } from "next-intl";
@@ -31,20 +27,20 @@ export function ColorSchemeToggle() {
         </TooltipTrigger>
         <TooltipContent>{t("colorSchemeToggle.toggleTheme")}</TooltipContent>
       </Tooltip>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setColorScheme("light")}>
+      <ActionsMenuContent align="end">
+        <ActionsMenuItem onClick={() => setColorScheme("light")}>
           <ICONS.themeLight />
           {t("colorSchemeToggle.light")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setColorScheme("dark")}>
+        </ActionsMenuItem>
+        <ActionsMenuItem onClick={() => setColorScheme("dark")}>
           <ICONS.themeDark />
           {t("colorSchemeToggle.dark")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setColorScheme("system")}>
+        </ActionsMenuItem>
+        <ActionsMenuItem onClick={() => setColorScheme("system")}>
           <ICONS.themeSystem />
           {t("colorSchemeToggle.system")}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+        </ActionsMenuItem>
+      </ActionsMenuContent>
     </DropdownMenu>
   );
 }

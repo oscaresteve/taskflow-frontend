@@ -36,6 +36,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem, ActionsMenuLabel } from "@/components/common/actions-menu";
 import { ColorDot } from "../ui/color-dot";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
@@ -206,15 +207,15 @@ export default function ProjectsNav() {
               </TooltipTrigger>
               <TooltipContent>{t("projectsNav.moreOptions")}</TooltipContent>
             </Tooltip>
-            <DropdownMenuContent align="start" className="min-w-max">
+            <ActionsMenuContent align="start">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>{t("projectsNav.title")}</DropdownMenuLabel>
-                <DropdownMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects`} />} className="gap-2">
+                <ActionsMenuLabel>{t("projectsNav.title")}</ActionsMenuLabel>
+                <ActionsMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects`} />}>
                   <ICONS.settings />
                   {t("projectsNav.manageProjects")}
-                </DropdownMenuItem>
+                </ActionsMenuItem>
               </DropdownMenuGroup>
-            </DropdownMenuContent>
+            </ActionsMenuContent>
           </DropdownMenu>
 
           <CollapsibleContent>

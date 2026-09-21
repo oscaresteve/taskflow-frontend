@@ -36,6 +36,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem, ActionsMenuLabel } from "@/components/common/actions-menu";
 import { SearchInput } from "../common/search-input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
@@ -191,15 +192,15 @@ export function WorkspacesNav() {
               </TooltipTrigger>
               <TooltipContent>{t("workspacesNav.moreOptions")}</TooltipContent>
             </Tooltip>
-            <DropdownMenuContent align="start" className="min-w-max">
+            <ActionsMenuContent align="start">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>{t("workspacesNav.title")}</DropdownMenuLabel>
-                <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2">
+                <ActionsMenuLabel>{t("workspacesNav.title")}</ActionsMenuLabel>
+                <ActionsMenuItem render={<Link href="/workspaces" />}>
                   <ICONS.settings />
                   {t("workspacesNav.manageWorkspaces")}
-                </DropdownMenuItem>
+                </ActionsMenuItem>
               </DropdownMenuGroup>
-            </DropdownMenuContent>
+            </ActionsMenuContent>
           </DropdownMenu>
 
           <CollapsibleContent>

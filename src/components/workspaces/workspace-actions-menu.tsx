@@ -8,13 +8,8 @@ import { ICONS } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
@@ -69,35 +64,35 @@ export function WorkspaceActionsMenu({ workspace, canManage, triggerRender }: Wo
           </TooltipTrigger>
           <TooltipContent>{t("workspaceActionsMenu.ariaLabel")}</TooltipContent>
         </Tooltip>
-        <DropdownMenuContent align="start" className="min-w-max">
-          <DropdownMenuItem onClick={() => toggleFavorite.mutate(!workspace.isFavorite)} className="gap-2">
+        <ActionsMenuContent align="start">
+          <ActionsMenuItem onClick={() => toggleFavorite.mutate(!workspace.isFavorite)}>
             <ICONS.favorite className={cn(workspace.isFavorite && "fill-current")} />
             {workspace.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
-          </DropdownMenuItem>
-          <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
+          </ActionsMenuItem>
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
             <ICONS.openExternal />
             {t("workspaceActionsMenu.open")}
-          </DropdownMenuItem>
-          <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/members`} />}>
+          </ActionsMenuItem>
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/members`} />}>
             <ICONS.members />
             {t("workspaceActionsMenu.members")}
-          </DropdownMenuItem>
+          </ActionsMenuItem>
           {canManage && (
-            <DropdownMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
+            <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
               <ICONS.settings />
               {t("workspaceActionsMenu.settings")}
-            </DropdownMenuItem>
+            </ActionsMenuItem>
           )}
           {canManage && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" onClick={() => setDeactivateOpen(true)}>
+              <ActionsMenuItem variant="destructive" onClick={() => setDeactivateOpen(true)}>
                 <ICONS.deactivate />
                 {t("workspaceActionsMenu.deactivate")}
-              </DropdownMenuItem>
+              </ActionsMenuItem>
             </>
           )}
-        </DropdownMenuContent>
+        </ActionsMenuContent>
       </DropdownMenu>
       <ConfirmDialog
         open={deactivateOpen}
