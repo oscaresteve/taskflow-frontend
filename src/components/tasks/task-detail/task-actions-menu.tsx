@@ -17,6 +17,8 @@ import { toast } from "@/components/ui/toast";
 import { useArchiveTask } from "@/hooks/use-archive-task";
 import { ApiError } from "@/lib/http/api-error";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
+import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
+import { cn } from "@/lib/utils";
 
 // Prop derivada directamente con ComponentProps.
 // Asi nos aseguramos que se le pasa exactamente lo que el componente pide
@@ -40,8 +42,10 @@ export function TaskActionsMenu({
   triggerRender,
 }: TaskActionsMenuProps) {
   const t = useTranslations("tasks");
+  const tCommon = useTranslations("common");
   const archiveTask = useArchiveTask(workspaceSlug, projectSlug, taskNumber);
   const [archiveOpen, setArchiveOpen] = useState(false);
+  const toggleFavorite = useToggleTaskFavorite(workspaceSlug, projectSlug, taskNumber);
 
   async function handleArchive() {
     try {
@@ -81,10 +85,14 @@ export function TaskActionsMenu({
           </TooltipTrigger>
           <TooltipContent>{t("taskActionsMenu.ariaLabel")}</TooltipContent>
 
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="min-w-max">
             <DropdownMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
               <ICONS.archive />
               {t("taskActionsMenu.archive")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => toggleFavorite.mutate(!task.isFavorite)}>
+              <ICONS.favorite className={cn(task.isFavorite && "fill-current")} />
+              {task.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -8,6 +8,8 @@ import { getTaskQuery } from "@/lib/queries/task.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { TaskActionsMenu } from "./task-actions-menu";
+import { FavoriteToggle } from "@/components/common/favorite-toggle";
+import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
 import { TaskBreadcrumb } from "./task-breadcrumb";
 import { TaskDetailHeader } from "./task-detail-header";
 import { TaskNameSection } from "./task-name-section";
@@ -32,6 +34,7 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
   const { data: task, isLoading, isError } = useQuery(getTaskQuery({ workspaceSlug, projectSlug, taskNumber }));
   const { data: workspace } = useQuery(getWorkspaceQuery(workspaceSlug));
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
+  const toggleFavorite = useToggleTaskFavorite(workspaceSlug, projectSlug, taskNumber);
 
   if (isError) {
     return (
@@ -68,13 +71,16 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
         archivedLabel={t("taskPage.archived")}
         closeLabel={tCommon("actions.close")}
         actions={
-          <TaskActionsMenu
-            task={task}
-            workspaceSlug={workspaceSlug}
-            projectSlug={projectSlug}
-            taskNumber={taskNumber}
-            onArchived={onClosePanel}
-          />
+          <>
+            <FavoriteToggle variant="outline" isFavorite={task.isFavorite} onToggle={() => toggleFavorite.mutate(!task.isFavorite)} />
+            <TaskActionsMenu
+              task={task}
+              workspaceSlug={workspaceSlug}
+              projectSlug={projectSlug}
+              taskNumber={taskNumber}
+              onArchived={onClosePanel}
+            />
+          </>
         }
       />
 

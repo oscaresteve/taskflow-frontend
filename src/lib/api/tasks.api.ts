@@ -84,3 +84,31 @@ export function archiveTask({
     method: "PATCH",
   });
 }
+
+export function favoriteTask({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/favorite`, {
+    method: "POST",
+  });
+}
+
+export function unfavoriteTask({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/favorite`, {
+    method: "DELETE",
+  });
+}

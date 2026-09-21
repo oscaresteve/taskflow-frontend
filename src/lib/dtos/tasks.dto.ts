@@ -27,6 +27,7 @@ export type TaskResponseDto = {
   rank: string;
 
   isArchived: boolean;
+  isFavorite: boolean;
 
   createdAt: string;
   updatedAt: string;

@@ -25,8 +25,8 @@ interface KanbanCardProps {
 
 export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: KanbanCardProps) {
   const t = useTranslations("tasks");
-  const updateTask = useUpdateTask(workspaceSlug, projectSlug, String(task.taskNumber));
   const taskNumber = task.taskNumber.toString();
+  const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
 
   function stopPropagation(event: MouseEvent) {
     event.preventDefault();
