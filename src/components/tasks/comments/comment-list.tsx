@@ -56,7 +56,7 @@ export function CommentList({
   }
 
   return (
-    <div className="-mx-4 flex flex-col gap-4 overflow-y-auto px-4">
+    <div className="-mx-4 flex flex-col gap-4 overflow-y-auto px-4 py-1">
       {comments.map((comment) => (
         <CommentItem
           key={comment.id}
