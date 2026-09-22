@@ -18,6 +18,8 @@ import { CreateTaskDto, createTaskSchema } from "@/lib/schemas/task.schema";
 import { TaskStatus } from "@/lib/dtos/tasks.dto";
 import { useCreateTask } from "@/hooks/use-create-task";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useKanbanFilters } from "@/hooks/use-kanban-filters";
+import { resolveDefaultAssignee, resolveDefaultPriority } from "@/lib/task-enums";
 
 interface KanbanInlineCreateTaskProps {
   workspaceSlug: string;
@@ -30,14 +32,27 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
   const tCommon = useTranslations("common");
   const [editing, setEditing] = useState(false);
   const createTask = useCreateTask(workspaceSlug, projectSlug);
+  const { priority, assigneeId } = useKanbanFilters();
 
   const form = useForm<CreateTaskDto>({
     resolver: zodResolver(createTaskSchema(t)),
-    defaultValues: { title: "", description: "", priority: "MEDIUM", assigneeId: undefined, dueDate: undefined },
+    defaultValues: {
+      title: "",
+      description: "",
+      priority: resolveDefaultPriority(priority),
+      assigneeId: resolveDefaultAssignee(assigneeId),
+      dueDate: undefined,
+    },
   });
 
   function startEditing() {
-    form.reset();
+    form.reset({
+      title: "",
+      description: "",
+      priority: resolveDefaultPriority(priority),
+      assigneeId: resolveDefaultAssignee(assigneeId),
+      dueDate: undefined,
+    });
     setEditing(true);
   }
 
@@ -123,7 +138,7 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
                   workspaceSlug={workspaceSlug}
                   projectSlug={projectSlug}
                   value={field.value ?? null}
-                  onChange={(userId) => field.onChange(userId ?? undefined)}
+                  onChange={(userId) => field.onChange(userId)}
                 />
               )}
             />
