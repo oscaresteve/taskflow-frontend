@@ -71,7 +71,7 @@ export default function WorkspaceSwitch() {
             }
           >
             <Avatar>
-              <AvatarImage src={activeWorkspace.logoUrl ?? undefined} alt={activeWorkspace.name} />
+              <AvatarImage src={activeWorkspace.avatarUrl ?? undefined} alt={activeWorkspace.name} />
               <AvatarFallback>{getInitials(activeWorkspace.name)}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -107,7 +107,7 @@ export default function WorkspaceSwitch() {
                   className="gap-2 p-2"
                 >
                   <Avatar size="sm">
-                    <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+                    <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
                     <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
                   </Avatar>
                   {workspace.name}

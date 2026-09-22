@@ -43,7 +43,7 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
       <TableCell>
         <Link href={`/workspaces/${workspace.slug}`} className="flex items-center gap-2">
           <Avatar size="sm">
-            <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+            <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
             <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
           </Avatar>
           <span className="truncate font-medium">{workspace.name}</span>

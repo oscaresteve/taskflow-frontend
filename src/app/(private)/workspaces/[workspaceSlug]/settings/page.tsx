@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { DeactivateWorkspaceSection } from "./_components/deactivate-workspace-section";
 import { WorkspaceNameSection } from "./_components/workspace-name-section";
 import { WorkspaceDescriptionSection } from "./_components/workspace-description-section";
+import { WorkspaceAvatarSection } from "./_components/workspace-avatar-section";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,6 +35,7 @@ export default function WorkspaceSettingsPage() {
       <PageHeader title={t("workspaceSettingsPage.title")} />
       <WorkspaceNameSection />
       <WorkspaceDescriptionSection />
+      <WorkspaceAvatarSection />
       <DeactivateWorkspaceSection />
     </PageContainer>
   );

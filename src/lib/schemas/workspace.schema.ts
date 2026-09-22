@@ -6,7 +6,6 @@ export const createWorkspaceSchema = (t: Translator) =>
   z.object({
     name: z.string().trim().min(2, t("validation.nameMinLength")).max(100, t("validation.nameMaxLength")),
     description: descriptionSchema(t),
-    logoUrl: z.url(t("validation.logoUrlInvalid")).optional(),
   });
 
 export const updateWorkspaceSchema = (t: Translator) =>
@@ -14,8 +13,6 @@ export const updateWorkspaceSchema = (t: Translator) =>
     .object({
       name: z.string().trim().min(2, t("validation.nameMinLength")).max(100, t("validation.nameMaxLength")).optional(),
       description: descriptionSchema(t).nullable(),
-      // Nullable para permitir borrar el contenido ya que este es opcional
-      logoUrl: z.url(t("validation.logoUrlInvalid")).optional().nullable(),
     })
     .refine((data) => Object.keys(data).length > 0, t("validation.atLeastOneField"));
 

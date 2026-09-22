@@ -1,7 +1,7 @@
 import { request } from "@/lib/http/client";
 import { buildQueryString } from "@/lib/http/query-string";
 import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
-import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
+import { WorkspaceAvatarUploadUrlResponseDto, WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../schemas/workspace.schema";
 import { WorkspaceSortField } from "../workspace-enums";
 
@@ -52,6 +52,34 @@ export function updateWorkspace({ workspaceSlug, data }: { workspaceSlug: string
 export function deactivateWorkspace(workspaceSlug: string) {
   return request<void>(`/workspaces/${workspaceSlug}/deactivate`, {
     method: "PATCH",
+  });
+}
+
+export function getWorkspaceAvatarUploadUrl({
+  workspaceSlug,
+  contentType,
+  fileSize,
+}: {
+  workspaceSlug: string;
+  contentType: string;
+  fileSize: number;
+}) {
+  return request<WorkspaceAvatarUploadUrlResponseDto>(`/workspaces/${workspaceSlug}/avatar/upload-url`, {
+    method: "POST",
+    body: JSON.stringify({ contentType, fileSize }),
+  });
+}
+
+export function confirmWorkspaceAvatar({ workspaceSlug, key }: { workspaceSlug: string; key: string }) {
+  return request<WorkspaceResponseDto>(`/workspaces/${workspaceSlug}/avatar`, {
+    method: "PUT",
+    body: JSON.stringify({ key }),
+  });
+}
+
+export function deleteWorkspaceAvatar(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/avatar`, {
+    method: "DELETE",
   });
 }
 

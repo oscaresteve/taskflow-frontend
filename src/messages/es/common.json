@@ -28,6 +28,11 @@
     "show": "Mantén pulsado para mostrar la contraseña",
     "hide": "Suelta para ocultar la contraseña"
   },
+  "avatarPicker": {
+    "changeAction": "Cambiar avatar",
+    "invalidType": "Elige una imagen PNG, JPEG o WebP.",
+    "tooLarge": "La imagen debe pesar 5MB o menos."
+  },
   "errors": {
     "generic": "Algo salió mal"
   }

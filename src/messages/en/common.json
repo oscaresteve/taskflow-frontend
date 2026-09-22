@@ -28,6 +28,11 @@
     "show": "Hold to show password",
     "hide": "Release to hide password"
   },
+  "avatarPicker": {
+    "changeAction": "Change avatar",
+    "invalidType": "Please choose a PNG, JPEG or WebP image.",
+    "tooLarge": "Image must be 5MB or smaller."
+  },
   "errors": {
     "generic": "Something went wrong"
   }

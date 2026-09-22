@@ -24,7 +24,7 @@ export function WorkspaceHeader({ workspaceSlug }: { workspaceSlug: string }) {
   return (
     <div className="flex items-center gap-4">
       <Avatar size="lg">
-        <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+        <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
         <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
       </Avatar>
       <div className="grid gap-1">

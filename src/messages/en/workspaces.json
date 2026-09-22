@@ -5,7 +5,6 @@
   "validation": {
     "nameMinLength": "Name must be at least 2 characters long",
     "nameMaxLength": "Name cannot exceed 100 characters",
-    "logoUrlInvalid": "Logo URL must be a valid URL",
     "descriptionMaxLength": "Description cannot exceed 500 characters",
     "atLeastOneField": "At least one field must be provided"
   },
@@ -71,6 +70,16 @@
     "dialogTitle": "Deactivate <b>{name}</b>?",
     "dialogDescription": "This will deactivate the workspace and hide it from all members. This action cannot be undone from the app.",
     "confirmLabel": "Deactivate"
+  },
+  "workspaceAvatarSection": {
+    "title": "Avatar",
+    "description": "An avatar is optional but strongly recommended.",
+    "footerHint": "PNG, JPEG or WebP. Max 5MB.",
+    "failedToLoad": "Failed to load workspace.",
+    "actionsLabel": "Avatar actions",
+    "removeAction": "Remove avatar",
+    "removeDialogTitle": "Remove avatar?",
+    "removeDialogDescription": "This will remove the workspace's current avatar. You can upload a new one anytime."
   },
   "workspaceDescriptionSection": {
     "title": "Description",

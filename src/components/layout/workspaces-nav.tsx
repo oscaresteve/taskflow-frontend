@@ -60,7 +60,7 @@ function WorkspaceNavItem({ workspace }: { workspace: WorkspaceResponseDto }) {
           }
         >
           <Avatar size="sm">
-            <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+            <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
             <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
           </Avatar>
           <span className="truncate">{workspace.name}</span>
@@ -93,7 +93,7 @@ function WorkspaceFavoriteMenuItem({ workspace }: { workspace: WorkspaceResponse
     <Tooltip>
       <TooltipTrigger render={<DropdownMenuItem onClick={() => router.push(`/workspaces/${workspace.slug}`)} />}>
         <Avatar size="sm">
-          <AvatarImage src={workspace.logoUrl ?? undefined} alt={workspace.name} />
+          <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
           <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
         </Avatar>
         <span className="truncate">{workspace.name}</span>

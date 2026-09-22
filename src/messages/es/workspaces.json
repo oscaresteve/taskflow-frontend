@@ -5,7 +5,6 @@
   "validation": {
     "nameMinLength": "El nombre debe tener al menos 2 caracteres",
     "nameMaxLength": "El nombre no puede superar los 100 caracteres",
-    "logoUrlInvalid": "La URL del logo debe ser una URL válida",
     "descriptionMaxLength": "La descripción no puede superar los 500 caracteres",
     "atLeastOneField": "Debe proporcionarse al menos un campo"
   },
@@ -71,6 +70,16 @@
     "dialogTitle": "¿Desactivar <b>{name}</b>?",
     "dialogDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
     "confirmLabel": "Desactivar"
+  },
+  "workspaceAvatarSection": {
+    "title": "Avatar",
+    "description": "El avatar es opcional, pero muy recomendable.",
+    "footerHint": "PNG, JPEG o WebP. Máximo 5MB.",
+    "failedToLoad": "No se pudo cargar el espacio.",
+    "actionsLabel": "Acciones del avatar",
+    "removeAction": "Quitar el avatar",
+    "removeDialogTitle": "¿Quitar el avatar?",
+    "removeDialogDescription": "Esto quitará el avatar actual del espacio. Puedes subir uno nuevo cuando quieras."
   },
   "workspaceDescriptionSection": {
     "title": "Descripción",
