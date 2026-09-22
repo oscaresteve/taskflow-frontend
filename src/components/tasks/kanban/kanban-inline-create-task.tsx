@@ -56,6 +56,7 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
     try {
       await createTask.mutateAsync({ ...data, status });
       form.reset();
+      cancel();
     } catch (error) {
       toast.add({
         type: "error",
