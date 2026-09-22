@@ -10,6 +10,8 @@ import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SortControls } from "@/components/common/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/common/empty-state";
+import { ICONS } from "@/lib/icons";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
 import { useMemberTable } from "@/hooks/use-member-table";
 import { MemberSortField } from "@/lib/member-enums";
@@ -88,6 +90,28 @@ export function ProjectMembersPanel({
     );
   }
 
+  const hasActiveFilters = !!search || roleFilter !== "ALL";
+
+  const emptyState = hasActiveFilters ? (
+    <EmptyState
+      icon={ICONS.members}
+      title={t("projectMembersPanel.emptyMessage")}
+      description={t("projectMembersPanel.emptyMessageDescription")}
+    />
+  ) : isActive ? (
+    <EmptyState
+      icon={ICONS.members}
+      title={t("projectMembersPage.emptyActive")}
+      description={t("projectMembersPage.emptyActiveDescription")}
+    />
+  ) : (
+    <EmptyState
+      icon={ICONS.members}
+      title={t("projectMembersPage.emptyInactive")}
+      description={t("projectMembersPage.emptyInactiveDescription")}
+    />
+  );
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -115,10 +139,12 @@ export function ProjectMembersPanel({
         roleChangeable={roleChangeable}
         onChangeRole={onChangeRole}
         renderActions={renderActions}
-        emptyMessage={t("projectMembersPanel.emptyMessage")}
+        emptyState={emptyState}
         actorUserId={actorUserId}
       />
-      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={onPageChange} />
+      {membersQuery.data.data.length > 0 && (
+        <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={onPageChange} />
+      )}
     </div>
   );
 }

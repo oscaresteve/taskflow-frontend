@@ -28,7 +28,7 @@ export function MembersTable<TMember extends MemberLike>({
   roleChangeable,
   onChangeRole,
   renderActions,
-  emptyMessage,
+  emptyState,
   actorUserId,
 }: {
   members: TMember[];
@@ -36,14 +36,14 @@ export function MembersTable<TMember extends MemberLike>({
   roleChangeable: (member: TMember) => boolean;
   onChangeRole: (member: TMember, role: MemberRole) => void;
   renderActions: (member: TMember) => ReactNode | null;
-  emptyMessage: string;
+  emptyState: ReactNode;
   actorUserId?: string;
 }) {
   const t = useTranslations("members");
   const format = useFormatter();
 
   if (members.length === 0) {
-    return <p className="px-1 py-6 text-center text-sm text-muted-foreground">{emptyMessage}</p>;
+    return emptyState;
   }
 
   return (
@@ -99,7 +99,9 @@ export function MembersTable<TMember extends MemberLike>({
                       <TooltipTrigger
                         render={
                           <DropdownMenuTrigger
-                            render={<Button variant="ghost" size="icon-sm" aria-label={t("membersTable.actionsSrOnly")} />}
+                            render={
+                              <Button variant="ghost" size="icon-sm" aria-label={t("membersTable.actionsSrOnly")} />
+                            }
                           />
                         }
                       >

@@ -160,9 +160,7 @@ export default function WorkspacesPage() {
         </div>
       </div>
 
-      {workspaces.data.length === 0 ? (
-        <p className="px-1 py-6 text-center text-sm text-muted-foreground">{t("workspacesPage.noWorkspacesFound")}</p>
-      ) : (
+      {workspaces.data.length > 0 && (
         <Table>
           <TableHeader>
             <TableRow>
@@ -180,7 +178,9 @@ export default function WorkspacesPage() {
         </Table>
       )}
 
-      <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+      {workspaces.data.length > 0 && (
+        <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+      )}
 
       <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
     </PageContainer>

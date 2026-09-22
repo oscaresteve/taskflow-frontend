@@ -11,7 +11,7 @@ import { useTasksTable } from "@/hooks/use-tasks-table";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { ApiError } from "@/lib/http/api-error";
-import { TaskSortField, taskSortFields } from "@/lib/task-enums";
+import { ALL_ASSIGNEES, TaskSortField, taskSortFields } from "@/lib/task-enums";
 import { cn } from "@/lib/utils";
 import { ICONS } from "@/lib/icons";
 import { toast } from "@/components/ui/toast";
@@ -21,6 +21,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { SortControls } from "@/components/common/sort-controls";
 import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
+import { EmptyState } from "@/components/common/empty-state";
 import { KanbanFilterBar } from "@/components/tasks/kanban/kanban-filter-bar";
 import { StatusSelect } from "@/components/tasks/status-select";
 import { PrioritySelect } from "@/components/tasks/priority-select";
@@ -31,6 +32,7 @@ import { TaskActionsMenu } from "@/components/tasks/task-detail/task-actions-men
 interface TaskListTableProps {
   workspaceSlug: string;
   project: ProjectResponseDto;
+  onCreateTask?: () => void;
 }
 
 function TaskListRow({
@@ -141,7 +143,7 @@ function TaskListRow({
   );
 }
 
-export function TaskListTable({ workspaceSlug, project }: TaskListTableProps) {
+export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskListTableProps) {
   const t = useTranslations("tasks");
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -199,6 +201,31 @@ export function TaskListTable({ workspaceSlug, project }: TaskListTableProps) {
     return <p className="py-4 text-sm text-muted-foreground">{t("listTable.failedToLoad")}</p>;
   }
 
+  const hasActiveFilters =
+    !!search || assigneeId !== ALL_ASSIGNEES || priority !== "ALL" || dueDate !== "ALL" || isFavorite;
+
+  const emptyState = hasActiveFilters ? (
+    <EmptyState
+      icon={ICONS.list}
+      title={t("listTable.noTasksFiltered")}
+      description={t("listTable.noTasksFilteredDescription")}
+    />
+  ) : (
+    <EmptyState
+      icon={ICONS.list}
+      title={t("listTable.noTasks")}
+      description={t("listTable.noTasksDescription")}
+      action={
+        onCreateTask ? (
+          <Button size="sm" onClick={onCreateTask}>
+            <ICONS.addNew />
+            {t("listPage.createTask")}
+          </Button>
+        ) : undefined
+      }
+    />
+  );
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -244,7 +271,7 @@ export function TaskListTable({ workspaceSlug, project }: TaskListTableProps) {
           <Skeleton className="h-8 w-full" />
         </div>
       ) : tasks.data.length === 0 ? (
-        <p className="px-1 py-6 text-center text-sm text-muted-foreground">{t("listTable.noTasks")}</p>
+        emptyState
       ) : (
         <Table>
           <TableHeader>

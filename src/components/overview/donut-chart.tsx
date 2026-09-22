@@ -2,6 +2,7 @@
 
 import { Label, Pie, PieChart } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { EmptyInline } from "@/components/common/empty-inline";
 
 export interface DonutSegment {
   key: string;
@@ -25,7 +26,7 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel, foo
   const total = segments.reduce((sum, segment) => sum + segment.count, 0);
 
   if (total === 0) {
-    return <p className="py-2 text-sm text-muted-foreground">{emptyLabel}</p>;
+    return <EmptyInline label={emptyLabel} className="py-2" />;
   }
 
   const config = Object.fromEntries(

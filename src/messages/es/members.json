@@ -16,6 +16,7 @@
   "workspaceMembersPanel": {
     "failedToLoad": "No se pudieron cargar los miembros.",
     "emptyMessage": "No se encontraron miembros.",
+    "emptyMessageDescription": "Prueba con otra búsqueda o filtro de rol.",
     "sortJoined": "Incorporación",
     "sortCreated": "Creado",
     "sortUpdated": "Actualizado"
@@ -23,6 +24,7 @@
   "projectMembersPanel": {
     "failedToLoad": "No se pudieron cargar los miembros.",
     "emptyMessage": "No se encontraron miembros.",
+    "emptyMessageDescription": "Prueba con otra búsqueda o filtro de rol.",
     "sortJoined": "Incorporación",
     "sortCreated": "Creado",
     "sortUpdated": "Actualizado"
@@ -54,6 +56,12 @@
     "tabActive": "Activos",
     "tabPending": "Pendientes",
     "tabRemoved": "Eliminados",
+    "emptyActive": "No hay miembros activos.",
+    "emptyActiveDescription": "Los miembros aparecerán aquí en cuanto se unan al espacio.",
+    "emptyPending": "Todavía no hay invitaciones pendientes.",
+    "emptyPendingDescription": "Los miembros que invites aparecerán aquí.",
+    "emptyRemoved": "No hay miembros eliminados.",
+    "emptyRemovedDescription": "Los miembros eliminados aparecerán aquí.",
     "activate": "Activar",
     "remove": "Eliminar",
     "activatedToast": "{name} activado.",
@@ -74,6 +82,10 @@
     "addMember": "Añadir miembro",
     "tabActive": "Activos",
     "tabInactive": "Inactivos",
+    "emptyActive": "No hay miembros activos.",
+    "emptyActiveDescription": "Los miembros aparecerán aquí en cuanto se unan al proyecto.",
+    "emptyInactive": "No hay miembros inactivos.",
+    "emptyInactiveDescription": "Los miembros desactivados aparecerán aquí.",
     "deactivate": "Desactivar",
     "roleChangedToast": "El rol de {name} se cambió a {role}.",
     "deactivatedToast": "{name} desactivado en este proyecto.",

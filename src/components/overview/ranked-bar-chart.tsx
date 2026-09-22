@@ -2,6 +2,7 @@
 
 import { Bar, BarChart, Cell, LabelList, XAxis, YAxis } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { EmptyInline } from "@/components/common/empty-inline";
 
 export interface RankedBarRow {
   key: string;
@@ -26,7 +27,7 @@ const ROW_HEIGHT = 32;
 
 export function RankedBarChart({ rows, emptyLabel, valueLabel, labelWidth = 150 }: RankedBarChartProps) {
   if (rows.length === 0 || rows.every((row) => row.value === 0)) {
-    return <p className="py-2 text-sm text-muted-foreground">{emptyLabel}</p>;
+    return <EmptyInline label={emptyLabel} className="py-2" />;
   }
 
   const config = { value: { label: valueLabel, color: "var(--chart-3)" } } satisfies ChartConfig;

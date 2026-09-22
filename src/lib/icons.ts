@@ -64,6 +64,7 @@ import {
   Star,
   ChevronRightIcon,
   type LucideIcon,
+  MessagesSquare,
 } from "lucide-react";
 
 export const ICONS = {
@@ -129,6 +130,7 @@ export const ICONS = {
   createWorkspace: Building2,
   mySpace: UserCircle,
   person: UserIcon,
+  messages: MessagesSquare,
 
   // Stat cards de los dashboards
   statOpenTasks: ListTodo,

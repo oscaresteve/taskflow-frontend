@@ -27,6 +27,7 @@ import { getFullName, getInitials } from "@/lib/utils";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import { ProjectActionsMenu } from "@/components/projects/project-actions-menu";
+import { EmptyState } from "@/components/common/empty-state";
 import { useFormatter, useTranslations } from "next-intl";
 import { ProjectSortField } from "@/lib/project-enums";
 import useProjectsTable from "@/hooks/use-projects-table";
@@ -141,6 +142,30 @@ export default function ProjectsPage() {
     { value: "updatedAt", label: t("projectsPage.sortOptions.updatedAt") },
   ];
 
+  const hasActiveFilters = !!search;
+
+  const emptyState = hasActiveFilters ? (
+    <EmptyState
+      icon={ICONS.project}
+      title={t("projectsPage.noProjectsFound")}
+      description={t("projectsPage.noProjectsFoundDescription")}
+    />
+  ) : (
+    <EmptyState
+      icon={ICONS.project}
+      title={t("projectsPage.noProjectsYet")}
+      description={t("projectsPage.noProjectsYetDescription")}
+      action={
+        isWorkspaceManager(myWorkspaceRole) ? (
+          <Button size="sm" onClick={() => setCreateOpen(true)}>
+            <ICONS.addNew />
+            {t("projectsPage.newProject")}
+          </Button>
+        ) : undefined
+      }
+    />
+  );
+
   return (
     <PageContainer>
       <PageHeader
@@ -175,7 +200,7 @@ export default function ProjectsPage() {
       </div>
 
       {projects.data.length === 0 ? (
-        <p className="px-1 py-6 text-center text-sm text-muted-foreground">{t("projectsPage.noProjectsFound")}</p>
+        emptyState
       ) : (
         <Table>
           <TableHeader>
@@ -196,7 +221,9 @@ export default function ProjectsPage() {
         </Table>
       )}
 
-      <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+      {projects.data.length > 0 && (
+        <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+      )}
 
       <CreateProjectDialog open={createOpen} workspaceSlug={workspaceSlug} onOpenChange={setCreateOpen} />
     </PageContainer>

@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import { EmptyInline } from "@/components/common/empty-inline";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
@@ -93,9 +94,11 @@ export default function WorkspaceSwitch() {
                 <SearchInput value={search} onChange={setSearch} placeholder={t("workspaceSwitch.searchPlaceholder")} />
               </div>
               {workspaces.length === 0 && (
-                <div className="flex h-9 items-center px-2 text-sm text-muted-foreground">
-                  {debouncedSearch ? t("workspaceSwitch.noneFound") : t("workspaceSwitch.noneYet")}
-                </div>
+                <EmptyInline
+                  icon={ICONS.workspace}
+                  label={debouncedSearch ? t("workspaceSwitch.noneFound") : t("workspaceSwitch.noneYet")}
+                  className="h-9 px-2"
+                />
               )}
               {workspaces.map((workspace) => (
                 <DropdownMenuItem

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchInput } from "@/components/common/search-input";
+import { EmptyInline } from "@/components/common/empty-inline";
 import { getFullName, getInitials } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
@@ -109,10 +110,7 @@ export function MemberPicker({
                 <Skeleton className="h-9 w-full" />
               </>
             ) : candidates.length === 0 ? (
-              <p className="flex items-center gap-2 px-1 py-2 text-sm text-muted-foreground">
-                <ICONS.person className="size-4" />
-                {emptyMessage}
-              </p>
+              <EmptyInline icon={ICONS.person} label={emptyMessage} className="px-1 py-2" />
             ) : (
               <>
                 {candidates.map((candidate) => (

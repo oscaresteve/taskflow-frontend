@@ -19,6 +19,9 @@
     "searchPlaceholder": "Buscar proyectos",
     "failedToLoad": "No se pudieron cargar los proyectos.",
     "noProjectsFound": "No se encontraron proyectos.",
+    "noProjectsFoundDescription": "Prueba con otra búsqueda.",
+    "noProjectsYet": "Todavía no hay proyectos.",
+    "noProjectsYetDescription": "Crea un proyecto para empezar a organizar tareas.",
     "sortOptions": {
       "name": "Nombre",
       "createdAt": "Creado",

@@ -45,7 +45,7 @@ export default function TaskListPage() {
         }
       />
 
-      <TaskListTable workspaceSlug={workspaceSlug} project={project} />
+      <TaskListTable workspaceSlug={workspaceSlug} project={project} onCreateTask={() => setCreateTaskOpen(true)} />
 
       <CreateTaskDialog workspaceSlug={workspaceSlug} project={project} open={createTaskOpen} onOpenChange={setCreateTaskOpen} />
     </PageContainer>

@@ -11,7 +11,6 @@ import { statusOptions } from "@/lib/task-enums";
 import { cn } from "@/lib/utils";
 import { SortableKanbanCard } from "./kanban-card";
 import { KanbanInlineCreateTask } from "./kanban-inline-create-task";
-import { useTranslations } from "next-intl";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 
 interface KanbanColumnProps {
@@ -35,7 +34,6 @@ export function KanbanColumn({
   // ultima o una columna vacia, donde no hay ningun sortable al que apuntar. Su `isOver` no se usa;
   // el resaltado lo decide el board, que sabe en que columna va a caer la tarjeta.
   const { setNodeRef } = useDroppable({ id: status });
-  const t = useTranslations("tasks");
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -55,12 +53,10 @@ export function KanbanColumn({
         </Badge>
       </div>
 
-      <div className="flex min-h-16 flex-col gap-2">
-        <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
-          {tasks.length === 0 ? (
-            <p className="px-1 py-4 text-center text-sm text-muted-foreground">{t("kanbanColumn.noTasks")}</p>
-          ) : (
-            tasks.map((task) => (
+      {tasks.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+            {tasks.map((task) => (
               <SortableKanbanCard
                 key={task.id}
                 href={buildTaskModalHref({
@@ -75,10 +71,10 @@ export function KanbanColumn({
                 workspaceSlug={workspaceSlug}
                 projectSlug={projectSlug}
               />
-            ))
-          )}
-        </SortableContext>
-      </div>
+            ))}
+          </SortableContext>
+        </div>
+      )}
 
       <KanbanInlineCreateTask workspaceSlug={workspaceSlug} projectSlug={projectSlug} status={status} />
     </div>

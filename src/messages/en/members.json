@@ -16,6 +16,7 @@
   "workspaceMembersPanel": {
     "failedToLoad": "Failed to load members.",
     "emptyMessage": "No members found.",
+    "emptyMessageDescription": "Try a different search or role filter.",
     "sortJoined": "Joined",
     "sortCreated": "Created",
     "sortUpdated": "Updated"
@@ -23,6 +24,7 @@
   "projectMembersPanel": {
     "failedToLoad": "Failed to load members.",
     "emptyMessage": "No members found.",
+    "emptyMessageDescription": "Try a different search or role filter.",
     "sortJoined": "Joined",
     "sortCreated": "Created",
     "sortUpdated": "Updated"
@@ -54,6 +56,12 @@
     "tabActive": "Active",
     "tabPending": "Pending",
     "tabRemoved": "Removed",
+    "emptyActive": "No active members.",
+    "emptyActiveDescription": "Members will appear here once they join the workspace.",
+    "emptyPending": "No pending invites yet.",
+    "emptyPendingDescription": "Members you invite will show up here.",
+    "emptyRemoved": "No removed members.",
+    "emptyRemovedDescription": "Removed members will show up here.",
     "activate": "Activate",
     "remove": "Remove",
     "activatedToast": "{name} activated.",
@@ -74,6 +82,10 @@
     "addMember": "Add member",
     "tabActive": "Active",
     "tabInactive": "Inactive",
+    "emptyActive": "No active members.",
+    "emptyActiveDescription": "Members will appear here once they join the project.",
+    "emptyInactive": "No inactive members.",
+    "emptyInactiveDescription": "Deactivated members will show up here.",
     "deactivate": "Deactivate",
     "roleChangedToast": "{name}'s role changed to {role}.",
     "deactivatedToast": "{name} deactivated on this project.",

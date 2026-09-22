@@ -20,6 +20,7 @@ import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getActiveProjectMembersInfiniteQuery, getProjectMemberQuery } from "@/lib/queries/project-member.queries";
 import { cn, getFullName, getInitials } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { EmptyInline } from "@/components/common/empty-inline";
 
 const PICKER_PAGE_SIZE = 10;
 const ITEM_CLASSNAME = "gap-1.5 py-1 pl-2";
@@ -121,7 +122,7 @@ export function AssigneePicker({
   }
 
   const candidateList = (
-    <ComboboxList>
+    <ComboboxList className="min-w-max">
       <ComboboxItem value={null} className={ITEM_CLASSNAME}>
         <Avatar size="sm">
           <AvatarFallback>
@@ -136,10 +137,7 @@ export function AssigneePicker({
           <Skeleton className="h-9 w-full" />
         </>
       ) : candidates.length === 0 ? (
-        <p className="flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground">
-          <ICONS.person className="size-4" />
-          {t("assigneeSelect.emptyMessage")}
-        </p>
+        <EmptyInline icon={ICONS.person} label={t("assigneeSelect.emptyMessage")} className="px-2 py-2" />
       ) : (
         <>
           {candidates.map((candidate) => (

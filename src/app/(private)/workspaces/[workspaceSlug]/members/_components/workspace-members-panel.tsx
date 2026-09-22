@@ -10,6 +10,9 @@ import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SortControls } from "@/components/common/sort-controls";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/common/empty-state";
+import { ICONS } from "@/lib/icons";
 import {
   WorkspaceMemberStatus,
   WorkspaceMemberWithUserResponseDto,
@@ -25,6 +28,7 @@ interface WorkspaceMembersPanelProps {
   roleChangeable: (member: WorkspaceMemberWithUserResponseDto) => boolean;
   onChangeRole: (member: WorkspaceMemberWithUserResponseDto, role: WorkspaceRole) => void;
   renderActions: (member: WorkspaceMemberWithUserResponseDto) => ReactNode | null;
+  onAddMember?: () => void;
   actorUserId?: string;
 }
 
@@ -35,6 +39,7 @@ export function WorkspaceMembersPanel({
   roleChangeable,
   onChangeRole,
   renderActions,
+  onAddMember,
   actorUserId,
 }: WorkspaceMembersPanelProps) {
   const t = useTranslations("members");
@@ -89,6 +94,42 @@ export function WorkspaceMembersPanel({
     );
   }
 
+  const hasActiveFilters = !!search || roleFilter !== "ALL";
+
+  const emptyState = hasActiveFilters ? (
+    <EmptyState
+      icon={ICONS.members}
+      title={t("workspaceMembersPanel.emptyMessage")}
+      description={t("workspaceMembersPanel.emptyMessageDescription")}
+    />
+  ) : status === "ACTIVE" ? (
+    <EmptyState
+      icon={ICONS.members}
+      title={t("workspaceMembersPage.emptyActive")}
+      description={t("workspaceMembersPage.emptyActiveDescription")}
+    />
+  ) : status === "PENDING" ? (
+    <EmptyState
+      icon={ICONS.members}
+      title={t("workspaceMembersPage.emptyPending")}
+      description={t("workspaceMembersPage.emptyPendingDescription")}
+      action={
+        onAddMember ? (
+          <Button size="sm" onClick={onAddMember}>
+            <ICONS.memberAdd />
+            {t("workspaceMembersPage.addMember")}
+          </Button>
+        ) : undefined
+      }
+    />
+  ) : (
+    <EmptyState
+      icon={ICONS.members}
+      title={t("workspaceMembersPage.emptyRemoved")}
+      description={t("workspaceMembersPage.emptyRemovedDescription")}
+    />
+  );
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -116,10 +157,12 @@ export function WorkspaceMembersPanel({
         roleChangeable={roleChangeable}
         onChangeRole={onChangeRole}
         renderActions={renderActions}
-        emptyMessage={t("workspaceMembersPanel.emptyMessage")}
+        emptyState={emptyState}
         actorUserId={actorUserId}
       />
-      <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={onPageChange} />
+      {membersQuery.data.data.length > 0 && (
+        <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={onPageChange} />
+      )}
     </div>
   );
 }

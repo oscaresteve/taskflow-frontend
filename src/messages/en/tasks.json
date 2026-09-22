@@ -65,7 +65,6 @@
     "searchPlaceholder": "Search tasks"
   },
   "kanbanColumn": {
-    "noTasks": "No tasks",
     "addTask": "Add task"
   },
   "listPage": {
@@ -75,7 +74,10 @@
   },
   "listTable": {
     "failedToLoad": "Failed to load tasks.",
-    "noTasks": "No tasks",
+    "noTasks": "No tasks yet.",
+    "noTasksDescription": "Create a task to get started.",
+    "noTasksFiltered": "No tasks match your filters.",
+    "noTasksFilteredDescription": "Try a different search or filter.",
     "favoritesFilter": "Favorites",
     "columns": {
       "task": "Task",

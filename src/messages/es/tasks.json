@@ -65,7 +65,6 @@
     "searchPlaceholder": "Buscar tareas"
   },
   "kanbanColumn": {
-    "noTasks": "Sin tareas",
     "addTask": "Añadir tarea"
   },
   "listPage": {
@@ -75,7 +74,10 @@
   },
   "listTable": {
     "failedToLoad": "No se pudieron cargar las tareas.",
-    "noTasks": "Sin tareas",
+    "noTasks": "Todavía no hay tareas.",
+    "noTasksDescription": "Crea una tarea para empezar.",
+    "noTasksFiltered": "Ninguna tarea coincide con los filtros.",
+    "noTasksFilteredDescription": "Prueba con otra búsqueda o filtro.",
     "favoritesFilter": "Favoritas",
     "columns": {
       "task": "Tarea",

@@ -2,8 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyInline } from "@/components/common/empty-inline";
 import { CommentItem } from "./comment-item";
 import { CommentResponseDto } from "@/lib/dtos/comments.dto";
+import { ICONS } from "@/lib/icons";
 
 interface CommentListProps {
   workspaceSlug: string;
@@ -50,7 +52,7 @@ export function CommentList({
   }
 
   if (comments.length === 0) {
-    return null;
+    return <EmptyInline icon={ICONS.messages} label={t("comments.empty")} className="py-2" />;
   }
 
   return (

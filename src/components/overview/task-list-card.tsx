@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyInline } from "@/components/common/empty-inline";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
 import { TaskItem } from "./task-item";
@@ -34,7 +35,7 @@ export function TaskListCard({ title, tasks, isLoading, emptyLabel, showProject 
             <Skeleton className="h-14 w-full" />
           </>
         ) : tasks.length === 0 ? (
-          <p className="py-2 text-sm text-muted-foreground">{emptyLabel}</p>
+          <EmptyInline label={emptyLabel} className="py-2" />
         ) : (
           tasks.map((task) => (
             <TaskItem

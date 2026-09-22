@@ -238,6 +238,7 @@ export default function WorkspaceMembersPage() {
               roleChangeable={roleChangeable}
               onChangeRole={handleRequestChangeRole}
               renderActions={renderActions}
+              onAddMember={isWorkspaceManager(myRole) ? () => setAddMemberOpen(true) : undefined}
               actorUserId={me?.id}
             />
           </TabsContent>

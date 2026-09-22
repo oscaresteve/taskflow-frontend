@@ -37,6 +37,7 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { ActionsMenuContent, ActionsMenuItem, ActionsMenuLabel } from "@/components/common/actions-menu";
+import { EmptyInline } from "@/components/common/empty-inline";
 import { ColorDot } from "../ui/color-dot";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
@@ -135,9 +136,7 @@ function ProjectsFavoritesNav({ workspaceSlug }: { workspaceSlug: string }) {
             <DropdownMenuGroup>
               <DropdownMenuLabel>{t("projectsNav.favorites")}</DropdownMenuLabel>
               {favorites.length === 0 ? (
-                <div className="flex h-9 items-center px-2 text-sm text-muted-foreground">
-                  {t("projectsNav.noFavorites")}
-                </div>
+                <EmptyInline icon={ICONS.favorite} label={t("projectsNav.noFavorites")} className="h-9 px-2" />
               ) : (
                 favorites.map((project) => (
                   <ProjectFavoriteMenuItem key={project.id} workspaceSlug={workspaceSlug} project={project} />
@@ -243,9 +242,11 @@ export default function ProjectsNav() {
                 ))
               ) : projects.length === 0 ? (
                 <SidebarMenuSubItem>
-                  <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
-                    {debouncedSearch ? t("projectsNav.noneFound") : t("projectsNav.noneYet")}
-                  </div>
+                  <EmptyInline
+                    icon={ICONS.project}
+                    label={debouncedSearch ? t("projectsNav.noneFound") : t("projectsNav.noneYet")}
+                    className="h-7 px-2"
+                  />
                 </SidebarMenuSubItem>
               ) : (
                 <>

@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { EmptyInline } from "@/components/common/empty-inline";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getActiveProjectMembersInfiniteQuery, getProjectMemberQuery } from "@/lib/queries/project-member.queries";
 import { ALL_ASSIGNEES, UNASSIGNED } from "@/lib/task-enums";
@@ -98,10 +99,7 @@ export function AssigneeFilterSelect({
     setEditText(next ? label : "");
   }
 
-  function handleValueChange(
-    item: AssigneeFilterItem | null,
-    eventDetails: ComboboxPrimitive.Root.ChangeEventDetails,
-  ) {
+  function handleValueChange(item: AssigneeFilterItem | null, eventDetails: ComboboxPrimitive.Root.ChangeEventDetails) {
     // Same reasoning as AssigneePicker: only commit on an explicit item selection, not on typing
     // down to empty or pressing Escape.
     if (eventDetails.reason !== "item-press" || item === null) {
@@ -170,7 +168,7 @@ export function AssigneeFilterSelect({
             onFocus={(e) => e.currentTarget.select()}
           />
         </div>
-        <ComboboxList>
+        <ComboboxList className="min-w-max">
           <ComboboxItem value={ALL_ASSIGNEES} className={ITEM_CLASSNAME}>
             <Avatar size="sm">
               <AvatarFallback>
@@ -193,10 +191,7 @@ export function AssigneeFilterSelect({
               <Skeleton className="h-9 w-full" />
             </>
           ) : candidates.length === 0 ? (
-            <p className="flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground">
-              <ICONS.person className="size-4" />
-              {t("assigneeSelect.emptyMessage")}
-            </p>
+            <EmptyInline icon={ICONS.person} label={t("assigneeSelect.emptyMessage")} className="px-2 py-3" />
           ) : (
             <>
               {candidates.map((candidate) => (
