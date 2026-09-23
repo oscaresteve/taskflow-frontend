@@ -12,7 +12,6 @@ export const createProjectSchema = (t: Translator) =>
       .max(10, t("validation.keyMaxLength"))
       .regex(/^[A-Z0-9]+$/, t("validation.keyFormat")),
     description: descriptionSchema(t),
-    icon: z.string().optional(),
     color: z.string().optional(),
   });
 
@@ -21,7 +20,6 @@ export const updateProjectSchema = (t: Translator) =>
     .object({
       name: z.string().trim().min(2, t("validation.nameMinLength")).max(100, t("validation.nameMaxLength")).optional(),
       description: descriptionSchema(t).nullable(),
-      icon: z.string(t("validation.iconMustBeString")).optional().nullable(),
       color: z.string(t("validation.colorMustBeString")).optional().nullable(),
     })
     .refine((data) => Object.keys(data).length > 0, t("validation.atLeastOneField"));

@@ -8,7 +8,6 @@
     "keyMinLength": "La clave debe tener al menos 2 caracteres",
     "keyMaxLength": "La clave no puede superar los 10 caracteres",
     "keyFormat": "La clave solo puede contener letras mayúsculas y números",
-    "iconMustBeString": "El icono debe ser una cadena de texto",
     "colorMustBeString": "El color debe ser una cadena de texto",
     "descriptionMaxLength": "La descripción no puede superar los 500 caracteres",
     "atLeastOneField": "Debe proporcionarse al menos un campo"

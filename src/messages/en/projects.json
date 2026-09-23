@@ -8,7 +8,6 @@
     "keyMinLength": "Key must be at least 2 characters long",
     "keyMaxLength": "Key cannot exceed 10 characters",
     "keyFormat": "Key must contain only uppercase letters and numbers",
-    "iconMustBeString": "Icon must be a string",
     "colorMustBeString": "Color must be a string",
     "descriptionMaxLength": "Description cannot exceed 500 characters",
     "atLeastOneField": "At least one field must be provided"
