@@ -5,8 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getWorkspaceQuery, getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
-import { getInitials } from "@/lib/utils";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
 import { SearchInput } from "@/components/common/search-input";
@@ -70,24 +69,18 @@ export default function WorkspaceSwitch() {
               />
             }
           >
-            <Avatar>
-              <AvatarImage src={activeWorkspace.avatarUrl ?? undefined} alt={activeWorkspace.name} />
-              <AvatarFallback>{getInitials(activeWorkspace.name)}</AvatarFallback>
-            </Avatar>
+            <CustomAvatar avatarUrl={activeWorkspace.avatarUrl} alt={activeWorkspace.name} seed={activeWorkspace.id} />
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{activeWorkspace.name}</span>
               <span className="truncate text-muted-foreground text-xs">{activeWorkspace.slug}</span>
             </div>
             <ICONS.chevronUpDown className="ml-auto size-4" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="min-w-56"
-            align="start"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
-          >
+          <DropdownMenuContent className="min-w-56" align="start" side={isMobile ? "bottom" : "right"} sideOffset={4}>
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">{t("workspaceSwitch.workspaces")}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
+                {t("workspaceSwitch.workspaces")}
+              </DropdownMenuLabel>
               {/* Stops keydown from bubbling to the menu's typeahead handler, which would otherwise
                   hijack keystrokes (and move item focus) instead of letting them reach the input. */}
               <div onKeyDown={(e) => e.stopPropagation()} className="p-2">
@@ -106,10 +99,7 @@ export default function WorkspaceSwitch() {
                   onClick={() => router.push(`/workspaces/${workspace.slug}`)}
                   className="gap-2 p-2"
                 >
-                  <Avatar size="sm">
-                    <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
-                    <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-                  </Avatar>
+                  <CustomAvatar size="sm" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
                   {workspace.name}
                 </DropdownMenuItem>
               ))}
@@ -120,7 +110,9 @@ export default function WorkspaceSwitch() {
                   aria-disabled={isFetchingNextPage}
                   className="gap-2 p-2 text-muted-foreground"
                 >
-                  {isFetchingNextPage ? t("workspaceSwitch.loading") : t("workspaceSwitch.remaining", { count: remaining })}
+                  {isFetchingNextPage
+                    ? t("workspaceSwitch.loading")
+                    : t("workspaceSwitch.remaining", { count: remaining })}
                 </DropdownMenuItem>
               )}
             </DropdownMenuGroup>

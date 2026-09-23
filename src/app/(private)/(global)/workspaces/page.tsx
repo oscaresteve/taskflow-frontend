@@ -9,7 +9,8 @@ import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
-import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/common/search-input";
 import { PageSizeSelect } from "@/components/common/page-size-select";
@@ -21,7 +22,7 @@ import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-
 import { WorkspaceActionsMenu } from "@/components/workspaces/workspace-actions-menu";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
-import { getFullName, getInitials } from "@/lib/utils";
+import { getFullName } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { WorkspaceSortField } from "@/lib/workspace-enums";
 import { useWorkspacesTable } from "@/hooks/use-workspaces-table";
@@ -42,10 +43,7 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
     <TableRow>
       <TableCell>
         <Link href={`/workspaces/${workspace.slug}`} className="flex items-center gap-2">
-          <Avatar size="sm">
-            <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
-            <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-          </Avatar>
+          <CustomAvatar size="sm" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
           <span className="truncate font-medium">{workspace.name}</span>
         </Link>
       </TableCell>
@@ -62,10 +60,14 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
             {visibleOwners.map((owner) => {
               const ownerName = getFullName(owner.user.firstName, owner.user.lastName);
               return (
-                <Avatar key={owner.id} size="sm">
-                  <AvatarImage src={owner.user.avatarUrl ?? undefined} alt={ownerName} />
-                  <AvatarFallback>{getInitials(ownerName)}</AvatarFallback>
-                </Avatar>
+                <CustomAvatar
+                  key={owner.id}
+                  size="sm"
+                  avatarUrl={owner.user.avatarUrl}
+                  alt={ownerName}
+                  seed={owner.user.id}
+                  variant="glyphs"
+                />
               );
             })}
             {remainingOwners > 0 && <AvatarGroupCount>+{remainingOwners}</AvatarGroupCount>}

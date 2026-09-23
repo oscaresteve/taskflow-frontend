@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { ICONS } from "@/lib/icons";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu
 import { ActionsMenuContent } from "@/components/common/actions-menu";
 import { MemberRole } from "@/lib/dtos/members.dto";
 import { roleOptions } from "@/lib/member-enums";
-import { getFullName, getInitials } from "@/lib/utils";
+import { getFullName } from "@/lib/utils";
 import { EnumBadge } from "@/components/common/enum-display";
 import { RoleSelect } from "@/components/members/role-select";
 import { useFormatter, useTranslations } from "next-intl";
@@ -66,10 +66,13 @@ export function MembersTable<TMember extends MemberLike>({
             <TableRow key={member.id}>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <Avatar size="sm">
-                    <AvatarImage src={member.user.avatarUrl ?? undefined} alt={memberName} />
-                    <AvatarFallback>{getInitials(memberName)}</AvatarFallback>
-                  </Avatar>
+                  <CustomAvatar
+                    size="sm"
+                    avatarUrl={member.user.avatarUrl}
+                    alt={memberName}
+                    seed={member.user.id}
+                    variant="glyphs"
+                  />
                   <span className="truncate font-medium">
                     {memberName}
                     {isActor && t("membersTable.youSuffix")}

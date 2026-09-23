@@ -2,13 +2,13 @@
 
 import { ICONS } from "@/lib/icons";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchInput } from "@/components/common/search-input";
 import { EmptyInline } from "@/components/common/empty-inline";
-import { getFullName, getInitials } from "@/lib/utils";
+import { getFullName } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
 export interface MemberCandidate {
@@ -82,10 +82,13 @@ export function MemberPicker({
       <FieldLabel htmlFor={`${id}-search`}>{label ?? t("memberPicker.defaultLabel")}</FieldLabel>
       {selected ? (
         <div className="flex items-center gap-2 rounded-lg border border-input px-2.5 py-1.5">
-          <Avatar size="sm">
-            <AvatarImage src={selected.avatarUrl ?? undefined} alt={selected.name} />
-            <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
-          </Avatar>
+          <CustomAvatar
+            size="sm"
+            avatarUrl={selected.avatarUrl}
+            alt={selected.name}
+            seed={selected.userId}
+            variant="glyphs"
+          />
           <div className="flex flex-1 flex-col truncate text-sm">
             <span className="truncate">{selected.name}</span>
             <span className="truncate text-xs text-muted-foreground">{selected.email}</span>
@@ -120,10 +123,13 @@ export function MemberPicker({
                     onClick={() => onSelect(candidate)}
                     className="flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
                   >
-                    <Avatar size="sm">
-                      <AvatarImage src={candidate.avatarUrl ?? undefined} alt={candidate.name} />
-                      <AvatarFallback>{getInitials(candidate.name)}</AvatarFallback>
-                    </Avatar>
+                    <CustomAvatar
+                      size="sm"
+                      avatarUrl={candidate.avatarUrl}
+                      alt={candidate.name}
+                      seed={candidate.userId}
+                      variant="glyphs"
+                    />
                     <div className="flex flex-1 flex-col truncate">
                       <span className="truncate">{candidate.name}</span>
                       <span className="truncate text-xs text-muted-foreground">{candidate.email}</span>

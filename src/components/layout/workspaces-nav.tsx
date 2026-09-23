@@ -10,9 +10,8 @@ import { getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
 import { useToggleWorkspaceFavorite } from "@/hooks/use-toggle-workspace-favorite";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
-import { getInitials } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
@@ -59,10 +58,7 @@ function WorkspaceNavItem({ workspace }: { workspace: WorkspaceResponseDto }) {
             />
           }
         >
-          <Avatar size="sm">
-            <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
-            <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-          </Avatar>
+          <CustomAvatar size="sm" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
           <span className="truncate">{workspace.name}</span>
           <span
             data-workspace-actions
@@ -92,10 +88,7 @@ function WorkspaceFavoriteMenuItem({ workspace }: { workspace: WorkspaceResponse
   return (
     <Tooltip>
       <TooltipTrigger render={<DropdownMenuItem onClick={() => router.push(`/workspaces/${workspace.slug}`)} />}>
-        <Avatar size="sm">
-          <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
-          <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-        </Avatar>
+        <CustomAvatar size="sm" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
         <span className="truncate">{workspace.name}</span>
         <span onClick={(event) => event.stopPropagation()} className="ml-auto shrink-0">
           <FavoriteToggle

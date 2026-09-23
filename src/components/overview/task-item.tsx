@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { EnumBadge } from "@/components/common/enum-display";
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
 import { priorityOptions, statusOptions } from "@/lib/task-enums";
 import { ICONS } from "@/lib/icons";
-import { cn, getFullName, getInitials, isOverdue } from "@/lib/utils";
+import { cn, getFullName, isOverdue } from "@/lib/utils";
 
 interface TaskItemProps {
   task: OverviewTaskDto;
@@ -58,10 +58,13 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
       <div className="flex shrink-0 items-center gap-2">
         <EnumBadge option={statusOptions[task.status]} />
         {task.assignee && assigneeName ? (
-          <Avatar size="sm">
-            <AvatarImage src={task.assignee.avatarUrl ?? undefined} alt={assigneeName} />
-            <AvatarFallback>{getInitials(assigneeName)}</AvatarFallback>
-          </Avatar>
+          <CustomAvatar
+            size="sm"
+            avatarUrl={task.assignee.avatarUrl}
+            alt={assigneeName}
+            seed={task.assignee.id}
+            variant="glyphs"
+          />
         ) : null}
       </div>
     </Link>

@@ -1,14 +1,14 @@
 "use client";
 
-import { ReactNode, useRef } from "react";
+import { useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { toast } from "@/components/ui/toast";
 import { ICONS } from "@/lib/icons";
 
 interface AvatarPickerProps {
   imageUrl: string | null;
-  fallback: ReactNode;
+  seed: string;
   alt: string;
   acceptedMimeTypes: readonly string[];
   maxSizeBytes: number;
@@ -18,7 +18,7 @@ interface AvatarPickerProps {
 
 export function AvatarPicker({
   imageUrl,
-  fallback,
+  seed,
   alt,
   acceptedMimeTypes,
   maxSizeBytes,
@@ -56,10 +56,13 @@ export function AvatarPicker({
         onClick={() => fileInputRef.current?.click()}
         className="relative rounded-full disabled:cursor-not-allowed disabled:opacity-70"
       >
-        <Avatar size="lg" className="size-16! cursor-pointer transition-opacity hover:opacity-80">
-          <AvatarImage src={imageUrl ?? undefined} alt={alt} />
-          <AvatarFallback>{fallback}</AvatarFallback>
-        </Avatar>
+        <CustomAvatar
+          size="lg"
+          className="size-16! cursor-pointer transition-opacity hover:opacity-80"
+          avatarUrl={imageUrl}
+          alt={alt}
+          seed={seed}
+        />
         {isUploading && (
           <div className="absolute inset-0 flex items-center justify-center rounded-full bg-background/60">
             <ICONS.loading className="size-5 animate-spin" aria-hidden="true" />

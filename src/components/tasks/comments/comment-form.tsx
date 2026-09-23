@@ -11,8 +11,9 @@ import { ApiError } from "@/lib/http/api-error";
 import { useCreateComment } from "@/hooks/use-create-comment";
 import { useUpdateComment } from "@/hooks/use-update-comment";
 import { CreateCommentDto, createCommentSchema, updateCommentSchema } from "@/lib/schemas/comment.schema";
-import { getFullName, getInitials } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getFullName } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { useQuery } from "@tanstack/react-query";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { KeyboardEvent } from "react";
@@ -86,10 +87,13 @@ export function CommentForm({
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
       <div className="flex gap-2">
-        <Avatar size="sm">
-          <AvatarImage src={author?.avatarUrl ?? undefined} alt={authorName} />
-          <AvatarFallback>{authorName ? getInitials(authorName) : "?"}</AvatarFallback>
-        </Avatar>
+        {author ? (
+          <CustomAvatar size="sm" avatarUrl={author.avatarUrl} alt={authorName} seed={author.id} variant="glyphs" />
+        ) : (
+          <Avatar size="sm">
+            <AvatarFallback>?</AvatarFallback>
+          </Avatar>
+        )}
         <Textarea
           {...form.register("content")}
           aria-label={t("comments.title")}

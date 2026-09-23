@@ -17,7 +17,6 @@ import { useDeleteWorkspaceAvatar } from "@/hooks/use-delete-workspace-avatar";
 import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { AVATAR_ACCEPTED_MIME_TYPES, MAX_AVATAR_SIZE_BYTES } from "@/lib/schemas/common.schema";
-import { getInitials } from "@/lib/utils";
 import { ICONS } from "@/lib/icons";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
@@ -106,7 +105,7 @@ export function WorkspaceAvatarSection() {
     >
       <AvatarPicker
         imageUrl={workspace.avatarUrl}
-        fallback={getInitials(workspace.name)}
+        seed={workspace.id}
         alt={workspace.name}
         acceptedMimeTypes={AVATAR_ACCEPTED_MIME_TYPES}
         maxSizeBytes={MAX_AVATAR_SIZE_BYTES}

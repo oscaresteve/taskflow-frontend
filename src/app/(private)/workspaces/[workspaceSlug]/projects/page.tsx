@@ -21,9 +21,10 @@ import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queri
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { ColorDot } from "@/components/ui/color-dot";
-import { getFullName, getInitials } from "@/lib/utils";
+import { getFullName } from "@/lib/utils";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import { ProjectActionsMenu } from "@/components/projects/project-actions-menu";
@@ -71,10 +72,14 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
             {visibleOwners.map((owner) => {
               const ownerName = getFullName(owner.user.firstName, owner.user.lastName);
               return (
-                <Avatar key={owner.id} size="sm">
-                  <AvatarImage src={owner.user.avatarUrl ?? undefined} alt={ownerName} />
-                  <AvatarFallback>{getInitials(ownerName)}</AvatarFallback>
-                </Avatar>
+                <CustomAvatar
+                  key={owner.id}
+                  size="sm"
+                  avatarUrl={owner.user.avatarUrl}
+                  alt={ownerName}
+                  seed={owner.user.id}
+                  variant="glyphs"
+                />
               );
             })}
             {remainingOwners > 0 && <AvatarGroupCount>+{remainingOwners}</AvatarGroupCount>}

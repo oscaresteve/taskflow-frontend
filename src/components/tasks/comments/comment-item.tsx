@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ICONS } from "@/lib/icons";
 import { useFormatter, useTranslations } from "next-intl";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
@@ -12,7 +12,7 @@ import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
 import { CommentResponseDto } from "@/lib/dtos/comments.dto";
-import { getFullName, getInitials } from "@/lib/utils";
+import { getFullName } from "@/lib/utils";
 import { useDeleteComment } from "@/hooks/use-delete-comment";
 import { CommentForm } from "./comment-form";
 import { useQuery } from "@tanstack/react-query";
@@ -77,10 +77,13 @@ export function CommentItem({
 
   return (
     <div className="flex gap-2 group">
-      <Avatar size="sm">
-        <AvatarImage src={author?.user.avatarUrl ?? undefined} alt={authorName} />
-        <AvatarFallback>{authorName ? getInitials(authorName) : "?"}</AvatarFallback>
-      </Avatar>
+      <CustomAvatar
+        size="sm"
+        avatarUrl={author?.user.avatarUrl ?? null}
+        alt={authorName}
+        seed={authorId}
+        variant="glyphs"
+      />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{authorName ?? t("comments.unknownAuthor")}</span>

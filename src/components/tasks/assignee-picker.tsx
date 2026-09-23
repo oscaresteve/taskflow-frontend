@@ -6,6 +6,7 @@ import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar, getDicebearDataUri } from "@/components/common/custom-avatar";
 import {
   Combobox,
   ComboboxContent,
@@ -142,10 +143,13 @@ export function AssigneePicker({
         <>
           {candidates.map((candidate) => (
             <ComboboxItem key={candidate.userId} value={candidate} className={ITEM_CLASSNAME}>
-              <Avatar size="sm">
-                <AvatarImage src={candidate.avatarUrl ?? undefined} alt={candidate.name} />
-                <AvatarFallback>{getInitials(candidate.name)}</AvatarFallback>
-              </Avatar>
+              <CustomAvatar
+                size="sm"
+                avatarUrl={candidate.avatarUrl}
+                alt={candidate.name}
+                seed={candidate.userId}
+                variant="glyphs"
+              />
               <div className="flex flex-1 flex-col truncate">
                 <span className="truncate">{candidate.name}</span>
                 <span className="truncate text-xs text-muted-foreground">{candidate.email}</span>
@@ -197,7 +201,10 @@ export function AssigneePicker({
                 />
               }
             >
-              <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
+              <AvatarImage
+                src={selected ? (selected.avatarUrl ?? getDicebearDataUri(selected.userId, "glyphs")) : undefined}
+                alt={selected?.name}
+              />
               {selected ? (
                 <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
               ) : (
@@ -233,16 +240,21 @@ export function AssigneePicker({
             )}
           >
             <InputGroupAddon>
-              <Avatar size="sm">
-                <AvatarImage src={selected?.avatarUrl ?? undefined} alt={selected?.name} />
-                {selected ? (
-                  <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
-                ) : (
+              {selected ? (
+                <CustomAvatar
+                  size="sm"
+                  avatarUrl={selected.avatarUrl}
+                  alt={selected.name}
+                  seed={selected.userId}
+                  variant="glyphs"
+                />
+              ) : (
+                <Avatar size="sm">
                   <AvatarFallback>
                     <ICONS.person className="size-4" />
                   </AvatarFallback>
-                )}
-              </Avatar>
+                </Avatar>
+              )}
             </InputGroupAddon>
             <ComboboxPrimitive.Input
               id={id}

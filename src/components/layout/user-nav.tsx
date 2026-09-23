@@ -12,7 +12,7 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { toast } from "@/components/ui/toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMeQuery } from "@/lib/queries/auth.queries";
@@ -20,7 +20,7 @@ import { signOut } from "@/lib/api/auth.api";
 import { ApiError } from "@/lib/http/api-error";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
-import { getFullName, getInitials } from "@/lib/utils";
+import { getFullName } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
 export default function UserNav() {
@@ -71,10 +71,7 @@ export default function UserNav() {
                 />
               }
             >
-              <Avatar>
-                <AvatarImage src={user.avatarUrl ?? undefined} alt={userName!} />
-                <AvatarFallback>{getInitials(userName!)}</AvatarFallback>
-              </Avatar>
+              <CustomAvatar avatarUrl={user.avatarUrl} alt={userName} seed={user.id} variant="glyphs" />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{userName}</span>
                 <span className="truncate text-xs">{user.email}</span>
@@ -89,10 +86,7 @@ export default function UserNav() {
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-3 py-1.5 text-left text-sm">
-                    <Avatar>
-                      <AvatarImage src={user.avatarUrl ?? undefined} alt={userName!} />
-                      <AvatarFallback>{getInitials(userName!)}</AvatarFallback>
-                    </Avatar>
+                    <CustomAvatar avatarUrl={user.avatarUrl} alt={userName} seed={user.id} variant="glyphs" />
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{userName}</span>
                       <span className="truncate text-xs">{user.email}</span>

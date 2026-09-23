@@ -6,6 +6,7 @@ import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar, getDicebearDataUri } from "@/components/common/custom-avatar";
 import { Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -144,7 +145,7 @@ export function AssigneeFilterSelect({
         >
           {typeof selected === "object" ? (
             <>
-              <AvatarImage src={selected.avatarUrl ?? undefined} alt={selected.name} />
+              <AvatarImage src={selected.avatarUrl ?? getDicebearDataUri(selected.userId, "glyphs")} alt={selected.name} />
               <AvatarFallback>{getInitials(selected.name)}</AvatarFallback>
             </>
           ) : selected === UNASSIGNED ? (
@@ -196,10 +197,13 @@ export function AssigneeFilterSelect({
             <>
               {candidates.map((candidate) => (
                 <ComboboxItem key={candidate.userId} value={candidate} className={ITEM_CLASSNAME}>
-                  <Avatar size="sm">
-                    <AvatarImage src={candidate.avatarUrl ?? undefined} alt={candidate.name} />
-                    <AvatarFallback>{getInitials(candidate.name)}</AvatarFallback>
-                  </Avatar>
+                  <CustomAvatar
+                    size="sm"
+                    avatarUrl={candidate.avatarUrl}
+                    alt={candidate.name}
+                    seed={candidate.userId}
+                    variant="glyphs"
+                  />
                   <div className="flex flex-1 flex-col truncate">
                     <span className="truncate">{candidate.name}</span>
                     <span className="truncate text-xs text-muted-foreground">{candidate.email}</span>

@@ -1,10 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
-import { getInitials } from "@/lib/utils";
 
 export function WorkspaceHeader({ workspaceSlug }: { workspaceSlug: string }) {
   const { data: workspace, isLoading } = useQuery(getWorkspaceQuery(workspaceSlug));
@@ -23,10 +22,7 @@ export function WorkspaceHeader({ workspaceSlug }: { workspaceSlug: string }) {
 
   return (
     <div className="flex items-center gap-4">
-      <Avatar size="lg">
-        <AvatarImage src={workspace.avatarUrl ?? undefined} alt={workspace.name} />
-        <AvatarFallback>{getInitials(workspace.name)}</AvatarFallback>
-      </Avatar>
+      <CustomAvatar size="lg" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
       <div className="grid gap-1">
         <h1 className="text-xl font-semibold">{workspace.name}</h1>
         {workspace.description ? <p className="text-sm text-muted-foreground">{workspace.description}</p> : null}
