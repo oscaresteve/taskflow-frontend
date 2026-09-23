@@ -66,6 +66,7 @@ export default function WorkspaceSwitch() {
               <SidebarMenuButton
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                tooltip={activeWorkspace.name}
               />
             }
           >

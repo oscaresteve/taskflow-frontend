@@ -68,6 +68,7 @@ export default function UserNav() {
                 <SidebarMenuButton
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  tooltip={userName}
                 />
               }
             >

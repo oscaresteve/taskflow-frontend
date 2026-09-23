@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import type { MouseEvent } from "react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import type { BaseUIEvent } from "@base-ui/react/types";
 import { ICONS } from "@/lib/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -27,6 +29,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -43,6 +46,7 @@ import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const NAV_PAGE_SIZE = 5;
 
@@ -127,7 +131,7 @@ function ProjectsFavoritesNav({ workspaceSlug }: { workspaceSlug: string }) {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger render={<SidebarMenuButton />}>
+          <DropdownMenuTrigger render={<SidebarMenuButton tooltip={t("projectsNav.favorites")} />}>
             <ICONS.favorite className="size-4 shrink-0" />
             {t("projectsNav.favorites")}
             <ICONS.chevronRight className="ml-auto size-4 shrink-0" />
@@ -163,6 +167,8 @@ export default function ProjectsNav() {
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - projects.length : 0;
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
   const t = useTranslations("layout");
+  const { state, isMobile, toggleSidebar } = useSidebar();
+  const isIconMode = state === "collapsed" && !isMobile;
 
   return (
     <>
@@ -170,10 +176,30 @@ export default function ProjectsNav() {
 
       <SidebarMenu>
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
-          <CollapsibleTrigger render={<SidebarMenuButton className="group/folder" />}>
+          <CollapsibleTrigger
+            render={<SidebarMenuButton className="group/folder" tooltip={t("projectsNav.title")} />}
+            onClick={(event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
+              // In icon mode the submenu is force-hidden (group-data-[collapsible=icon]:hidden), so
+              // toggling it open/closed has no visible effect. Expand the sidebar instead.
+              if (isIconMode) {
+                event.preventBaseUIHandler();
+                toggleSidebar();
+              }
+            }}
+          >
             <span className="relative size-4 shrink-0">
-              <ICONS.project className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/folder:opacity-0" />
-              <ICONS.expand className="absolute inset-0 size-4 opacity-0 transition-all group-hover/folder:opacity-100 group-data-open/collapsible:rotate-180" />
+              <ICONS.project
+                className={cn(
+                  "absolute inset-0 size-4 opacity-100 transition-opacity",
+                  !isIconMode && "group-hover/folder:opacity-0",
+                )}
+              />
+              <ICONS.expand
+                className={cn(
+                  "absolute inset-0 size-4 opacity-0 transition-all",
+                  !isIconMode && "group-hover/folder:opacity-100 group-data-open/collapsible:rotate-180",
+                )}
+              />
             </span>
             {t("projectsNav.title")}
           </CollapsibleTrigger>

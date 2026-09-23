@@ -42,20 +42,28 @@ export function WorkspaceSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t("workspaceSidebar.global")}</SidebarGroupLabel>
+          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
+            {t("workspaceSidebar.global")}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <GlobalNav />
           </SidebarGroupContent>
         </SidebarGroup>
         <Separator />
         <SidebarGroup>
-          <SidebarGroupLabel>{t("workspaceSidebar.workspace")}</SidebarGroupLabel>
+          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
+            {t("workspaceSidebar.workspace")}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 {/* Exact match, not isNavActive: every workspace subpage's pathname starts
                     with overviewHref, so a prefix match would keep this active everywhere. */}
-                <SidebarMenuButton render={<Link href={overviewHref} />} isActive={pathname === overviewHref}>
+                <SidebarMenuButton
+                  render={<Link href={overviewHref} />}
+                  isActive={pathname === overviewHref}
+                  tooltip={t("workspaceSidebar.overview")}
+                >
                   <ICONS.overview />
                   {t("workspaceSidebar.overview")}
                 </SidebarMenuButton>
@@ -68,6 +76,7 @@ export function WorkspaceSidebar() {
                 <SidebarMenuButton
                   render={<Link href={`/workspaces/${workspaceSlug}/members`} />}
                   isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/members`)}
+                  tooltip={t("workspaceSidebar.members")}
                 >
                   <ICONS.members />
                   {t("workspaceSidebar.members")}
@@ -78,6 +87,7 @@ export function WorkspaceSidebar() {
                   <SidebarMenuButton
                     render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}
                     isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
+                    tooltip={t("workspaceSidebar.settings")}
                   >
                     <ICONS.settings />
                     {t("workspaceSidebar.settings")}
@@ -89,7 +99,9 @@ export function WorkspaceSidebar() {
         </SidebarGroup>
         <Separator />
         <SidebarGroup>
-          <SidebarGroupLabel>{t("workspaceSidebar.app")}</SidebarGroupLabel>
+          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
+            {t("workspaceSidebar.app")}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <AppNav />
           </SidebarGroupContent>

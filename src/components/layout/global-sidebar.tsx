@@ -30,7 +30,7 @@ export function GlobalSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link href="/my-space" />}>
+            <SidebarMenuButton size="lg" render={<Link href="/my-space" />} tooltip={t("globalNav.mySpace")}>
               <TaskflowLogo />
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -39,7 +39,9 @@ export function GlobalSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t("globalSidebar.global")}</SidebarGroupLabel>
+          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
+            {t("globalSidebar.global")}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <GlobalNav />
           </SidebarGroupContent>
@@ -53,7 +55,9 @@ export function GlobalSidebar() {
         </SidebarGroup>
         <Separator />
         <SidebarGroup>
-          <SidebarGroupLabel>{t("globalSidebar.app")}</SidebarGroupLabel>
+          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
+            {t("globalSidebar.app")}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <AppNav />
           </SidebarGroupContent>

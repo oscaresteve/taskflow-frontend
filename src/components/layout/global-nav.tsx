@@ -31,7 +31,7 @@ export default function GlobalNav() {
         const isActive = isNavActive(pathname, nav.href);
         return (
           <SidebarMenuItem key={nav.href}>
-            <SidebarMenuButton render={<Link href={nav.href} />} isActive={isActive}>
+            <SidebarMenuButton render={<Link href={nav.href} />} isActive={isActive} tooltip={nav.name}>
               <Icon />
               {nav.name}
             </SidebarMenuButton>

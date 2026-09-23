@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import type { MouseEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { BaseUIEvent } from "@base-ui/react/types";
 import { ICONS } from "@/lib/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -26,6 +28,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -40,6 +43,7 @@ import { EmptyInline } from "@/components/common/empty-inline";
 import { SearchInput } from "../common/search-input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 const NAV_PAGE_SIZE = 5;
 
@@ -112,7 +116,7 @@ function WorkspacesFavoritesNav() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger render={<SidebarMenuButton />}>
+          <DropdownMenuTrigger render={<SidebarMenuButton tooltip={t("workspacesNav.favorites")} />}>
             <ICONS.favorite className="size-4 shrink-0" />
             {t("workspacesNav.favorites")}
             <ICONS.chevronRight className="ml-auto size-4 shrink-0" />
@@ -143,6 +147,8 @@ export function WorkspacesNav() {
   const activeWorkspaces = data?.pages.flatMap((page) => page.data) ?? [];
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - activeWorkspaces.length : 0;
   const t = useTranslations("layout");
+  const { state, isMobile, toggleSidebar } = useSidebar();
+  const isIconMode = state === "collapsed" && !isMobile;
 
   return (
     <>
@@ -150,10 +156,30 @@ export function WorkspacesNav() {
 
       <SidebarMenu>
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
-          <CollapsibleTrigger render={<SidebarMenuButton className="group/orbit" />}>
+          <CollapsibleTrigger
+            render={<SidebarMenuButton className="group/orbit" tooltip={t("workspacesNav.title")} />}
+            onClick={(event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
+              // In icon mode the submenu is force-hidden (group-data-[collapsible=icon]:hidden), so
+              // toggling it open/closed has no visible effect. Expand the sidebar instead.
+              if (isIconMode) {
+                event.preventBaseUIHandler();
+                toggleSidebar();
+              }
+            }}
+          >
             <span className="relative size-4 shrink-0">
-              <ICONS.workspace className="absolute inset-0 size-4 opacity-100 transition-opacity group-hover/orbit:opacity-0" />
-              <ICONS.expand className="absolute inset-0 size-4 opacity-0 transition-all group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180" />
+              <ICONS.workspace
+                className={cn(
+                  "absolute inset-0 size-4 opacity-100 transition-opacity",
+                  !isIconMode && "group-hover/orbit:opacity-0",
+                )}
+              />
+              <ICONS.expand
+                className={cn(
+                  "absolute inset-0 size-4 opacity-0 transition-all",
+                  !isIconMode && "group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180",
+                )}
+              />
             </span>
             {t("workspacesNav.title")}
           </CollapsibleTrigger>
