@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyboardEvent, useState } from "react";
+import { FocusEvent, KeyboardEvent, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/toast";
 import { ICONS } from "@/lib/icons";
 import { ApiError } from "@/lib/http/api-error";
+import { focusLeftForm } from "@/lib/inline-edit";
 import { AssigneePicker } from "@/components/tasks/assignee-picker";
 import { PrioritySelect } from "@/components/tasks/priority-select";
 import { DueDatePicker } from "@/components/tasks/due-date-picker";
@@ -67,6 +68,15 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
     }
   }
 
+  function handleBlur(e: FocusEvent<HTMLFormElement>) {
+    if (form.formState.isSubmitting) {
+      return;
+    }
+    if (focusLeftForm(e)) {
+      cancel();
+    }
+  }
+
   async function onSubmit(data: CreateTaskDto) {
     try {
       await createTask.mutateAsync({ ...data, status });
@@ -92,7 +102,7 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
 
   return (
     <Card size="sm" className="gap-2">
-      <form onSubmit={form.handleSubmit(onSubmit)} className="contents">
+      <form onSubmit={form.handleSubmit(onSubmit)} onBlur={handleBlur} className="contents">
         <div className="px-(--card-spacing)">
           <Field data-invalid={!!form.formState.errors.title}>
             <Input

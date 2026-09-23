@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyboardEvent, useState } from "react";
+import { FocusEvent, KeyboardEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -12,6 +12,7 @@ import { Field, FieldError } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
+import { focusLeftForm } from "@/lib/inline-edit";
 import { cn } from "@/lib/utils";
 
 interface InlineEditableTextareaProps {
@@ -60,6 +61,15 @@ export function InlineEditableTextarea({
     }
   }
 
+  function handleBlur(e: FocusEvent<HTMLFormElement>) {
+    if (form.formState.isSubmitting) {
+      return;
+    }
+    if (focusLeftForm(e)) {
+      cancel();
+    }
+  }
+
   async function onSubmit(data: FormValues) {
     if (!form.formState.isDirty) {
       setEditing(false);
@@ -97,7 +107,7 @@ export function InlineEditableTextarea({
   const fieldState = form.formState.errors.value;
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
+    <form onSubmit={form.handleSubmit(onSubmit)} onBlur={handleBlur} className="flex flex-col gap-2">
       <Field data-invalid={!!fieldState}>
         <Textarea
           autoFocus
