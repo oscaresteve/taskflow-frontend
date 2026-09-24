@@ -16,13 +16,9 @@ interface DonutChartProps {
   centerValue: string | number;
   centerLabel: string;
   emptyLabel: string;
-  footer?: string;
 }
 
-// Reparto parte-todo de una escala ordenada (estado de las tareas, urgencia de mi cola). El anillo
-// se lee de un vistazo y dentro va la cifra que resume la tarjeta; la leyenda lleva los numeros
-// exactos, asi que comparar dos tramos parecidos nunca depende de medir el angulo a ojo.
-export function DonutChart({ segments, centerValue, centerLabel, emptyLabel, footer }: DonutChartProps) {
+export function DonutChart({ segments, centerValue, centerLabel, emptyLabel }: DonutChartProps) {
   const total = segments.reduce((sum, segment) => sum + segment.count, 0);
 
   if (total === 0) {
@@ -35,7 +31,7 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel, foo
 
   const data = segments
     .filter((segment) => segment.count > 0)
-    .map((segment) => ({ bucket: segment.key, count: segment.count, fill: segment.color }));
+    .map((segment) => ({ bucket: segment.key, count: segment.count, fill: `var(--color-${segment.key})` }));
 
   return (
     <div className="flex flex-col gap-3">
@@ -48,27 +44,24 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel, foo
             nameKey="bucket"
             innerRadius="62%"
             outerRadius="100%"
-            // El hueco entre porciones lo hace el angulo, no un borde pintado encima.
             paddingAngle={2}
             strokeWidth={0}
             isAnimationActive={false}
           >
             <Label
               content={({ viewBox }) => {
-                if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) return null;
-                const cx = viewBox.cx ?? 0;
-                const cy = viewBox.cy ?? 0;
-
-                return (
-                  <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
-                    <tspan x={cx} y={cy - 6} className="fill-foreground text-3xl font-semibold">
-                      {centerValue}
-                    </tspan>
-                    <tspan x={cx} y={cy + 18} className="fill-muted-foreground text-xs">
-                      {centerLabel}
-                    </tspan>
-                  </text>
-                );
+                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  return (
+                    <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                      <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                        {centerValue}
+                      </tspan>
+                      <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
+                        {centerLabel}
+                      </tspan>
+                    </text>
+                  );
+                }
               }}
             />
           </Pie>
@@ -84,8 +77,6 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel, foo
           </li>
         ))}
       </ul>
-
-      {footer && <p className="text-center text-xs text-muted-foreground">{footer}</p>}
     </div>
   );
 }

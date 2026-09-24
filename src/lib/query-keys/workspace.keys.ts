@@ -5,6 +5,7 @@ type WorkspaceListParams = {
   page?: number;
   limit?: number;
   search?: string;
+  isFavorite?: boolean;
   sort?: WorkspaceSortField;
   order?: SortOrder;
 };

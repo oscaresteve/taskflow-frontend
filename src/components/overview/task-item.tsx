@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import { CustomAvatar } from "@/components/common/custom-avatar";
-import { EnumBadge } from "@/components/common/enum-display";
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
 import { priorityOptions, statusOptions } from "@/lib/task-enums";
 import { ICONS } from "@/lib/icons";
@@ -19,44 +18,37 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
   const t = useTranslations("tasks");
   const format = useFormatter();
 
+  const statusOption = statusOptions[task.status];
+  const priorityOption = priorityOptions[task.priority];
+  const StatusIcon = statusOption.icon;
+  const PriorityIcon = priorityOption.icon;
+
   const taskIsOverdue = !!task.dueDate && task.status !== "DONE" && isOverdue(task.dueDate);
   const assigneeName = task.assignee ? getFullName(task.assignee.firstName, task.assignee.lastName) : null;
-  const hasMeta = showProject || !!task.dueDate;
 
   return (
-    <Link
-      href={href}
-      className="flex items-stretch gap-3 rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/50"
-    >
-      <span aria-hidden className={cn("w-[3px] shrink-0 rounded-full", priorityOptions[task.priority].colors.bg)} />
-      <span className="sr-only">{`${t("fields.priority")}: ${t(`priority.${task.priority}`)}`}</span>
+    <Link href={href} className="flex items-center gap-2.5 px-2 py-2 transition-colors hover:bg-muted/50">
+      <StatusIcon className={cn("size-4 shrink-0", statusOption.colors.text)} />
+      <span className="sr-only">{`${t("fields.status")}: ${t(`status.${task.status}`)}`}</span>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="shrink-0 font-mono text-xs text-muted-foreground">
-            {task.project.key}-{task.taskNumber}
+      <span className="shrink-0 font-mono text-xs text-muted-foreground">
+        {task.project.key}-{task.taskNumber}
+      </span>
+
+      <span className="truncate text-sm font-medium">{task.title}</span>
+      {showProject && <span className="max-w-32 truncate text-muted-foreground">{task.project.name}</span>}
+
+      <div className="ml-auto flex shrink-0 items-center gap-2.5 text-xs text-muted-foreground">
+        {task.dueDate && (
+          <span className={cn("flex items-center gap-1", taskIsOverdue && "text-severity-critical-foreground")}>
+            {taskIsOverdue ? <ICONS.overdue className="size-3.5" /> : <ICONS.dueDate className="size-3.5" />}
+            {format.dateTime(new Date(task.dueDate), "short")}
           </span>
-          <span className="truncate text-sm font-medium">{task.title}</span>
-        </div>
-
-        {hasMeta && (
-          <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
-            {showProject && <span className="truncate">{task.project.name}</span>}
-            {showProject && task.dueDate && <span aria-hidden>·</span>}
-            {task.dueDate && (
-              <span
-                className={cn("flex shrink-0 items-center gap-1", taskIsOverdue && "text-severity-critical-foreground")}
-              >
-                {taskIsOverdue ? <ICONS.overdue className="size-3" /> : <ICONS.dueDate className="size-3" />}
-                {format.dateTime(new Date(task.dueDate), "short")}
-              </span>
-            )}
-          </div>
         )}
-      </div>
 
-      <div className="flex shrink-0 items-center gap-2">
-        <EnumBadge option={statusOptions[task.status]} />
+        <PriorityIcon className={cn("size-4", priorityOption.colors.text)} />
+        <span className="sr-only">{`${t("fields.priority")}: ${t(`priority.${task.priority}`)}`}</span>
+
         {task.assignee && assigneeName ? (
           <CustomAvatar
             size="sm"

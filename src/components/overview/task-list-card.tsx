@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyInline } from "@/components/common/empty-inline";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
+import { ICONS } from "@/lib/icons";
 import { TaskItem } from "./task-item";
 
 interface TaskListCardProps {
@@ -17,8 +18,6 @@ interface TaskListCardProps {
 }
 
 export function TaskListCard({ title, tasks, isLoading, emptyLabel, showProject }: TaskListCardProps) {
-  // usePathname/useSearchParams son hooks: se llaman una vez aqui y buildTaskModalHref (funcion
-  // normal) se usa por fila dentro del map.
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -27,15 +26,15 @@ export function TaskListCard({ title, tasks, isLoading, emptyLabel, showProject 
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2">
+      <CardContent className="flex flex-col divide-y">
         {isLoading ? (
           <>
-            <Skeleton className="h-14 w-full" />
-            <Skeleton className="h-14 w-full" />
-            <Skeleton className="h-14 w-full" />
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-9 w-full" />
           </>
         ) : tasks.length === 0 ? (
-          <EmptyInline label={emptyLabel} className="py-2" />
+          <EmptyInline icon={ICONS.task} label={emptyLabel} className="py-2" />
         ) : (
           tasks.map((task) => (
             <TaskItem

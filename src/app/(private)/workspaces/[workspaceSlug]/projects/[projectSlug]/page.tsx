@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { ICONS } from "@/lib/icons";
 import { PageContainer } from "@/components/common/page-container";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatCard } from "@/components/overview/stat-card";
 import { DonutChart } from "@/components/overview/donut-chart";
@@ -67,7 +67,11 @@ export default function ProjectPage() {
             value={overview.tasks.overdue}
             tone={overview.tasks.overdue > 0 ? "destructive" : "default"}
           />
-          <StatCard icon={ICONS.statUnassigned} label={t("projectOverviewPage.stats.unassigned")} value={overview.tasks.unassigned} />
+          <StatCard
+            icon={ICONS.statUnassigned}
+            label={t("projectOverviewPage.stats.unassigned")}
+            value={overview.tasks.unassigned}
+          />
           <StatCard
             icon={ICONS.statCompleted}
             label={t("projectOverviewPage.stats.completedThisWeek")}
@@ -82,6 +86,13 @@ export default function ProjectPage() {
         <Card className="overflow-visible">
           <CardHeader>
             <CardTitle>{t("projectOverviewPage.progress.title")}</CardTitle>
+            <CardDescription>
+              {isPending ? (
+                <Skeleton className="h-4 w-40" />
+              ) : (
+                t("projectOverviewPage.progress.taskCount", { count: totalTasks })
+              )}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {isPending ? (
@@ -94,7 +105,6 @@ export default function ProjectPage() {
                 centerValue={`${overview.tasks.completionRate}%`}
                 centerLabel={t("projectOverviewPage.progress.complete")}
                 emptyLabel={t("projectOverviewPage.progress.empty")}
-                footer={t("projectOverviewPage.progress.taskCount", { count: totalTasks })}
               />
             )}
           </CardContent>

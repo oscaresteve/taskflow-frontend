@@ -33,18 +33,20 @@ export const getWorkspacesQuery = ({
   page,
   limit,
   search,
+  isFavorite,
   sort,
   order,
 }: {
   page?: number;
   limit?: number;
   search?: string;
+  isFavorite?: boolean;
   sort?: WorkspaceSortField;
   order?: SortOrder;
 } = {}) =>
   queryOptions({
-    queryKey: workspaceKeys.lists({ page, limit, search, sort, order }),
-    queryFn: () => getWorkspaces({ page, limit, search, sort, order }),
+    queryKey: workspaceKeys.lists({ page, limit, search, isFavorite, sort, order }),
+    queryFn: () => getWorkspaces({ page, limit, search, isFavorite, sort, order }),
   });
 
 export const getWorkspaceQuery = (workspaceSlug: string) =>

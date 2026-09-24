@@ -17,6 +17,15 @@
     "queue": {
       "title": "My queue",
       "empty": "You're all caught up."
+    },
+    "favorites": {
+      "title": "Favorite workspaces",
+      "searchPlaceholder": "Search favorites",
+      "noFavoritesFound": "No favorites found.",
+      "noFavoritesFoundDescription": "Try a different search.",
+      "noFavoritesYet": "No favorites yet.",
+      "noFavoritesYetDescription": "Star a workspace to keep it within reach here.",
+      "failedToLoad": "Failed to load your favorites."
     }
   }
 }
