@@ -26,12 +26,15 @@ import { getFullName } from "@/lib/utils";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { WorkspaceSortField } from "@/lib/workspace-enums";
 import { useWorkspacesTable } from "@/hooks/use-workspaces-table";
+import { FavoriteToggle } from "@/components/common/favorite-toggle";
+import { useToggleWorkspaceFavorite } from "@/hooks/use-toggle-workspace-favorite";
 
 const MAX_VISIBLE_OWNERS = 4;
 
 function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
   const { data: members, isLoading, isError } = useQuery(getWorkspaceMembersQuery(workspace.slug));
   const { role: myRole } = useWorkspaceRole(workspace.slug);
+  const toggleFavorite = useToggleWorkspaceFavorite(workspace.slug);
 
   const owners = members?.filter((member) => member.role === "OWNER" && member.status === "ACTIVE") ?? [];
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
@@ -41,6 +44,12 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
 
   return (
     <TableRow>
+      <TableCell className="w-px">
+        <FavoriteToggle
+          isFavorite={workspace.isFavorite}
+          onToggle={() => toggleFavorite.mutate(!workspace.isFavorite)}
+        />
+      </TableCell>
       <TableCell>
         <Link href={`/workspaces/${workspace.slug}`} className="flex items-center gap-2">
           <CustomAvatar size="sm" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
@@ -166,6 +175,7 @@ export default function WorkspacesPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead />
               <TableHead>{t("workspacesPage.columns.workspace")}</TableHead>
               <TableHead>{t("workspacesPage.columns.slug")}</TableHead>
               <TableHead>{t("workspacesPage.columns.owners")}</TableHead>

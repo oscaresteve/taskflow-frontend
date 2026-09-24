@@ -32,6 +32,8 @@ import { EmptyState } from "@/components/common/empty-state";
 import { useFormatter, useTranslations } from "next-intl";
 import { ProjectSortField } from "@/lib/project-enums";
 import useProjectsTable from "@/hooks/use-projects-table";
+import { FavoriteToggle } from "@/components/common/favorite-toggle";
+import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 
 const MAX_VISIBLE_OWNERS = 4;
 
@@ -43,6 +45,7 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
     isError,
   } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug: project.slug }));
   const { role: myRole } = useProjectRole(workspaceSlug, project.slug);
+  const toggleFavorite = useToggleProjectFavorite(workspaceSlug, project.slug);
 
   const owners = members?.filter((member) => member.role === "OWNER") ?? [];
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
@@ -52,6 +55,9 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
 
   return (
     <TableRow>
+      <TableCell className="w-px">
+        <FavoriteToggle isFavorite={project.isFavorite} onToggle={() => toggleFavorite.mutate(!project.isFavorite)} />
+      </TableCell>
       <TableCell>
         <Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} className="flex items-center gap-2">
           <ColorDot color={project.color} className="size-3" />
@@ -210,6 +216,7 @@ export default function ProjectsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead />
               <TableHead>{t("projectsPage.columns.project")}</TableHead>
               <TableHead>{t("projectsPage.columns.slug")}</TableHead>
               <TableHead>{t("projectsPage.columns.key")}</TableHead>
