@@ -20,7 +20,8 @@ interface RankedBarChartProps {
   valueLabel: string;
 }
 
-const ROW_HEIGHT = 32;
+const ROW_HEIGHT = 44;
+const MAX_BAR_SIZE = 32;
 const MAX_LABEL_CHARS = 24;
 
 function RankedBarShape(props: BarShapeProps) {
@@ -69,7 +70,7 @@ export function RankedBarChart({ rows, emptyLabel, valueLabel }: RankedBarChartP
             />
           }
         />
-        <Bar dataKey="value" barSize={20} radius={6} isAnimationActive={false} shape={RankedBarShape} />
+        <Bar dataKey="value" maxBarSize={MAX_BAR_SIZE} radius={6} isAnimationActive={false} shape={RankedBarShape} />
       </BarChart>
     </ChartContainer>
   );
@@ -79,9 +80,9 @@ export function RankedBarChartSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div className="flex w-full flex-col">
       {Array.from({ length: rows }).map((_, index) => (
-        <div key={index} className="flex h-8 items-center gap-2">
+        <div key={index} className="flex items-center gap-2" style={{ height: ROW_HEIGHT }}>
           <Skeleton className="h-3 w-24 shrink-0" />
-          <Skeleton className="h-5 flex-1 rounded-md" />
+          <Skeleton className="flex-1 rounded-md" style={{ height: MAX_BAR_SIZE }} />
         </div>
       ))}
     </div>

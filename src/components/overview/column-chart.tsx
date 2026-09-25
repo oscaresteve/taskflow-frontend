@@ -15,6 +15,8 @@ export interface ColumnChartBar {
   color: string;
 }
 
+const MAX_BAR_SIZE = 48;
+
 interface ColumnChartProps {
   bars: ColumnChartBar[];
   emptyLabel: string;
@@ -58,7 +60,7 @@ export function ColumnChart({ bars, emptyLabel, valueLabel, className }: ColumnC
             />
           }
         />
-        <Bar dataKey="value" radius={6} isAnimationActive={false} shape={ColumnShape} />
+        <Bar dataKey="value" maxBarSize={MAX_BAR_SIZE} radius={6} isAnimationActive={false} shape={ColumnShape} />
       </BarChart>
     </ChartContainer>
   );
@@ -71,7 +73,7 @@ export function ColumnChartSkeleton({ bars = 4 }: { bars?: number }) {
   return (
     <div className="flex w-full items-end justify-around gap-3">
       {Array.from({ length: bars }).map((_, index) => (
-        <Skeleton key={index} className="w-full" style={{ height: heights[index % heights.length] }} />
+        <Skeleton key={index} className="w-full max-w-12" style={{ height: heights[index % heights.length] }} />
       ))}
     </div>
   );
