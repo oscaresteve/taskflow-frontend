@@ -21,13 +21,18 @@
     "addAssignee": "Add assignee",
     "dueDate": "Due date",
     "dueDatePlaceholder": "Pick a date",
-    "addDueDate": "Add due date"
+    "addDueDate": "Add due date",
+    "noDueDate": "No due date"
   },
   "status": {
     "TODO": "To do",
     "IN_PROGRESS": "In progress",
     "IN_REVIEW": "In review",
     "DONE": "Done"
+  },
+  "statusFilter": {
+    "all": "Any status",
+    "open": "Open"
   },
   "priority": {
     "LOW": "Low",
@@ -43,6 +48,12 @@
     "overdue": "Overdue",
     "thisWeek": "Due this week",
     "none": "No due date"
+  },
+  "dueDateBucket": {
+    "overdue": "Overdue",
+    "dueSoon": "This week",
+    "scheduled": "Scheduled",
+    "noDueDate": "No due date"
   },
   "assigneeFilter": {
     "all": "Everyone"

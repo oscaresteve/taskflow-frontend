@@ -52,26 +52,20 @@
   "projectOverviewPage": {
     "title": "Resumen del proyecto",
     "failedToLoad": "No se pudo cargar el resumen del proyecto.",
-    "progress": {
-      "title": "Progreso",
-      "complete": "Completado",
-      "taskCount": "{count} tareas",
-      "empty": "Todavía no hay tareas."
-    },
     "stats": {
+      "openTasks": "Tareas abiertas",
       "overdue": "Vencidas",
       "unassigned": "Sin asignar",
       "completedThisWeek": "Completadas esta semana"
     },
-    "byPriority": {
-      "title": "Tareas por prioridad",
-      "empty": "Todavía no hay tareas.",
-      "valueLabel": "Tareas"
-    },
-    "workload": {
-      "title": "Carga por miembro",
-      "empty": "No hay tareas abiertas asignadas.",
-      "valueLabel": "Tareas abiertas"
+    "favorites": {
+      "title": "Tareas favoritas",
+      "searchPlaceholder": "Buscar tareas",
+      "noFavoritesFound": "No se encontraron tareas favoritas.",
+      "noFavoritesFoundDescription": "Prueba con otra búsqueda.",
+      "noFavoritesYet": "Todavía no hay tareas favoritas.",
+      "noFavoritesYetDescription": "Marca una tarea con la estrella para tenerla a mano aquí.",
+      "failedToLoad": "No se pudieron cargar las tareas favoritas."
     },
     "recent": {
       "title": "Actividad reciente",

@@ -44,15 +44,14 @@
       "completedThisWeek": "Completadas esta semana",
       "projects": "Proyectos"
     },
-    "byStatus": {
-      "title": "Tareas por estado",
-      "centerLabel": "Completado",
-      "empty": "Todavía no hay tareas."
-    },
-    "byProject": {
-      "title": "Tareas abiertas por proyecto",
-      "empty": "Ningún proyecto tiene tareas abiertas.",
-      "valueLabel": "Tareas abiertas"
+    "favorites": {
+      "title": "Proyectos favoritos",
+      "searchPlaceholder": "Buscar proyectos",
+      "noFavoritesFound": "No se encontraron proyectos favoritos.",
+      "noFavoritesFoundDescription": "Prueba con otra búsqueda.",
+      "noFavoritesYet": "Todavía no hay proyectos favoritos.",
+      "noFavoritesYetDescription": "Marca un proyecto con la estrella para tenerlo a mano aquí.",
+      "failedToLoad": "No se pudieron cargar los proyectos favoritos."
     },
     "recent": {
       "title": "Actividad reciente",

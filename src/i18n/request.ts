@@ -10,6 +10,7 @@ import mySpaceEn from "@/messages/en/my-space.json";
 import preferencesEn from "@/messages/en/preferences.json";
 import workspacesEn from "@/messages/en/workspaces.json";
 import projectsEn from "@/messages/en/projects.json";
+import overviewEn from "@/messages/en/overview.json";
 import membersEn from "@/messages/en/members.json";
 import tasksEn from "@/messages/en/tasks.json";
 
@@ -21,6 +22,7 @@ import mySpaceEs from "@/messages/es/my-space.json";
 import preferencesEs from "@/messages/es/preferences.json";
 import workspacesEs from "@/messages/es/workspaces.json";
 import projectsEs from "@/messages/es/projects.json";
+import overviewEs from "@/messages/es/overview.json";
 import membersEs from "@/messages/es/members.json";
 import tasksEs from "@/messages/es/tasks.json";
 
@@ -35,6 +37,7 @@ const messagesByLocale = {
     workspaces: workspacesEn,
     projects: projectsEn,
     members: membersEn,
+    overview: overviewEn,
     tasks: tasksEn,
   },
   es: {
@@ -47,6 +50,7 @@ const messagesByLocale = {
     workspaces: workspacesEs,
     projects: projectsEs,
     members: membersEs,
+    overview: overviewEs,
     tasks: tasksEs,
   },
 } satisfies Record<Locale, unknown>;

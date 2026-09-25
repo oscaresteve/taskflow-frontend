@@ -21,13 +21,18 @@
     "addAssignee": "Añadir asignación",
     "dueDate": "Fecha límite",
     "dueDatePlaceholder": "Elegir fecha",
-    "addDueDate": "Añadir fecha límite"
+    "addDueDate": "Añadir fecha límite",
+    "noDueDate": "Sin fecha"
   },
   "status": {
     "TODO": "Por hacer",
     "IN_PROGRESS": "En progreso",
     "IN_REVIEW": "En revisión",
     "DONE": "Hecho"
+  },
+  "statusFilter": {
+    "all": "Cualquier estado",
+    "open": "Abiertas"
   },
   "priority": {
     "LOW": "Baja",
@@ -43,6 +48,12 @@
     "overdue": "Vencidas",
     "thisWeek": "Vence esta semana",
     "none": "Sin fecha"
+  },
+  "dueDateBucket": {
+    "overdue": "Vencidas",
+    "dueSoon": "Esta semana",
+    "scheduled": "Programadas",
+    "noDueDate": "Sin fecha"
   },
   "assigneeFilter": {
     "all": "Todos"

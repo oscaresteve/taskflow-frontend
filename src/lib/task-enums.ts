@@ -125,6 +125,39 @@ export const dueDateFilterOptions: Record<DueDateFilter, EnumOption> = {
   },
 };
 
+// Reparto de las tareas abiertas que pintan las tres vistas de overview. No son un filtro: el
+// backend las devuelve ya contadas, y "scheduled" (con fecha, pero mas alla de esta semana) no
+// tiene equivalente en el filtro de fecha limite de la lista y el kanban.
+export const dueDateBuckets = ["overdue", "dueSoon", "scheduled", "noDueDate"] as const;
+export type DueDateBucket = (typeof dueDateBuckets)[number];
+
+export const dueDateBucketOptions: Record<DueDateBucket, EnumOption & { chartColor: string }> = {
+  overdue: {
+    labelKey: "tasks.dueDateBucket.overdue",
+    icon: ICONS.overdue,
+    colors: severityCriticalColors,
+    chartColor: "var(--severity-critical)",
+  },
+  dueSoon: {
+    labelKey: "tasks.dueDateBucket.dueSoon",
+    icon: ICONS.dueDateThisWeek,
+    colors: severityWarningColors,
+    chartColor: "var(--severity-warning)",
+  },
+  scheduled: {
+    labelKey: "tasks.dueDateBucket.scheduled",
+    icon: ICONS.dueDate,
+    colors: neutralColors,
+    chartColor: "var(--chart-2)",
+  },
+  noDueDate: {
+    labelKey: "tasks.dueDateBucket.noDueDate",
+    icon: ICONS.dueDateEmpty,
+    colors: neutralColors,
+    chartColor: "var(--chart-1)",
+  },
+};
+
 export const ALL_ASSIGNEES = "ALL";
 export const UNASSIGNED = "UNASSIGNED";
 

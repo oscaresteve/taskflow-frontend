@@ -5,13 +5,7 @@
     "focus": {
       "title": "Foco",
       "openTasks": "Abiertas",
-      "completedThisWeek": "{count} completadas en los últimos 7 días"
-    },
-    "urgency": {
-      "overdue": "Vencidas",
-      "dueSoon": "Vencen esta semana",
-      "scheduled": "Programadas",
-      "noDueDate": "Sin fecha",
+      "completedThisWeek": "{count, plural, one {# completada} other {# completadas}} en los últimos 7 días",
       "empty": "Ahora mismo no tienes nada asignado."
     },
     "queue": {
@@ -20,12 +14,12 @@
     },
     "favorites": {
       "title": "Espacios favoritos",
-      "searchPlaceholder": "Buscar favoritos",
-      "noFavoritesFound": "No se encontraron favoritos.",
+      "searchPlaceholder": "Buscar espacios",
+      "noFavoritesFound": "No se encontraron espacios favoritos.",
       "noFavoritesFoundDescription": "Prueba con otra búsqueda.",
-      "noFavoritesYet": "Todavía no hay favoritos.",
-      "noFavoritesYetDescription": "Marca un workspace con la estrella para tenerlo a mano aquí.",
-      "failedToLoad": "No se pudieron cargar tus favoritos."
+      "noFavoritesYet": "Todavía no hay espacios favoritos.",
+      "noFavoritesYetDescription": "Marca un espacio con la estrella para tenerlo a mano aquí.",
+      "failedToLoad": "No se pudieron cargar los espacios favoritos."
     }
   }
 }

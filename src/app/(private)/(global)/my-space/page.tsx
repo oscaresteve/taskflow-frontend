@@ -2,100 +2,67 @@
 
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { EmptyState } from "@/components/common/empty-state";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { DonutChart } from "@/components/overview/donut-chart";
+import { ChartCard } from "@/components/overview/chart-card";
+import { DonutChart, DonutChartSkeleton } from "@/components/overview/donut-chart";
 import { TaskListCard } from "@/components/overview/task-list-card";
-import { ICONS } from "@/lib/icons";
 import { getMyOverviewQuery } from "@/lib/queries/overview.queries";
+import { dueDateBucketOptions, dueDateBuckets } from "@/lib/task-enums";
 import { FavoriteWorkspaces } from "./_components/favorite-workspaces";
 
 export default function MySpacePage() {
   const t = useTranslations("mySpace");
+  const tEnum = useTranslations();
   const { data: overview, isLoading, isError } = useQuery(getMyOverviewQuery());
 
-  const isPending = isLoading || !overview;
+  const tasks = isLoading ? undefined : overview?.tasks;
 
-  const urgencySegments = [
-    {
-      key: "overdue",
-      label: t("mySpacePage.urgency.overdue"),
-      count: overview?.tasks.byUrgency.overdue ?? 0,
-      color: "var(--severity-critical)",
-    },
-    {
-      key: "dueSoon",
-      label: t("mySpacePage.urgency.dueSoon"),
-      count: overview?.tasks.byUrgency.dueSoon ?? 0,
-      color: "var(--severity-warning)",
-    },
-    {
-      key: "scheduled",
-      label: t("mySpacePage.urgency.scheduled"),
-      count: overview?.tasks.byUrgency.scheduled ?? 0,
-      color: "var(--chart-2)",
-    },
-    {
-      key: "noDueDate",
-      label: t("mySpacePage.urgency.noDueDate"),
-      count: overview?.tasks.byUrgency.noDueDate ?? 0,
-      color: "var(--chart-1)",
-    },
-  ];
+  // Las mismas cubetas que pintan las otras dos vistas de overview, aqui como reparto de la carga
+  // propia en vez de como grafica de barras.
+  const segments = dueDateBuckets.map((bucket) => ({
+    key: bucket,
+    label: tEnum(dueDateBucketOptions[bucket].labelKey),
+    count: tasks?.byDueDate[bucket] ?? 0,
+    color: dueDateBucketOptions[bucket].chartColor,
+  }));
 
   return (
-    <PageContainer>
+    <PageContainer className="gap-6">
       <PageHeader title={t("mySpacePage.title")} />
 
-      <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("mySpacePage.focus.title")}</CardTitle>
-            {!isError && (
-              <CardDescription>
-                {isPending ? (
-                  <Skeleton className="h-4 w-40" />
-                ) : (
-                  t("mySpacePage.focus.completedThisWeek", { count: overview.tasks.completedLast7Days })
-                )}
-              </CardDescription>
-            )}
-          </CardHeader>
-          <CardContent>
-            {isError ? (
-              <p className="text-sm text-muted-foreground">{t("mySpacePage.failedToLoad")}</p>
-            ) : isPending ? (
-              <div className="flex justify-center">
-                <Skeleton className="size-45 rounded-full" />
-              </div>
-            ) : overview.tasks.open === 0 ? (
-              <EmptyState icon={ICONS.task} title={t("mySpacePage.urgency.empty")} />
-            ) : (
+      {isError ? (
+        <p className="text-sm text-muted-foreground">{t("mySpacePage.failedToLoad")}</p>
+      ) : (
+        <div className="grid grid-cols-5 gap-6">
+          <ChartCard
+            title={t("mySpacePage.focus.title")}
+            description={tasks && t("mySpacePage.focus.completedThisWeek", { count: tasks.completedLast7Days })}
+            className="col-span-2"
+          >
+            {tasks ? (
               <DonutChart
-                segments={urgencySegments}
-                centerValue={overview.tasks.open}
+                segments={segments}
+                centerValue={tasks.open}
                 centerLabel={t("mySpacePage.focus.openTasks")}
-                emptyLabel={t("mySpacePage.urgency.empty")}
+                emptyLabel={t("mySpacePage.focus.empty")}
               />
+            ) : (
+              <DonutChartSkeleton />
             )}
-          </CardContent>
-        </Card>
+          </ChartCard>
 
-        <FavoriteWorkspaces />
-      </div>
-
-      {!isError && (
-        <TaskListCard
-          title={t("mySpacePage.queue.title")}
-          emptyLabel={t("mySpacePage.queue.empty")}
-          tasks={overview?.myTasks ?? []}
-          isLoading={isPending}
-          showProject
-        />
+          <FavoriteWorkspaces />
+        </div>
       )}
+
+      <TaskListCard
+        title={t("mySpacePage.queue.title")}
+        emptyLabel={t("mySpacePage.queue.empty")}
+        tasks={overview?.myTasks ?? []}
+        isLoading={!tasks}
+        showProject
+      />
     </PageContainer>
   );
 }

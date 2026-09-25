@@ -44,15 +44,14 @@
       "completedThisWeek": "Completed this week",
       "projects": "Projects"
     },
-    "byStatus": {
-      "title": "Tasks by status",
-      "centerLabel": "Complete",
-      "empty": "No tasks yet."
-    },
-    "byProject": {
-      "title": "Open tasks by project",
-      "empty": "No open tasks in any project.",
-      "valueLabel": "Open tasks"
+    "favorites": {
+      "title": "Favorite projects",
+      "searchPlaceholder": "Search projects",
+      "noFavoritesFound": "No favorite projects found.",
+      "noFavoritesFoundDescription": "Try a different search.",
+      "noFavoritesYet": "No favorite projects yet.",
+      "noFavoritesYetDescription": "Star a project to keep it within reach here.",
+      "failedToLoad": "Failed to load favorite projects."
     },
     "recent": {
       "title": "Recent activity",

@@ -52,26 +52,20 @@
   "projectOverviewPage": {
     "title": "Project Overview",
     "failedToLoad": "Failed to load the project overview.",
-    "progress": {
-      "title": "Progress",
-      "complete": "Complete",
-      "taskCount": "{count} tasks",
-      "empty": "No tasks yet."
-    },
     "stats": {
+      "openTasks": "Open tasks",
       "overdue": "Overdue",
       "unassigned": "Unassigned",
       "completedThisWeek": "Completed this week"
     },
-    "byPriority": {
-      "title": "Tasks by priority",
-      "empty": "No tasks yet.",
-      "valueLabel": "Tasks"
-    },
-    "workload": {
-      "title": "Workload by member",
-      "empty": "No open tasks assigned.",
-      "valueLabel": "Open tasks"
+    "favorites": {
+      "title": "Favorite tasks",
+      "searchPlaceholder": "Search tasks",
+      "noFavoritesFound": "No favorite tasks found.",
+      "noFavoritesFoundDescription": "Try a different search.",
+      "noFavoritesYet": "No favorite tasks yet.",
+      "noFavoritesYetDescription": "Star a task to keep it within reach here.",
+      "failedToLoad": "Failed to load favorite tasks."
     },
     "recent": {
       "title": "Recent activity",

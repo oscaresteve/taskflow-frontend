@@ -1,4 +1,5 @@
 import { TaskPriority, TaskStatus, TaskResponseDto } from "@/lib/dtos/tasks.dto";
+import { DueDateBucket } from "@/lib/task-enums";
 
 export type OverviewTaskDto = TaskResponseDto & {
   project: {
@@ -15,28 +16,14 @@ export type OverviewTaskDto = TaskResponseDto & {
   } | null;
 };
 
-export type ProjectWorkloadItemDto = {
-  projectId: string;
-  name: string;
-  slug: string;
-  openTasksCount: number;
-};
-
-export type MemberWorkloadItemDto = {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl: string | null;
-  openTasksCount: number;
-};
-
-export type UrgencyBucket = "overdue" | "dueSoon" | "scheduled" | "noDueDate";
+// Reparto de las tareas abiertas por fecha limite; las cuatro cubetas suman siempre `open`.
+export type DueDateBucketsDto = Record<DueDateBucket, number>;
 
 export type MyOverviewResponseDto = {
   tasks: {
     open: number;
     completedLast7Days: number;
-    byUrgency: Record<UrgencyBucket, number>;
+    byDueDate: DueDateBucketsDto;
   };
 
   myTasks: OverviewTaskDto[];
@@ -44,17 +31,14 @@ export type MyOverviewResponseDto = {
 
 export type WorkspaceOverviewResponseDto = {
   projectsCount: number;
-  membersCount: number;
 
   tasks: {
     byStatus: Record<TaskStatus, number>;
+    byDueDate: DueDateBucketsDto;
     open: number;
-    overdue: number;
     completedLast7Days: number;
     completionRate: number;
   };
-
-  workload: ProjectWorkloadItemDto[];
 
   recentTasks: OverviewTaskDto[];
 };
@@ -63,14 +47,12 @@ export type ProjectOverviewResponseDto = {
   tasks: {
     byStatus: Record<TaskStatus, number>;
     byPriority: Record<TaskPriority, number>;
+    byDueDate: DueDateBucketsDto;
     open: number;
-    overdue: number;
     unassigned: number;
     completedLast7Days: number;
     completionRate: number;
   };
-
-  workload: MemberWorkloadItemDto[];
 
   recentTasks: OverviewTaskDto[];
 };
