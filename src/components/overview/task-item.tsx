@@ -6,10 +6,8 @@ import { CustomAvatar } from "@/components/common/custom-avatar";
 import { EnumIconBadge } from "@/components/common/enum-display";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { neutralColors, severityCriticalColors } from "@/lib/enum-colors";
-import type { EnumOption } from "@/lib/enum-option";
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
-import { priorityOptions, statusOptions } from "@/lib/task-enums";
+import { getDueDateOption, priorityOptions, statusOptions } from "@/lib/task-enums";
 import { ICONS } from "@/lib/icons";
 import { getFullName, isOverdue } from "@/lib/utils";
 
@@ -17,15 +15,6 @@ interface TaskItemProps {
   task: OverviewTaskDto;
   href: string;
   showProject?: boolean;
-}
-
-// La fila es de solo lectura, asi que la fecha limite se pinta con el mismo lenguaje de icono que
-// el estado y la prioridad (badge + tooltip) en vez de con los tres estados del date picker.
-function getDueDateOption(dueDate: string | null, overdue: boolean): EnumOption {
-  if (!dueDate) return { labelKey: "tasks.fields.noDueDate", icon: ICONS.dueDateEmpty, colors: neutralColors };
-  if (overdue) return { labelKey: "tasks.fields.dueDate", icon: ICONS.overdue, colors: severityCriticalColors };
-
-  return { labelKey: "tasks.fields.dueDate", icon: ICONS.dueDate, colors: neutralColors };
 }
 
 export function TaskItem({ task, href, showProject }: TaskItemProps) {
@@ -37,10 +26,7 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
   const priorityOption = priorityOptions[task.priority];
 
   const taskIsOverdue = !!task.dueDate && task.status !== "DONE" && isOverdue(task.dueDate);
-  const dueDateOption = getDueDateOption(task.dueDate, taskIsOverdue);
-  const dueDateLabel = task.dueDate
-    ? `${t("fields.dueDate")}: ${format.dateTime(new Date(task.dueDate), "short")}`
-    : t("fields.noDueDate");
+  const dueDateOption = getDueDateOption(taskIsOverdue);
 
   const assigneeName = task.assignee ? getFullName(task.assignee.firstName, task.assignee.lastName) : null;
 
@@ -70,12 +56,14 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
           <TooltipContent>{`${t("fields.priority")}: ${tEnum(priorityOption.labelKey)}`}</TooltipContent>
         </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger render={<span className="flex" />}>
-            <EnumIconBadge option={dueDateOption} />
-          </TooltipTrigger>
-          <TooltipContent>{dueDateLabel}</TooltipContent>
-        </Tooltip>
+        {task.dueDate && (
+          <Tooltip>
+            <TooltipTrigger render={<span className="flex" />}>
+              <EnumIconBadge option={dueDateOption} />
+            </TooltipTrigger>
+            <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(new Date(task.dueDate), "short")}`}</TooltipContent>
+          </Tooltip>
+        )}
 
         <Tooltip>
           <TooltipTrigger render={<span className="flex" />}>

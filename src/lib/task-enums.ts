@@ -68,6 +68,15 @@ export const priorityOptions: Record<TaskPriority, EnumOption & { chartColor: st
   },
 };
 
+// La fecha limite de las filas y tarjetas de solo lectura se pinta con el mismo lenguaje de icono
+// que el estado y la prioridad (badge + tooltip) en vez de con los tres estados del date picker.
+// Las tareas sin fecha no pintan badge.
+export function getDueDateOption(overdue: boolean): EnumOption {
+  if (overdue) return { labelKey: "tasks.fields.dueDate", icon: ICONS.overdue, colors: severityCriticalColors };
+
+  return { labelKey: "tasks.fields.dueDate", icon: ICONS.dueDate, colors: neutralColors };
+}
+
 export const statusFilters = ["ALL", "OPEN", ...taskStatuses] as const;
 export type StatusFilter = (typeof statusFilters)[number];
 

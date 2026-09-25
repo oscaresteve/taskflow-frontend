@@ -6,6 +6,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { EmptyState } from "@/components/common/empty-state";
 import { EnumIconBadge } from "@/components/common/enum-display";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
@@ -21,8 +22,8 @@ import { ICONS } from "@/lib/icons";
 import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { getTasksQuery } from "@/lib/queries/task.queries";
-import { priorityOptions, statusOptions } from "@/lib/task-enums";
-import { cn, getFullName, isOverdue } from "@/lib/utils";
+import { getDueDateOption, priorityOptions, statusOptions } from "@/lib/task-enums";
+import { getFullName, isOverdue } from "@/lib/utils";
 
 const PAGE_SIZE = 8;
 
@@ -36,6 +37,8 @@ interface FavoriteTaskCardProps {
 }
 
 function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee, href }: FavoriteTaskCardProps) {
+  const t = useTranslations("tasks");
+  const tEnum = useTranslations();
   const format = useFormatter();
   const toggleFavorite = useToggleTaskFavorite(workspaceSlug, projectSlug, task.taskNumber.toString());
 
@@ -43,6 +46,8 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
   const priorityOption = priorityOptions[task.priority];
 
   const taskIsOverdue = !!task.dueDate && task.status !== "DONE" && isOverdue(task.dueDate);
+  const dueDateOption = getDueDateOption(taskIsOverdue);
+
   const assigneeName = assignee ? getFullName(assignee.firstName, assignee.lastName) : null;
 
   return (
@@ -71,29 +76,43 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
 
           <div className="flex items-center justify-between gap-2">
             <span className="flex items-center gap-1">
-              <EnumIconBadge option={statusOption} />
-              <EnumIconBadge option={priorityOption} />
+              <Tooltip>
+                <TooltipTrigger render={<span className="flex" />}>
+                  <EnumIconBadge option={statusOption} />
+                </TooltipTrigger>
+                <TooltipContent>{`${t("fields.status")}: ${tEnum(statusOption.labelKey)}`}</TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger render={<span className="flex" />}>
+                  <EnumIconBadge option={priorityOption} />
+                </TooltipTrigger>
+                <TooltipContent>{`${t("fields.priority")}: ${tEnum(priorityOption.labelKey)}`}</TooltipContent>
+              </Tooltip>
 
               {task.dueDate && (
-                <span className={cn("flex items-center gap-1", taskIsOverdue && "text-severity-critical-foreground")}>
-                  {taskIsOverdue ? (
-                    <ICONS.overdue className="size-3.5 shrink-0" />
-                  ) : (
-                    <ICONS.dueDate className="size-3.5 shrink-0" />
-                  )}
-                  {format.dateTime(new Date(task.dueDate), "short")}
-                </span>
+                <Tooltip>
+                  <TooltipTrigger render={<span className="flex" />}>
+                    <EnumIconBadge option={dueDateOption} />
+                  </TooltipTrigger>
+                  <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(new Date(task.dueDate), "short")}`}</TooltipContent>
+                </Tooltip>
               )}
             </span>
 
             {assignee && assigneeName && (
-              <CustomAvatar
-                size="sm"
-                avatarUrl={assignee.avatarUrl}
-                alt={assigneeName}
-                seed={assignee.id}
-                variant="glyphs"
-              />
+              <Tooltip>
+                <TooltipTrigger render={<span className="flex" />}>
+                  <CustomAvatar
+                    size="sm"
+                    avatarUrl={assignee.avatarUrl}
+                    alt={assigneeName}
+                    seed={assignee.id}
+                    variant="glyphs"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>{`${t("fields.assignee")}: ${assigneeName}`}</TooltipContent>
+              </Tooltip>
             )}
           </div>
         </CardContent>
