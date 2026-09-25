@@ -1,4 +1,4 @@
-/* Paleta propia del proyecto (severity / role).
+/* Paleta propia del proyecto (severity / status / role).
    Generada comprobando los contrastes WCAG contra el tema shadcn. 
    Volver a comprobar WCAG si se cambiase el tema shadcn */
 
@@ -11,6 +11,14 @@
   --color-severity-warning-foreground: var(--severity-warning-foreground);
   --color-severity-good: var(--severity-good);
   --color-severity-good-foreground: var(--severity-good-foreground);
+  --color-status-todo: var(--status-todo);
+  --color-status-todo-foreground: var(--status-todo-foreground);
+  --color-status-in-progress: var(--status-in-progress);
+  --color-status-in-progress-foreground: var(--status-in-progress-foreground);
+  --color-status-in-review: var(--status-in-review);
+  --color-status-in-review-foreground: var(--status-in-review-foreground);
+  --color-status-done: var(--status-done);
+  --color-status-done-foreground: var(--status-done-foreground);
   --color-role-owner: var(--role-owner);
   --color-role-owner-foreground: var(--role-owner-foreground);
   --color-role-admin: var(--role-admin);
@@ -28,6 +36,14 @@
   --severity-serious-foreground: #b44100;
   --severity-critical: #d03b3b;
   --severity-critical-foreground: #bc0c1f;
+  --status-todo: #a3b3c4;
+  --status-todo-foreground: #515f6e;
+  --status-in-progress: #25aabe;
+  --status-in-progress-foreground: #00667d;
+  --status-in-review: #4e75d2;
+  --status-in-review-foreground: #3157b8;
+  --status-done: #6c44a4;
+  --status-done-foreground: #7347af;
   --role-owner: #4a3aa7;
   --role-owner-foreground: #5842ca;
   --role-admin: #eb6834;
@@ -45,6 +61,14 @@
   --severity-serious-foreground: #ff7a43;
   --severity-critical: #d03b3b;
   --severity-critical-foreground: #fc5955;
+  --status-todo: #a3b3c4;
+  --status-todo-foreground: #8e9dae;
+  --status-in-progress: #25aabe;
+  --status-in-progress-foreground: #00abc3;
+  --status-in-review: #4e75d2;
+  --status-in-review-foreground: #6d9aff;
+  --status-done: #6c44a4;
+  --status-done-foreground: #b287f5;
   --role-owner: #9085e9;
   --role-owner-foreground: #9c8fff;
   --role-admin: #d95926;

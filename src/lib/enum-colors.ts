@@ -57,6 +57,46 @@ export const severityCriticalColors: EnumColors = {
     "focus:bg-severity-critical/15! focus:text-severity-critical-foreground! focus:**:text-severity-critical-foreground! text-severity-critical-foreground!",
 };
 
+export const statusTodoColors: EnumColors = {
+  text: "text-status-todo-foreground!",
+  bg: "bg-status-todo!",
+  bgSoft: "bg-status-todo/15!",
+  bgSoftHover: "hover:bg-status-todo/25!",
+  border: "border-status-todo/30!",
+  menuHighlight:
+    "focus:bg-status-todo/15! focus:text-status-todo-foreground! focus:**:text-status-todo-foreground! text-status-todo-foreground!",
+};
+
+export const statusInProgressColors: EnumColors = {
+  text: "text-status-in-progress-foreground!",
+  bg: "bg-status-in-progress!",
+  bgSoft: "bg-status-in-progress/15!",
+  bgSoftHover: "hover:bg-status-in-progress/25!",
+  border: "border-status-in-progress/30!",
+  menuHighlight:
+    "focus:bg-status-in-progress/15! focus:text-status-in-progress-foreground! focus:**:text-status-in-progress-foreground! text-status-in-progress-foreground!",
+};
+
+export const statusInReviewColors: EnumColors = {
+  text: "text-status-in-review-foreground!",
+  bg: "bg-status-in-review!",
+  bgSoft: "bg-status-in-review/15!",
+  bgSoftHover: "hover:bg-status-in-review/25!",
+  border: "border-status-in-review/30!",
+  menuHighlight:
+    "focus:bg-status-in-review/15! focus:text-status-in-review-foreground! focus:**:text-status-in-review-foreground! text-status-in-review-foreground!",
+};
+
+export const statusDoneColors: EnumColors = {
+  text: "text-status-done-foreground!",
+  bg: "bg-status-done!",
+  bgSoft: "bg-status-done/15!",
+  bgSoftHover: "hover:bg-status-done/25!",
+  border: "border-status-done/30!",
+  menuHighlight:
+    "focus:bg-status-done/15! focus:text-status-done-foreground! focus:**:text-status-done-foreground! text-status-done-foreground!",
+};
+
 export const roleOwnerColors: EnumColors = {
   text: "text-role-owner-foreground!",
   bg: "bg-role-owner!",

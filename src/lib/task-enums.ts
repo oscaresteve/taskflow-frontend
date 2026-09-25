@@ -3,6 +3,10 @@ import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { taskPriorities } from "@/lib/schemas/task.schema";
 import {
   neutralColors,
+  statusDoneColors,
+  statusInProgressColors,
+  statusInReviewColors,
+  statusTodoColors,
   severityCriticalColors,
   severityGoodColors,
   severitySeriousColors,
@@ -14,26 +18,26 @@ export const statusOptions: Record<TaskStatus, EnumOption & { chartColor: string
   TODO: {
     labelKey: "tasks.status.TODO",
     icon: ICONS.statusTodo,
-    colors: neutralColors,
-    chartColor: "var(--chart-1)",
+    colors: statusTodoColors,
+    chartColor: "var(--status-todo)",
   },
   IN_PROGRESS: {
     labelKey: "tasks.status.IN_PROGRESS",
     icon: ICONS.statusInProgress,
-    colors: neutralColors,
-    chartColor: "var(--chart-2)",
+    colors: statusInProgressColors,
+    chartColor: "var(--status-in-progress)",
   },
   IN_REVIEW: {
     labelKey: "tasks.status.IN_REVIEW",
     icon: ICONS.statusInReview,
-    colors: neutralColors,
-    chartColor: "var(--chart-3)",
+    colors: statusInReviewColors,
+    chartColor: "var(--status-in-review)",
   },
   DONE: {
     labelKey: "tasks.status.DONE",
     icon: ICONS.statusDone,
-    colors: neutralColors,
-    chartColor: "var(--chart-4)",
+    colors: statusDoneColors,
+    chartColor: "var(--status-done)",
   },
 };
 
