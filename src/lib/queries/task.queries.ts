@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { getBoardTasks, getTask, getTasks } from "@/lib/api/tasks.api";
 import { taskKeys } from "@/lib/query-keys/task.keys";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
-import { ALL_ASSIGNEES, DueDateFilter, PriorityFilter, TaskSortField } from "@/lib/task-enums";
+import { ALL_ASSIGNEES, DueDateFilter, PriorityFilter, StatusFilter, TaskSortField } from "@/lib/task-enums";
 
 export const getTasksBoardQuery = (workspaceSlug: string, projectSlug: string) =>
   queryOptions({
@@ -17,6 +17,7 @@ export const getTasksQuery = ({
   page,
   limit,
   search,
+  status,
   assigneeId,
   priority,
   dueDate,
@@ -29,6 +30,7 @@ export const getTasksQuery = ({
   page?: number;
   limit?: number;
   search?: string;
+  status?: StatusFilter;
   assigneeId?: string;
   priority?: PriorityFilter;
   dueDate?: DueDateFilter;
@@ -41,6 +43,7 @@ export const getTasksQuery = ({
       page,
       limit,
       search,
+      status,
       assigneeId,
       priority,
       dueDate,
@@ -55,6 +58,7 @@ export const getTasksQuery = ({
         page,
         limit,
         search: search || undefined,
+        status: status && status !== "ALL" ? status : undefined,
         assigneeId: assigneeId && assigneeId !== ALL_ASSIGNEES ? assigneeId : undefined,
         priority: priority && priority !== "ALL" ? priority : undefined,
         dueDate: dueDate && dueDate !== "ALL" ? dueDate : undefined,

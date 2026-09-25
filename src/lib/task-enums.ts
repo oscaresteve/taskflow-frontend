@@ -1,6 +1,6 @@
 import { ICONS } from "@/lib/icons";
 import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
-import { taskPriorities } from "@/lib/schemas/task.schema";
+import { taskPriorities, taskStatuses } from "@/lib/schemas/task.schema";
 import {
   neutralColors,
   statusDoneColors,
@@ -66,6 +66,25 @@ export const priorityOptions: Record<TaskPriority, EnumOption & { chartColor: st
     colors: severityCriticalColors,
     chartColor: "var(--severity-critical)",
   },
+};
+
+export const statusFilters = ["ALL", "OPEN", ...taskStatuses] as const;
+export type StatusFilter = (typeof statusFilters)[number];
+
+export const statusFilterOptions: Record<StatusFilter, EnumOption> = {
+  ALL: {
+    labelKey: "tasks.statusFilter.all",
+    icon: ICONS.statusAll,
+    colors: neutralColors,
+  },
+  // "OPEN" no es un estado del modelo sino todo lo que no esta DONE: es la lectura con la que se
+  // habla de "tareas abiertas" en los overviews, y a este filtro enlazan sus contadores.
+  OPEN: {
+    labelKey: "tasks.statusFilter.open",
+    icon: ICONS.statusOpen,
+    colors: neutralColors,
+  },
+  ...statusOptions,
 };
 
 export const priorityFilters = ["ALL", ...taskPriorities] as const;

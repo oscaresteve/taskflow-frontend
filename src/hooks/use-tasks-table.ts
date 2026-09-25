@@ -7,6 +7,8 @@ import {
   dueDateFilters,
   PriorityFilter,
   priorityFilters,
+  StatusFilter,
+  statusFilters,
   TaskSortField,
   taskSortFields,
 } from "@/lib/task-enums";
@@ -14,22 +16,28 @@ import {
 const PAGE_SIZE_OPTIONS = [10, 15, 20];
 
 export function useTasksTable() {
-  const [{ search, assigneeId, priority, dueDate, isFavorite, sort, order, limit, page }, setQuery] = useQueryStates({
-    search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
-    assigneeId: parseAsString.withDefault(ALL_ASSIGNEES),
-    priority: parseAsStringLiteral(priorityFilters).withDefault("ALL"),
-    dueDate: parseAsStringLiteral(dueDateFilters).withDefault("ALL"),
-    isFavorite: parseAsBoolean.withDefault(false),
-    sort: parseAsStringLiteral(taskSortFields).withDefault("rank"),
-    order: parseAsStringLiteral(sortOrders).withDefault("asc"),
-    limit: parseAsInteger.withDefault(PAGE_SIZE_OPTIONS[0]),
-    page: parseAsInteger.withDefault(1),
-  });
+  const [{ search, status, assigneeId, priority, dueDate, isFavorite, sort, order, limit, page }, setQuery] =
+    useQueryStates({
+      search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
+      status: parseAsStringLiteral(statusFilters).withDefault("ALL"),
+      assigneeId: parseAsString.withDefault(ALL_ASSIGNEES),
+      priority: parseAsStringLiteral(priorityFilters).withDefault("ALL"),
+      dueDate: parseAsStringLiteral(dueDateFilters).withDefault("ALL"),
+      isFavorite: parseAsBoolean.withDefault(false),
+      sort: parseAsStringLiteral(taskSortFields).withDefault("rank"),
+      order: parseAsStringLiteral(sortOrders).withDefault("asc"),
+      limit: parseAsInteger.withDefault(PAGE_SIZE_OPTIONS[0]),
+      page: parseAsInteger.withDefault(1),
+    });
 
   const debouncedSearch = useDebouncedValue(search);
 
   function onSearchChange(value: string) {
     setQuery({ search: value, page: 1 });
+  }
+
+  function onStatusChange(value: StatusFilter) {
+    setQuery({ status: value, page: 1 });
   }
 
   function onAssigneeChange(value: string) {
@@ -66,6 +74,7 @@ export function useTasksTable() {
 
   return {
     search,
+    status,
     assigneeId,
     priority,
     dueDate,
@@ -77,6 +86,7 @@ export function useTasksTable() {
     debouncedSearch,
     pageSizeOptions: PAGE_SIZE_OPTIONS,
     onSearchChange,
+    onStatusChange,
     onAssigneeChange,
     onPriorityChange,
     onDueDateChange,

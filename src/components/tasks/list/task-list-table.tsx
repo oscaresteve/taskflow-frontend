@@ -150,6 +150,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
 
   const {
     search,
+    status,
     assigneeId,
     priority,
     dueDate,
@@ -161,6 +162,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     debouncedSearch,
     pageSizeOptions,
     onSearchChange,
+    onStatusChange,
     onAssigneeChange,
     onPriorityChange,
     onDueDateChange,
@@ -187,6 +189,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
       page,
       limit,
       search: debouncedSearch,
+      status,
       assigneeId,
       priority,
       dueDate,
@@ -202,7 +205,12 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
   }
 
   const hasActiveFilters =
-    !!search || assigneeId !== ALL_ASSIGNEES || priority !== "ALL" || dueDate !== "ALL" || isFavorite;
+    !!search ||
+    status !== "ALL" ||
+    assigneeId !== ALL_ASSIGNEES ||
+    priority !== "ALL" ||
+    dueDate !== "ALL" ||
+    isFavorite;
 
   const emptyState = hasActiveFilters ? (
     <EmptyState
@@ -235,6 +243,8 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
             projectSlug={project.slug}
             search={search}
             onSearchChange={onSearchChange}
+            status={status}
+            onStatusChange={onStatusChange}
             assigneeId={assigneeId}
             onAssigneeChange={onAssigneeChange}
             priority={priority}

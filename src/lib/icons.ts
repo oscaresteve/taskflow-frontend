@@ -61,6 +61,7 @@ import {
   ShieldIcon,
   UsersIcon,
   ListFilter,
+  ListChecks,
   CalendarClock,
   Star,
   ChevronRightIcon,
@@ -158,6 +159,8 @@ export const ICONS = {
   priorityHigh: ChevronUpIcon,
   priorityUrgent: ChevronsUpIcon,
   priorityAll: ListFilter,
+  statusAll: ListChecks,
+  statusOpen: ListTodo,
   dueDateThisWeek: CalendarClock,
 
   // Member enums

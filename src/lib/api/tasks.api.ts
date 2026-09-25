@@ -3,7 +3,7 @@ import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
 import { MoveTaskDto, TaskPriority, TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { CreateTaskDto, UpdateTaskDto } from "@/lib/schemas/task.schema";
 import { buildQueryString } from "@/lib/http/query-string";
-import { DueDateFilter, TaskSortField } from "@/lib/task-enums";
+import { DueDateFilter, StatusFilter, TaskSortField } from "@/lib/task-enums";
 
 export function createTask({
   workspaceSlug,
@@ -32,6 +32,7 @@ export function getTasks({
   page,
   limit,
   search,
+  status,
   priority,
   assigneeId,
   dueDate,
@@ -44,6 +45,7 @@ export function getTasks({
   page?: number;
   limit?: number;
   search?: string;
+  status?: Exclude<StatusFilter, "ALL">;
   priority?: TaskPriority;
   assigneeId?: string;
   dueDate?: Exclude<DueDateFilter, "ALL">;
@@ -51,7 +53,18 @@ export function getTasks({
   sort?: TaskSortField;
   order?: SortOrder;
 }) {
-  const queryString = buildQueryString({ page, limit, search, priority, assigneeId, dueDate, isFavorite, sort, order });
+  const queryString = buildQueryString({
+    page,
+    limit,
+    search,
+    status,
+    priority,
+    assigneeId,
+    dueDate,
+    isFavorite,
+    sort,
+    order,
+  });
 
   return request<PaginatedResponseDto<TaskResponseDto>>(
     `/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks${queryString}`,

@@ -1,10 +1,11 @@
 import { SortOrder } from "@/lib/dtos/pagination.dto";
-import { DueDateFilter, PriorityFilter, TaskSortField } from "@/lib/task-enums";
+import { DueDateFilter, PriorityFilter, StatusFilter, TaskSortField } from "@/lib/task-enums";
 
 type TaskListParams = {
   page?: number;
   limit?: number;
   search?: string;
+  status?: StatusFilter;
   assigneeId?: string;
   priority?: PriorityFilter;
   dueDate?: DueDateFilter;
