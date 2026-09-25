@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import { CustomAvatar } from "@/components/common/custom-avatar";
 import { EnumIconBadge } from "@/components/common/enum-display";
+import { UserPopup } from "@/components/common/user-popup";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
@@ -65,28 +66,40 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
           </Tooltip>
         )}
 
-        <Tooltip>
-          <TooltipTrigger render={<span className="flex" />}>
-            {task.assignee && assigneeName ? (
-              <CustomAvatar
-                size="sm"
-                avatarUrl={task.assignee.avatarUrl}
-                alt={assigneeName}
-                seed={task.assignee.id}
-                variant="glyphs"
-              />
-            ) : (
+        {task.assignee && assigneeName ? (
+          <Tooltip>
+            <UserPopup
+              userId={task.assignee.id}
+              align="end"
+              render={
+                <TooltipTrigger
+                  render={
+                    <CustomAvatar
+                      size="sm"
+                      avatarUrl={task.assignee.avatarUrl}
+                      alt={assigneeName}
+                      seed={task.assignee.id}
+                      variant="glyphs"
+                      className="cursor-pointer"
+                    />
+                  }
+                />
+              }
+            />
+            <TooltipContent>{`${t("fields.assignee")}: ${assigneeName}`}</TooltipContent>
+          </Tooltip>
+        ) : (
+          <Tooltip>
+            <TooltipTrigger render={<span className="flex" />}>
               <Avatar size="sm">
                 <AvatarFallback>
                   <ICONS.person className="size-4" />
                 </AvatarFallback>
               </Avatar>
-            )}
-          </TooltipTrigger>
-          <TooltipContent>
-            {assigneeName ? `${t("fields.assignee")}: ${assigneeName}` : t("fields.unassigned")}
-          </TooltipContent>
-        </Tooltip>
+            </TooltipTrigger>
+            <TooltipContent>{t("fields.unassigned")}</TooltipContent>
+          </Tooltip>
+        )}
       </div>
     </Link>
   );

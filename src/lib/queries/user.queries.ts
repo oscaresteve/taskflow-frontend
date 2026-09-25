@@ -1,5 +1,5 @@
-import { infiniteQueryOptions } from "@tanstack/react-query";
-import { getUsers } from "@/lib/api/users.api";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { getUser, getUsers } from "@/lib/api/users.api";
 import { userKeys } from "@/lib/query-keys/user.keys";
 import { dedupeInfinitePages, getNextPageParam } from "@/lib/queries/pagination";
 
@@ -12,4 +12,10 @@ export const getUsersInfiniteQuery = (search: string, workspaceSlug: string | un
     initialPageParam: 1,
     getNextPageParam,
     select: dedupeInfinitePages,
+  });
+
+export const getUserQuery = (userId: string) =>
+  queryOptions({
+    queryKey: userKeys.detail(userId),
+    queryFn: () => getUser({ userId }),
   });

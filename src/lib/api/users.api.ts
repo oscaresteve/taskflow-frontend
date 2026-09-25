@@ -20,3 +20,9 @@ export function getUsers({
     method: "GET",
   });
 }
+
+export function getUser({ userId }: { userId: string }) {
+  return request<UserResponseDto>(`/users/${userId}`, {
+    method: "GET",
+  });
+}

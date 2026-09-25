@@ -33,6 +33,15 @@
     "invalidType": "Please choose a PNG, JPEG or WebP image.",
     "tooLarge": "Image must be 5MB or smaller."
   },
+  "userStatus": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "userPopup": {
+    "joined": "Joined",
+    "lastLogin": "Last login",
+    "neverLoggedIn": "Never"
+  },
   "errors": {
     "generic": "Something went wrong"
   }
