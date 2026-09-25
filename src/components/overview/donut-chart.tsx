@@ -2,6 +2,7 @@
 
 import { Label, Pie, PieChart } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyInline } from "@/components/common/empty-inline";
 
 export interface DonutSegment {
@@ -34,10 +35,32 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel }: D
     .map((segment) => ({ bucket: segment.key, count: segment.count, fill: `var(--color-${segment.key})` }));
 
   return (
-    <div className="flex flex-col gap-3">
-      <ChartContainer config={config} className="mx-auto aspect-square h-45">
+    <div className="grid grid-cols-5 items-center justify-center gap-4 w-full">
+      <ChartContainer config={config} className="w-full aspect-square col-span-3">
         <PieChart>
-          <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel nameKey="bucket" />} />
+          <ChartTooltip
+            cursor={false}
+            content={
+              <ChartTooltipContent
+                hideLabel
+                formatter={(value, name) => {
+                  const segment = segments.find((item) => item.key === name);
+
+                  return (
+                    <>
+                      <span className="size-2.5 shrink-0 rounded-xs" style={{ backgroundColor: segment?.color }} />
+                      <span className="flex flex-1 items-center justify-between gap-3 leading-none">
+                        <span className="text-muted-foreground">{segment?.label ?? name}</span>
+                        <span className="font-mono font-medium tabular-nums">
+                          {value} ({Math.round((Number(value) / total) * 100)}%)
+                        </span>
+                      </span>
+                    </>
+                  );
+                }}
+              />
+            }
+          />
           <Pie
             data={data}
             dataKey="count"
@@ -68,15 +91,28 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel }: D
         </PieChart>
       </ChartContainer>
 
-      <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5">
+      <ul className="flex min-w-0 flex-1 flex-col gap-1.5 col-span-2">
         {segments.map((segment) => (
           <li key={segment.key} className="flex items-center gap-1.5 text-xs">
             <span aria-hidden className="size-2 shrink-0 rounded-xs" style={{ backgroundColor: segment.color }} />
-            <span className="text-muted-foreground">{segment.label}</span>
-            <span className="font-medium tabular-nums">{segment.count}</span>
+            <span className="truncate text-muted-foreground">{segment.label}</span>
+            <span className="ml-auto font-mono font-medium tabular-nums">{segment.count}</span>
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+export function DonutChartSkeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div className="flex items-center justify-center gap-4">
+      <Skeleton className="size-40 shrink-0 rounded-full" />
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        {Array.from({ length: rows }).map((_, index) => (
+          <Skeleton key={index} className="h-3 w-full" />
+        ))}
+      </div>
     </div>
   );
 }
