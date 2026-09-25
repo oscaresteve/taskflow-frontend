@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CustomAvatar } from "@/components/common/custom-avatar";
 import { EmptyState } from "@/components/common/empty-state";
@@ -11,7 +11,7 @@ import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SearchInput } from "@/components/common/search-input";
 import { WorkspaceActionsMenu } from "@/components/workspaces/workspace-actions-menu";
-import { useFavoriteWorkspaces } from "@/hooks/use-favorite-workspaces";
+import { useFavoritesGrid } from "@/hooks/use-favorites-grid";
 import { useToggleWorkspaceFavorite } from "@/hooks/use-toggle-workspace-favorite";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
@@ -27,18 +27,23 @@ function FavoriteWorkspaceCard({ workspace }: { workspace: WorkspaceResponseDto 
 
   return (
     <Link href={`/workspaces/${workspace.slug}`}>
-      <Card className="transition-colors hover:bg-muted/50">
-        <CardHeader>
-          <CardTitle className="flex min-w-0 items-center gap-4">
-            <CustomAvatar size="lg" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
-            <div className="flex min-w-0 flex-col gap-1">
-              <span className="truncate">{workspace.name}</span>
-              <span className="line-clamp-2 text-muted-foreground text-xs">{workspace.description}</span>
-            </div>
-          </CardTitle>
-
-          <CardAction
-            className="flex items-center gap-1"
+      <Card className="h-full transition-colors hover:bg-muted/50">
+        <CardContent className="flex h-full items-center gap-3">
+          <CustomAvatar
+            size="lg"
+            avatarUrl={workspace.avatarUrl}
+            alt={workspace.name}
+            seed={workspace.id}
+            className="shrink-0"
+          />
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <span className="truncate font-medium">{workspace.name}</span>
+            {workspace.description && (
+              <p className="line-clamp-2 text-xs text-muted-foreground">{workspace.description}</p>
+            )}
+          </div>
+          <div
+            className="-my-1 flex shrink-0 items-center gap-1 self-start"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -50,8 +55,8 @@ function FavoriteWorkspaceCard({ workspace }: { workspace: WorkspaceResponseDto 
               disabled={toggleFavorite.isPending}
             />
             <WorkspaceActionsMenu workspace={workspace} canManage={isWorkspaceManager(myRole)} />
-          </CardAction>
-        </CardHeader>
+          </div>
+        </CardContent>
       </Card>
     </Link>
   );
@@ -59,7 +64,7 @@ function FavoriteWorkspaceCard({ workspace }: { workspace: WorkspaceResponseDto 
 
 export function FavoriteWorkspaces() {
   const t = useTranslations("mySpace");
-  const { search, page, searchParam, onSearchChange, onPageChange } = useFavoriteWorkspaces();
+  const { search, page, searchParam, onSearchChange, onPageChange } = useFavoritesGrid();
 
   const {
     data: workspaces,
@@ -94,7 +99,7 @@ export function FavoriteWorkspaces() {
   );
 
   return (
-    <div className="flex flex-col gap-3 col-span-2">
+    <div className="flex flex-col gap-3 col-span-3">
       <div className="flex items-center justify-between gap-2">
         <h2 className="font-heading text-base leading-snug font-medium">{t("mySpacePage.favorites.title")}</h2>
         <SearchInput
@@ -108,11 +113,11 @@ export function FavoriteWorkspaces() {
       {isError ? (
         <p className="text-sm text-muted-foreground">{t("mySpacePage.favorites.failedToLoad")}</p>
       ) : isLoading || !workspaces ? (
-        <div className="grid grid-cols-2 gap-3">
-          <Skeleton className="h-20 w-full" />
-          <Skeleton className="h-20 w-full" />
-          <Skeleton className="h-20 w-full" />
-          <Skeleton className="h-20 w-full" />
+        <div className="grid grid-cols-4 gap-3">
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
         </div>
       ) : workspaces.data.length === 0 ? (
         emptyState

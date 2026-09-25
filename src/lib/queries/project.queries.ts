@@ -41,6 +41,7 @@ export const getProjectsQuery = (
     page?: number;
     limit?: number;
     isArchived?: boolean;
+    isFavorite?: boolean;
     search?: string;
     sort?: ProjectSortField;
     order?: SortOrder;

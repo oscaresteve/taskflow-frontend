@@ -1,7 +1,7 @@
 import { debounce, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { useDebouncedValue } from "./use-debounced-value";
 
-export function useFavoriteWorkspaces() {
+export function useFavoritesGrid() {
   const [{ search, page }, setQuery] = useQueryStates({
     search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
     page: parseAsInteger.withDefault(1),
