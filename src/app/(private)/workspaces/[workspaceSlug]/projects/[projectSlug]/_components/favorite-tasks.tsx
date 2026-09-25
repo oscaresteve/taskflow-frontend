@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
 import { EnumIconBadge } from "@/components/common/enum-display";
@@ -47,52 +47,56 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
 
   return (
     <Link href={href}>
-      <Card size="sm" className="h-full gap-2 transition-colors hover:bg-muted/50">
-        <div className="flex items-center justify-between gap-2 px-(--card-spacing)">
-          <span className="text-xs text-muted-foreground">{taskKey}</span>
-          <span
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-            }}
-          >
-            <FavoriteToggle
-              isFavorite={task.isFavorite}
-              onToggle={() => toggleFavorite.mutate(!task.isFavorite)}
-              disabled={toggleFavorite.isPending}
-            />
-          </span>
-        </div>
+      <Card size="sm" className="h-full gap-2 transition-colors hover:bg-muted/50 group">
+        <CardContent className="flex flex-1 flex-col gap-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs text-muted-foreground">{taskKey}</span>
+            <span
+              className="-my-1 flex shrink-0 items-center gap-1"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+              }}
+            >
+              <FavoriteToggle
+                isFavorite={task.isFavorite}
+                onToggle={() => toggleFavorite.mutate(!task.isFavorite)}
+                disabled={toggleFavorite.isPending}
+                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
+              />
+            </span>
+          </div>
 
-        <p className="line-clamp-2 flex flex-1 px-(--card-spacing) text-sm font-medium">{task.title}</p>
+          <p className="line-clamp-2 flex flex-1 text-sm font-medium">{task.title}</p>
 
-        <div className="flex items-center justify-between gap-2 px-(--card-spacing) text-xs text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <EnumIconBadge option={statusOption} />
-            <EnumIconBadge option={priorityOption} />
+          <div className="flex items-center justify-between gap-2">
+            <span className="flex items-center gap-1">
+              <EnumIconBadge option={statusOption} />
+              <EnumIconBadge option={priorityOption} />
 
-            {task.dueDate && (
-              <span className={cn("flex items-center gap-1", taskIsOverdue && "text-severity-critical-foreground")}>
-                {taskIsOverdue ? (
-                  <ICONS.overdue className="size-3.5 shrink-0" />
-                ) : (
-                  <ICONS.dueDate className="size-3.5 shrink-0" />
-                )}
-                {format.dateTime(new Date(task.dueDate), "short")}
-              </span>
+              {task.dueDate && (
+                <span className={cn("flex items-center gap-1", taskIsOverdue && "text-severity-critical-foreground")}>
+                  {taskIsOverdue ? (
+                    <ICONS.overdue className="size-3.5 shrink-0" />
+                  ) : (
+                    <ICONS.dueDate className="size-3.5 shrink-0" />
+                  )}
+                  {format.dateTime(new Date(task.dueDate), "short")}
+                </span>
+              )}
+            </span>
+
+            {assignee && assigneeName && (
+              <CustomAvatar
+                size="sm"
+                avatarUrl={assignee.avatarUrl}
+                alt={assigneeName}
+                seed={assignee.id}
+                variant="glyphs"
+              />
             )}
-          </span>
-
-          {assignee && assigneeName && (
-            <CustomAvatar
-              size="sm"
-              avatarUrl={assignee.avatarUrl}
-              alt={assigneeName}
-              seed={assignee.id}
-              variant="glyphs"
-            />
-          )}
-        </div>
+          </div>
+        </CardContent>
       </Card>
     </Link>
   );

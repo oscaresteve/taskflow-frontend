@@ -10,25 +10,21 @@ import { EmptyState } from "@/components/common/empty-state";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SearchInput } from "@/components/common/search-input";
-import { WorkspaceActionsMenu } from "@/components/workspaces/workspace-actions-menu";
 import { useFavoritesGrid } from "@/hooks/use-favorites-grid";
 import { useToggleWorkspaceFavorite } from "@/hooks/use-toggle-workspace-favorite";
-import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 import { ICONS } from "@/lib/icons";
-import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 
 const PAGE_SIZE = 4;
 
 function FavoriteWorkspaceCard({ workspace }: { workspace: WorkspaceResponseDto }) {
   const toggleFavorite = useToggleWorkspaceFavorite(workspace.slug);
-  const { role: myRole } = useWorkspaceRole(workspace.slug);
 
   return (
     <Link href={`/workspaces/${workspace.slug}`}>
-      <Card className="h-full transition-colors hover:bg-muted/50">
-        <CardContent className="flex h-full items-center gap-3">
+      <Card className="h-full transition-colors hover:bg-muted/50 group">
+        <CardContent className="flex h-full gap-3">
           <CustomAvatar
             size="lg"
             avatarUrl={workspace.avatarUrl}
@@ -43,7 +39,7 @@ function FavoriteWorkspaceCard({ workspace }: { workspace: WorkspaceResponseDto 
             )}
           </div>
           <div
-            className="-my-1 flex shrink-0 items-center gap-1 self-start"
+            className="-my-1 flex shrink-0 gap-1"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -53,8 +49,8 @@ function FavoriteWorkspaceCard({ workspace }: { workspace: WorkspaceResponseDto 
               isFavorite={workspace.isFavorite}
               onToggle={() => toggleFavorite.mutate(!workspace.isFavorite)}
               disabled={toggleFavorite.isPending}
+              className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
             />
-            <WorkspaceActionsMenu workspace={workspace} canManage={isWorkspaceManager(myRole)} />
           </div>
         </CardContent>
       </Card>

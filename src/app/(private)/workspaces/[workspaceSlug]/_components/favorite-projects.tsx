@@ -10,25 +10,21 @@ import { EmptyState } from "@/components/common/empty-state";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SearchInput } from "@/components/common/search-input";
-import { ProjectActionsMenu } from "@/components/projects/project-actions-menu";
 import { useFavoritesGrid } from "@/hooks/use-favorites-grid";
-import { useProjectRole } from "@/hooks/use-project-role";
 import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { ICONS } from "@/lib/icons";
-import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 
 const PAGE_SIZE = 6;
 
 function FavoriteProjectCard({ workspaceSlug, project }: { workspaceSlug: string; project: ProjectResponseDto }) {
   const toggleFavorite = useToggleProjectFavorite(workspaceSlug, project.slug);
-  const { role: myRole } = useProjectRole(workspaceSlug, project.slug);
 
   return (
     <Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`}>
-      <Card className="h-full transition-colors hover:bg-muted/50">
-        <CardContent className="flex h-full items-start gap-3">
+      <Card className="h-full transition-colors hover:bg-muted/50 group">
+        <CardContent className="flex h-full gap-3">
           <div className="flex min-w-0 flex-1 flex-col gap-1">
             <div className="flex min-w-0 items-center gap-2">
               <ColorDot color={project.color} className="size-4 shrink-0" />
@@ -40,7 +36,7 @@ function FavoriteProjectCard({ workspaceSlug, project }: { workspaceSlug: string
           </div>
 
           <div
-            className="-my-1 flex shrink-0 items-center gap-1"
+            className="-my-1 flex shrink-0 gap-1"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -50,8 +46,8 @@ function FavoriteProjectCard({ workspaceSlug, project }: { workspaceSlug: string
               isFavorite={project.isFavorite}
               onToggle={() => toggleFavorite.mutate(!project.isFavorite)}
               disabled={toggleFavorite.isPending}
+              className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
             />
-            <ProjectActionsMenu workspaceSlug={workspaceSlug} project={project} canManage={isProjectManager(myRole)} />
           </div>
         </CardContent>
       </Card>
