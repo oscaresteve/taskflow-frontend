@@ -4,6 +4,7 @@ import { Label, Pie, PieChart } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyInline } from "@/components/common/empty-inline";
+import { ChartTooltipRow } from "@/components/overview/chart-tooltip-row";
 
 export interface DonutSegment {
   key: string;
@@ -32,32 +33,30 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel }: D
 
   const data = segments
     .filter((segment) => segment.count > 0)
-    .map((segment) => ({ bucket: segment.key, count: segment.count, fill: `var(--color-${segment.key})` }));
+    .map((segment) => ({
+      bucket: segment.key,
+      label: segment.label,
+      color: segment.color,
+      count: segment.count,
+      fill: `var(--color-${segment.key})`,
+    }));
 
   return (
-    <div className="grid grid-cols-5 items-center justify-center gap-4 w-full">
-      <ChartContainer config={config} className="w-full aspect-square col-span-3">
+    <div className="flex w-full items-center justify-center gap-6">
+      <ChartContainer config={config} className="aspect-square min-w-0 max-w-64 flex-1">
         <PieChart>
           <ChartTooltip
             cursor={false}
             content={
               <ChartTooltipContent
                 hideLabel
-                formatter={(value, name) => {
-                  const segment = segments.find((item) => item.key === name);
-
-                  return (
-                    <>
-                      <span className="size-2.5 shrink-0 rounded-xs" style={{ backgroundColor: segment?.color }} />
-                      <span className="flex flex-1 items-center justify-between gap-3 leading-none">
-                        <span className="text-muted-foreground">{segment?.label ?? name}</span>
-                        <span className="font-mono font-medium tabular-nums">
-                          {value} ({Math.round((Number(value) / total) * 100)}%)
-                        </span>
-                      </span>
-                    </>
-                  );
-                }}
+                formatter={(value, _name, item) => (
+                  <ChartTooltipRow
+                    color={item.payload.color}
+                    label={item.payload.label}
+                    value={`${value} (${Math.round((Number(value) / total) * 100)}%)`}
+                  />
+                )}
               />
             }
           />
@@ -70,6 +69,7 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel }: D
             paddingAngle={2}
             strokeWidth={0}
             isAnimationActive={false}
+            cornerRadius={6}
           >
             <Label
               content={({ viewBox }) => {
@@ -91,12 +91,14 @@ export function DonutChart({ segments, centerValue, centerLabel, emptyLabel }: D
         </PieChart>
       </ChartContainer>
 
-      <ul className="flex min-w-0 flex-1 flex-col gap-1.5 col-span-2">
+      <ul className="flex w-fit shrink-0 flex-col gap-1.5">
         {segments.map((segment) => (
           <li key={segment.key} className="flex items-center gap-1.5 text-xs">
-            <span aria-hidden className="size-2 shrink-0 rounded-xs" style={{ backgroundColor: segment.color }} />
-            <span className="truncate text-muted-foreground">{segment.label}</span>
-            <span className="ml-auto font-mono font-medium tabular-nums">{segment.count}</span>
+            <span aria-hidden className="size-2.5 shrink-0 rounded-xs" style={{ backgroundColor: segment.color }} />
+            <span className="flex flex-1 items-center justify-between gap-3 leading-none whitespace-nowrap">
+              <span className="text-muted-foreground">{segment.label}</span>
+              <span className="font-mono font-medium tabular-nums">{segment.count}</span>
+            </span>
           </li>
         ))}
       </ul>

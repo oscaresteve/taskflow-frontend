@@ -29,7 +29,7 @@ export function TasksByDueDateCard({ data, className }: TasksByDueDateCardProps)
       className={className}
     >
       {data ? (
-        <ColumnChart bars={bars} emptyLabel={t("byDueDate.empty")} valueLabel={t("byDueDate.valueLabel")} />
+        <ColumnChart bars={bars} emptyLabel={t("byDueDate.empty")} valueLabel={t("byDueDate.valueLabel")} className="self-end" />
       ) : (
         <ColumnChartSkeleton />
       )}

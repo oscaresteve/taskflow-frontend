@@ -1,10 +1,11 @@
 "use client";
 
-import { Bar, BarChart, LabelList, Rectangle, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, Rectangle, XAxis, YAxis } from "recharts";
 import type { BarShapeProps } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyInline } from "@/components/common/empty-inline";
+import { ChartTooltipRow } from "@/components/overview/chart-tooltip-row";
 
 export interface RankedBarRow {
   key: string;
@@ -40,8 +41,8 @@ export function RankedBarChart({ rows, emptyLabel, valueLabel }: RankedBarChartP
   const config = { value: { label: valueLabel, color: "var(--chart-3)" } } satisfies ChartConfig;
 
   return (
-    <ChartContainer config={config} className="w-full" style={{ height: rows.length * ROW_HEIGHT }}>
-      <BarChart accessibilityLayer layout="vertical" data={rows} margin={{ right: 32 }}>
+    <ChartContainer config={config} className="aspect-auto w-full" style={{ height: rows.length * ROW_HEIGHT }}>
+      <BarChart accessibilityLayer layout="vertical" data={rows} margin={{ top: 0, bottom: 0, left: 0, right: 32 }}>
         <XAxis type="number" dataKey="value" hide />
         <YAxis
           type="category"
@@ -50,29 +51,25 @@ export function RankedBarChart({ rows, emptyLabel, valueLabel }: RankedBarChartP
           tickLine={false}
           tickMargin={8}
           axisLine={false}
-          tick={{ fill: "var(--card-foreground)", fillOpacity: 0.75 }}
+          tick={{ className: "fill-muted-foreground text-xs" }}
           tickFormatter={truncate}
         />
         <ChartTooltip
           cursor={false}
           content={
             <ChartTooltipContent
+              hideLabel
               formatter={(value, _name, item) => (
-                <>
-                  <span
-                    className="size-2.5 shrink-0 rounded-xs"
-                    style={{ backgroundColor: item.payload.color ?? "var(--color-value)" }}
-                  />
-                  <span className="font-mono font-medium tabular-nums">{value}</span>
-                  <span className="text-muted-foreground">{valueLabel}</span>
-                </>
+                <ChartTooltipRow
+                  color={item.payload.color ?? "var(--color-value)"}
+                  label={item.payload.label}
+                  value={value}
+                />
               )}
             />
           }
         />
-        <Bar dataKey="value" barSize={16} radius={[0, 4, 4, 0]} isAnimationActive={false} shape={RankedBarShape}>
-          <LabelList dataKey="value" position="right" offset={8} fontSize={12} className="fill-card-foreground" />
-        </Bar>
+        <Bar dataKey="value" barSize={20} radius={6} isAnimationActive={false} shape={RankedBarShape} />
       </BarChart>
     </ChartContainer>
   );
@@ -80,11 +77,11 @@ export function RankedBarChart({ rows, emptyLabel, valueLabel }: RankedBarChartP
 
 export function RankedBarChartSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="flex w-full flex-col justify-center gap-2" style={{ height: rows * ROW_HEIGHT }}>
+    <div className="flex w-full flex-col">
       {Array.from({ length: rows }).map((_, index) => (
-        <div key={index} className="flex items-center gap-3">
+        <div key={index} className="flex h-8 items-center gap-2">
           <Skeleton className="h-3 w-24 shrink-0" />
-          <Skeleton className="h-4 flex-1" />
+          <Skeleton className="h-5 flex-1 rounded-md" />
         </div>
       ))}
     </div>

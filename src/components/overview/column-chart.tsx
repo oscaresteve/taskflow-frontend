@@ -1,10 +1,12 @@
 "use client";
 
-import { Bar, BarChart, LabelList, Rectangle, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, Rectangle, XAxis, YAxis } from "recharts";
 import type { BarShapeProps } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyInline } from "@/components/common/empty-inline";
+import { cn } from "@/lib/utils";
+import { ChartTooltipRow } from "@/components/overview/chart-tooltip-row";
 
 export interface ColumnChartBar {
   key: string;
@@ -17,9 +19,8 @@ interface ColumnChartProps {
   bars: ColumnChartBar[];
   emptyLabel: string;
   valueLabel: string;
+  className?: string;
 }
-
-const CHART_HEIGHT = 180;
 
 function ColumnShape(props: BarShapeProps) {
   const bar: ColumnChartBar = props.payload;
@@ -27,7 +28,7 @@ function ColumnShape(props: BarShapeProps) {
   return <Rectangle {...props} fill={bar.color} />;
 }
 
-export function ColumnChart({ bars, emptyLabel, valueLabel }: ColumnChartProps) {
+export function ColumnChart({ bars, emptyLabel, valueLabel, className }: ColumnChartProps) {
   if (bars.every((bar) => bar.value === 0)) {
     return <EmptyInline label={emptyLabel} className="py-2" />;
   }
@@ -35,27 +36,29 @@ export function ColumnChart({ bars, emptyLabel, valueLabel }: ColumnChartProps) 
   const config = { value: { label: valueLabel } } satisfies ChartConfig;
 
   return (
-    <ChartContainer config={config} className="w-full" style={{ height: CHART_HEIGHT }}>
+    <ChartContainer config={config} className={cn("w-full", className)}>
       <BarChart accessibilityLayer data={bars} margin={{ top: 20 }}>
-        <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} interval={0} />
+        <XAxis
+          dataKey="label"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          interval={0}
+          tick={{ className: "fill-muted-foreground text-xs" }}
+        />
         <YAxis type="number" dataKey="value" hide />
         <ChartTooltip
           cursor={false}
           content={
             <ChartTooltipContent
+              hideLabel
               formatter={(value, _name, item) => (
-                <>
-                  <span className="size-2.5 shrink-0 rounded-xs" style={{ backgroundColor: item.payload.color }} />
-                  <span className="font-mono font-medium tabular-nums">{value}</span>
-                  <span className="text-muted-foreground">{valueLabel}</span>
-                </>
+                <ChartTooltipRow color={item.payload.color} label={item.payload.label} value={value} />
               )}
             />
           }
         />
-        <Bar dataKey="value" radius={[4, 4, 0, 0]} isAnimationActive={false} shape={ColumnShape}>
-          <LabelList dataKey="value" position="top" offset={8} fontSize={12} className="fill-card-foreground" />
-        </Bar>
+        <Bar dataKey="value" radius={6} isAnimationActive={false} shape={ColumnShape} />
       </BarChart>
     </ChartContainer>
   );
@@ -66,7 +69,7 @@ export function ColumnChartSkeleton({ bars = 4 }: { bars?: number }) {
   const heights = ["70%", "45%", "85%", "30%"];
 
   return (
-    <div className="flex w-full items-end justify-around gap-3" style={{ height: CHART_HEIGHT }}>
+    <div className="flex w-full items-end justify-around gap-3">
       {Array.from({ length: bars }).map((_, index) => (
         <Skeleton key={index} className="w-full" style={{ height: heights[index % heights.length] }} />
       ))}
