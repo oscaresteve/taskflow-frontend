@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import { ICONS } from "@/lib/icons";
 import { CustomAvatar } from "@/components/common/custom-avatar";
+import { UserPopup } from "@/components/common/user-popup";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -66,13 +67,27 @@ export function MembersTable<TMember extends MemberLike>({
             <TableRow key={member.id}>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <CustomAvatar
-                    size="sm"
-                    avatarUrl={member.user.avatarUrl}
-                    alt={memberName}
-                    seed={member.user.id}
-                    variant="glyphs"
-                  />
+                  <Tooltip>
+                    <UserPopup
+                      userId={member.user.id}
+                      align="start"
+                      render={
+                        <TooltipTrigger
+                          render={
+                            <CustomAvatar
+                              size="sm"
+                              avatarUrl={member.user.avatarUrl}
+                              alt={memberName}
+                              seed={member.user.id}
+                              variant="glyphs"
+                              className="cursor-pointer"
+                            />
+                          }
+                        />
+                      }
+                    />
+                    <TooltipContent>{memberName}</TooltipContent>
+                  </Tooltip>
                   <span className="truncate font-medium">
                     {memberName}
                     {isActor && t("membersTable.youSuffix")}

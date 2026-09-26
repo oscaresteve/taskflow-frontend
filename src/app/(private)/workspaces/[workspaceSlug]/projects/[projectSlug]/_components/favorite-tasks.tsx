@@ -13,6 +13,7 @@ import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SearchInput } from "@/components/common/search-input";
 import { CustomAvatar } from "@/components/common/custom-avatar";
+import { UserPopup } from "@/components/common/user-popup";
 import { useFavoritesGrid } from "@/hooks/use-favorites-grid";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
@@ -102,15 +103,24 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
 
             {assignee && assigneeName && (
               <Tooltip>
-                <TooltipTrigger render={<span className="flex" />}>
-                  <CustomAvatar
-                    size="sm"
-                    avatarUrl={assignee.avatarUrl}
-                    alt={assigneeName}
-                    seed={assignee.id}
-                    variant="glyphs"
-                  />
-                </TooltipTrigger>
+                <UserPopup
+                  userId={assignee.id}
+                  align="end"
+                  render={
+                    <TooltipTrigger
+                      render={
+                        <CustomAvatar
+                          size="sm"
+                          avatarUrl={assignee.avatarUrl}
+                          alt={assigneeName}
+                          seed={assignee.id}
+                          variant="glyphs"
+                          className="cursor-pointer"
+                        />
+                      }
+                    />
+                  }
+                />
                 <TooltipContent>{`${t("fields.assignee")}: ${assigneeName}`}</TooltipContent>
               </Tooltip>
             )}

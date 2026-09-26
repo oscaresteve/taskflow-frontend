@@ -23,6 +23,8 @@ import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissio
 import Link from "next/link";
 import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { CustomAvatar } from "@/components/common/custom-avatar";
+import { UserPopup } from "@/components/common/user-popup";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ColorDot } from "@/components/ui/color-dot";
 import { getFullName } from "@/lib/utils";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
@@ -78,14 +80,26 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
             {visibleOwners.map((owner) => {
               const ownerName = getFullName(owner.user.firstName, owner.user.lastName);
               return (
-                <CustomAvatar
-                  key={owner.id}
-                  size="sm"
-                  avatarUrl={owner.user.avatarUrl}
-                  alt={ownerName}
-                  seed={owner.user.id}
-                  variant="glyphs"
-                />
+                <Tooltip key={owner.id}>
+                  <UserPopup
+                    userId={owner.user.id}
+                    render={
+                      <TooltipTrigger
+                        render={
+                          <CustomAvatar
+                            size="sm"
+                            avatarUrl={owner.user.avatarUrl}
+                            alt={ownerName}
+                            seed={owner.user.id}
+                            variant="glyphs"
+                            className="cursor-pointer ring-2 ring-background"
+                          />
+                        }
+                      />
+                    }
+                  />
+                  <TooltipContent>{ownerName}</TooltipContent>
+                </Tooltip>
               );
             })}
             {remainingOwners > 0 && <AvatarGroupCount>+{remainingOwners}</AvatarGroupCount>}

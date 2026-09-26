@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ICONS } from "@/lib/icons";
 import { useFormatter, useTranslations } from "next-intl";
 import { CustomAvatar } from "@/components/common/custom-avatar";
+import { UserPopup } from "@/components/common/user-popup";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
@@ -77,13 +78,27 @@ export function CommentItem({
 
   return (
     <div className="flex gap-2 group">
-      <CustomAvatar
-        size="sm"
-        avatarUrl={author?.user.avatarUrl ?? null}
-        alt={authorName}
-        seed={authorId}
-        variant="glyphs"
-      />
+      <Tooltip>
+        <UserPopup
+          userId={authorId}
+          align="start"
+          render={
+            <TooltipTrigger
+              render={
+                <CustomAvatar
+                  size="sm"
+                  avatarUrl={author?.user.avatarUrl ?? null}
+                  alt={authorName}
+                  seed={authorId}
+                  variant="glyphs"
+                  className="cursor-pointer"
+                />
+              }
+            />
+          }
+        />
+        <TooltipContent>{authorName ?? t("comments.unknownAuthor")}</TooltipContent>
+      </Tooltip>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{authorName ?? t("comments.unknownAuthor")}</span>
