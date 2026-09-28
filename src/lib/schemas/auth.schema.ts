@@ -4,12 +4,25 @@ import type { Translator } from "./common.schema";
 
 // Usar los mismos esquemas que el backend
 
+// El identificador publico con el que se menciona a alguien (@usuario). Se guarda en minusculas
+// para que la unicidad no dependa de como lo escriba cada uno.
+const usernameSchema = (t: Translator) =>
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(3, t("signUpSchema.usernameMin"))
+    .max(30, t("signUpSchema.usernameMax"))
+    .regex(/^[a-z0-9_]+$/, t("signUpSchema.usernameFormat"));
+
 export const signUpSchema = (t: Translator) =>
   z
     .object({
       firstName: z.string().trim().min(2, t("signUpSchema.firstNameMin")).max(100, t("signUpSchema.firstNameMax")),
 
       lastName: z.string().trim().min(2, t("signUpSchema.lastNameMin")).max(100, t("signUpSchema.lastNameMax")),
+
+      username: usernameSchema(t),
 
       email: z.string().trim().toLowerCase().email(t("signUpSchema.emailInvalid")),
 
@@ -42,6 +55,7 @@ export const signInSchema = (t: Translator) =>
 export const updateMeSchema = (t: Translator) =>
   z
     .object({
+      username: usernameSchema(t).optional(),
       locale: z.enum(locales, t("updateMeSchema.localeInvalid")).optional(),
       timezone: z.string().min(1, t("updateMeSchema.timezoneRequired")).optional(),
     })

@@ -3,6 +3,7 @@ import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { ColorSchemeSection } from "./_components/color-scheme-section";
 import { LanguageSection } from "./_components/language-section";
+import { UsernameSection } from "./_components/username-section";
 
 export default async function PreferencesPage() {
   const t = await getTranslations("preferences");
@@ -12,6 +13,7 @@ export default async function PreferencesPage() {
       <PageHeader title={t("preferencesPage.title")} />
       <ColorSchemeSection />
       <LanguageSection />
+      <UsernameSection />
     </PageContainer>
   );
 }

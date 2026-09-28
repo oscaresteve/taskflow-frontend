@@ -26,6 +26,7 @@ export function SignUpForm() {
     defaultValues: {
       firstName: "",
       lastName: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -96,6 +97,30 @@ export function SignUpForm() {
                     required
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+            <Controller
+              name="username"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="username">{t("signUpForm.usernameLabel")}</FieldLabel>
+                  <Input
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id="username"
+                    type="text"
+                    autoComplete="username"
+                    placeholder={t("signUpForm.usernamePlaceholder")}
+                    required
+                  />
+
+                  {fieldState.invalid ? (
+                    <FieldError errors={[fieldState.error]} />
+                  ) : (
+                    <FieldDescription>{t("signUpForm.usernameHelp")}</FieldDescription>
+                  )}
                 </Field>
               )}
             />

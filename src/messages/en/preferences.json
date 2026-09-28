@@ -15,5 +15,10 @@
   },
   "errors": {
     "generic": "Something went wrong"
+  },
+  "usernameSection": {
+    "title": "Username",
+    "description": "This is how people mention you in comments. Changing it does not break existing mentions.",
+    "saved": "Username updated"
   }
 }

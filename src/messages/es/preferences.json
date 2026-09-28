@@ -15,5 +15,10 @@
   },
   "errors": {
     "generic": "Algo salió mal"
+  },
+  "usernameSection": {
+    "title": "Nombre de usuario",
+    "description": "Con este nombre te mencionan en los comentarios. Cambiarlo no rompe las menciones que ya existen.",
+    "saved": "Nombre de usuario actualizado"
   }
 }

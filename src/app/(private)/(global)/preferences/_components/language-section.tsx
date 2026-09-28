@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { getMeQuery } from "@/lib/queries/auth.queries";
-import { useUpdateMe } from "@/hooks/use-update-me";
+import { useUpdateLocale } from "@/hooks/use-update-locale";
 import { ApiError } from "@/lib/http/api-error";
 import { locales, normalizeLocale, type Locale } from "@/lib/locale";
 
@@ -46,7 +46,7 @@ function LanguagePicker({ savedLocale }: { savedLocale: Locale }) {
   const t = useTranslations("preferences");
   const tCommon = useTranslations("common");
   const router = useRouter();
-  const updateMe = useUpdateMe();
+  const updateLocale = useUpdateLocale();
   const [locale, setLocale] = useState<Locale>(savedLocale);
 
   const localeLabels: Record<Locale, string> = {
@@ -56,19 +56,17 @@ function LanguagePicker({ savedLocale }: { savedLocale: Locale }) {
 
   function handleSave() {
     if (locale === savedLocale) return;
-    updateMe.mutate(
-      { locale },
-      {
-        onSuccess: () => router.refresh(),
-        onError: (error) => {
-          toast.add({
-            type: "error",
-            description: error instanceof ApiError ? error.message : t("errors.generic"),
-            priority: "high",
-          });
-        },
+    updateLocale.mutate(locale, {
+      // El idioma vive en el usuario, asi que los mensajes del servidor se rehacen al refrescar.
+      onSuccess: () => router.refresh(),
+      onError: (error) => {
+        toast.add({
+          type: "error",
+          description: error instanceof ApiError ? error.message : t("errors.generic"),
+          priority: "high",
+        });
       },
-    );
+    });
   }
 
   return (
@@ -76,8 +74,8 @@ function LanguagePicker({ savedLocale }: { savedLocale: Locale }) {
       title={t("languageSection.title")}
       description={t("languageSection.description")}
       footerAction={
-        <Button onClick={handleSave} disabled={updateMe.isPending || locale === savedLocale}>
-          {updateMe.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
+        <Button onClick={handleSave} disabled={updateLocale.isPending || locale === savedLocale}>
+          {updateLocale.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
           {tCommon("actions.save")}
         </Button>
       }
@@ -86,7 +84,7 @@ function LanguagePicker({ savedLocale }: { savedLocale: Locale }) {
       <Select
         value={locale}
         onValueChange={(value) => value && setLocale(value as Locale)}
-        disabled={updateMe.isPending}
+        disabled={updateLocale.isPending}
       >
         <SelectTrigger className="w-40">
           <SelectValue>
