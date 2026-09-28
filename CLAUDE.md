@@ -1,7 +1,126 @@
 @AGENTS.md
 
+# TaskFlow frontend
+
+Next.js 16 (App Router) + React 19 client for the TaskFlow REST API. The API lives in a separate
+repo, `../taskflow-backend` (Express 5 + Prisma + Postgres) — it is the source of truth for data,
+authorization and validation. Domain: workspaces → projects → tasks, with members and roles at both
+the workspace and the project level.
+
+## Commands
+
+This project uses **pnpm** exclusively (`packageManager` in `package.json`, same rule as the
+backend) — never suggest `npm`/`npx`/`yarn`, including for one-off package runs (`pnpm dlx`).
+
+- `pnpm dev` — Next dev server. Needs the backend running (`pnpm db:up && pnpm dev` in
+  `../taskflow-backend`); `NEXT_PUBLIC_API_URL` defaults to `http://localhost:4000/api`.
+- `pnpm typecheck` — `tsc --noEmit`, incremental (~2s). The main correctness signal.
+- `pnpm lint` — eslint (flat config, `eslint-config-next`). Known pre-existing failure:
+  `react-hooks/set-state-in-effect` in `src/hooks/use-mobile.ts`, which is vendored shadcn code.
+  Don't chase it and don't rewrite it as part of unrelated work.
+- `pnpm verify` — typecheck + lint. Run it before reporting work as done, and report failures
+  other than the one above.
+- `pnpm build` — production build. Slower; only when something build-specific is suspected.
+- There is no test suite yet. Pure logic (`lib/permissions`, `lib/schemas`, `lib/query-keys`,
+  date/color helpers) is the part worth covering first when one is added.
+
+### How work gets verified here
+
+Two hooks in `.claude/settings.json` close the loop automatically: eslint on every edited
+`.ts`/`.tsx` file (PostToolUse) and a full typecheck when the turn ends (Stop). Both return failures
+to the agent, not to the user — so never finish a turn with the project not compiling, and never ask
+the user to check whether something compiles.
+
+Visual and behavioural checking is the user's job, in their own browser. Do not drive a browser,
+and do not start `pnpm dev` to "see" a change. When a change needs human verification, say what to
+click and what to expect.
+
+## Architecture
+
+### Data flow — one direction, never skip a layer
+
+1. `lib/config/env.ts` — zod-validated `NEXT_PUBLIC_*` env.
+2. `lib/http/client.ts` — `request<T>()` for the **browser**: `credentials: "include"`, a single
+   in-flight refresh on 401 (outside the auth routes) with one retry, hard redirect to sign-in when
+   the refresh dies, errors normalized to `ApiError`.
+   `lib/http/server-client.ts` — `serverRequest<T>()` for **RSC** (returns `T | null`) and
+   `serverFetch()` for `proxy.ts` (needs the raw status). Cookies are forwarded manually.
+   `lib/http/query-string.ts` — `buildQueryString()`; never hand-build a query string.
+3. `lib/api/<domain>.api.ts` — one exported function per endpoint, client side, on `request`.
+   `lib/api/<domain>.server.ts` — the RSC/proxy counterpart, on `serverRequest`.
+4. `lib/dtos/<domain>.dto.ts` — response shapes, mirroring the backend's `dtos/`.
+   `lib/schemas/<domain>.schema.ts` — zod schemas for form/request bodies; request DTO types are
+   `z.infer<...>` of these, shared with react-hook-form via `@hookform/resolvers`.
+5. `lib/query-keys/<domain>.keys.ts` — key factories (`all`, `lists`, `detail`, `infiniteList`,
+   `me`). List params default to `{}` so a parameterless invalidation still matches every page and
+   search (react-query treats `{}` as a partial-match wildcard).
+6. `lib/queries/<domain>.queries.ts` — `queryOptions` / `infiniteQueryOptions` builders, each
+   pairing a key factory with an api function, `enabled: !!slug` where a slug is required.
+7. `hooks/use-*.ts` — one mutation per hook (`useMutation` + `invalidateQueries` on the domain's
+   `*Keys.all`), plus the table/filter hooks.
+8. Components consume the query builders and hooks — **never** `fetch` or `*.api.ts` directly.
+
+### Routing
+
+`src/app/(private)` (authenticated) and `src/app/(public)` (auth screens); `(global)` groups the
+scope-less pages (`my-space`, `preferences`, `workspaces`). The nested scope is
+`/workspaces/[workspaceSlug]/projects/[projectSlug]`, whose own `page.tsx` is the project
+overview, plus the `list`, `kanban`, `members` and `settings` segments.
+
+- Page-specific components live in that route's `_components/`; anything reused moves to
+  `src/components/<domain>/`.
+- `src/proxy.ts` is the Next 16 proxy (the file that replaced `middleware.ts`): it calls `/auth/me`,
+  gates private routes, and distinguishes a dead session (401) from a backend that is restarting
+  (5xx) so a hiccup never logs the user out. See
+  `node_modules/next/dist/docs/01-app/01-getting-started/16-proxy.md`.
+
+### i18n (next-intl)
+
+Messages are namespaced JSON files under `src/messages/{en,es}/`, all imported and registered in
+`src/i18n/request.ts`. The locale lives on the user model, not in a cookie, so it is resolved per
+request from the authenticated user.
+
+**Every new string goes into both `en` and `es` under the same key.** A new namespace file also has
+to be imported and added to `messagesByLocale` in `request.ts` for both locales.
+
+### URL state (nuqs)
+
+Filters, search, sorting and pagination live in the URL, via `useQueryStates` in the
+`hooks/use-*-table.ts` / `use-*-filters.ts` hooks, so a view can be shared as a link. Don't put
+shareable view state in `useState`.
+
+### Permissions
+
+`src/lib/permissions/` mirrors the backend's `shared/auth/permissions.ts` and decides only what the
+UI shows or enables. Keep it in sync with that file; the backend re-validates every request. Never
+invent a rule that is stricter than what the corresponding endpoint already allows.
+
+### Colors and enums
+
+Project/workspace colors come from `lib/colors.ts` (curated for white-on-color contrast), status and
+priority palettes from `lib/enum-colors.ts` + `src/app/palette.css`. No hardcoded hex in components.
+
 # UI component rules
 
 - Always use shadcn components for UI. Check `components.json` for the configured style/aliases, and use the shadcn MCP server (`search`/`view`/`add`/`docs`) to find and install the right component before hand-rolling one.
 - Use the minimum amount of Tailwind utility classes needed to achieve the design — don't add classes for effects, spacing, or variants that weren't asked for.
 - Never design for responsiveness (breakpoint variants like `sm:`, `md:`, `lg:`, etc.) unless explicitly instructed to do so.
+- Never modify anything in `src/components/ui/` — those are vendored shadcn primitives (edits there
+  are denied in `.claude/settings.json`). Adjust behaviour at the call site with `className` or a
+  wrapper component instead.
+
+## Conventions
+
+- Comments explain **why**, not what, and match the language of the surrounding file (this codebase
+  mixes Spanish and English comments; don't translate existing ones).
+- Conventional commits (`feat(scope): ...`). Never commit unless asked to in that same turn.
+- When the frontend needs data no endpoint exposes, propose the endpoint in `../taskflow-backend`
+  (`/add-dir ../taskflow-backend` to work across both) instead of threading context through props.
+- Prefer explicit, named code over clever abstraction for small fixed sets of variants.
+
+## Decisions
+
+- `docs/decisiones-producto.md` — product/UX decisions: what each screen is for, what counters
+  count, what is deliberately not built yet. Read it before designing a screen or a counter.
+- `../taskflow-backend/docs/decisiones.md` — stack rationale for **both** repos (framework, React
+  Query, nuqs, next-intl, shadcn...). New stack decisions go there, not here.
