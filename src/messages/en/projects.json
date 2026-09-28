@@ -66,10 +66,6 @@
       "noFavoritesYet": "No favorite tasks yet.",
       "noFavoritesYetDescription": "Star a task to keep it within reach here.",
       "failedToLoad": "Failed to load favorite tasks."
-    },
-    "recent": {
-      "title": "Recent activity",
-      "empty": "No tasks yet."
     }
   },
   "projectSettingsPage": {

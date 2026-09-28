@@ -66,10 +66,6 @@
       "noFavoritesYet": "Todavía no hay tareas favoritas.",
       "noFavoritesYetDescription": "Marca una tarea con la estrella para tenerla a mano aquí.",
       "failedToLoad": "No se pudieron cargar las tareas favoritas."
-    },
-    "recent": {
-      "title": "Actividad reciente",
-      "empty": "Todavía no hay tareas."
     }
   },
   "projectSettingsPage": {

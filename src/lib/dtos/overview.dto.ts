@@ -68,7 +68,6 @@ export type WorkspaceOverviewResponseDto = {
   };
 
   myTasks: OverviewTaskDto[];
-  recentTasks: OverviewTaskDto[];
 };
 
 export type ProjectOverviewResponseDto = {
@@ -82,5 +81,4 @@ export type ProjectOverviewResponseDto = {
     completionRate: number;
   };
 
-  recentTasks: OverviewTaskDto[];
 };

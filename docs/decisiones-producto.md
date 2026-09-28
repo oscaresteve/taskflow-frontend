@@ -33,6 +33,27 @@ debajo — si la lista muestra 7 tareas, el contador no puede decir 9.
 
 **Por qué:** un número mayor que lo visible se lee como un bug, no como información extra.
 
+## Actividad: un feed por ámbito, y cada uno corta un nivel más abajo
+
+Antes de que existiera el registro de eventos, los dos overviews tenían una tarjeta **"Actividad
+reciente"** que era una lista de tareas ordenada por `updatedAt`. Servía de sustituto: decía que una
+fila se había tocado, pero no qué había cambiado ni quién. El feed de actividad dice las dos cosas y
+sigue enlazando a la tarea, así que la sustituye en ambos overviews; `recentTasks` desapareció del
+endpoint de overview por quedarse sin uso.
+
+Lo que **no** sustituye es "Mi trabajo en este espacio": esa es mi cola de tareas abiertas, no un
+historial, y responde a otra pregunta.
+
+Cada feed enseña su ámbito y el de justo debajo:
+
+- **Overview de espacio**: el espacio y sus proyectos. No baja al detalle de cada tarea — un solo
+  proyecto movido ahogaría a los demás, y esta pantalla está para aterrizar.
+- **Overview de proyecto**: el proyecto, sus miembros, sus tareas y sus comentarios. Aquí sí vive el
+  detalle.
+- **Detalle de tarea**: solo esa tarea, bajo sus campos.
+
+La regla del corte y su implementación están en `../taskflow-backend/docs/eventos-de-dominio.md`.
+
 ## Soft delete: espacios inactivos y proyectos archivados
 
 El borrado es lógico: los espacios se desactivan y los proyectos se archivan. El backend responde

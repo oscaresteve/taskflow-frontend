@@ -59,10 +59,6 @@
     "myTasks": {
       "title": "Mi trabajo en este espacio",
       "empty": "No tienes tareas abiertas aquí."
-    },
-    "recent": {
-      "title": "Actividad reciente",
-      "empty": "Todavía no hay tareas."
     }
   },
   "workspaceSettingsPage": {

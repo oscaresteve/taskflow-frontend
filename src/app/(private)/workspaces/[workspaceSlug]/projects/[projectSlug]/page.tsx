@@ -9,7 +9,6 @@ import { StatCard, StatCardSkeleton } from "@/components/overview/stat-card";
 import { TasksByDueDateCard } from "@/components/overview/tasks-by-due-date-card";
 import { TasksByPriorityCard } from "@/components/overview/tasks-by-priority-card";
 import { TasksByStatusCard } from "@/components/overview/tasks-by-status-card";
-import { TaskListCard } from "@/components/overview/task-list-card";
 import { FavoriteTasks } from "./_components/favorite-tasks";
 import { ProjectActivityCard } from "@/components/activity/project-activity-card";
 import { getProjectOverviewQuery } from "@/lib/queries/overview.queries";
@@ -73,13 +72,6 @@ export default function ProjectPage() {
             <TasksByPriorityCard data={tasks} />
             <TasksByDueDateCard data={tasks} />
           </div>
-
-          <TaskListCard
-            title={t("projectOverviewPage.recent.title")}
-            emptyLabel={t("projectOverviewPage.recent.empty")}
-            tasks={overview?.recentTasks ?? []}
-            isLoading={!tasks}
-          />
 
           <ProjectActivityCard workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
         </>

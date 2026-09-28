@@ -76,14 +76,6 @@ export default function WorkspacePage() {
             showProject
           />
 
-          <TaskListCard
-            title={t("workspacePage.recent.title")}
-            emptyLabel={t("workspacePage.recent.empty")}
-            tasks={overview?.recentTasks ?? []}
-            isLoading={!tasks}
-            showProject
-          />
-
           <WorkspaceActivityCard workspaceSlug={workspaceSlug} />
         </>
       )}
