@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "trigger": "Search…",
+    "placeholder": "Search workspaces, projects and tasks…",
+    "title": "Search",
+    "description": "Search across your workspaces, projects and tasks, or jump to a section.",
+    "hint": "Type to search across everything you can open.",
+    "loading": "Searching…",
+    "empty": "No results for “{search}”.",
+    "failed": "Search failed. Try again."
+  },
+  "groups": {
+    "navigation": "Go to",
+    "favorites": "Favorite workspaces",
+    "workspaces": "Workspaces",
+    "projects": "Projects",
+    "tasks": "Tasks"
+  },
+  "commands": {
+    "mySpace": "My space",
+    "manageWorkspaces": "Manage workspaces",
+    "preferences": "Preferences"
+  }
+}

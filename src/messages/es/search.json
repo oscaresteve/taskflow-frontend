@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "trigger": "Buscar…",
+    "placeholder": "Busca espacios, proyectos y tareas…",
+    "title": "Buscar",
+    "description": "Busca en tus espacios, proyectos y tareas, o salta a una sección.",
+    "hint": "Escribe para buscar en todo lo que puedes abrir.",
+    "loading": "Buscando…",
+    "empty": "Sin resultados para «{search}».",
+    "failed": "La búsqueda ha fallado. Inténtalo de nuevo."
+  },
+  "groups": {
+    "navigation": "Ir a",
+    "favorites": "Espacios favoritos",
+    "workspaces": "Espacios",
+    "projects": "Proyectos",
+    "tasks": "Tareas"
+  },
+  "commands": {
+    "mySpace": "Mi espacio",
+    "manageWorkspaces": "Gestionar espacios",
+    "preferences": "Preferencias"
+  }
+}
