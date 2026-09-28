@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { taskKeys } from "@/lib/query-keys/task.keys";
 import { archiveTask } from "@/lib/api/tasks.api";
+import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useArchiveTask(workspaceSlug: string, projectSlug: string, taskNumber: string) {
   const queryClient = useQueryClient();
@@ -12,6 +13,7 @@ export function useArchiveTask(workspaceSlug: string, projectSlug: string, taskN
         queryClient.invalidateQueries({ queryKey: taskKeys.detail(workspaceSlug, projectSlug, taskNumber) }),
         queryClient.invalidateQueries({ queryKey: taskKeys.board(workspaceSlug, projectSlug) }),
         queryClient.invalidateQueries({ queryKey: taskKeys.lists(workspaceSlug, projectSlug) }),
+        queryClient.invalidateQueries({ queryKey: activityKeys.all }),
       ]);
     },
   });

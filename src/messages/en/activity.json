@@ -1,0 +1,25 @@
+{
+  "title": "Activity",
+  "empty": "No activity yet",
+  "failedToLoad": "Activity could not be loaded",
+  "loading": "Loading…",
+  "remaining": "Show {count} more",
+  "unknownMember": "Someone",
+  "actions": {
+    "TASK_CREATED": "created the task",
+    "TASK_EDITED_title": "edited the title",
+    "TASK_EDITED_description": "edited the description",
+    "TASK_EDITED_both": "edited the title and the description",
+    "TASK_STATUS_CHANGED": "changed the status",
+    "TASK_PRIORITY_CHANGED": "changed the priority",
+    "TASK_ASSIGNEE_ASSIGNED": "assigned the task to {name}",
+    "TASK_ASSIGNEE_CLEARED": "cleared the assignee",
+    "TASK_DUE_DATE_SET": "changed the due date to {date}",
+    "TASK_DUE_DATE_CLEARED": "cleared the due date",
+    "TASK_ARCHIVED": "archived the task",
+    "COMMENT_CREATED": "commented",
+    "PROJECT_MEMBER_ADDED": "added {name} to the project",
+    "PROJECT_MEMBER_ROLE_CHANGED": "changed the role of {name}",
+    "PROJECT_MEMBER_DEACTIVATED": "deactivated {name}"
+  }
+}

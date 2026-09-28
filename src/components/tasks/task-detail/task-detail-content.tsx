@@ -19,6 +19,7 @@ import { TaskPrioritySection } from "./task-priority-section";
 import { TaskAssigneeSection } from "./task-assignee-section";
 import { TaskDueDateSection } from "./task-due-date-section";
 import { CommentsSection } from "@/components/tasks/comments/comments-section";
+import { TaskActivitySection } from "@/components/activity/task-activity-section";
 import { Separator } from "@/components/ui/separator";
 
 interface TaskDetailContentProps {
@@ -130,6 +131,8 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
             taskNumber={taskNumber}
             dueDate={task.dueDate}
           />
+          <Separator />
+          <TaskActivitySection workspaceSlug={workspaceSlug} projectSlug={projectSlug} taskNumber={taskNumber} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

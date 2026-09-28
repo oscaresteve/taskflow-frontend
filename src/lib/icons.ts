@@ -45,6 +45,7 @@ import {
   CheckCircle2,
   CircleCheckIcon,
   ClockIcon,
+  History,
   CircleMinusIcon,
   UserCheck,
   UserCog,
@@ -134,6 +135,7 @@ export const ICONS = {
   mySpace: UserCircle,
   person: UserIcon,
   messages: MessagesSquare,
+  activity: History,
 
   // Stat cards de los dashboards
   statOpenTasks: ListTodo,

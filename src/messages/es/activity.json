@@ -1,0 +1,25 @@
+{
+  "title": "Actividad",
+  "empty": "Todavía no hay actividad",
+  "failedToLoad": "No se ha podido cargar la actividad",
+  "loading": "Cargando…",
+  "remaining": "Ver {count} más",
+  "unknownMember": "Alguien",
+  "actions": {
+    "TASK_CREATED": "creó la tarea",
+    "TASK_EDITED_title": "editó el título",
+    "TASK_EDITED_description": "editó la descripción",
+    "TASK_EDITED_both": "editó el título y la descripción",
+    "TASK_STATUS_CHANGED": "cambió el estado",
+    "TASK_PRIORITY_CHANGED": "cambió la prioridad",
+    "TASK_ASSIGNEE_ASSIGNED": "asignó la tarea a {name}",
+    "TASK_ASSIGNEE_CLEARED": "quitó el responsable",
+    "TASK_DUE_DATE_SET": "cambió la fecha límite al {date}",
+    "TASK_DUE_DATE_CLEARED": "quitó la fecha límite",
+    "TASK_ARCHIVED": "archivó la tarea",
+    "COMMENT_CREATED": "comentó",
+    "PROJECT_MEMBER_ADDED": "añadió a {name} al proyecto",
+    "PROJECT_MEMBER_ROLE_CHANGED": "cambió el rol de {name}",
+    "PROJECT_MEMBER_DEACTIVATED": "desactivó a {name}"
+  }
+}

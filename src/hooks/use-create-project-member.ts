@@ -3,6 +3,7 @@ import { projectMemberKeys } from "@/lib/query-keys/project-member.keys";
 import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 import { CreateProjectMemberDto } from "@/lib/schemas/project-member.schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useCreateProjectMember(workspaceSlug: string, projectSlug: string) {
   const queryClient = useQueryClient();
@@ -15,6 +16,7 @@ export function useCreateProjectMember(workspaceSlug: string, projectSlug: strin
       queryClient.invalidateQueries({
         queryKey: workspaceMemberKeys.activeInfiniteList(workspaceSlug, { excludeProjectSlug: projectSlug }),
       });
+      queryClient.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }
