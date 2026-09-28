@@ -1,6 +1,7 @@
 import { removeWorkspaceMember } from "@/lib/api/workspace-members.api";
 import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useRemoveWorkspaceMember(workspaceSlug: string) {
   const queryClient = useQueryClient();
@@ -9,6 +10,7 @@ export function useRemoveWorkspaceMember(workspaceSlug: string) {
     mutationFn: (userId: string) => removeWorkspaceMember({ workspaceSlug, userId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.all });
+      queryClient.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }

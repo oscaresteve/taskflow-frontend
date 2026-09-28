@@ -5,11 +5,16 @@
   "loading": "Loading…",
   "remaining": "Show {count} more",
   "unknownMember": "Someone",
+  "fields": {
+    "title": "the title",
+    "description": "the description",
+    "name": "the name",
+    "color": "the color",
+    "avatar": "the avatar"
+  },
   "actions": {
     "TASK_CREATED": "created the task",
-    "TASK_EDITED_title": "edited the title",
-    "TASK_EDITED_description": "edited the description",
-    "TASK_EDITED_both": "edited the title and the description",
+    "TASK_EDITED": "edited {fields}",
     "TASK_STATUS_CHANGED": "changed the status",
     "TASK_PRIORITY_CHANGED": "changed the priority",
     "TASK_ASSIGNEE_ASSIGNED": "assigned the task to {name}",
@@ -18,8 +23,20 @@
     "TASK_DUE_DATE_CLEARED": "cleared the due date",
     "TASK_ARCHIVED": "archived the task",
     "COMMENT_CREATED": "commented",
+    "COMMENT_EDITED": "edited a comment",
+    "COMMENT_DELETED": "deleted a comment",
+    "PROJECT_CREATED": "created the project {name}",
+    "PROJECT_UPDATED": "edited {fields} of the project",
+    "PROJECT_ARCHIVED": "archived the project {name}",
     "PROJECT_MEMBER_ADDED": "added {name} to the project",
     "PROJECT_MEMBER_ROLE_CHANGED": "changed the role of {name}",
-    "PROJECT_MEMBER_DEACTIVATED": "deactivated {name}"
+    "PROJECT_MEMBER_DEACTIVATED": "deactivated {name}",
+    "WORKSPACE_CREATED": "created the workspace {name}",
+    "WORKSPACE_UPDATED": "edited {fields} of the workspace",
+    "WORKSPACE_DEACTIVATED": "deactivated the workspace",
+    "WORKSPACE_MEMBER_INVITED": "invited {name} to the workspace",
+    "WORKSPACE_MEMBER_ACTIVATED": "activated {name}",
+    "WORKSPACE_MEMBER_ROLE_CHANGED": "changed the role of {name}",
+    "WORKSPACE_MEMBER_REMOVED": "removed {name} from the workspace"
   }
 }

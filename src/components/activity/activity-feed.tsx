@@ -1,19 +1,20 @@
 "use client";
 
+import { useMemo } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyInline } from "@/components/common/empty-inline";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
-import { getProjectQuery } from "@/lib/queries/project.queries";
+import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { ActivityEventResponseDto } from "@/lib/dtos/activity.dto";
+import { getFullName } from "@/lib/utils";
 import { ICONS } from "@/lib/icons";
 import { ActivityEntry, getTaskRef } from "./activity-entry";
 
 interface ActivityFeedProps {
   workspaceSlug: string;
-  projectSlug: string;
   events: ActivityEventResponseDto[];
   remaining: number;
   isLoading: boolean;
@@ -27,7 +28,6 @@ interface ActivityFeedProps {
 
 export function ActivityFeed({
   workspaceSlug,
-  projectSlug,
   events,
   remaining,
   isLoading,
@@ -40,10 +40,15 @@ export function ActivityFeed({
   const t = useTranslations("activity");
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
 
-  // Mismo recurso que el breadcrumb del detalle: la clave del proyecto mientras carga es su slug.
-  const projectKey = project?.key ?? projectSlug;
+  // Una sola consulta para todos los nombres del feed: cualquier objetivo de un evento, tambien
+  // los de miembro de proyecto, es miembro del espacio.
+  const { data: members } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
+
+  const memberNames = useMemo(
+    () => new Map((members ?? []).map((member) => [member.userId, getFullName(member.user.firstName, member.user.lastName)])),
+    [members],
+  );
 
   if (isError) {
     return <p className="text-sm text-muted-foreground">{t("failedToLoad")}</p>;
@@ -72,16 +77,14 @@ export function ActivityFeed({
           <ActivityEntry
             key={event.id}
             event={event}
-            workspaceSlug={workspaceSlug}
-            projectSlug={projectSlug}
-            projectKey={projectKey}
+            memberNames={memberNames}
             taskHref={
-              linkTasks && taskRef
+              linkTasks && taskRef && event.project
                 ? buildTaskModalHref({
                     pathname,
                     searchParams,
                     workspaceSlug,
-                    projectSlug,
+                    projectSlug: event.project.slug,
                     taskNumber: taskRef.taskNumber,
                   })
                 : undefined

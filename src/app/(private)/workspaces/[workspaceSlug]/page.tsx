@@ -7,6 +7,7 @@ import { ICONS } from "@/lib/icons";
 import { PageContainer } from "@/components/common/page-container";
 import { StatCard, StatCardSkeleton } from "@/components/overview/stat-card";
 import { TaskListCard } from "@/components/overview/task-list-card";
+import { WorkspaceActivityCard } from "@/components/activity/workspace-activity-card";
 import { getWorkspaceOverviewQuery } from "@/lib/queries/overview.queries";
 import { WorkspaceProjects } from "./_components/workspace-projects";
 import { WorkspaceHeader } from "./_components/workspace-header";
@@ -82,6 +83,8 @@ export default function WorkspacePage() {
             isLoading={!tasks}
             showProject
           />
+
+          <WorkspaceActivityCard workspaceSlug={workspaceSlug} />
         </>
       )}
     </PageContainer>

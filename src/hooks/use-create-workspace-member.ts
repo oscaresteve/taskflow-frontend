@@ -3,6 +3,7 @@ import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 import { userKeys } from "@/lib/query-keys/user.keys";
 import { CreateWorkspaceMemberDto } from "@/lib/schemas/workspace-member.schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useCreateWorkspaceMember(workspaceSlug: string) {
   const queryClient = useQueryClient();
@@ -13,6 +14,7 @@ export function useCreateWorkspaceMember(workspaceSlug: string) {
       queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.all });
       // The added user should no longer show up in workspace-scoped user search results.
       queryClient.invalidateQueries({ queryKey: userKeys.all });
+      queryClient.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }

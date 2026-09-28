@@ -3,20 +3,19 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getProjectActivityInfiniteQuery } from "@/lib/queries/activity.queries";
+import { getWorkspaceActivityInfiniteQuery } from "@/lib/queries/activity.queries";
 import { ActivityFeed } from "./activity-feed";
 
 const PAGE_SIZE = 15;
 
-interface ProjectActivityCardProps {
+interface WorkspaceActivityCardProps {
   workspaceSlug: string;
-  projectSlug: string;
 }
 
-export function ProjectActivityCard({ workspaceSlug, projectSlug }: ProjectActivityCardProps) {
+export function WorkspaceActivityCard({ workspaceSlug }: WorkspaceActivityCardProps) {
   const t = useTranslations("activity");
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    getProjectActivityInfiniteQuery({ workspaceSlug, projectSlug, limit: PAGE_SIZE }),
+    getWorkspaceActivityInfiniteQuery({ workspaceSlug, limit: PAGE_SIZE }),
   );
 
   const events = data?.pages.flatMap((page) => page.data) ?? [];

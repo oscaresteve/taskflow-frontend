@@ -4,6 +4,8 @@ type ActivityListParams = {
 
 export const activityKeys = {
   all: ["activity"] as const,
+  workspaceInfiniteList: (workspaceSlug: string, params: ActivityListParams = {}) =>
+    [...activityKeys.all, "workspace", "infinite-list", workspaceSlug, params] as const,
   projectInfiniteList: (workspaceSlug: string, projectSlug: string, params: ActivityListParams = {}) =>
     [...activityKeys.all, "project", "infinite-list", workspaceSlug, projectSlug, params] as const,
   taskInfiniteList: (

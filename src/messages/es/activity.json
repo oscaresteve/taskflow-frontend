@@ -5,11 +5,16 @@
   "loading": "Cargando…",
   "remaining": "Ver {count} más",
   "unknownMember": "Alguien",
+  "fields": {
+    "title": "el título",
+    "description": "la descripción",
+    "name": "el nombre",
+    "color": "el color",
+    "avatar": "el avatar"
+  },
   "actions": {
     "TASK_CREATED": "creó la tarea",
-    "TASK_EDITED_title": "editó el título",
-    "TASK_EDITED_description": "editó la descripción",
-    "TASK_EDITED_both": "editó el título y la descripción",
+    "TASK_EDITED": "editó {fields}",
     "TASK_STATUS_CHANGED": "cambió el estado",
     "TASK_PRIORITY_CHANGED": "cambió la prioridad",
     "TASK_ASSIGNEE_ASSIGNED": "asignó la tarea a {name}",
@@ -18,8 +23,20 @@
     "TASK_DUE_DATE_CLEARED": "quitó la fecha límite",
     "TASK_ARCHIVED": "archivó la tarea",
     "COMMENT_CREATED": "comentó",
+    "COMMENT_EDITED": "editó un comentario",
+    "COMMENT_DELETED": "borró un comentario",
+    "PROJECT_CREATED": "creó el proyecto {name}",
+    "PROJECT_UPDATED": "editó {fields} del proyecto",
+    "PROJECT_ARCHIVED": "archivó el proyecto {name}",
     "PROJECT_MEMBER_ADDED": "añadió a {name} al proyecto",
     "PROJECT_MEMBER_ROLE_CHANGED": "cambió el rol de {name}",
-    "PROJECT_MEMBER_DEACTIVATED": "desactivó a {name}"
+    "PROJECT_MEMBER_DEACTIVATED": "desactivó a {name}",
+    "WORKSPACE_CREATED": "creó el espacio {name}",
+    "WORKSPACE_UPDATED": "editó {fields} del espacio",
+    "WORKSPACE_DEACTIVATED": "desactivó el espacio",
+    "WORKSPACE_MEMBER_INVITED": "invitó a {name} al espacio",
+    "WORKSPACE_MEMBER_ACTIVATED": "activó a {name}",
+    "WORKSPACE_MEMBER_ROLE_CHANGED": "cambió el rol de {name}",
+    "WORKSPACE_MEMBER_REMOVED": "sacó a {name} del espacio"
   }
 }

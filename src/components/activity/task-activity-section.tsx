@@ -28,7 +28,6 @@ export function TaskActivitySection({ workspaceSlug, projectSlug, taskNumber }: 
 
       <ActivityFeed
         workspaceSlug={workspaceSlug}
-        projectSlug={projectSlug}
         events={events}
         remaining={remaining}
         isLoading={isLoading}

@@ -1,7 +1,22 @@
 import { infiniteQueryOptions } from "@tanstack/react-query";
 import { activityKeys } from "@/lib/query-keys/activity.keys";
-import { getProjectActivity, getTaskActivity } from "@/lib/api/activity.api";
+import { getProjectActivity, getTaskActivity, getWorkspaceActivity } from "@/lib/api/activity.api";
 import { getNextPageParam } from "@/lib/queries/pagination";
+
+export const getWorkspaceActivityInfiniteQuery = ({
+  workspaceSlug,
+  limit,
+}: {
+  workspaceSlug: string;
+  limit?: number;
+}) =>
+  infiniteQueryOptions({
+    queryKey: activityKeys.workspaceInfiniteList(workspaceSlug, { limit }),
+    queryFn: ({ pageParam }) => getWorkspaceActivity({ workspaceSlug, page: pageParam, limit }),
+    initialPageParam: 1,
+    getNextPageParam,
+    enabled: !!workspaceSlug,
+  });
 
 export const getProjectActivityInfiniteQuery = ({
   workspaceSlug,

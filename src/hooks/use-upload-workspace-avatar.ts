@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { workspaceKeys } from "@/lib/query-keys/workspace.keys";
 import { confirmWorkspaceAvatar, getWorkspaceAvatarUploadUrl } from "@/lib/api/workspaces.api";
 import { compressImage } from "@/lib/compress-image";
+import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useUploadWorkspaceAvatar(workspaceSlug: string) {
   const queryClient = useQueryClient();
@@ -38,6 +39,7 @@ export function useUploadWorkspaceAvatar(workspaceSlug: string) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() }),
         queryClient.invalidateQueries({ queryKey: workspaceKeys.infiniteList() }),
+        queryClient.invalidateQueries({ queryKey: activityKeys.all }),
       ]);
     },
   });

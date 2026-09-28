@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { workspaceKeys } from "@/lib/query-keys/workspace.keys";
 import { updateWorkspace } from "@/lib/api/workspaces.api";
 import { UpdateWorkspaceDto } from "@/lib/schemas/workspace.schema";
+import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useUpdateWorkspace(workspaceSlug: string) {
   const queryClient = useQueryClient();
@@ -17,6 +18,7 @@ export function useUpdateWorkspace(workspaceSlug: string) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() }),
         queryClient.invalidateQueries({ queryKey: workspaceKeys.infiniteList() }),
+        queryClient.invalidateQueries({ queryKey: activityKeys.all }),
       ]);
     },
   });
