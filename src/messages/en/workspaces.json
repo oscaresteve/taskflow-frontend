@@ -42,16 +42,23 @@
       "openTasks": "Open tasks",
       "overdue": "Overdue",
       "completedThisWeek": "Completed this week",
-      "projects": "Projects"
+      "projects": "Projects",
+      "unassigned": "Unassigned"
     },
-    "favorites": {
-      "title": "Favorite projects",
+    "projects": {
+      "title": "Your projects",
       "searchPlaceholder": "Search projects",
-      "noFavoritesFound": "No favorite projects found.",
-      "noFavoritesFoundDescription": "Try a different search.",
-      "noFavoritesYet": "No favorite projects yet.",
-      "noFavoritesYetDescription": "Star a project to keep it within reach here.",
-      "failedToLoad": "Failed to load favorite projects."
+      "openTasks": "{count, plural, one {# open} other {# open}}",
+      "overdue": "{count, plural, one {# overdue} other {# overdue}}",
+      "noneFound": "No projects found.",
+      "noneFoundDescription": "Try a different search.",
+      "noneYet": "No projects yet.",
+      "noneYetDescription": "The projects in this space will show up here.",
+      "failedToLoad": "Could not load the projects."
+    },
+    "myTasks": {
+      "title": "My work in this space",
+      "empty": "You have no open tasks here."
     },
     "recent": {
       "title": "Recent activity",

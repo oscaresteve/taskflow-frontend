@@ -1,5 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getMyOverview, getProjectOverview, getWorkspaceOverview } from "@/lib/api/overview.api";
+import {
+  getMyOverview,
+  getProjectOverview,
+  getWorkspaceOverview,
+  getWorkspaceOverviewProjects,
+} from "@/lib/api/overview.api";
 import { overviewKeys } from "@/lib/query-keys/overview.keys";
 
 export const getMyOverviewQuery = () =>
@@ -12,6 +17,16 @@ export const getWorkspaceOverviewQuery = (workspaceSlug: string) =>
   queryOptions({
     queryKey: overviewKeys.workspace(workspaceSlug),
     queryFn: () => getWorkspaceOverview(workspaceSlug),
+    enabled: !!workspaceSlug,
+  });
+
+export const getWorkspaceOverviewProjectsQuery = (
+  workspaceSlug: string,
+  params: { page?: number; limit?: number; search?: string } = {},
+) =>
+  queryOptions({
+    queryKey: overviewKeys.workspaceProjects(workspaceSlug, params),
+    queryFn: () => getWorkspaceOverviewProjects({ workspaceSlug, ...params }),
     enabled: !!workspaceSlug,
   });
 
