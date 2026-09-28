@@ -5,7 +5,6 @@
     "title": "Buscar",
     "description": "Busca en tus espacios, proyectos y tareas, o salta a una sección.",
     "hint": "Escribe para buscar en todo lo que puedes abrir.",
-    "loading": "Buscando…",
     "empty": "Sin resultados para «{search}».",
     "failed": "La búsqueda ha fallado. Inténtalo de nuevo."
   },

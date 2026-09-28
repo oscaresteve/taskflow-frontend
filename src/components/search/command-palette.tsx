@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -35,25 +34,27 @@ const FAVORITES_LIMIT = 5;
 
 export function CommandPalette() {
   const t = useTranslations("search");
-  const { open, setOpen, close } = useCommandPalette();
+  const { open, setOpen, close, search, setSearch } = useCommandPalette();
   const router = useRouter();
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebouncedValue(search);
-  const trimmedSearch = debouncedSearch.trim();
+  // Lo que el usuario ve escrito decide que se pinta; la version con debounce solo decide cuando se
+  // pregunta al servidor.
+  const trimmedSearch = search.trim();
+  const debouncedSearch = useDebouncedValue(trimmedSearch);
 
   const {
     data: results,
     isFetching,
     isError,
+    isPlaceholderData,
   } = useQuery({
-    ...getGlobalSearchQuery({ search: trimmedSearch, limit: RESULTS_PER_ENTITY }),
+    ...getGlobalSearchQuery({ search: debouncedSearch, limit: RESULTS_PER_ENTITY }),
     // El `enabled` del builder ya exige texto; aqui se le suma la paleta abierta, porque al cerrar
     // el texto se limpia de golpe y el valor con debounce tarda un poco mas en vaciarse.
-    enabled: open && !!trimmedSearch,
+    enabled: open && !!debouncedSearch,
   });
 
   // El estado vacio no necesita endpoint nuevo: los favoritos ya salen del listado de espacios.
@@ -62,23 +63,20 @@ export function CommandPalette() {
     enabled: open && !trimmedSearch,
   });
 
-  function handleOpenChange(next: boolean) {
-    setOpen(next);
-    // El texto se descarta al cerrar: la siguiente ⌘K empieza limpia.
-    if (!next) setSearch("");
-  }
-
   function go(href: string) {
     router.push(href);
     close();
-    setSearch("");
   }
 
   const hasQuery = trimmedSearch.length > 0;
-  // `results` sigue trayendo la respuesta anterior mientras llega la nueva (keepPreviousData), asi
-  // que "cargando" solo es el primer viaje, cuando todavia no hay nada que enseñar.
-  const isFirstLoad = hasQuery && isFetching && !results;
-  const hasResults = !!results && results.workspaces.length + results.projects.length + results.tasks.length > 0;
+  // keepPreviousData deja en `results` la respuesta del termino anterior, y el debounce hace que el
+  // termino consultado vaya por detras de lo escrito. Mientras alguna de las dos cosas pase, lo que
+  // hay en cache no responde a lo que el usuario ve escrito: no se puede enseñar como si lo fuera.
+  const isSearching = hasQuery && (trimmedSearch !== debouncedSearch || isFetching);
+  const currentResults = isSearching || isError || isPlaceholderData ? undefined : results;
+  const hasResults =
+    !!currentResults &&
+    currentResults.workspaces.length + currentResults.projects.length + currentResults.tasks.length > 0;
 
   return (
     <>
@@ -93,7 +91,7 @@ export function CommandPalette() {
         <CommandShortcut>⌘K</CommandShortcut>
       </Button>
 
-      <Dialog open={open} onOpenChange={handleOpenChange}>
+      <Dialog open={open} onOpenChange={setOpen}>
         {/* Se compone a mano en vez de usar CommandDialog: ese helper renderiza su DialogTitle
             fuera del DialogContent, o sea fuera del portal, y el popup de Base UI se queda sin
             nombre accesible (y el titulo se cuela en la pagina). */}
@@ -109,7 +107,7 @@ export function CommandPalette() {
             <CommandList>
               {hasQuery ? (
                 <>
-                  {isFirstLoad && (
+                  {isSearching && (
                     <div className="flex flex-col gap-1 p-1">
                       <Skeleton className="h-9 w-full" />
                       <Skeleton className="h-9 w-full" />
@@ -117,17 +115,17 @@ export function CommandPalette() {
                     </div>
                   )}
 
-                  {isError && (
+                  {!isSearching && isError && (
                     <EmptyInline icon={ICONS.info} label={t("palette.failed")} className="px-3 py-6 justify-center" />
                   )}
 
-                  {!isFirstLoad && !isError && !hasResults && (
+                  {!isSearching && !isError && !hasResults && (
                     <CommandEmpty>{t("palette.empty", { search: trimmedSearch })}</CommandEmpty>
                   )}
 
-                  {results && results.workspaces.length > 0 && (
+                  {currentResults && currentResults.workspaces.length > 0 && (
                     <CommandGroup heading={t("groups.workspaces")}>
-                      {results.workspaces.map((workspace) => (
+                      {currentResults.workspaces.map((workspace) => (
                         <CommandItem
                           key={workspace.id}
                           value={`workspace:${workspace.id}`}
@@ -145,9 +143,9 @@ export function CommandPalette() {
                     </CommandGroup>
                   )}
 
-                  {results && results.projects.length > 0 && (
+                  {currentResults && currentResults.projects.length > 0 && (
                     <CommandGroup heading={t("groups.projects")}>
-                      {results.projects.map((project) => (
+                      {currentResults.projects.map((project) => (
                         <CommandItem
                           key={project.id}
                           value={`project:${project.id}`}
@@ -161,9 +159,9 @@ export function CommandPalette() {
                     </CommandGroup>
                   )}
 
-                  {results && results.tasks.length > 0 && (
+                  {currentResults && currentResults.tasks.length > 0 && (
                     <CommandGroup heading={t("groups.tasks")}>
-                      {results.tasks.map((task) => (
+                      {currentResults.tasks.map((task) => (
                         <CommandItem
                           key={task.id}
                           value={`task:${task.id}`}
