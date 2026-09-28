@@ -44,7 +44,7 @@ function WorkspaceCard({ workspace }: { workspace: OverviewWorkspaceDto }) {
 
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge variant="outline" className={cn("", open === 0 && "text-muted-foreground")}>
-                <ICONS.task className="text-muted-foreground" />
+                <ICONS.task />
                 {t("mySpacePage.workspaces.assignedTasks", { count: open })}
               </Badge>
 
