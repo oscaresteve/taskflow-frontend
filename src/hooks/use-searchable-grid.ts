@@ -1,7 +1,9 @@
 import { debounce, parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { useDebouncedValue } from "./use-debounced-value";
 
-export function useFavoritesGrid() {
+// Estado de una rejilla con buscador y paginacion: vive en la URL, asi que sobrevive al refresco y
+// se puede compartir. La usan las tres rejillas de overview (espacios, proyectos y tareas).
+export function useSearchableGrid() {
   const [{ search, page }, setQuery] = useQueryStates({
     search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
     page: parseAsInteger.withDefault(1),

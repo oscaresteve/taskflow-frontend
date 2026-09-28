@@ -6,12 +6,10 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { ColorDot } from "@/components/ui/color-dot";
 import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
-import { PaginationControls } from "@/components/common/pagination-controls";
-import { SearchInput } from "@/components/common/search-input";
-import { useFavoritesGrid } from "@/hooks/use-favorites-grid";
+import { SearchableGrid } from "@/components/common/searchable-grid";
+import { useSearchableGrid } from "@/hooks/use-searchable-grid";
 import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 import { OverviewProjectDto } from "@/lib/dtos/overview.dto";
 import { ICONS } from "@/lib/icons";
@@ -81,20 +79,18 @@ function ProjectCard({ workspaceSlug, project }: { workspaceSlug: string; projec
 
 export function WorkspaceProjects({ workspaceSlug }: { workspaceSlug: string }) {
   const t = useTranslations("workspaces");
-  const { search, page, searchParam, onSearchChange, onPageChange } = useFavoritesGrid();
+  const state = useSearchableGrid();
 
-  const {
-    data: projects,
-    isLoading,
-    isError,
-  } = useQuery({
-    ...getWorkspaceOverviewProjectsQuery(workspaceSlug, { page, limit: PAGE_SIZE, search: searchParam }),
+  const { data: projects, isError } = useQuery({
+    ...getWorkspaceOverviewProjectsQuery(workspaceSlug, {
+      page: state.page,
+      limit: PAGE_SIZE,
+      search: state.searchParam,
+    }),
     placeholderData: keepPreviousData,
   });
 
-  const totalPages = projects?.pagination.pages ?? 1;
-
-  const emptyState = searchParam ? (
+  const emptyState = state.searchParam ? (
     <EmptyState
       icon={ICONS.project}
       title={t("workspacePage.projects.noneFound")}
@@ -109,36 +105,19 @@ export function WorkspaceProjects({ workspaceSlug }: { workspaceSlug: string }) 
   );
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="font-heading text-base leading-snug font-medium">{t("workspacePage.projects.title")}</h2>
-        <SearchInput
-          value={search}
-          onChange={onSearchChange}
-          placeholder={t("workspacePage.projects.searchPlaceholder")}
-          className="w-48"
-        />
-      </div>
-
-      {isError ? (
-        <p className="text-sm text-muted-foreground">{t("workspacePage.projects.failedToLoad")}</p>
-      ) : isLoading || !projects ? (
-        <div className="grid grid-cols-3 gap-3">
-          <Skeleton className="h-28 w-full" />
-          <Skeleton className="h-28 w-full" />
-          <Skeleton className="h-28 w-full" />
-        </div>
-      ) : projects.data.length === 0 ? (
-        emptyState
-      ) : (
-        <div className="grid grid-cols-3 gap-3">
-          {projects.data.map((project) => (
-            <ProjectCard key={project.id} workspaceSlug={workspaceSlug} project={project} />
-          ))}
-        </div>
-      )}
-
-      {totalPages > 1 && <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />}
-    </div>
+    <SearchableGrid
+      title={t("workspacePage.projects.title")}
+      searchPlaceholder={t("workspacePage.projects.searchPlaceholder")}
+      errorLabel={t("workspacePage.projects.failedToLoad")}
+      emptyState={emptyState}
+      columns="grid-cols-3"
+      skeletonClassName="h-28"
+      pageSize={PAGE_SIZE}
+      state={state}
+      result={projects}
+      isError={isError}
+    >
+      {(project) => <ProjectCard workspaceSlug={workspaceSlug} project={project} />}
+    </SearchableGrid>
   );
 }

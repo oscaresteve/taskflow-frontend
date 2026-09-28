@@ -12,14 +12,16 @@
       "title": "Mi cola",
       "empty": "Estás al día."
     },
-    "favorites": {
-      "title": "Espacios favoritos",
+    "workspaces": {
+      "title": "Tus espacios",
       "searchPlaceholder": "Buscar espacios",
-      "noFavoritesFound": "No se encontraron espacios favoritos.",
-      "noFavoritesFoundDescription": "Prueba con otra búsqueda.",
-      "noFavoritesYet": "Todavía no hay espacios favoritos.",
-      "noFavoritesYetDescription": "Marca un espacio con la estrella para tenerlo a mano aquí.",
-      "failedToLoad": "No se pudieron cargar los espacios favoritos."
+      "assignedTasks": "{count, plural, one {# asignada} other {# asignadas}}",
+      "overdue": "{count, plural, one {# vencida} other {# vencidas}}",
+      "noneFound": "No se encontraron espacios.",
+      "noneFoundDescription": "Prueba con otra búsqueda.",
+      "noneYet": "Todavía no perteneces a ningún espacio.",
+      "noneYetDescription": "Cuando te añadan a uno aparecerá aquí.",
+      "failedToLoad": "No se pudieron cargar los espacios."
     }
   }
 }

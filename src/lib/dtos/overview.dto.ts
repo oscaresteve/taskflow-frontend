@@ -1,6 +1,7 @@
 import { TaskPriority, TaskStatus, TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { DueDateBucket } from "@/lib/task-enums";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
+import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
 
 export type OverviewTaskDto = TaskResponseDto & {
   project: {
@@ -41,6 +42,16 @@ export type ProjectStatsDto = {
 
 export type OverviewProjectDto = ProjectResponseDto & {
   stats: ProjectStatsDto;
+};
+
+// Carga propia del usuario en un espacio: las mismas tareas que cuenta su resumen de My Space.
+export type MyWorkspaceStatsDto = {
+  open: number;
+  overdue: number;
+};
+
+export type OverviewWorkspaceDto = WorkspaceResponseDto & {
+  stats: MyWorkspaceStatsDto;
 };
 
 // El espacio no reparte sus tareas en graficas: eso se ve dentro de cada proyecto, y cada proyecto

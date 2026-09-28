@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import {
   getMyOverview,
+  getMyOverviewWorkspaces,
   getProjectOverview,
   getWorkspaceOverview,
   getWorkspaceOverviewProjects,
@@ -11,6 +12,12 @@ export const getMyOverviewQuery = () =>
   queryOptions({
     queryKey: overviewKeys.my(),
     queryFn: () => getMyOverview(),
+  });
+
+export const getMyOverviewWorkspacesQuery = (params: { page?: number; limit?: number; search?: string } = {}) =>
+  queryOptions({
+    queryKey: overviewKeys.myWorkspaces(params),
+    queryFn: () => getMyOverviewWorkspaces(params),
   });
 
 export const getWorkspaceOverviewQuery = (workspaceSlug: string) =>

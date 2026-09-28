@@ -5,16 +5,14 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { EmptyState } from "@/components/common/empty-state";
 import { EnumIconBadge } from "@/components/common/enum-display";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
-import { PaginationControls } from "@/components/common/pagination-controls";
-import { SearchInput } from "@/components/common/search-input";
+import { SearchableGrid } from "@/components/common/searchable-grid";
 import { CustomAvatar } from "@/components/common/custom-avatar";
 import { UserPopup } from "@/components/common/user-popup";
-import { useFavoritesGrid } from "@/hooks/use-favorites-grid";
+import { useSearchableGrid } from "@/hooks/use-searchable-grid";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
 import { UserResponseDto } from "@/lib/dtos/auth.dto";
@@ -135,22 +133,18 @@ export function FavoriteTasks({ workspaceSlug, projectSlug }: { workspaceSlug: s
   const t = useTranslations("projects");
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { search, page, searchParam, onSearchChange, onPageChange } = useFavoritesGrid();
+  const state = useSearchableGrid();
 
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
   const { data: members } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
 
-  const {
-    data: tasks,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: tasks, isError } = useQuery({
     ...getTasksQuery({
       workspaceSlug,
       projectSlug,
-      page,
+      page: state.page,
       limit: PAGE_SIZE,
-      search: searchParam,
+      search: state.searchParam,
       isFavorite: true,
       sort: "updatedAt",
       order: "desc",
@@ -158,9 +152,7 @@ export function FavoriteTasks({ workspaceSlug, projectSlug }: { workspaceSlug: s
     placeholderData: keepPreviousData,
   });
 
-  const totalPages = tasks?.pagination.pages ?? 1;
-
-  const emptyState = searchParam ? (
+  const emptyState = state.searchParam ? (
     <EmptyState
       icon={ICONS.favorite}
       title={t("projectOverviewPage.favorites.noFavoritesFound")}
@@ -175,50 +167,34 @@ export function FavoriteTasks({ workspaceSlug, projectSlug }: { workspaceSlug: s
   );
 
   return (
-    <section className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="font-heading text-base leading-snug font-medium">{t("projectOverviewPage.favorites.title")}</h2>
-        <SearchInput
-          value={search}
-          onChange={onSearchChange}
-          placeholder={t("projectOverviewPage.favorites.searchPlaceholder")}
-          className="w-48"
+    <SearchableGrid
+      title={t("projectOverviewPage.favorites.title")}
+      searchPlaceholder={t("projectOverviewPage.favorites.searchPlaceholder")}
+      errorLabel={t("projectOverviewPage.favorites.failedToLoad")}
+      emptyState={emptyState}
+      columns="grid-cols-4"
+      skeletonClassName="h-16"
+      pageSize={PAGE_SIZE}
+      state={state}
+      result={tasks}
+      isError={isError}
+    >
+      {(task) => (
+        <FavoriteTaskCard
+          workspaceSlug={workspaceSlug}
+          projectSlug={projectSlug}
+          taskKey={`${project?.key}-${task.taskNumber}`}
+          assignee={members?.find((member) => member.userId === task.assigneeId)?.user}
+          task={task}
+          href={buildTaskModalHref({
+            pathname,
+            searchParams,
+            workspaceSlug,
+            projectSlug,
+            taskNumber: task.taskNumber,
+          })}
         />
-      </div>
-
-      {isError ? (
-        <p className="text-sm text-muted-foreground">{t("projectOverviewPage.favorites.failedToLoad")}</p>
-      ) : isLoading || !tasks ? (
-        <div className="grid grid-cols-3 gap-3">
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-16 w-full" />
-        </div>
-      ) : tasks.data.length === 0 ? (
-        emptyState
-      ) : (
-        <div className="grid grid-cols-4 gap-3">
-          {tasks.data.map((task) => (
-            <FavoriteTaskCard
-              key={task.id}
-              workspaceSlug={workspaceSlug}
-              projectSlug={projectSlug}
-              taskKey={`${project?.key}-${task.taskNumber}`}
-              assignee={members?.find((member) => member.userId === task.assigneeId)?.user}
-              task={task}
-              href={buildTaskModalHref({
-                pathname,
-                searchParams,
-                workspaceSlug,
-                projectSlug,
-                taskNumber: task.taskNumber,
-              })}
-            />
-          ))}
-        </div>
       )}
-
-      {totalPages > 1 && <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />}
-    </section>
+    </SearchableGrid>
   );
 }

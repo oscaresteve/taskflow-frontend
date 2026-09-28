@@ -9,7 +9,7 @@ import { DonutChart, DonutChartSkeleton } from "@/components/overview/donut-char
 import { TaskListCard } from "@/components/overview/task-list-card";
 import { getMyOverviewQuery } from "@/lib/queries/overview.queries";
 import { dueDateBucketOptions, dueDateBuckets } from "@/lib/task-enums";
-import { FavoriteWorkspaces } from "./_components/favorite-workspaces";
+import { MyWorkspaces } from "./_components/my-workspaces";
 
 export default function MySpacePage() {
   const t = useTranslations("mySpace");
@@ -52,7 +52,7 @@ export default function MySpacePage() {
             )}
           </ChartCard>
 
-          <FavoriteWorkspaces />
+          <MyWorkspaces />
         </div>
       )}
 

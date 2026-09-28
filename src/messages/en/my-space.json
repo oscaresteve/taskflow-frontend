@@ -12,14 +12,16 @@
       "title": "My queue",
       "empty": "You're all caught up."
     },
-    "favorites": {
-      "title": "Favorite workspaces",
-      "searchPlaceholder": "Search workspaces",
-      "noFavoritesFound": "No favorite workspaces found.",
-      "noFavoritesFoundDescription": "Try a different search.",
-      "noFavoritesYet": "No favorite workspaces yet.",
-      "noFavoritesYetDescription": "Star a workspace to keep it within reach here.",
-      "failedToLoad": "Failed to load favorite workspaces."
+    "workspaces": {
+      "title": "Your spaces",
+      "searchPlaceholder": "Search spaces",
+      "assignedTasks": "{count, plural, one {# assigned} other {# assigned}}",
+      "overdue": "{count, plural, one {# overdue} other {# overdue}}",
+      "noneFound": "No spaces found.",
+      "noneFoundDescription": "Try a different search.",
+      "noneYet": "You don't belong to any space yet.",
+      "noneYetDescription": "Once someone adds you to one, it will show up here.",
+      "failedToLoad": "Could not load the spaces."
     }
   }
 }

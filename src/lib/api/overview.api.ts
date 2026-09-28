@@ -2,6 +2,7 @@ import { request } from "@/lib/http/client";
 import {
   MyOverviewResponseDto,
   OverviewProjectDto,
+  OverviewWorkspaceDto,
   ProjectOverviewResponseDto,
   WorkspaceOverviewResponseDto,
 } from "@/lib/dtos/overview.dto";
@@ -10,6 +11,22 @@ import { buildQueryString } from "@/lib/http/query-string";
 
 export function getMyOverview() {
   return request<MyOverviewResponseDto>("/me/overview", {
+    method: "GET",
+  });
+}
+
+export function getMyOverviewWorkspaces({
+  page,
+  limit,
+  search,
+}: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}) {
+  const queryString = buildQueryString({ page, limit, search });
+
+  return request<PaginatedResponseDto<OverviewWorkspaceDto>>(`/me/overview/workspaces${queryString}`, {
     method: "GET",
   });
 }
