@@ -53,6 +53,7 @@ function TaskListRow({
   const updateTask = useUpdateTask(workspaceSlug, projectSlug, taskNumber);
 
   async function handleStatusChange(status: TaskStatus) {
+    if (task.status === status) return;
     try {
       await updateTask.mutateAsync({ status });
       toast.add({ type: "success", description: t("statusUpdated", { status: t(`status.${status}`) }) });
@@ -66,6 +67,7 @@ function TaskListRow({
   }
 
   async function handlePriorityChange(priority: TaskPriority) {
+    if (task.priority === priority) return;
     try {
       await updateTask.mutateAsync({ priority });
       toast.add({ type: "success", description: t("priorityUpdated", { priority: t(`priority.${priority}`) }) });
@@ -79,6 +81,7 @@ function TaskListRow({
   }
 
   async function handleAssigneeChange(assigneeId: string | null) {
+    if (task.assigneeId === assigneeId) return;
     try {
       await updateTask.mutateAsync({ assigneeId });
       toast.add({ type: "success", description: t("assigneeUpdated") });
@@ -92,6 +95,7 @@ function TaskListRow({
   }
 
   async function handleDueDateChange(dueDate: string | null) {
+    if (task.dueDate === dueDate) return;
     try {
       await updateTask.mutateAsync({ dueDate });
       toast.add({ type: "success", description: t("dueDateUpdated") });

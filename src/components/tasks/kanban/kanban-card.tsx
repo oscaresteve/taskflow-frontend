@@ -34,6 +34,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
   }
 
   async function handleAssigneeChange(assigneeId: string | null) {
+    if (task.assigneeId === assigneeId) return;
     try {
       await updateTask.mutateAsync({ assigneeId });
       toast.add({ type: "success", description: t("assigneeUpdated") });
@@ -47,6 +48,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
   }
 
   async function handlePriorityChange(priority: TaskPriority) {
+    if (task.priority === priority) return;
     try {
       await updateTask.mutateAsync({ priority });
       toast.add({ type: "success", description: t("priorityUpdated", { priority: t(`priority.${priority}`) }) });
@@ -60,6 +62,7 @@ export function KanbanCard({ taskKey, task, workspaceSlug, projectSlug }: Kanban
   }
 
   async function handleDueDateChange(dueDate: string | null) {
+    if (task.dueDate === dueDate) return;
     try {
       await updateTask.mutateAsync({ dueDate });
       toast.add({ type: "success", description: t("dueDateUpdated") });

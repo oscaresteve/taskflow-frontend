@@ -57,6 +57,7 @@ export function TaskDueDateSection({ workspaceSlug, projectSlug, taskNumber, due
             id="dueDate"
             value={field.value}
             onChange={(value) => {
+              if (value === field.value) return;
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}

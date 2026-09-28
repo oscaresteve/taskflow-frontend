@@ -58,6 +58,7 @@ export function TaskStatusSection({ workspaceSlug, projectSlug, taskNumber, stat
             id="status"
             value={field.value}
             onValueChange={(value) => {
+              if (value === field.value) return;
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}

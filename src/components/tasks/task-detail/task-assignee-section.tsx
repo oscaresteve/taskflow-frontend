@@ -59,6 +59,7 @@ export function TaskAssigneeSection({ workspaceSlug, projectSlug, taskNumber, as
             projectSlug={projectSlug}
             value={field.value}
             onChange={(value) => {
+              if (value === field.value) return;
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}

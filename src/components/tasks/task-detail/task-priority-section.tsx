@@ -58,6 +58,7 @@ export function TaskPrioritySection({ workspaceSlug, projectSlug, taskNumber, pr
             id="priority"
             value={field.value}
             onValueChange={(value) => {
+              if (value === field.value) return;
               field.onChange(value);
               form.handleSubmit(onSubmit)();
             }}
