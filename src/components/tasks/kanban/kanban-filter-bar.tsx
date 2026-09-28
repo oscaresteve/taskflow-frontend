@@ -46,13 +46,13 @@ export function KanbanFilterBar({
         placeholder={t("kanbanFilterBar.searchPlaceholder")}
         className="w-48"
       />
-      {status && onStatusChange && <StatusFilterSelect value={status} onValueChange={onStatusChange} />}
       <AssigneeFilterSelect
         workspaceSlug={workspaceSlug}
         projectSlug={projectSlug}
         value={assigneeId}
         onChange={onAssigneeChange}
       />
+      {status && onStatusChange && <StatusFilterSelect value={status} onValueChange={onStatusChange} />}
       <PriorityFilterSelect value={priority} onValueChange={onPriorityChange} />
       <DueDateFilterSelect value={dueDate} onValueChange={onDueDateChange} />
     </div>
