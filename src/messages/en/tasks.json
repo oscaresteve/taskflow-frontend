@@ -122,7 +122,7 @@
   },
   "comments": {
     "title": "Comments",
-    "composerPlaceholder": "Write a comment…",
+    "composerPlaceholder": "Write a comment… use @ to mention",
     "submit": "Post",
     "empty": "No comments yet.",
     "failedToLoad": "Failed to load comments.",
@@ -141,7 +141,8 @@
     "validation": {
       "contentRequired": "Comment cannot be empty",
       "contentMaxLength": "Comment cannot exceed 5000 characters"
-    }
+    },
+    "mentionListLabel": "Members you can mention"
   },
   "createTaskDialog": {
     "title": "Create task",

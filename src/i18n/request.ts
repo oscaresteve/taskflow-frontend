@@ -15,6 +15,7 @@ import membersEn from "@/messages/en/members.json";
 import tasksEn from "@/messages/en/tasks.json";
 import searchEn from "@/messages/en/search.json";
 import activityEn from "@/messages/en/activity.json";
+import notificationsEn from "@/messages/en/notifications.json";
 
 import commonEs from "@/messages/es/common.json";
 import layoutEs from "@/messages/es/layout.json";
@@ -29,6 +30,7 @@ import membersEs from "@/messages/es/members.json";
 import tasksEs from "@/messages/es/tasks.json";
 import searchEs from "@/messages/es/search.json";
 import activityEs from "@/messages/es/activity.json";
+import notificationsEs from "@/messages/es/notifications.json";
 
 const messagesByLocale = {
   en: {
@@ -45,6 +47,7 @@ const messagesByLocale = {
     tasks: tasksEn,
     search: searchEn,
     activity: activityEn,
+    notifications: notificationsEn,
   },
   es: {
     common: commonEs,
@@ -60,6 +63,7 @@ const messagesByLocale = {
     tasks: tasksEs,
     search: searchEs,
     activity: activityEs,
+    notifications: notificationsEs,
   },
 } satisfies Record<Locale, unknown>;
 

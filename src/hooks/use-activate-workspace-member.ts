@@ -1,7 +1,6 @@
 import { activateWorkspaceMember } from "@/lib/api/workspace-members.api";
 import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useActivateWorkspaceMember(workspaceSlug: string) {
   const queryClient = useQueryClient();
@@ -10,7 +9,6 @@ export function useActivateWorkspaceMember(workspaceSlug: string) {
     mutationFn: (userId: string) => activateWorkspaceMember({ workspaceSlug, userId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: workspaceMemberKeys.all });
-      queryClient.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }

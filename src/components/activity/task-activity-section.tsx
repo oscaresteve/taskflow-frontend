@@ -15,27 +15,15 @@ interface TaskActivitySectionProps {
 
 export function TaskActivitySection({ workspaceSlug, projectSlug, taskNumber }: TaskActivitySectionProps) {
   const t = useTranslations("activity");
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+  const query = useInfiniteQuery(
     getTaskActivityInfiniteQuery({ workspaceSlug, projectSlug, taskNumber, limit: PAGE_SIZE }),
   );
-
-  const events = data?.pages.flatMap((page) => page.data) ?? [];
-  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - events.length : 0;
 
   return (
     <div className="flex flex-col gap-2">
       <h2 className="text-sm font-semibold">{t("title")}</h2>
 
-      <ActivityFeed
-        workspaceSlug={workspaceSlug}
-        events={events}
-        remaining={remaining}
-        isLoading={isLoading}
-        isError={isError}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-        fetchNextPage={fetchNextPage}
-      />
+      <ActivityFeed workspaceSlug={workspaceSlug} query={query} />
     </div>
   );
 }

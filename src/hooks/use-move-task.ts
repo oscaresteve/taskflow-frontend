@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { moveTask } from "@/lib/api/tasks.api";
 import { taskKeys } from "@/lib/query-keys/task.keys";
 import { MoveTaskDto, TaskResponseDto } from "@/lib/dtos/tasks.dto";
-import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 interface MoveTaskInput {
   task: TaskResponseDto;
@@ -32,8 +31,6 @@ export function useMoveTask(workspaceSlug: string, projectSlug: string) {
       queryClient.invalidateQueries({
         queryKey: taskKeys.detail(workspaceSlug, projectSlug, String(task.taskNumber)),
       });
-      // Solo el salto de columna deja evento, pero desde aqui no se sabe si lo hubo.
-      queryClient.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }

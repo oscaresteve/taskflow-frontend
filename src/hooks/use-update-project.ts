@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { projectKeys } from "@/lib/query-keys/project.keys";
 import { updateProject } from "@/lib/api/projects.api";
 import { UpdateProjectDto } from "@/lib/schemas/project.schema";
-import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useUpdateProject(workspaceSlug: string, projectSlug: string) {
   const queryClient = useQueryClient();
@@ -18,7 +17,6 @@ export function useUpdateProject(workspaceSlug: string, projectSlug: string) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: projectKeys.lists(workspaceSlug) }),
         queryClient.invalidateQueries({ queryKey: projectKeys.infiniteList(workspaceSlug) }),
-        queryClient.invalidateQueries({ queryKey: activityKeys.all }),
       ]);
     },
   });

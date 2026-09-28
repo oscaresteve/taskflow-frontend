@@ -1,0 +1,10 @@
+{
+  "title": "Notifications",
+  "ariaLabel": "Notifications, {count} unread",
+  "empty": "No notifications yet",
+  "failedToLoad": "Notifications could not be loaded",
+  "loading": "Loading…",
+  "loadMore": "Show more",
+  "markRead": "Mark as read",
+  "markAllRead": "Mark all read"
+}

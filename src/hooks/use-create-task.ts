@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { taskKeys } from "@/lib/query-keys/task.keys";
 import { createTask } from "@/lib/api/tasks.api";
 import { CreateTaskDto } from "@/lib/schemas/task.schema";
-import { activityKeys } from "@/lib/query-keys/activity.keys";
 
 export function useCreateTask(workspaceSlug: string, projectSlug: string) {
   const queryClient = useQueryClient();
@@ -12,7 +11,6 @@ export function useCreateTask(workspaceSlug: string, projectSlug: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.board(workspaceSlug, projectSlug) });
       queryClient.invalidateQueries({ queryKey: taskKeys.lists(workspaceSlug, projectSlug) });
-      queryClient.invalidateQueries({ queryKey: activityKeys.all });
     },
   });
 }

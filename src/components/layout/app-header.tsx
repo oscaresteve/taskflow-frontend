@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { BreadcrumbNav } from "@/components/layout/breadcrumb-nav";
 import { ColorSchemeToggle } from "@/components/common/color-scheme-toggle";
 import { CommandPalette } from "@/components/search/command-palette";
+import { NotificationBell } from "@/components/notifications/notification-bell";
 
 export default function AppHeader() {
   return (
@@ -22,6 +23,7 @@ export default function AppHeader() {
         <CommandPalette />
       </Suspense>
       <div className="flex min-w-0 flex-1 items-center justify-end gap-2 mx-3">
+        <NotificationBell />
         <ColorSchemeToggle />
       </div>
     </header>

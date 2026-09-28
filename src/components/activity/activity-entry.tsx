@@ -31,38 +31,19 @@ export function getTaskRef(event: ActivityEventResponseDto): { taskNumber: numbe
   }
 }
 
-// Solo algunas acciones hablan de un tercero. El del actor viaja ya en el propio evento.
-function getTargetUserId(event: ActivityEventResponseDto): string | null {
-  switch (event.action) {
-    case "TASK_ASSIGNEE_CHANGED":
-      return event.payload.to;
-    case "PROJECT_MEMBER_ADDED":
-    case "PROJECT_MEMBER_ROLE_CHANGED":
-    case "PROJECT_MEMBER_DEACTIVATED":
-    case "WORKSPACE_MEMBER_INVITED":
-    case "WORKSPACE_MEMBER_ACTIVATED":
-    case "WORKSPACE_MEMBER_ROLE_CHANGED":
-    case "WORKSPACE_MEMBER_REMOVED":
-      return event.payload.targetUserId;
-    default:
-      return null;
-  }
-}
-
 interface ActivityEntryProps {
   event: ActivityEventResponseDto;
-  // Todo objetivo es miembro del espacio, tambien los de proyecto, asi que un solo mapa los cubre.
-  memberNames: Map<string, string>;
   // El feed de una tarea ya sabe de cual habla; los otros dos tienen que nombrarla y enlazarla.
   taskHref?: string;
 }
 
-export function ActivityEntry({ event, memberNames, taskHref }: ActivityEntryProps) {
+export function ActivityEntry({ event, taskHref }: ActivityEntryProps) {
   const t = useTranslations("activity");
   const format = useFormatter();
 
-  const targetUserId = getTargetUserId(event);
-  const name = (targetUserId && memberNames.get(targetUserId)) || t("unknownMember");
+  // El evento trae ya resuelta a la persona de la que habla, asi que la frase no depende de tener
+  // a mano el roster del proyecto: la campanita cruza espacios y no lo tendria.
+  const name = event.target ? getFullName(event.target.firstName, event.target.lastName) : t("unknownMember");
   const actorName = getFullName(event.actor.firstName, event.actor.lastName);
   const taskRef = getTaskRef(event);
 

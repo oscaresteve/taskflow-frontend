@@ -2,38 +2,11 @@ import { TaskPriority, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { ProjectRole } from "@/lib/dtos/project-members.dto";
 import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 
-export const activityActions = [
-  "TASK_CREATED",
-  "TASK_EDITED",
-  "TASK_STATUS_CHANGED",
-  "TASK_PRIORITY_CHANGED",
-  "TASK_ASSIGNEE_CHANGED",
-  "TASK_DUE_DATE_CHANGED",
-  "TASK_ARCHIVED",
-  "COMMENT_CREATED",
-  "COMMENT_EDITED",
-  "COMMENT_DELETED",
-  "PROJECT_CREATED",
-  "PROJECT_UPDATED",
-  "PROJECT_ARCHIVED",
-  "PROJECT_MEMBER_ADDED",
-  "PROJECT_MEMBER_ROLE_CHANGED",
-  "PROJECT_MEMBER_DEACTIVATED",
-  "WORKSPACE_CREATED",
-  "WORKSPACE_UPDATED",
-  "WORKSPACE_DEACTIVATED",
-  "WORKSPACE_MEMBER_INVITED",
-  "WORKSPACE_MEMBER_ACTIVATED",
-  "WORKSPACE_MEMBER_ROLE_CHANGED",
-  "WORKSPACE_MEMBER_REMOVED",
-] as const;
-
-export type ActivityAction = (typeof activityActions)[number];
-
-export type ActivityActorDto = {
+export type ActivityPersonDto = {
   id: string;
   firstName: string;
   lastName: string;
+  username: string;
   avatarUrl: string | null;
 };
 
@@ -100,6 +73,8 @@ export type ActivityPayloadMap = {
   WORKSPACE_MEMBER_REMOVED: MemberRef;
 };
 
+export type ActivityAction = keyof ActivityPayloadMap;
+
 export type ActivityEventResponseDto = {
   [A in ActivityAction]: {
     id: string;
@@ -110,7 +85,9 @@ export type ActivityEventResponseDto = {
     taskId: string | null;
     project: ActivityProjectDto | null;
 
-    actor: ActivityActorDto;
+    actor: ActivityPersonDto;
+    // Solo las acciones que hablan de alguien lo traen ("asigno la tarea a X").
+    target: ActivityPersonDto | null;
 
     createdAt: string;
   };

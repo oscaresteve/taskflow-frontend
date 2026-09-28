@@ -1,0 +1,10 @@
+{
+  "title": "Notificaciones",
+  "ariaLabel": "Notificaciones, {count} sin leer",
+  "empty": "No tienes notificaciones",
+  "failedToLoad": "No se han podido cargar las notificaciones",
+  "loading": "Cargando…",
+  "loadMore": "Ver más",
+  "markRead": "Marcar como leída",
+  "markAllRead": "Marcar todas"
+}

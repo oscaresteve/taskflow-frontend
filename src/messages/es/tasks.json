@@ -122,7 +122,7 @@
   },
   "comments": {
     "title": "Comentarios",
-    "composerPlaceholder": "Escribe un comentario…",
+    "composerPlaceholder": "Escribe un comentario… usa @ para mencionar",
     "submit": "Publicar",
     "empty": "Todavía no hay comentarios.",
     "failedToLoad": "No se pudieron cargar los comentarios.",
@@ -141,7 +141,8 @@
     "validation": {
       "contentRequired": "El comentario no puede estar vacío",
       "contentMaxLength": "El comentario no puede superar los 5000 caracteres"
-    }
+    },
+    "mentionListLabel": "Miembros que puedes mencionar"
   },
   "createTaskDialog": {
     "title": "Crear tarea",

@@ -46,6 +46,7 @@ import {
   CircleCheckIcon,
   ClockIcon,
   History,
+  Bell,
   CircleMinusIcon,
   UserCheck,
   UserCog,
@@ -136,6 +137,7 @@ export const ICONS = {
   person: UserIcon,
   messages: MessagesSquare,
   activity: History,
+  notifications: Bell,
 
   // Stat cards de los dashboards
   statOpenTasks: ListTodo,

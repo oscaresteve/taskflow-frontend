@@ -16,6 +16,7 @@ import { CommentResponseDto } from "@/lib/dtos/comments.dto";
 import { getFullName } from "@/lib/utils";
 import { useDeleteComment } from "@/hooks/use-delete-comment";
 import { CommentForm } from "./comment-form";
+import { CommentContent } from "./comment-content";
 import { useQuery } from "@tanstack/react-query";
 import { getProjectMemberQuery } from "@/lib/queries/project-member.queries";
 
@@ -154,7 +155,7 @@ export function CommentItem({
             </DropdownMenu>
           )}
         </div>
-        <p className="mt-1 text-sm whitespace-pre-wrap">{comment.content}</p>
+        <CommentContent content={comment.content} workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
       </div>
       <ConfirmDialog
         open={deleteOpen}

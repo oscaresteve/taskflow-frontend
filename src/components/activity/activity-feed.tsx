@@ -1,54 +1,36 @@
 "use client";
 
-import { useMemo } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyInline } from "@/components/common/empty-inline";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
-import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
 import { ActivityEventResponseDto } from "@/lib/dtos/activity.dto";
-import { getFullName } from "@/lib/utils";
+import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
 import { ICONS } from "@/lib/icons";
 import { ActivityEntry, getTaskRef } from "./activity-entry";
 
+// Los tres feeds (espacio, proyecto y tarea) solo se diferencian en que consulta montan, asi que
+// el aplanado de paginas y la cuenta de lo que falta viven aqui una sola vez.
+type ActivityQueryResult = UseInfiniteQueryResult<InfiniteData<PaginatedResponseDto<ActivityEventResponseDto>>>;
+
 interface ActivityFeedProps {
   workspaceSlug: string;
-  events: ActivityEventResponseDto[];
-  remaining: number;
-  isLoading: boolean;
-  isError: boolean;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
-  fetchNextPage: () => void;
+  query: ActivityQueryResult;
   // El feed de una tarea no repite de que tarea habla en cada linea.
   linkTasks?: boolean;
 }
 
-export function ActivityFeed({
-  workspaceSlug,
-  events,
-  remaining,
-  isLoading,
-  isError,
-  hasNextPage,
-  isFetchingNextPage,
-  fetchNextPage,
-  linkTasks,
-}: ActivityFeedProps) {
+export function ActivityFeed({ workspaceSlug, query, linkTasks }: ActivityFeedProps) {
   const t = useTranslations("activity");
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Una sola consulta para todos los nombres del feed: cualquier objetivo de un evento, tambien
-  // los de miembro de proyecto, es miembro del espacio.
-  const { data: members } = useQuery(getWorkspaceMembersQuery(workspaceSlug));
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = query;
 
-  const memberNames = useMemo(
-    () => new Map((members ?? []).map((member) => [member.userId, getFullName(member.user.firstName, member.user.lastName)])),
-    [members],
-  );
+  const events = data?.pages.flatMap((page) => page.data) ?? [];
+  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - events.length : 0;
 
   if (isError) {
     return <p className="text-sm text-muted-foreground">{t("failedToLoad")}</p>;
@@ -77,7 +59,6 @@ export function ActivityFeed({
           <ActivityEntry
             key={event.id}
             event={event}
-            memberNames={memberNames}
             taskHref={
               linkTasks && taskRef && event.project
                 ? buildTaskModalHref({
