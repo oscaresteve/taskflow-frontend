@@ -38,13 +38,24 @@ async function toApiError(res: Response) {
   return new ApiError(message, res.status);
 }
 
-async function refreshSession() {
+async function performRefresh() {
   // El refresh token viaja en la cookie httpOnly, asi que no hay body: 204 si renueva, 401 si murio.
   const res = await send("/auth/refresh", { method: "POST" });
 
   if (!res.ok) {
     throw await toApiError(res);
   }
+}
+
+// El single-flight vive aqui dentro y no en request() porque el socket tambien la llama al
+// reconectar: dos refrescos en paralelo rotarian el token dos veces y el perdedor se quedaria sin
+// sesion.
+export function refreshSession(): Promise<void> {
+  refreshPromise ??= performRefresh().finally(() => {
+    refreshPromise = null;
+  });
+
+  return refreshPromise;
 }
 
 function redirectToSignIn() {
@@ -68,10 +79,7 @@ export async function request<T>(path: string, options: RequestInit = {}): Promi
   // renueva y se reintenta una unica vez, nunca en bucle.
   if (res.status === 401 && !AUTH_PATHS.includes(path)) {
     try {
-      refreshPromise ??= refreshSession().finally(() => {
-        refreshPromise = null;
-      });
-      await refreshPromise;
+      await refreshSession();
     } catch (error) {
       redirectToSignIn();
       throw error;

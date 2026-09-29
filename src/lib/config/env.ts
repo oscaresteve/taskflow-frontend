@@ -16,3 +16,7 @@ if (!parsedEnv.success) {
 }
 
 export const env = parsedEnv.data;
+
+// NEXT_PUBLIC_API_URL incluye el sufijo /api, y el socket se conecta al origen pelado: su ruta
+// por defecto es /socket.io, fuera de /api.
+export const apiOrigin = new URL(env.NEXT_PUBLIC_API_URL).origin;

@@ -89,6 +89,29 @@ Filters, search, sorting and pagination live in the URL, via `useQueryStates` in
 `hooks/use-*-table.ts` / `use-*-filters.ts` hooks, so a view can be shared as a link. Don't put
 shareable view state in `useState`.
 
+### Tiempo real
+
+`components/realtime/realtime-bridge.tsx` es el único consumidor del socket. Se monta una sola vez
+en `app/(private)/layout.tsx`, por debajo de `QueryProvider`, y **no es un provider**: no expone
+contexto, solo escucha y devuelve `null`.
+
+- **Lo que llega se invalida, nunca se escribe en la caché.** Por eso los mensajes pueden ser pobres:
+  la verdad sigue viniendo del endpoint. El mapeo mensaje → claves es un `switch` explícito sobre
+  `event.action` en ese mismo fichero.
+- **Cada mensaje trae `actorId` y se ignoran los propios ecos**, o pisarían las actualizaciones
+  optimistas del arrastre. El usuario se lee de la caché (`authKeys.me()`) dentro del handler, para
+  no tener que reregistrar los listeners.
+- El socket se une a la sala del proyecto de la ruta, y **vuelve a unirse en cada `connect`**: tras
+  reconectar el servidor tiene un socket nuevo sin salas.
+- Al reconectar con el token caducado se llama a `refreshSession()` de `lib/http/client.ts`, que
+  comparte el single-flight con las peticiones HTTP — dos refrescos en paralelo rotarían el token dos
+  veces y cerrarían la sesión.
+
+**Aristas asumidas:** durante un arrastre la caché del tablero *es* el estado del arrastre, así que
+una invalidación que llegue por socket puede pisar la previsualización (solo choca si dos personas
+arrastran a la vez, y se corrige al soltar). Y el feed de espacio no se actualiza en vivo: sus
+eventos no cuelgan de un proyecto, así que no tienen sala.
+
 ### Permissions
 
 `src/lib/permissions/` mirrors the backend's `shared/auth/permissions.ts` and decides only what the
