@@ -9,20 +9,23 @@ the workspace and the project level.
 
 ## Commands
 
-This project uses **pnpm** exclusively (`packageManager` in `package.json`, same rule as the
-backend) — never suggest `npm`/`npx`/`yarn`, including for one-off package runs (`pnpm dlx`).
+This project uses **pnpm** exclusively (`packageManager` in `package.json`; the backend enforces the
+same rule via `devEngines`) — never suggest `npm`/`npx`/`yarn`, including for one-off package runs
+(`pnpm dlx`).
 
 - `pnpm dev` — Next dev server. Needs the backend running (`pnpm db:up && pnpm dev` in
   `../taskflow-backend`); `NEXT_PUBLIC_API_URL` defaults to `http://localhost:4000/api`.
 - `pnpm typecheck` — `tsc --noEmit`, incremental (~2s). The main correctness signal.
-- `pnpm lint` — eslint (flat config, `eslint-config-next`). Known pre-existing failure:
-  `react-hooks/set-state-in-effect` in `src/hooks/use-mobile.ts`, which is vendored shadcn code.
-  Don't chase it and don't rewrite it as part of unrelated work.
-- `pnpm verify` — typecheck + lint. Run it before reporting work as done, and report failures
-  other than the one above.
+- `pnpm lint` — eslint (flat config, `eslint-config-next`). Two pre-existing findings, both
+  expected: the `react-hooks/set-state-in-effect` **error** in `src/hooks/use-mobile.ts` (vendored
+  shadcn code) and an unused-`variant` **warning** in `src/components/common/empty-inline.tsx`.
+  Don't chase either, and don't rewrite them as part of unrelated work.
+- `pnpm verify` — typecheck + lint. Run it before reporting work as done, and report findings other
+  than those two.
 - `pnpm build` — production build. Slower; only when something build-specific is suspected.
 - There is no test suite yet. Pure logic (`lib/permissions`, `lib/schemas`, `lib/query-keys`,
-  date/color helpers) is the part worth covering first when one is added.
+  `lib/colors.ts` and the helpers in `lib/utils.ts`) is the part worth covering first when one is
+  added.
 
 ### How work gets verified here
 
@@ -56,23 +59,46 @@ click and what to expect.
    search (react-query treats `{}` as a partial-match wildcard).
 6. `lib/queries/<domain>.queries.ts` — `queryOptions` / `infiniteQueryOptions` builders, each
    pairing a key factory with an api function, `enabled: !!slug` where a slug is required.
-7. `hooks/use-*.ts` — one mutation per hook (`useMutation` + `invalidateQueries` on the domain's
-   `*Keys.all`), plus the table/filter hooks.
-8. Components consume the query builders and hooks — **never** `fetch` or `*.api.ts` directly.
+7. `hooks/use-*.ts` — one mutation per hook, plus the table/filter hooks. **Invalidate the narrowest
+   keys the mutation actually affects** (`detail`, `lists`, `board`, `infiniteList`), and
+   `setQueryData` the detail key when the response already carries the updated entity — that is what
+   the task, project and workspace hooks do. `*Keys.all` is the blunt fallback, fine when a change
+   fans out unpredictably (it is still what the realtime bridge uses).
+8. Components consume the query builders and hooks — **never** `fetch` or `*.api.ts` directly. The
+   one exception is the auth actions (`signIn`, `signUp`, `signOut`), called straight from the auth
+   forms and the logout buttons because they have no hook: they navigate hard instead of touching the
+   query cache.
+
+### Avatar uploads — the one `fetch` outside `lib/http`
+
+Workspace avatars do not travel through the API. `hooks/use-upload-workspace-avatar.ts` compresses
+the file in the browser (`lib/compress-image.ts`), asks the backend for a signed PutObject URL, PUTs
+the file **straight to the bucket** (MinIO in dev, R2 in prod) with a bare `fetch`, then calls the
+confirm endpoint so the backend checks the object exists and stores the key. The direct PUT is the
+only sanctioned `fetch` outside `lib/http/` — it is not an API call, so `request()` would only get
+in the way with its base URL, credentials and JSON headers.
 
 ### Routing
 
 `src/app/(private)` (authenticated) and `src/app/(public)` (auth screens); `(global)` groups the
-scope-less pages (`my-space`, `preferences`, `workspaces`). The nested scope is
+scope-less pages (`my-space`, `preferences`, `workspaces`), and `(private)/onboarding` is where a
+user with no workspace lands. The nested scope is
 `/workspaces/[workspaceSlug]/projects/[projectSlug]`, whose own `page.tsx` is the project
 overview, plus the `list`, `kanban`, `members` and `settings` segments.
 
 - Page-specific components live in that route's `_components/`; anything reused moves to
   `src/components/<domain>/`.
-- `src/proxy.ts` is the Next 16 proxy (the file that replaced `middleware.ts`): it calls `/auth/me`,
-  gates private routes, and distinguishes a dead session (401) from a backend that is restarting
-  (5xx) so a hiccup never logs the user out. See
+- **Two gating layers, not one.** `src/proxy.ts` is the Next 16 proxy (the file that replaced
+  `middleware.ts`): it calls `/auth/me`, gates private routes, and distinguishes a dead session (401)
+  from a backend that is restarting (5xx) so a hiccup never logs the user out. It is also the *only*
+  place that can renew the session — it calls `/auth/refresh`, forwards the raw `Set-Cookie` and
+  rewrites `request.cookies` so this same render already sees the new token, because an RSC cannot
+  write cookies. Then `requireWorkspaces()` guards `(global)/layout.tsx` and
+  `[workspaceSlug]/layout.tsx`, redirecting to `/onboarding`. See
   `node_modules/next/dist/docs/01-app/01-getting-started/16-proxy.md`.
+- The task detail modal is global and URL-driven: `task-detail/task-detail-modal.tsx` is mounted
+  once in the **root** layout and opened by the search param that `hooks/use-task-modal-href.ts`
+  builds, so any task card from any route can link to it.
 
 ### i18n (next-intl)
 
@@ -86,8 +112,9 @@ to be imported and added to `messagesByLocale` in `request.ts` for both locales.
 ### URL state (nuqs)
 
 Filters, search, sorting and pagination live in the URL, via `useQueryStates` in the
-`hooks/use-*-table.ts` / `use-*-filters.ts` hooks, so a view can be shared as a link. Don't put
-shareable view state in `useState`.
+`hooks/use-*-table.ts` / `use-*-filters.ts` hooks (plus `use-searchable-grid.ts`, the card-grid
+counterpart of the table hooks), so a view can be shared as a link. Don't put shareable view state
+in `useState`.
 
 ### Tiempo real
 
@@ -114,23 +141,38 @@ eventos no cuelgan de un proyecto, así que no tienen sala.
 
 ### Permissions
 
-`src/lib/permissions/` mirrors the backend's `shared/auth/permissions.ts` and decides only what the
-UI shows or enables. Keep it in sync with that file; the backend re-validates every request. Never
-invent a rule that is stricter than what the corresponding endpoint already allows.
+`src/lib/permissions/` decides only what the UI shows or enables; the backend re-validates every
+request. Never invent a rule that is stricter than what the corresponding endpoint already allows.
+
+The rules it mirrors come from two places in the backend, so check both when syncing:
+
+- `shared/auth/permissions.ts` — the role rules (a manager is OWNER or ADMIN; an ADMIN can neither
+  manage an OWNER nor assign the OWNER role).
+- the module services — the rules the services raise themselves, e.g. "you cannot change your own
+  role" / "you cannot remove yourself" in `workspace-members.service.ts`, which is what
+  `canUpdateWorkspaceMemberRole` and `canRemoveWorkspaceMember` reflect.
+
+One rule deliberately lives outside this directory: comment authorship, inline in
+`components/tasks/comments/comment-list.tsx`. Editing is author-only while deleting also allows a
+project manager — asymmetric on purpose, because that is exactly what `comments.service.ts` enforces.
 
 ### Colors and enums
 
-Project/workspace colors come from `lib/colors.ts` (curated for white-on-color contrast), status and
-priority palettes from `lib/enum-colors.ts` + `src/app/palette.css`. No hardcoded hex in components.
+Project/workspace colors come from `lib/colors.ts` (curated for white-on-color contrast). The enum
+palettes are `lib/enum-colors.ts` + `src/app/palette.css`, in three families: **severity** (what task
+priority renders through — there is no separate priority palette), **status** and **role**. Each
+exports the same `EnumColors` shape, so a new variant means a new palette entry plus its Tailwind
+token — never a hardcoded hex in a component.
 
 # UI component rules
 
 - Always use shadcn components for UI. Check `components.json` for the configured style/aliases, and use the shadcn MCP server (`search`/`view`/`add`/`docs`) to find and install the right component before hand-rolling one.
 - Use the minimum amount of Tailwind utility classes needed to achieve the design — don't add classes for effects, spacing, or variants that weren't asked for.
 - Never design for responsiveness (breakpoint variants like `sm:`, `md:`, `lg:`, etc.) unless explicitly instructed to do so.
-- Never modify anything in `src/components/ui/` — those are vendored shadcn primitives (edits there
-  are denied in `.claude/settings.json`). Adjust behaviour at the call site with `className` or a
-  wrapper component instead.
+- Never modify anything in `src/components/ui/` — those are vendored shadcn primitives. The
+  `Edit(src/components/ui/**)` deny rule in `.claude/settings.json` blocks edits but not a whole-file
+  `Write`, so treat the directory as read-only regardless of what the permission prompt allows.
+  Adjust behaviour at the call site with `className` or a wrapper component instead.
 
 ## Conventions
 
