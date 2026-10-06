@@ -1,7 +1,7 @@
 import { request } from "@/lib/http/client";
 import { buildQueryString } from "@/lib/http/query-string";
 import { PaginatedResponseDto } from "@/lib/dtos/pagination.dto";
-import { UserResponseDto } from "@/lib/dtos/auth.dto";
+import { UserProfileResponseDto, UserSummaryResponseDto } from "@/lib/dtos/users.dto";
 
 export function getUsers({
   search,
@@ -10,19 +10,19 @@ export function getUsers({
   limit,
 }: {
   search: string;
-  workspaceSlug?: string;
+  workspaceSlug: string;
   page?: number;
   limit?: number;
 }) {
   const queryString = buildQueryString({ search: search || undefined, workspaceSlug, page, limit });
 
-  return request<PaginatedResponseDto<UserResponseDto>>(`/users${queryString}`, {
+  return request<PaginatedResponseDto<UserSummaryResponseDto>>(`/users${queryString}`, {
     method: "GET",
   });
 }
 
 export function getUser({ userId }: { userId: string }) {
-  return request<UserResponseDto>(`/users/${userId}`, {
+  return request<UserProfileResponseDto>(`/users/${userId}`, {
     method: "GET",
   });
 }
