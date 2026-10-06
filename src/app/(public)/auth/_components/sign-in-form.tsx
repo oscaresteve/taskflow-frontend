@@ -16,6 +16,10 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 
+// Quien entra a ver la demo no debería tener que teclear nada. Son las credenciales del seed, que
+// son públicas de todas formas: salen en el README y en la salida de `pnpm db:seed`.
+const DEMO_CREDENTIALS = { email: "demo@taskflow.dev", password: "Password123" };
+
 export function SignInForm({ next }: { next: string }) {
   const t = useTranslations("auth");
   const router = useRouter();
@@ -40,6 +44,13 @@ export function SignInForm({ next }: { next: string }) {
         priority: "high",
       });
     }
+  }
+
+  async function signInAsDemo() {
+    form.setValue("email", DEMO_CREDENTIALS.email);
+    form.setValue("password", DEMO_CREDENTIALS.password);
+    // Pasa por handleSubmit para reutilizar la validación, el isSubmitting y el toast de error.
+    await form.handleSubmit(onSubmit)();
   }
 
   return (
@@ -92,6 +103,15 @@ export function SignInForm({ next }: { next: string }) {
                 {form.formState.isSubmitting && <ICONS.loading className="animate-spin" aria-hidden="true" />}
                 {t("signInForm.submitButton")}
               </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={signInAsDemo}
+                disabled={form.formState.isSubmitting}
+              >
+                {t("signInForm.demoButton")}
+              </Button>
+              <FieldDescription className="text-center">{t("signInForm.demoHint")}</FieldDescription>
               <FieldDescription className="text-center">
                 {t("signInForm.signUpPrompt")} <Link href="/auth/sign-up">{t("signInForm.signUpLink")}</Link>
               </FieldDescription>
