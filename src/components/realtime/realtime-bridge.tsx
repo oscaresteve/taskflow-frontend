@@ -33,6 +33,7 @@ function invalidateForActivity(queryClient: QueryClient, event: ActivityNewMessa
     case "COMMENT_CREATED":
     case "COMMENT_EDITED":
     case "COMMENT_DELETED":
+    case "COMMENT_MENTIONED":
       queryClient.invalidateQueries({ queryKey: commentKeys.all });
       return;
 

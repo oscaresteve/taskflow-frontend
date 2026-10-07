@@ -25,6 +25,7 @@ export function getTaskRef(event: ActivityEventResponseDto): { taskNumber: numbe
     case "COMMENT_CREATED":
     case "COMMENT_EDITED":
     case "COMMENT_DELETED":
+    case "COMMENT_MENTIONED":
       return { taskNumber: event.payload.taskNumber, taskTitle: event.payload.taskTitle };
     default:
       return null;
@@ -116,6 +117,11 @@ export function ActivityEntry({ event, taskHref }: ActivityEntryProps) {
 
       case "COMMENT_DELETED":
         return { text: t("actions.COMMENT_DELETED") };
+
+      // El payload lleva la lista de mencionados y no un targetUserId, asi que no hay persona
+      // resuelta que interpolar: la frase no nombra a nadie.
+      case "COMMENT_MENTIONED":
+        return { text: t("actions.COMMENT_MENTIONED") };
 
       case "PROJECT_CREATED":
         return { text: t("actions.PROJECT_CREATED", { name: event.payload.projectName }) };

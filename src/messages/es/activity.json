@@ -25,6 +25,7 @@
     "COMMENT_CREATED": "comentó",
     "COMMENT_EDITED": "editó un comentario",
     "COMMENT_DELETED": "borró un comentario",
+    "COMMENT_MENTIONED": "mencionó a alguien en un comentario",
     "PROJECT_CREATED": "creó el proyecto {name}",
     "PROJECT_UPDATED": "editó {fields} del proyecto",
     "PROJECT_ARCHIVED": "archivó el proyecto {name}",

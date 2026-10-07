@@ -54,6 +54,7 @@ export type ActivityPayloadMap = {
   COMMENT_CREATED: CommentRef;
   COMMENT_EDITED: CommentRef;
   COMMENT_DELETED: CommentRef;
+  COMMENT_MENTIONED: CommentRef;
 
   PROJECT_CREATED: ProjectRef;
   PROJECT_UPDATED: ProjectRef & { fields: ProjectEditedField[] };
