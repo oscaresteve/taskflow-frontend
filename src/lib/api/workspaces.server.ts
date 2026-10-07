@@ -16,6 +16,8 @@ export async function hasWorkspaces() {
   return workspaces !== null && workspaces.data.length > 0;
 }
 
+// Redirigir aqui solo es seguro porque `serverRequest` lanza ante un fallo: el `false` de
+// `hasWorkspaces()` significa un 200 con la lista vacia, no "no se pudo preguntar".
 export async function requireWorkspaces() {
   if (!(await hasWorkspaces())) {
     redirect("/onboarding");

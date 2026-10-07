@@ -43,6 +43,9 @@
     "neverLoggedIn": "Never"
   },
   "errors": {
-    "generic": "Something went wrong"
+    "generic": "Something went wrong",
+    "title": "We couldn't load this page",
+    "description": "The server may be restarting. Try again in a moment.",
+    "retry": "Try again"
   }
 }

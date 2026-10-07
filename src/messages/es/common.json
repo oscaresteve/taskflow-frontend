@@ -43,6 +43,9 @@
     "neverLoggedIn": "Nunca"
   },
   "errors": {
-    "generic": "Algo salió mal"
+    "generic": "Algo salió mal",
+    "title": "No pudimos cargar esta página",
+    "description": "El servidor puede estar reiniciándose. Vuelve a intentarlo en un momento.",
+    "retry": "Reintentar"
   }
 }

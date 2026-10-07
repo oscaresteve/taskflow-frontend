@@ -46,8 +46,13 @@ click and what to expect.
 2. `lib/http/client.ts` — `request<T>()` for the **browser**: `credentials: "include"`, a single
    in-flight refresh on 401 (outside the auth routes) with one retry, hard redirect to sign-in when
    the refresh dies, errors normalized to `ApiError`.
-   `lib/http/server-client.ts` — `serverRequest<T>()` for **RSC** (returns `T | null`) and
-   `serverFetch()` for `proxy.ts` (needs the raw status). Cookies are forwarded manually.
+   `lib/http/server-client.ts` — `serverRequest<T>()` for **RSC** and `serverFetch()` for `proxy.ts`
+   (needs the raw status). Cookies are forwarded manually. `serverRequest` returns `null` **only**
+   for a conclusive no (404, or 403 for "not yours") and throws `ApiError` on anything else — which
+   is what lets its callers route on the answer: `requireWorkspaces()` redirects to `/onboarding`
+   and the layouts call `notFound()` without a 5xx passing for an empty account. The throw lands in
+   `app/(private)/error.tsx`. `getCurrentUser()` swallows it on purpose: it resolves the locale from
+   the **root** layout, where a throw would only reach `global-error.tsx`, styleless and untranslated.
    `lib/http/query-string.ts` — `buildQueryString()`; never hand-build a query string.
 3. `lib/api/<domain>.api.ts` — one exported function per endpoint, client side, on `request`.
    `lib/api/<domain>.server.ts` — the RSC/proxy counterpart, on `serverRequest`.
