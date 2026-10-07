@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/components/ui/toast";
 import { EmptyInline } from "@/components/common/empty-inline";
 import { ActivityEntry, getTaskRef } from "@/components/activity/activity-entry";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
@@ -14,6 +16,7 @@ import { getNotificationsInfiniteQuery, getUnreadNotificationCountQuery } from "
 import { useMarkAllNotificationsRead } from "@/hooks/use-mark-all-notifications-read";
 import { useMarkNotificationRead } from "@/hooks/use-mark-notification-read";
 import { NotificationResponseDto } from "@/lib/dtos/notifications.dto";
+import { ApiError } from "@/lib/http/api-error";
 import { ICONS } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
@@ -107,6 +110,8 @@ function NotificationItem({
   notification: NotificationResponseDto;
   onOpenTask: () => void;
 }) {
+  const t = useTranslations("notifications");
+  const router = useRouter();
   const markRead = useMarkNotificationRead();
   const taskRef = getTaskRef(notification.event);
   const project = notification.event.project;
@@ -125,21 +130,36 @@ function NotificationItem({
       : undefined;
 
   // Patron habitual: abrir la notificacion la marca como leida; el highlight solo indica estado.
-  const handleClick = () => {
-    if (!notification.readAt) markRead.mutate(notification.id);
-    if (taskHref) onOpenTask();
+  // Marcarla no bloquea la navegacion, asi que el error se avisa por callback y no esperandola.
+  const handleOpen = () => {
+    if (!notification.readAt) {
+      markRead.mutate(notification.id, {
+        onError: (error) =>
+          toast.add({
+            type: "error",
+            description: error instanceof ApiError ? error.message : t("errors.generic"),
+            priority: "high",
+          }),
+      });
+    }
+
+    if (taskHref) {
+      router.push(taskHref);
+      onOpenTask();
+    }
   };
 
   return (
-    <div
-      onClick={handleClick}
+    <button
+      type="button"
+      onClick={handleOpen}
       // El resaltado es el unico indicador de no leida, asi que solo lo llevan esas.
       className={cn(
-        "min-w-0 cursor-pointer rounded-md px-2.5 transition-colors",
+        "min-w-0 cursor-pointer rounded-md px-2.5 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring",
         !notification.readAt ? "bg-muted" : "hover:bg-muted/50",
       )}
     >
-      <ActivityEntry event={notification.event} taskHref={taskHref} />
-    </div>
+      <ActivityEntry event={notification.event} taskHref={taskHref} plainTaskRef />
+    </button>
   );
 }

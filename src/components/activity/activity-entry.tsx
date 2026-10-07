@@ -36,9 +36,12 @@ interface ActivityEntryProps {
   event: ActivityEventResponseDto;
   // El feed de una tarea ya sabe de cual habla; los otros dos tienen que nombrarla y enlazarla.
   taskHref?: string;
+  // La campanita mete la entrada entera dentro de un boton, y un enlace ahi dentro no es HTML valido
+  // ni queda alcanzable con el teclado: ahi la tarea se nombra como texto y la abre el boton.
+  plainTaskRef?: boolean;
 }
 
-export function ActivityEntry({ event, taskHref }: ActivityEntryProps) {
+export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryProps) {
   const t = useTranslations("activity");
   const format = useFormatter();
 
@@ -178,6 +181,9 @@ export function ActivityEntry({ event, taskHref }: ActivityEntryProps) {
 
   const { text, detail } = describe();
 
+  const taskLabel =
+    taskRef && event.project ? `${event.project.key}-${taskRef.taskNumber} · ${taskRef.taskTitle}` : null;
+
   return (
     <div className="flex items-start gap-3 py-2">
       <CustomAvatar
@@ -195,11 +201,15 @@ export function ActivityEntry({ event, taskHref }: ActivityEntryProps) {
 
         {detail}
 
-        {taskHref && taskRef && event.project && (
-          <Link href={taskHref} className="truncate text-xs text-muted-foreground hover:text-foreground">
-            {event.project.key}-{taskRef.taskNumber} · {taskRef.taskTitle}
-          </Link>
-        )}
+        {taskHref &&
+          taskLabel &&
+          (plainTaskRef ? (
+            <span className="truncate text-xs text-muted-foreground">{taskLabel}</span>
+          ) : (
+            <Link href={taskHref} className="truncate text-xs text-muted-foreground hover:text-foreground">
+              {taskLabel}
+            </Link>
+          ))}
       </div>
 
       <time dateTime={event.createdAt} className="shrink-0 text-xs text-muted-foreground">

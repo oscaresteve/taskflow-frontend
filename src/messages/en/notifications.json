@@ -1,4 +1,7 @@
 {
+  "errors": {
+    "generic": "Something went wrong"
+  },
   "title": "Notifications",
   "ariaLabel": "Notifications, {count} unread",
   "empty": "No notifications yet",

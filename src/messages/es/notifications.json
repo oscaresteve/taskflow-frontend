@@ -1,4 +1,7 @@
 {
+  "errors": {
+    "generic": "Algo salió mal"
+  },
   "title": "Notificaciones",
   "ariaLabel": "Notificaciones, {count} sin leer",
   "empty": "No tienes notificaciones",
