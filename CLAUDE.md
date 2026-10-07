@@ -147,7 +147,11 @@ request. Never invent a rule that is stricter than what the corresponding endpoi
 The rules it mirrors come from two places in the backend, so check both when syncing:
 
 - `shared/auth/permissions.ts` — the role rules (a manager is OWNER or ADMIN; an ADMIN can neither
-  manage an OWNER nor assign the OWNER role).
+  manage an OWNER nor assign the OWNER role). Administering a project is the one rule that spans
+  both levels: `requireWorkspaceOrProjectManager` lets a manager of the *workspace* edit, archive
+  and staff a project without being in it, and then the project's own hierarchy does not apply —
+  which is why `canManageProject` and everything under it take both roles, and why the workspace
+  one short-circuits. Task- and comment-level rules did **not** move: they stay project-role only.
 - the module services — the rules the services raise themselves, e.g. "you cannot change your own
   role" / "you cannot remove yourself" in `workspace-members.service.ts`, which is what
   `canUpdateWorkspaceMemberRole` and `canRemoveWorkspaceMember` reflect.

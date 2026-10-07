@@ -18,8 +18,9 @@ import { useProjectRole } from "@/hooks/use-project-role";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { useParams } from "next/navigation";
 import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
-import { isProjectManager } from "@/lib/permissions/project-member-permissions";
+import { canManageProject } from "@/lib/permissions/project-member-permissions";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
+import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import Link from "next/link";
 import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { CustomAvatar } from "@/components/common/custom-avatar";
@@ -39,7 +40,15 @@ import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 
 const MAX_VISIBLE_OWNERS = 4;
 
-function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project: ProjectResponseDto }) {
+function ProjectRow({
+  workspaceSlug,
+  workspaceRole,
+  project,
+}: {
+  workspaceSlug: string;
+  workspaceRole: WorkspaceRole | undefined;
+  project: ProjectResponseDto;
+}) {
   const format = useFormatter();
   const {
     data: members,
@@ -53,7 +62,7 @@ function ProjectRow({ workspaceSlug, project }: { workspaceSlug: string; project
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
   const remainingOwners = owners.length - visibleOwners.length;
 
-  const canManage = isProjectManager(myRole);
+  const canManage = canManageProject({ workspaceRole, projectRole: myRole });
 
   return (
     <TableRow>
@@ -241,7 +250,12 @@ export default function ProjectsPage() {
           </TableHeader>
           <TableBody>
             {projects.data.map((project) => (
-              <ProjectRow key={project.id} workspaceSlug={workspaceSlug} project={project} />
+              <ProjectRow
+                key={project.id}
+                workspaceSlug={workspaceSlug}
+                workspaceRole={myWorkspaceRole}
+                project={project}
+              />
             ))}
           </TableBody>
         </Table>

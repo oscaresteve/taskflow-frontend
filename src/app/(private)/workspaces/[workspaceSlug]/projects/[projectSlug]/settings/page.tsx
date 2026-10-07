@@ -10,14 +10,16 @@ import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProjectRole } from "@/hooks/use-project-role";
-import { isProjectManager } from "@/lib/permissions/project-member-permissions";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
+import { canManageProject } from "@/lib/permissions/project-member-permissions";
 
 export default function ProjectSettingsPage() {
   const t = useTranslations("projects");
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { role: myRole, isLoading } = useProjectRole(workspaceSlug, projectSlug);
+  const { role: myWorkspaceRole, isLoading: isLoadingWorkspaceRole } = useWorkspaceRole(workspaceSlug);
 
-  if (isLoading) {
+  if (isLoading || isLoadingWorkspaceRole) {
     return (
       <PageContainer className="max-w-5xl">
         <Skeleton className="h-8 w-64" />
@@ -26,7 +28,7 @@ export default function ProjectSettingsPage() {
     );
   }
 
-  if (!isProjectManager(myRole)) {
+  if (!canManageProject({ workspaceRole: myWorkspaceRole, projectRole: myRole })) {
     return <p className="p-6 text-sm text-muted-foreground">{t("projectSettingsPage.noPermission")}</p>;
   }
 

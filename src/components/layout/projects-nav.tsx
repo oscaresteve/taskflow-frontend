@@ -11,7 +11,7 @@ import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getProjectsInfiniteQuery } from "@/lib/queries/project.queries";
 import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 import { useProjectRole } from "@/hooks/use-project-role";
-import { isProjectManager } from "@/lib/permissions/project-member-permissions";
+import { canManageProject } from "@/lib/permissions/project-member-permissions";
 import { isNavActive } from "@/lib/nav";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -44,6 +44,7 @@ import { EmptyInline } from "@/components/common/empty-inline";
 import { ColorDot } from "../ui/color-dot";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
+import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -53,14 +54,16 @@ const NAV_PAGE_SIZE = 5;
 function ProjectNavItem({
   project,
   workspaceSlug,
+  workspaceRole,
   isActive,
 }: {
   project: ProjectResponseDto;
   workspaceSlug: string;
+  workspaceRole: WorkspaceRole | undefined;
   isActive: boolean;
 }) {
   const { role } = useProjectRole(workspaceSlug, project.slug);
-  const canManage = isProjectManager(role);
+  const canManage = canManageProject({ workspaceRole, projectRole: role });
   const href = `/workspaces/${workspaceSlug}/projects/${project.slug}`;
 
   return (
@@ -283,6 +286,7 @@ export default function ProjectsNav() {
                         key={project.id}
                         project={project}
                         workspaceSlug={workspaceSlug}
+                        workspaceRole={myRole}
                         isActive={isNavActive(pathname, href)}
                       />
                     );

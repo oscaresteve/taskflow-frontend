@@ -12,6 +12,7 @@ import { MemberCandidate, MemberPicker, toMemberCandidate } from "@/components/m
 import { useCreateProjectMember } from "@/hooks/use-create-project-member";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useProjectRole } from "@/hooks/use-project-role";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { getActiveWorkspaceMembersInfiniteQuery } from "@/lib/queries/workspace-member.queries";
 import { ApiError } from "@/lib/http/api-error";
 import { CreateProjectMemberDto, createProjectMemberSchema } from "@/lib/schemas/project-member.schema";
@@ -38,7 +39,8 @@ export function AddProjectMemberDialog({
   const createProjectMember = useCreateProjectMember(workspaceSlug, projectSlug);
 
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
-  const assignableRoles = assignableProjectRoles(myRole);
+  const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
+  const assignableRoles = assignableProjectRoles({ workspaceRole: myWorkspaceRole, actorRole: myRole });
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search);

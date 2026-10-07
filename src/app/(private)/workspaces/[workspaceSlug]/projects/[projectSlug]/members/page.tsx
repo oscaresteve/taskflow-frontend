@@ -8,6 +8,7 @@ import { ICONS, type Icon } from "@/lib/icons";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useProjectRole } from "@/hooks/use-project-role";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { AddProjectMemberDialog } from "@/components/members/add-project-member-dialog";
@@ -25,8 +26,8 @@ import { getFullName } from "@/lib/utils";
 import {
   assignableProjectRoles,
   canDeactivateProjectMember,
+  canManageProject,
   canUpdateProjectMemberRole,
-  isProjectManager,
 } from "@/lib/permissions/project-member-permissions";
 import { Badge } from "@/components/ui/badge";
 import { EnumBadge } from "@/components/common/enum-display";
@@ -43,6 +44,7 @@ export default function ProjectMembersPage() {
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
+  const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
   const updateProjectMember = useUpdateProjectMember(workspaceSlug, projectSlug);
   const deactivateProjectMember = useDeactivateProjectMember(workspaceSlug, projectSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
@@ -66,7 +68,7 @@ export default function ProjectMembersPage() {
     INACTIVE: inactiveCountQuery,
   };
 
-  const assignableRoles = assignableProjectRoles(myRole);
+  const assignableRoles = assignableProjectRoles({ workspaceRole: myWorkspaceRole, actorRole: myRole });
 
   function reportError(error: unknown) {
     toast.add({
@@ -127,6 +129,7 @@ export default function ProjectMembersPage() {
   function roleChangeable(member: ProjectMemberWithUserResponseDto) {
     return canUpdateProjectMemberRole({
       actorUserId: me?.id,
+      workspaceRole: myWorkspaceRole,
       actorRole: myRole,
       targetUserId: member.userId,
       targetRole: member.role,
@@ -137,6 +140,7 @@ export default function ProjectMembersPage() {
   function renderActions(member: ProjectMemberWithUserResponseDto) {
     const deactivatable = canDeactivateProjectMember({
       actorUserId: me?.id,
+      workspaceRole: myWorkspaceRole,
       actorRole: myRole,
       targetUserId: member.userId,
       targetRole: member.role,
@@ -156,7 +160,7 @@ export default function ProjectMembersPage() {
       <PageHeader
         title={t("projectMembersPage.title")}
         actions={
-          isProjectManager(myRole) ? (
+          canManageProject({ workspaceRole: myWorkspaceRole, projectRole: myRole }) ? (
             <Button size="sm" onClick={() => setAddMemberOpen(true)}>
               <ICONS.memberAdd />
               {t("projectMembersPage.addMember")}

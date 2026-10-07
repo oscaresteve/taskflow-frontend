@@ -5,13 +5,15 @@ import { useParams, usePathname } from "next/navigation";
 import { ICONS } from "@/lib/icons";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjectRole } from "@/hooks/use-project-role";
-import { isProjectManager } from "@/lib/permissions/project-member-permissions";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
+import { canManageProject } from "@/lib/permissions/project-member-permissions";
 import { useTranslations } from "next-intl";
 
 export function ProjectNavTabs() {
   const pathname = usePathname();
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
+  const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
   const t = useTranslations("layout");
 
   const projectTabs = [
@@ -23,7 +25,8 @@ export function ProjectNavTabs() {
   ];
   const base = `/workspaces/${workspaceSlug}/projects/${projectSlug}`;
 
-  const tabs = isProjectManager(myRole) ? projectTabs : projectTabs.filter((tab) => tab.segment !== "/settings");
+  const canManage = canManageProject({ workspaceRole: myWorkspaceRole, projectRole: myRole });
+  const tabs = canManage ? projectTabs : projectTabs.filter((tab) => tab.segment !== "/settings");
   const activeTab = [...tabs].reverse().find((tab) => pathname.startsWith(`${base}${tab.segment}`))?.segment;
 
   return (
