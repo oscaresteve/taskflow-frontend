@@ -10,7 +10,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getProjectsInfiniteQuery } from "@/lib/queries/project.queries";
 import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
-import { useProjectRole } from "@/hooks/use-project-role";
 import { canManageProject } from "@/lib/permissions/project-member-permissions";
 import { isNavActive } from "@/lib/nav";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
@@ -62,8 +61,7 @@ function ProjectNavItem({
   workspaceRole: WorkspaceRole | undefined;
   isActive: boolean;
 }) {
-  const { role } = useProjectRole(workspaceSlug, project.slug);
-  const canManage = canManageProject({ workspaceRole, projectRole: role });
+  const canManage = canManageProject({ workspaceRole, projectRole: project.myRole });
   const href = `/workspaces/${workspaceSlug}/projects/${project.slug}`;
 
   return (

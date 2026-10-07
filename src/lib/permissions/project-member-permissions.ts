@@ -18,7 +18,7 @@ const ASSIGNABLE_ROLES_BY_ROLE: Record<ProjectRole, ProjectRole[]> = {
 };
 
 // OWNER o ADMIN pueden administrar el proyecto.
-export function isProjectManager(actorRole: ProjectRole | undefined): boolean {
+export function isProjectManager(actorRole: ProjectRole | null | undefined): boolean {
   return actorRole === "OWNER" || actorRole === "ADMIN";
 }
 
@@ -30,7 +30,9 @@ export function canManageProject({
   projectRole,
 }: {
   workspaceRole: WorkspaceRole | undefined;
-  projectRole: ProjectRole | undefined;
+  // null es el "no soy miembro activo" que trae ProjectResponseDto.myRole; undefined, el de un rol
+  // que aun no ha cargado. Para administrar dan lo mismo.
+  projectRole: ProjectRole | null | undefined;
 }): boolean {
   return isWorkspaceManager(workspaceRole) || isProjectManager(projectRole);
 }

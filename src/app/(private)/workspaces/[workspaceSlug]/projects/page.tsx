@@ -14,7 +14,6 @@ import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
-import { useProjectRole } from "@/hooks/use-project-role";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { useParams } from "next/navigation";
 import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
@@ -55,14 +54,13 @@ function ProjectRow({
     isLoading,
     isError,
   } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug: project.slug }));
-  const { role: myRole } = useProjectRole(workspaceSlug, project.slug);
   const toggleFavorite = useToggleProjectFavorite(workspaceSlug, project.slug);
 
   const owners = members?.filter((member) => member.role === "OWNER") ?? [];
   const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
   const remainingOwners = owners.length - visibleOwners.length;
 
-  const canManage = canManageProject({ workspaceRole, projectRole: myRole });
+  const canManage = canManageProject({ workspaceRole, projectRole: project.myRole });
 
   return (
     <TableRow>
