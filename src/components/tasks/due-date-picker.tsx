@@ -5,7 +5,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ICONS } from "@/lib/icons";
-import { cn, isOverdue } from "@/lib/utils";
+import { cn, isOverdue, parseDueDate, toDueDate } from "@/lib/utils";
 import { LocalizedCalendar } from "@/components/common/localized-calendar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -22,11 +22,13 @@ export function DueDatePicker({ value, onChange, id, className, variant = "defau
   const format = useFormatter();
   const [open, setOpen] = useState(false);
 
-  const date = value ? new Date(value) : undefined;
-  const overdue = !!date && isOverdue(date);
+  // El calendario trabaja en hora local, asi que el dia guardado se rearma como medianoche local
+  // para seleccionarlo y pintarlo, y al revertir vuelve a medianoche UTC.
+  const date = value ? parseDueDate(value) : undefined;
+  const overdue = !!value && isOverdue(value);
 
   function handleSelect(next: Date | undefined) {
-    onChange(next ? next.toISOString() : null);
+    onChange(next ? toDueDate(next) : null);
     setOpen(false);
   }
 

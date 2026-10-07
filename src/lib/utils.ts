@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
+import { startOfToday } from "date-fns"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -18,8 +19,26 @@ export function getFullName(firstName: string, lastName: string) {
   return `${firstName} ${lastName}`
 }
 
-export function isOverdue(date: string | Date) {
-  return new Date(date) < new Date()
+// `dueDate` es un dia de calendario, no un instante: viaja y se guarda como la medianoche UTC de ese
+// dia para que todo el mundo vea la misma fecha. Para pintarlo o pasarlo al calendario hay que
+// leerlo con los getters UTC y rearmarlo en local, porque interpretarlo como instante lo corre un
+// dia en cuanto la zona del visor no es UTC.
+export function parseDueDate(dueDate: string) {
+  const day = new Date(dueDate)
+
+  return new Date(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate())
+}
+
+// La inversa: el calendario devuelve la medianoche local del dia elegido y al backend va la
+// medianoche UTC de ese mismo dia.
+export function toDueDate(day: Date) {
+  return new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate())).toISOString()
+}
+
+// Vencida es "su dia limite ya paso", no "su instante ya paso": lo que vence hoy no esta vencido
+// hasta manana. Comparar instantes lo pintaba vencido desde las 00:00 del propio dia de vencimiento.
+export function isOverdue(dueDate: string) {
+  return parseDueDate(dueDate) < startOfToday()
 }
 
 // Solo se aceptan rutas internas: "//evil.com" y "https://evil.com" tambien son destinos validos

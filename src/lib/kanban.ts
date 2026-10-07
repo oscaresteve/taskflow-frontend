@@ -2,7 +2,7 @@ import { isThisWeek } from "date-fns";
 import { MoveTaskDto, TaskResponseDto, TaskStatus } from "@/lib/dtos/tasks.dto";
 import { taskStatuses } from "@/lib/schemas/task.schema";
 import { ALL_ASSIGNEES, DueDateFilter, PriorityFilter, UNASSIGNED } from "@/lib/task-enums";
-import { isOverdue } from "@/lib/utils";
+import { isOverdue, parseDueDate } from "@/lib/utils";
 
 export type BoardColumns = Record<TaskStatus, TaskResponseDto[]>;
 
@@ -110,7 +110,7 @@ function matchesDueDate(task: TaskResponseDto, dueDate: DueDateFilter): boolean 
   if (dueDate === "NONE") return task.dueDate === null;
   if (task.dueDate === null) return false;
   if (dueDate === "OVERDUE") return isOverdue(task.dueDate);
-  return isThisWeek(task.dueDate, { weekStartsOn: 1 });
+  return isThisWeek(parseDueDate(task.dueDate), { weekStartsOn: 1 });
 }
 
 // El tablero se trae completo (el drag-and-drop necesita el orden por rank de todas las tareas),

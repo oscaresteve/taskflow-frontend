@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { OverviewTaskDto } from "@/lib/dtos/overview.dto";
 import { getDueDateOption, priorityOptions, statusOptions } from "@/lib/task-enums";
 import { ICONS } from "@/lib/icons";
-import { getFullName, isOverdue } from "@/lib/utils";
+import { getFullName, isOverdue, parseDueDate } from "@/lib/utils";
 
 interface TaskItemProps {
   task: OverviewTaskDto;
@@ -62,7 +62,7 @@ export function TaskItem({ task, href, showProject }: TaskItemProps) {
             <TooltipTrigger render={<span className="flex" />}>
               <EnumIconBadge option={dueDateOption} />
             </TooltipTrigger>
-            <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(new Date(task.dueDate), "short")}`}</TooltipContent>
+            <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(parseDueDate(task.dueDate), "short")}`}</TooltipContent>
           </Tooltip>
         )}
 

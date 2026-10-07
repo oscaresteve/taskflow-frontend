@@ -22,7 +22,7 @@ import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queri
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { getTasksQuery } from "@/lib/queries/task.queries";
 import { getDueDateOption, priorityOptions, statusOptions } from "@/lib/task-enums";
-import { getFullName, isOverdue } from "@/lib/utils";
+import { getFullName, isOverdue, parseDueDate } from "@/lib/utils";
 
 const PAGE_SIZE = 8;
 
@@ -94,7 +94,7 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
                   <TooltipTrigger render={<span className="flex" />}>
                     <EnumIconBadge option={dueDateOption} />
                   </TooltipTrigger>
-                  <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(new Date(task.dueDate), "short")}`}</TooltipContent>
+                  <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(parseDueDate(task.dueDate), "short")}`}</TooltipContent>
                 </Tooltip>
               )}
             </span>
