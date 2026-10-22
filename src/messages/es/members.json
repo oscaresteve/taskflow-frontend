@@ -44,7 +44,7 @@
   },
   "memberPicker": {
     "defaultLabel": "Miembro",
-    "searchPlaceholder": "Buscar por nombre o correo electrónico",
+    "searchPlaceholder": "Buscar personas",
     "loadingMore": "Cargando…",
     "moreCandidates": "{count} más",
     "selectPersonError": "Selecciona una persona para añadir",
@@ -98,7 +98,7 @@
   },
   "addWorkspaceMemberDialog": {
     "title": "Añadir miembro",
-    "description": "Busca a una persona por nombre o correo electrónico. Se añadirá como pendiente hasta que un propietario o administrador la active.",
+    "description": "Busca a una persona. Se añadirá como pendiente hasta que un propietario o administrador la active.",
     "submitLabel": "Añadir miembro",
     "roleLabel": "Rol",
     "emptyMessage": "No se encontraron personas coincidentes.",

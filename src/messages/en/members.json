@@ -44,7 +44,7 @@
   },
   "memberPicker": {
     "defaultLabel": "Member",
-    "searchPlaceholder": "Search by name or email",
+    "searchPlaceholder": "Search people",
     "loadingMore": "Loading…",
     "moreCandidates": "{count} more",
     "selectPersonError": "Select a person to add",
@@ -98,7 +98,7 @@
   },
   "addWorkspaceMemberDialog": {
     "title": "Add member",
-    "description": "Search for a person by name or email. They'll be added as pending until an owner or admin activates them.",
+    "description": "Search for a person. They'll be added as pending until an owner or admin activates them.",
     "submitLabel": "Add member",
     "roleLabel": "Role",
     "emptyMessage": "No matching people found.",
