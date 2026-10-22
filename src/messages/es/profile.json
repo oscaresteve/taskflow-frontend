@@ -1,0 +1,33 @@
+{
+  "profilePage": {
+    "title": "Perfil"
+  },
+  "avatarSection": {
+    "title": "Avatar",
+    "description": "El avatar es opcional, pero muy recomendable.",
+    "footerHint": "PNG, JPEG o WebP. Máximo 5MB.",
+    "failedToLoad": "No se pudo cargar tu perfil.",
+    "actionsLabel": "Acciones del avatar",
+    "removeAction": "Quitar el avatar",
+    "removeDialogTitle": "¿Quitar el avatar?",
+    "removeDialogDescription": "Esto quitará tu avatar actual. Puedes subir uno nuevo cuando quieras."
+  },
+  "firstNameSection": {
+    "title": "Nombre",
+    "description": "Tu nombre de pila, el que aparece junto a tu actividad en TaskFlow.",
+    "saved": "Nombre actualizado"
+  },
+  "lastNameSection": {
+    "title": "Apellidos",
+    "description": "Tus apellidos, que aparecen justo después de tu nombre.",
+    "saved": "Apellidos actualizados"
+  },
+  "usernameSection": {
+    "title": "Nombre de usuario",
+    "description": "Con este nombre te mencionan en los comentarios. Cambiarlo no rompe las menciones que ya existen.",
+    "saved": "Nombre de usuario actualizado"
+  },
+  "errors": {
+    "generic": "Algo salió mal"
+  }
+}

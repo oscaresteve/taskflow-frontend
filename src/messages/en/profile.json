@@ -1,0 +1,33 @@
+{
+  "profilePage": {
+    "title": "Profile"
+  },
+  "avatarSection": {
+    "title": "Avatar",
+    "description": "An avatar is optional but strongly recommended.",
+    "footerHint": "PNG, JPEG or WebP. Max 5MB.",
+    "failedToLoad": "Failed to load your profile.",
+    "actionsLabel": "Avatar actions",
+    "removeAction": "Remove avatar",
+    "removeDialogTitle": "Remove avatar?",
+    "removeDialogDescription": "This will remove your current avatar. You can upload a new one anytime."
+  },
+  "firstNameSection": {
+    "title": "First name",
+    "description": "Your given name, shown next to your activity across TaskFlow.",
+    "saved": "First name updated"
+  },
+  "lastNameSection": {
+    "title": "Last name",
+    "description": "Your family name, shown right after your first name.",
+    "saved": "Last name updated"
+  },
+  "usernameSection": {
+    "title": "Username",
+    "description": "This is how people mention you in comments. Changing it does not break existing mentions.",
+    "saved": "Username updated"
+  },
+  "errors": {
+    "generic": "Something went wrong"
+  }
+}

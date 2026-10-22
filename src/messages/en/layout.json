@@ -7,6 +7,7 @@
   },
   "breadcrumb": {
     "mySpace": "My space",
+    "profile": "Profile",
     "preferences": "Preferences",
     "manageWorkspaces": "Manage workspaces",
     "settings": "Settings",
@@ -70,6 +71,7 @@
     "manageWorkspaces": "Manage workspaces"
   },
   "userNav": {
+    "profile": "Profile",
     "logOut": "Log out",
     "logOutConfirmTitle": "Log out",
     "logOutConfirmDescription": "Are you sure you want to log out? You'll need to sign in again to access your account.",

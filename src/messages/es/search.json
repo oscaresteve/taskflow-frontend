@@ -18,6 +18,7 @@
   "commands": {
     "mySpace": "Mi espacio",
     "manageWorkspaces": "Gestionar espacios",
+    "profile": "Perfil",
     "preferences": "Preferencias"
   }
 }

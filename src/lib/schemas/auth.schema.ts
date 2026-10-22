@@ -55,6 +55,8 @@ export const signInSchema = (t: Translator) =>
 export const updateMeSchema = (t: Translator) =>
   z
     .object({
+      firstName: z.string().trim().min(2, t("signUpSchema.firstNameMin")).max(100, t("signUpSchema.firstNameMax")).optional(),
+      lastName: z.string().trim().min(2, t("signUpSchema.lastNameMin")).max(100, t("signUpSchema.lastNameMax")).optional(),
       username: usernameSchema(t).optional(),
       locale: z.enum(locales, t("updateMeSchema.localeInvalid")).optional(),
       timezone: z.string().min(1, t("updateMeSchema.timezoneRequired")).optional(),

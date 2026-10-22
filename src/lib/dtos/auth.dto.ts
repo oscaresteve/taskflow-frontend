@@ -19,3 +19,8 @@ export interface UserResponseDto {
 export interface AuthResponseDto {
   user: UserResponseDto;
 }
+
+export type UserAvatarUploadUrlResponseDto = {
+  uploadUrl: string;
+  key: string;
+};

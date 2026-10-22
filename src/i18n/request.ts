@@ -7,6 +7,7 @@ import layoutEn from "@/messages/en/layout.json";
 import authEn from "@/messages/en/auth.json";
 import onboardingEn from "@/messages/en/onboarding.json";
 import mySpaceEn from "@/messages/en/my-space.json";
+import profileEn from "@/messages/en/profile.json";
 import preferencesEn from "@/messages/en/preferences.json";
 import workspacesEn from "@/messages/en/workspaces.json";
 import projectsEn from "@/messages/en/projects.json";
@@ -22,6 +23,7 @@ import layoutEs from "@/messages/es/layout.json";
 import authEs from "@/messages/es/auth.json";
 import onboardingEs from "@/messages/es/onboarding.json";
 import mySpaceEs from "@/messages/es/my-space.json";
+import profileEs from "@/messages/es/profile.json";
 import preferencesEs from "@/messages/es/preferences.json";
 import workspacesEs from "@/messages/es/workspaces.json";
 import projectsEs from "@/messages/es/projects.json";
@@ -39,6 +41,7 @@ const messagesByLocale = {
     auth: authEn,
     onboarding: onboardingEn,
     mySpace: mySpaceEn,
+    profile: profileEn,
     preferences: preferencesEn,
     workspaces: workspacesEn,
     projects: projectsEn,
@@ -55,6 +58,7 @@ const messagesByLocale = {
     auth: authEs,
     onboarding: onboardingEs,
     mySpace: mySpaceEs,
+    profile: profileEs,
     preferences: preferencesEs,
     workspaces: workspacesEs,
     projects: projectsEs,

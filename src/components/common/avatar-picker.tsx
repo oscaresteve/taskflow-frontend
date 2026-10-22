@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
-import { CustomAvatar } from "@/components/common/custom-avatar";
+import { CustomAvatar, type DicebearVariant } from "@/components/common/custom-avatar";
 import { toast } from "@/components/ui/toast";
 import { ICONS } from "@/lib/icons";
 
@@ -10,6 +10,7 @@ interface AvatarPickerProps {
   imageUrl: string | null;
   seed: string;
   alt: string;
+  variant?: DicebearVariant;
   acceptedMimeTypes: readonly string[];
   maxSizeBytes: number;
   isUploading?: boolean;
@@ -20,6 +21,7 @@ export function AvatarPicker({
   imageUrl,
   seed,
   alt,
+  variant,
   acceptedMimeTypes,
   maxSizeBytes,
   isUploading = false,
@@ -62,6 +64,7 @@ export function AvatarPicker({
           avatarUrl={imageUrl}
           alt={alt}
           seed={seed}
+          variant={variant}
         />
         {isUploading && (
           <div className="absolute inset-0 flex items-center justify-center rounded-full bg-background/60">

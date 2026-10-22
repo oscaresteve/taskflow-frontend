@@ -69,6 +69,7 @@ import {
   ChevronRightIcon,
   type LucideIcon,
   MessagesSquare,
+  UserRound,
 } from "lucide-react";
 
 export const ICONS = {
@@ -121,6 +122,7 @@ export const ICONS = {
   chevronUpDown: ChevronsUpDown,
   settings: Settings,
   preferences: Settings2,
+  profile: UserRound,
   members: Users,
   overview: LayoutDashboard,
   kanban: Kanban,

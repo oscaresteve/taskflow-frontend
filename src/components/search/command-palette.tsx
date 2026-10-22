@@ -201,6 +201,10 @@ export function CommandPalette() {
                       <ICONS.workspace />
                       {t("commands.manageWorkspaces")}
                     </CommandItem>
+                    <CommandItem value="go:profile" onSelect={() => go("/profile")}>
+                      <ICONS.profile />
+                      {t("commands.profile")}
+                    </CommandItem>
                     <CommandItem value="go:preferences" onSelect={() => go("/preferences")}>
                       <ICONS.preferences />
                       {t("commands.preferences")}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { ICONS } from "@/lib/icons";
@@ -95,6 +96,11 @@ export default function UserNav() {
                   </div>
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <ActionsMenuItem render={<Link href="/profile" />}>
+                <ICONS.profile />
+                {t("userNav.profile")}
+              </ActionsMenuItem>
               <DropdownMenuSeparator />
               <ActionsMenuItem onClick={() => setLogOutOpen(true)}>
                 <ICONS.logOut />

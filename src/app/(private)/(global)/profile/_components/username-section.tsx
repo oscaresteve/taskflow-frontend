@@ -14,7 +14,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 
 export function UsernameSection() {
-  const t = useTranslations("preferences");
+  const t = useTranslations("profile");
   const { data: user, isLoading } = useQuery(getMeQuery());
 
   if (isLoading || !user) {
@@ -31,7 +31,7 @@ export function UsernameSection() {
 }
 
 function UsernameEditor({ savedUsername }: { savedUsername: string }) {
-  const t = useTranslations("preferences");
+  const t = useTranslations("profile");
   const tCommon = useTranslations("common");
   const updateUsername = useUpdateUsername();
   const [username, setUsername] = useState(savedUsername);
