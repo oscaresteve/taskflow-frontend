@@ -108,3 +108,11 @@ export function removeWorkspaceMember({ workspaceSlug, userId }: { workspaceSlug
     method: "PATCH",
   });
 }
+
+// Salir por cuenta propia. Endpoint aparte de `removeWorkspaceMember` porque el del manager exige
+// permisos de gestion.
+export function leaveWorkspace({ workspaceSlug }: { workspaceSlug: string }) {
+  return request<void>(`/workspaces/${workspaceSlug}/members/me/leave`, {
+    method: "PATCH",
+  });
+}

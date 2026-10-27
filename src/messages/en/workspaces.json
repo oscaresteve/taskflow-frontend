@@ -63,7 +63,18 @@
   },
   "workspaceSettingsPage": {
     "title": "Settings",
+    "leftToast": "You left {name}.",
     "noPermission": "You don't have permission to view this page."
+  },
+  "leaveWorkspaceSection": {
+    "title": "Leave workspace",
+    "description": "You'll lose access to this workspace and to its projects.",
+    "actionLabel": "Leave",
+    "dialogTitle": "Leave <b>{name}</b>?",
+    "dialogDescription": "This will remove you from the workspace and its projects. You'll lose access immediately.",
+    "descriptionLastOwner": "You're the last owner of this workspace. Assign the owner role to someone else to be able to leave.",
+    "transferOwnershipLabel": "Assign owner",
+    "confirmLabel": "Leave"
   },
   "deactivateWorkspaceSection": {
     "title": "Deactivate workspace",

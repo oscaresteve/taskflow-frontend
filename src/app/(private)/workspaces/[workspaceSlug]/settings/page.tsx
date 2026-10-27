@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { DeactivateWorkspaceSection } from "./_components/deactivate-workspace-section";
+import { LeaveWorkspaceSection } from "./_components/leave-workspace-section";
 import { WorkspaceNameSection } from "./_components/workspace-name-section";
 import { WorkspaceDescriptionSection } from "./_components/workspace-description-section";
 import { WorkspaceAvatarSection } from "./_components/workspace-avatar-section";
@@ -26,17 +27,22 @@ export default function WorkspaceSettingsPage() {
     );
   }
 
-  if (!isWorkspaceManager(myRole)) {
-    return <p className="p-6 text-sm text-muted-foreground">{t("workspaceSettingsPage.noPermission")}</p>;
-  }
+  // La pagina ya no se cierra en bloque a quien no gestiona: salir del espacio es justo lo que un
+  // miembro raso necesita hacer aqui, asi que solo se condicionan las secciones de gestion.
+  const canManage = isWorkspaceManager(myRole);
 
   return (
     <PageContainer className="max-w-5xl">
       <PageHeader title={t("workspaceSettingsPage.title")} />
-      <WorkspaceNameSection />
-      <WorkspaceDescriptionSection />
-      <WorkspaceAvatarSection />
-      <DeactivateWorkspaceSection />
+      {canManage && (
+        <>
+          <WorkspaceNameSection />
+          <WorkspaceDescriptionSection />
+          <WorkspaceAvatarSection />
+        </>
+      )}
+      <LeaveWorkspaceSection />
+      {canManage && <DeactivateWorkspaceSection />}
     </PageContainer>
   );
 }

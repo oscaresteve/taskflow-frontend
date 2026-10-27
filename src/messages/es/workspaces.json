@@ -63,7 +63,18 @@
   },
   "workspaceSettingsPage": {
     "title": "Configuración",
+    "leftToast": "Has salido de {name}.",
     "noPermission": "No tienes permiso para ver esta página."
+  },
+  "leaveWorkspaceSection": {
+    "title": "Salir del espacio",
+    "description": "Perderás el acceso a este espacio y a sus proyectos.",
+    "actionLabel": "Salir",
+    "dialogTitle": "¿Salir de <b>{name}</b>?",
+    "dialogDescription": "Esto te sacará del espacio y de sus proyectos. Perderás el acceso de inmediato.",
+    "descriptionLastOwner": "Eres el último propietario de este espacio. Asigna el rol de propietario a otra persona para poder salir.",
+    "transferOwnershipLabel": "Asignar propietario",
+    "confirmLabel": "Salir"
   },
   "deactivateWorkspaceSection": {
     "title": "Desactivar espacio",
