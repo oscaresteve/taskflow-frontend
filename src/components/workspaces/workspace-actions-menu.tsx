@@ -77,12 +77,10 @@ export function WorkspaceActionsMenu({ workspace, canManage, triggerRender }: Wo
             <ICONS.members />
             {t("workspaceActionsMenu.members")}
           </ActionsMenuItem>
-          {canManage && (
-            <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
-              <ICONS.settings />
-              {t("workspaceActionsMenu.settings")}
-            </ActionsMenuItem>
-          )}
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
+            <ICONS.settings />
+            {t("workspaceActionsMenu.settings")}
+          </ActionsMenuItem>
           {canManage && (
             <>
               <DropdownMenuSeparator />

@@ -22,8 +22,6 @@ import { ICONS } from "@/lib/icons";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { isNavActive } from "@/lib/nav";
-import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
-import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { Separator } from "../ui/separator";
 import { useTranslations } from "next-intl";
 
@@ -31,7 +29,6 @@ export function WorkspaceSidebar() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const overviewHref = `/workspaces/${workspaceSlug}`;
-  const { role: myRole } = useWorkspaceRole(workspaceSlug);
   const t = useTranslations("layout");
 
   return (
@@ -82,18 +79,18 @@ export function WorkspaceSidebar() {
                   {t("workspaceSidebar.members")}
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              {isWorkspaceManager(myRole) && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}
-                    isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
-                    tooltip={t("workspaceSidebar.settings")}
-                  >
-                    <ICONS.settings />
-                    {t("workspaceSidebar.settings")}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
+              {/* Visible para cualquier miembro: ahi vive salir del espacio, y la propia pagina
+                  decide que secciones de gestion ensena segun el rol. */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  render={<Link href={`/workspaces/${workspaceSlug}/settings`} />}
+                  isActive={isNavActive(pathname, `/workspaces/${workspaceSlug}/settings`)}
+                  tooltip={t("workspaceSidebar.settings")}
+                >
+                  <ICONS.settings />
+                  {t("workspaceSidebar.settings")}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
