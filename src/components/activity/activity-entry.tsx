@@ -174,8 +174,13 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
           ),
         };
 
+      // Irse por cuenta propia y que te echen acaban en la misma accion, asi que lo que las
+      // distingue es que en una salida el actor y la persona del evento son la misma. La frase ya
+      // lleva el nombre del actor delante, asi que esa no necesita `name`.
       case "WORKSPACE_MEMBER_REMOVED":
-        return { text: t("actions.WORKSPACE_MEMBER_REMOVED", { name }) };
+        return event.target?.id === event.actor.id
+          ? { text: t("actions.WORKSPACE_MEMBER_REMOVED_SELF") }
+          : { text: t("actions.WORKSPACE_MEMBER_REMOVED", { name }) };
     }
   }
 
