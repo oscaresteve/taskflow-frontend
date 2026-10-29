@@ -4,15 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ICONS } from "@/lib/icons";
+import { ICONS, type Icon } from "@/lib/icons";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
-import { getWorkspaceMembersQuery } from "@/lib/queries/workspace-member.queries";
-import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
-import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { CustomAvatar } from "@/components/common/custom-avatar";
-import { UserPopup } from "@/components/common/user-popup";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { OwnersCell } from "@/components/members/owners-cell";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/common/search-input";
 import { PageSizeSelect } from "@/components/common/page-size-select";
@@ -24,25 +20,18 @@ import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-
 import { WorkspaceActionsMenu } from "@/components/workspaces/workspace-actions-menu";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
-import { getFullName } from "@/lib/utils";
-import { WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
-import { WorkspaceSortField } from "@/lib/workspace-enums";
+import { EmptyState } from "@/components/common/empty-state";
+import { WorkspaceListItemResponseDto } from "@/lib/dtos/workspaces.dto";
+import { WorkspaceLifecycle, WorkspaceSortField, workspaceLifecycles } from "@/lib/workspace-enums";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { useTabParam } from "@/hooks/use-tab-param";
 import { useWorkspacesTable } from "@/hooks/use-workspaces-table";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { useToggleWorkspaceFavorite } from "@/hooks/use-toggle-workspace-favorite";
 
-const MAX_VISIBLE_OWNERS = 4;
-
-function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
-  const { data: members, isLoading, isError } = useQuery(getWorkspaceMembersQuery(workspace.slug));
-  const { role: myRole } = useWorkspaceRole(workspace.slug);
+function ActiveWorkspaceRow({ workspace }: { workspace: WorkspaceListItemResponseDto }) {
   const toggleFavorite = useToggleWorkspaceFavorite(workspace.slug);
-
-  const owners = members?.filter((member) => member.role === "OWNER" && member.status === "ACTIVE") ?? [];
-  const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
-  const remainingOwners = owners.length - visibleOwners.length;
-
-  const canManage = isWorkspaceManager(myRole);
 
   return (
     <TableRow>
@@ -60,45 +49,31 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
       </TableCell>
       <TableCell className="text-muted-foreground">{workspace.slug}</TableCell>
       <TableCell>
-        {isError ? (
-          <span className="text-sm text-muted-foreground">—</span>
-        ) : isLoading || !members ? (
-          <Skeleton className="h-6 w-16" />
-        ) : owners.length === 0 ? (
-          <span className="text-sm text-muted-foreground">—</span>
-        ) : (
-          <AvatarGroup>
-            {visibleOwners.map((owner) => {
-              const ownerName = getFullName(owner.user.firstName, owner.user.lastName);
-              return (
-                <Tooltip key={owner.id}>
-                  <UserPopup
-                    userId={owner.user.id}
-                    render={
-                      <TooltipTrigger
-                        render={
-                          <CustomAvatar
-                            size="sm"
-                            avatarUrl={owner.user.avatarUrl}
-                            alt={ownerName}
-                            seed={owner.user.id}
-                            variant="glyphs"
-                            className="cursor-pointer ring-2 ring-background"
-                          />
-                        }
-                      />
-                    }
-                  />
-                  <TooltipContent>{ownerName}</TooltipContent>
-                </Tooltip>
-              );
-            })}
-            {remainingOwners > 0 && <AvatarGroupCount>+{remainingOwners}</AvatarGroupCount>}
-          </AvatarGroup>
-        )}
+        <OwnersCell owners={workspace.owners} />
       </TableCell>
       <TableCell>
-        <WorkspaceActionsMenu workspace={workspace} canManage={canManage} />
+        <WorkspaceActionsMenu workspace={workspace} canManage={isWorkspaceManager(workspace.myRole)} />
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function InactiveWorkspaceRow({ workspace }: { workspace: WorkspaceListItemResponseDto }) {
+  return (
+    <TableRow>
+      <TableCell className="w-px" />
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <CustomAvatar size="sm" avatarUrl={workspace.avatarUrl} alt={workspace.name} seed={workspace.id} />
+          <span className="truncate font-medium text-muted-foreground">{workspace.name}</span>
+        </div>
+      </TableCell>
+      <TableCell className="text-muted-foreground">{workspace.slug}</TableCell>
+      <TableCell>
+        <OwnersCell owners={workspace.owners} />
+      </TableCell>
+      <TableCell>
+        <WorkspaceActionsMenu workspace={workspace} canManage={isWorkspaceManager(workspace.myRole)} />
       </TableCell>
     </TableRow>
   );
@@ -107,6 +82,10 @@ function WorkspaceRow({ workspace }: { workspace: WorkspaceResponseDto }) {
 export default function WorkspacesPage() {
   const t = useTranslations("workspaces");
   const [createOpen, setCreateOpen] = useState(false);
+  const LIFECYCLE_TABS: { value: WorkspaceLifecycle; label: string; icon: Icon }[] = [
+    { value: "ACTIVE", label: t("workspacesPage.lifecycle.active"), icon: ICONS.workspace },
+    { value: "INACTIVE", label: t("workspacesPage.lifecycle.inactive"), icon: ICONS.deactivate },
+  ];
   const sortOptions: { value: WorkspaceSortField; label: string }[] = [
     { value: "name", label: t("workspacesPage.sort.name") },
     { value: "createdAt", label: t("workspacesPage.sort.createdAt") },
@@ -127,15 +106,31 @@ export default function WorkspacesPage() {
     onLimitChange,
     onPageChange,
   } = useWorkspacesTable();
+  const { tab, onTabChange } = useTabParam(workspaceLifecycles, "ACTIVE");
+
+  const showingInactive = tab === "INACTIVE";
 
   const {
     data: workspaces,
     isLoading,
     isError,
   } = useQuery({
-    ...getWorkspacesQuery({ page, search: searchParam, limit, sort, order }),
+    ...getWorkspacesQuery({ page, search: searchParam, limit, sort, order, isActive: !showingInactive }),
     placeholderData: keepPreviousData,
   });
+
+  // Un contador por pestana, igual que en miembros: la propia busqueda los acota, para que el numero
+  // cuadre con lo que la tabla ensena debajo.
+  const activeCountQuery = useQuery(
+    getWorkspacesQuery({ page: 1, limit: 1, search: searchParam, isActive: true }),
+  );
+  const inactiveCountQuery = useQuery(
+    getWorkspacesQuery({ page: 1, limit: 1, search: searchParam, isActive: false }),
+  );
+  const countQueryByTab = {
+    ACTIVE: activeCountQuery,
+    INACTIVE: inactiveCountQuery,
+  };
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("workspacesPage.failedToLoad")}</p>;
@@ -166,47 +161,80 @@ export default function WorkspacesPage() {
         }
       />
 
-      <div className="flex items-center justify-between gap-2">
-        <SearchInput
-          value={search}
-          onChange={onSearchChange}
-          placeholder={t("workspacesPage.searchPlaceholder")}
-          className="w-48"
-        />
-        <div className="flex items-center gap-1">
-          <SortControls
-            field={sort}
-            order={order}
-            options={sortOptions}
-            onFieldChange={onSortFieldChange}
-            onOrderChange={onSortOrderChange}
-          />
-          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
+      <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as WorkspaceLifecycle)}>
+        <div className="border-b">
+          <TabsList variant="line">
+            {LIFECYCLE_TABS.map((lifecycleTab) => {
+              const total = countQueryByTab[lifecycleTab.value].data?.pagination.total;
+              return (
+                <TabsTrigger key={lifecycleTab.value} value={lifecycleTab.value}>
+                  <lifecycleTab.icon />
+                  {lifecycleTab.label}
+                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
         </div>
-      </div>
 
-      {workspaces.data.length > 0 && (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead />
-              <TableHead>{t("workspacesPage.columns.workspace")}</TableHead>
-              <TableHead>{t("workspacesPage.columns.slug")}</TableHead>
-              <TableHead>{t("workspacesPage.columns.owners")}</TableHead>
-              <TableHead>{t("workspacesPage.columns.actions")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {workspaces.data.map((workspace) => (
-              <WorkspaceRow key={workspace.id} workspace={workspace} />
-            ))}
-          </TableBody>
-        </Table>
-      )}
+        <div className="flex items-center justify-between gap-2">
+          <SearchInput
+            value={search}
+            onChange={onSearchChange}
+            placeholder={t("workspacesPage.searchPlaceholder")}
+            className="w-48"
+          />
+          <div className="flex items-center gap-1">
+            <SortControls
+              field={sort}
+              order={order}
+              options={sortOptions}
+              onFieldChange={onSortFieldChange}
+              onOrderChange={onSortOrderChange}
+            />
+            <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
+          </div>
+        </div>
 
-      {workspaces.data.length > 0 && (
-        <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
-      )}
+        {LIFECYCLE_TABS.map((lifecycleTab) => (
+          <TabsContent key={lifecycleTab.value} value={lifecycleTab.value} className="flex flex-col gap-4">
+            {workspaces.data.length === 0 && (
+              <EmptyState
+                icon={ICONS.workspace}
+                title={t("workspacesPage.noWorkspacesFound")}
+                description={t("workspacesPage.noWorkspacesFoundDescription")}
+              />
+            )}
+
+            {workspaces.data.length > 0 && (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead />
+                    <TableHead>{t("workspacesPage.columns.workspace")}</TableHead>
+                    <TableHead>{t("workspacesPage.columns.slug")}</TableHead>
+                    <TableHead>{t("workspacesPage.columns.owners")}</TableHead>
+                    <TableHead>{t("workspacesPage.columns.actions")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {workspaces.data.map((workspace) =>
+                    showingInactive ? (
+                      <InactiveWorkspaceRow key={workspace.id} workspace={workspace} />
+                    ) : (
+                      <ActiveWorkspaceRow key={workspace.id} workspace={workspace} />
+                    ),
+                  )}
+                </TableBody>
+              </Table>
+            )}
+
+            {workspaces.data.length > 0 && (
+              <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
 
       <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
     </PageContainer>

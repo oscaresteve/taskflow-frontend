@@ -2,6 +2,7 @@ import {
   Trash2,
   Archive,
   ShieldMinus,
+  ShieldCheck,
   UserX,
   LogOut,
   CalendarIcon,
@@ -77,6 +78,7 @@ export const ICONS = {
   delete: Trash2,
   archive: Archive,
   deactivate: ShieldMinus,
+  reactivate: ShieldCheck,
   removeMember: UserX,
   logOut: LogOut,
 

@@ -12,8 +12,13 @@
     "title": "Manage workspaces",
     "newWorkspace": "New workspace",
     "searchPlaceholder": "Search workspaces",
+    "lifecycle": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "failedToLoad": "Failed to load workspaces.",
     "noWorkspacesFound": "No workspaces found.",
+    "noWorkspacesFoundDescription": "Nothing matches this tab and search.",
     "columns": {
       "workspace": "Workspace",
       "slug": "Slug",
@@ -33,8 +38,13 @@
     "settings": "Settings",
     "deactivate": "Deactivate",
     "deactivateTitle": "Deactivate <b>{name}</b>?",
-    "deactivateDescription": "This will deactivate the workspace and hide it from all members. This action cannot be undone from the app.",
-    "deactivateConfirmLabel": "Deactivate"
+    "deactivateDescription": "This will deactivate the workspace and hide it from all members. You can bring it back from the workspaces list, filtering by inactive.",
+    "deactivateConfirmLabel": "Deactivate",
+    "reactivate": "Reactivate",
+    "reactivateTitle": "Reactivate <b>{name}</b>?",
+    "reactivateDescription": "The workspace and everything in it become reachable again for its members. Its projects come back exactly as they were, archived ones included.",
+    "reactivateConfirmLabel": "Reactivate",
+    "reactivatedToast": "{name} is active again."
   },
   "workspacePage": {
     "failedToLoad": "Failed to load the workspace overview.",
@@ -81,7 +91,7 @@
     "description": "This workspace will no longer be accessible to members.",
     "actionLabel": "Deactivate",
     "dialogTitle": "Deactivate <b>{name}</b>?",
-    "dialogDescription": "This will deactivate the workspace and hide it from all members. This action cannot be undone from the app.",
+    "dialogDescription": "This will deactivate the workspace and hide it from all members. You can bring it back from the workspaces list, filtering by inactive.",
     "confirmLabel": "Deactivate"
   },
   "workspaceAvatarSection": {

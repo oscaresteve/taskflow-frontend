@@ -24,15 +24,16 @@ export const getWorkspacesInfiniteQuery = ({
     getNextPageParam,
   });
 
-// Active only. Omitting `isActive` relies on the backend's own default filter (active-only) rather
-// than fetching everything and filtering client-side — used by the sidebar nav, workspace switcher,
-// and the "manage workspaces" page. Inactive workspaces 404 on every workspace-scoped endpoint (the
-// backend treats isActive as a soft delete), so nothing in the frontend surfaces them until a
-// reactivate flow exists.
+// Only the "manage workspaces" page passes `isActive`, because it is the one that offers to
+// reactivate. Omitting it leans on the backend's own default filter (active-only), which is what
+// the sidebar nav, the workspace switcher and every other consumer want: a deactivated workspace
+// still 404s on everything but its own reactivate route, so surfacing it anywhere else would lead
+// nowhere.
 export const getWorkspacesQuery = ({
   page,
   limit,
   search,
+  isActive,
   isFavorite,
   sort,
   order,
@@ -40,13 +41,14 @@ export const getWorkspacesQuery = ({
   page?: number;
   limit?: number;
   search?: string;
+  isActive?: boolean;
   isFavorite?: boolean;
   sort?: WorkspaceSortField;
   order?: SortOrder;
 } = {}) =>
   queryOptions({
-    queryKey: workspaceKeys.lists({ page, limit, search, isFavorite, sort, order }),
-    queryFn: () => getWorkspaces({ page, limit, search, isFavorite, sort, order }),
+    queryKey: workspaceKeys.lists({ page, limit, search, isActive, isFavorite, sort, order }),
+    queryFn: () => getWorkspaces({ page, limit, search, isActive, isFavorite, sort, order }),
   });
 
 export const getWorkspaceQuery = (workspaceSlug: string) =>

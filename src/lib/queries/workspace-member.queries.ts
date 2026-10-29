@@ -1,5 +1,5 @@
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from "@tanstack/react-query";
-import { getAllWorkspaceMembers, getMyWorkspaceMember, getWorkspaceMembers } from "@/lib/api/workspace-members.api";
+import { getMyWorkspaceMember, getWorkspaceMembers } from "@/lib/api/workspace-members.api";
 import { workspaceMemberKeys } from "@/lib/query-keys/workspace-member.keys";
 import { dedupeInfinitePages, getNextPageParam } from "@/lib/queries/pagination";
 import { WorkspaceMemberStatus, WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
@@ -10,13 +10,6 @@ export const getMyWorkspaceMemberQuery = (workspaceSlug: string) =>
   queryOptions({
     queryKey: workspaceMemberKeys.me(workspaceSlug),
     queryFn: () => getMyWorkspaceMember({ workspaceSlug }),
-    enabled: !!workspaceSlug,
-  });
-
-export const getWorkspaceMembersQuery = (workspaceSlug: string) =>
-  queryOptions({
-    queryKey: workspaceMemberKeys.lists(workspaceSlug),
-    queryFn: () => getAllWorkspaceMembers({ workspaceSlug, status: ["ACTIVE", "PENDING", "REMOVED"] }),
     enabled: !!workspaceSlug,
   });
 

@@ -1,7 +1,11 @@
 import { request } from "@/lib/http/client";
 import { buildQueryString } from "@/lib/http/query-string";
 import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
-import { WorkspaceAvatarUploadUrlResponseDto, WorkspaceResponseDto } from "@/lib/dtos/workspaces.dto";
+import {
+  WorkspaceAvatarUploadUrlResponseDto,
+  WorkspaceListItemResponseDto,
+  WorkspaceResponseDto,
+} from "@/lib/dtos/workspaces.dto";
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../schemas/workspace.schema";
 import { WorkspaceSortField } from "../workspace-enums";
 
@@ -24,7 +28,7 @@ export function getWorkspaces({
 } = {}) {
   const queryString = buildQueryString({ page, limit, isActive, isFavorite, search, sort, order });
 
-  return request<PaginatedResponseDto<WorkspaceResponseDto>>(`/workspaces${queryString}`, {
+  return request<PaginatedResponseDto<WorkspaceListItemResponseDto>>(`/workspaces${queryString}`, {
     method: "GET",
   });
 }
@@ -51,6 +55,13 @@ export function updateWorkspace({ workspaceSlug, data }: { workspaceSlug: string
 
 export function deactivateWorkspace(workspaceSlug: string) {
   return request<void>(`/workspaces/${workspaceSlug}/deactivate`, {
+    method: "PATCH",
+  });
+}
+
+// La unica ruta que resuelve un espacio desactivado: el resto sigue respondiendo 404 mientras lo este.
+export function reactivateWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/reactivate`, {
     method: "PATCH",
   });
 }

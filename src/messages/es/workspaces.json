@@ -12,8 +12,13 @@
     "title": "Gestionar espacios",
     "newWorkspace": "Nuevo espacio",
     "searchPlaceholder": "Buscar espacios",
+    "lifecycle": {
+      "active": "Activos",
+      "inactive": "Inactivos"
+    },
     "failedToLoad": "No se pudieron cargar los espacios.",
     "noWorkspacesFound": "No se encontraron espacios.",
+    "noWorkspacesFoundDescription": "Nada coincide con esta pestaña y esta búsqueda.",
     "columns": {
       "workspace": "Espacio",
       "slug": "Slug",
@@ -33,8 +38,13 @@
     "settings": "Configuración",
     "deactivate": "Desactivar",
     "deactivateTitle": "¿Desactivar <b>{name}</b>?",
-    "deactivateDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
-    "deactivateConfirmLabel": "Desactivar"
+    "deactivateDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de espacios, filtrando por inactivos.",
+    "deactivateConfirmLabel": "Desactivar",
+    "reactivate": "Reactivar",
+    "reactivateTitle": "¿Reactivar <b>{name}</b>?",
+    "reactivateDescription": "El espacio y todo lo que contiene vuelven a estar accesibles para sus miembros. Sus proyectos vuelven tal y como estaban, incluidos los archivados.",
+    "reactivateConfirmLabel": "Reactivar",
+    "reactivatedToast": "{name} vuelve a estar activo."
   },
   "workspacePage": {
     "failedToLoad": "No se pudo cargar el resumen del espacio.",
@@ -81,7 +91,7 @@
     "description": "Este espacio dejará de estar accesible para los miembros.",
     "actionLabel": "Desactivar",
     "dialogTitle": "¿Desactivar <b>{name}</b>?",
-    "dialogDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app.",
+    "dialogDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de espacios, filtrando por inactivos.",
     "confirmLabel": "Desactivar"
   },
   "workspaceAvatarSection": {
