@@ -47,13 +47,36 @@ export function assignableWorkspaceRoles(actorRole: WorkspaceRole | undefined): 
   return ASSIGNABLE_ROLES_BY_ROLE[actorRole];
 }
 
+// Activar es solo aceptar una invitacion pendiente; a quien ya fue eliminado se le restaura.
 export function canActivateWorkspaceMember({
   actorRole,
   targetRole,
+  targetStatus,
 }: {
   actorRole: WorkspaceRole | undefined;
   targetRole: WorkspaceRole;
+  targetStatus: WorkspaceMemberStatus;
 }): boolean {
+  if (targetStatus !== "PENDING") return false;
+  return canManageWorkspaceMember({ actorRole, targetRole });
+}
+
+// Y al reves: solo se restaura a quien fue eliminado.
+export function canRestoreWorkspaceMember({
+  actorUserId,
+  actorRole,
+  targetUserId,
+  targetRole,
+  targetStatus,
+}: {
+  actorUserId: string | undefined;
+  actorRole: WorkspaceRole | undefined;
+  targetUserId: string;
+  targetRole: WorkspaceRole;
+  targetStatus: WorkspaceMemberStatus;
+}): boolean {
+  if (!actorUserId || actorUserId === targetUserId) return false;
+  if (targetStatus !== "REMOVED") return false;
   return canManageWorkspaceMember({ actorRole, targetRole });
 }
 

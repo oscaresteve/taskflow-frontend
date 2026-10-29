@@ -51,6 +51,7 @@ import {
   Bell,
   CircleMinusIcon,
   UserCheck,
+  UserRoundCheck,
   UserCog,
   UserPlus,
   CircleDashedIcon,
@@ -156,6 +157,7 @@ export const ICONS = {
   memberPending: ClockIcon,
   memberInactive: CircleMinusIcon,
   memberActivate: UserCheck,
+  memberRestore: UserRoundCheck,
   memberChangeRole: UserCog,
   memberAdd: UserPlus,
 

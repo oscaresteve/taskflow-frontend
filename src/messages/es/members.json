@@ -75,7 +75,14 @@
     "changeRoleConfirmLabel": "Cambiar",
     "activateMemberTitle": "¿Activar a <b>{name}</b>?",
     "activateMemberDescription": "Esto activará al miembro. Tendrá acceso inmediato al espacio.",
-    "activateConfirmLabel": "Activar"
+    "activateConfirmLabel": "Activar",
+    "restore": "Restaurar",
+    "restoredToast": "{name} vuelve a estar en el espacio.",
+    "restoreMemberTitle": "¿Readmitir a {name}?",
+    "restoreMemberDescription": "Volverá a tener acceso al espacio. Sus pertenencias a proyectos se quedan como están, así que cada proyecto tiene que volver a darle acceso por su cuenta.",
+    "restoreRoleLabel": "Rol en el espacio",
+    "restoreRoleDescription": "Al eliminar a un miembro se pierde su rol anterior, así que elige con cuál vuelve.",
+    "restoreConfirmLabel": "Restaurar"
   },
   "projectMembersPage": {
     "title": "Miembros",

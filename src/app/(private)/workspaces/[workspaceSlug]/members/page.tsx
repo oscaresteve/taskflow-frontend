@@ -21,6 +21,8 @@ import { WorkspaceMembersPanel } from "./_components/workspace-members-panel";
 import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-member";
 import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
 import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
+import { useRestoreWorkspaceMember } from "@/hooks/use-restore-workspace-member";
+import { RestoreMemberDialog } from "@/components/members/restore-member-dialog";
 import { ApiError } from "@/lib/http/api-error";
 import {
   WorkspaceMemberStatus,
@@ -32,6 +34,7 @@ import {
   assignableWorkspaceRoles,
   canActivateWorkspaceMember,
   canRemoveWorkspaceMember,
+  canRestoreWorkspaceMember,
   canUpdateWorkspaceMemberRole,
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
@@ -53,11 +56,14 @@ export default function WorkspaceMembersPage() {
   const activateWorkspaceMember = useActivateWorkspaceMember(workspaceSlug);
   const updateWorkspaceMember = useUpdateWorkspaceMember(workspaceSlug);
   const removeWorkspaceMember = useRemoveWorkspaceMember(workspaceSlug);
+  const restoreWorkspaceMember = useRestoreWorkspaceMember(workspaceSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
   const [activateDialogOpen, setActivateDialogOpen] = useState(false);
   const [memberToActivate, setMemberToActivate] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
+  const [restoreDialogOpen, setRestoreDialogOpen] = useState(false);
+  const [memberToRestore, setMemberToRestore] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
   const [roleChangeDialogOpen, setRoleChangeDialogOpen] = useState(false);
   const [pendingRoleChange, setPendingRoleChange] = useState<{
     member: WorkspaceMemberWithUserResponseDto;
@@ -109,6 +115,30 @@ export default function WorkspaceMembersPage() {
       },
       onError: reportError,
     });
+  }
+
+  function handleRequestRestore(member: WorkspaceMemberWithUserResponseDto) {
+    setMemberToRestore(member);
+    setRestoreDialogOpen(true);
+  }
+
+  function handleConfirmRestore(role: WorkspaceRole) {
+    if (!memberToRestore) return;
+    restoreWorkspaceMember.mutate(
+      { userId: memberToRestore.userId, data: { role } },
+      {
+        onSuccess: () => {
+          setRestoreDialogOpen(false);
+          toast.add({
+            type: "success",
+            description: t("workspaceMembersPage.restoredToast", {
+              name: getFullName(memberToRestore.user.firstName, memberToRestore.user.lastName),
+            }),
+          });
+        },
+        onError: reportError,
+      },
+    );
   }
 
   function handleRequestRemove(member: WorkspaceMemberWithUserResponseDto) {
@@ -170,8 +200,18 @@ export default function WorkspaceMembersPage() {
   }
 
   function renderActions(member: WorkspaceMemberWithUserResponseDto) {
-    const activatable =
-      member.status === "PENDING" && canActivateWorkspaceMember({ actorRole: myRole, targetRole: member.role });
+    const activatable = canActivateWorkspaceMember({
+      actorRole: myRole,
+      targetRole: member.role,
+      targetStatus: member.status,
+    });
+    const restorable = canRestoreWorkspaceMember({
+      actorUserId: me?.id,
+      actorRole: myRole,
+      targetUserId: member.userId,
+      targetRole: member.role,
+      targetStatus: member.status,
+    });
     const removable = canRemoveWorkspaceMember({
       actorUserId: me?.id,
       actorRole: myRole,
@@ -180,7 +220,7 @@ export default function WorkspaceMembersPage() {
       targetStatus: member.status,
     });
 
-    if (!activatable && !removable) return null;
+    if (!activatable && !restorable && !removable) return null;
 
     return (
       <>
@@ -188,6 +228,12 @@ export default function WorkspaceMembersPage() {
           <ActionsMenuItem onClick={() => handleRequestActivate(member)}>
             <ICONS.memberActivate />
             {t("workspaceMembersPage.activate")}
+          </ActionsMenuItem>
+        )}
+        {restorable && (
+          <ActionsMenuItem onClick={() => handleRequestRestore(member)}>
+            <ICONS.memberRestore />
+            {t("workspaceMembersPage.restore")}
           </ActionsMenuItem>
         )}
         {activatable && removable && <DropdownMenuSeparator />}
@@ -294,6 +340,21 @@ export default function WorkspaceMembersPage() {
         onConfirm={handleConfirmActivate}
         pending={activateWorkspaceMember.isPending}
         Icon={ICONS.memberActivate}
+      />
+      <RestoreMemberDialog
+        open={restoreDialogOpen}
+        onOpenChange={setRestoreDialogOpen}
+        title={t("workspaceMembersPage.restoreMemberTitle", {
+          name: memberToRestore ? getFullName(memberToRestore.user.firstName, memberToRestore.user.lastName) : "",
+        })}
+        description={t("workspaceMembersPage.restoreMemberDescription")}
+        roleLabel={t("workspaceMembersPage.restoreRoleLabel")}
+        roleDescription={t("workspaceMembersPage.restoreRoleDescription")}
+        submitLabel={t("workspaceMembersPage.restoreConfirmLabel")}
+        formId="restore-workspace-member-form"
+        assignableRoles={assignableRoles}
+        pending={restoreWorkspaceMember.isPending}
+        onConfirm={handleConfirmRestore}
       />
     </PageContainer>
   );

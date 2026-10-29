@@ -7,7 +7,11 @@ import {
   WorkspaceMemberWithUserResponseDto,
   WorkspaceRole,
 } from "@/lib/dtos/workspace-members.dto";
-import { CreateWorkspaceMemberDto, UpdateWorkspaceMemberDto } from "../schemas/workspace-member.schema";
+import {
+  CreateWorkspaceMemberDto,
+  RestoreWorkspaceMemberDto,
+  UpdateWorkspaceMemberDto,
+} from "../schemas/workspace-member.schema";
 import { MemberSortField } from "../member-enums";
 
 export function getWorkspaceMembers({
@@ -106,6 +110,23 @@ export function updateWorkspaceMember({
 export function removeWorkspaceMember({ workspaceSlug, userId }: { workspaceSlug: string; userId: string }) {
   return request<void>(`/workspaces/${workspaceSlug}/members/${userId}/remove`, {
     method: "PATCH",
+  });
+}
+
+// La vuelta de `removeWorkspaceMember`, no de `activateWorkspaceMember`: ese sigue siendo solo para
+// aceptar una invitacion pendiente.
+export function restoreWorkspaceMember({
+  workspaceSlug,
+  userId,
+  data,
+}: {
+  workspaceSlug: string;
+  userId: string;
+  data: RestoreWorkspaceMemberDto;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/members/${userId}/restore`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
   });
 }
 

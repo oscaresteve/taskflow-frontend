@@ -75,7 +75,14 @@
     "changeRoleConfirmLabel": "Change",
     "activateMemberTitle": "Activate <b>{name}</b>?",
     "activateMemberDescription": "This will activate the member. They'll get immediate access to the workspace.",
-    "activateConfirmLabel": "Activate"
+    "activateConfirmLabel": "Activate",
+    "restore": "Restore",
+    "restoredToast": "{name} is back in the workspace.",
+    "restoreMemberTitle": "Bring {name} back?",
+    "restoreMemberDescription": "They'll get access to the workspace again. Their project memberships stay as they are, so each project has to add them back on its own.",
+    "restoreRoleLabel": "Role in the workspace",
+    "restoreRoleDescription": "Removing a member clears their old role, so pick the one they come back with.",
+    "restoreConfirmLabel": "Restore"
   },
   "projectMembersPage": {
     "title": "Members",
