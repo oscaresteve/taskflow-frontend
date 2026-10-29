@@ -8,36 +8,69 @@ import { SearchInput } from "@/components/common/search-input";
 import { SortControls } from "@/components/common/sort-controls";
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table";
 
-import { ICONS } from "@/lib/icons";
+import { ICONS, type Icon } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
+import { ProjectListItemResponseDto } from "@/lib/dtos/projects.dto";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { useParams } from "next/navigation";
-import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
 import { canManageProject } from "@/lib/permissions/project-member-permissions";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import Link from "next/link";
-import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
-import { CustomAvatar } from "@/components/common/custom-avatar";
-import { UserPopup } from "@/components/common/user-popup";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { OwnersCell } from "@/components/members/owners-cell";
 import { ColorDot } from "@/components/ui/color-dot";
-import { getFullName } from "@/lib/utils";
 import { getProjectsQuery } from "@/lib/queries/project.queries";
 import { CreateProjectDialog } from "@/components/projects/create-project-dialog";
 import { ProjectActionsMenu } from "@/components/projects/project-actions-menu";
 import { EmptyState } from "@/components/common/empty-state";
 import { useFormatter, useTranslations } from "next-intl";
-import { ProjectSortField } from "@/lib/project-enums";
+import { ProjectLifecycle, ProjectSortField, projectLifecycles } from "@/lib/project-enums";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { useTabParam } from "@/hooks/use-tab-param";
 import useProjectsTable from "@/hooks/use-projects-table";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 
-const MAX_VISIBLE_OWNERS = 4;
+function ArchivedProjectRow({
+  workspaceSlug,
+  workspaceRole,
+  project,
+}: {
+  workspaceSlug: string;
+  workspaceRole: WorkspaceRole | undefined;
+  project: ProjectListItemResponseDto;
+}) {
+  const format = useFormatter();
+
+  return (
+    <TableRow>
+      <TableCell className="w-px" />
+      <TableCell>
+        <div className="flex items-center gap-2">
+          <ColorDot color={project.color} className="size-3" />
+          <span className="truncate font-medium text-muted-foreground">{project.name}</span>
+        </div>
+      </TableCell>
+      <TableCell className="text-muted-foreground">{project.slug}</TableCell>
+      <TableCell className="text-muted-foreground">{project.key}</TableCell>
+      <TableCell>
+        <OwnersCell owners={project.owners} />
+      </TableCell>
+      <TableCell className="text-muted-foreground">{format.dateTime(new Date(project.createdAt), "short")}</TableCell>
+      <TableCell>
+        <ProjectActionsMenu
+          workspaceSlug={workspaceSlug}
+          project={project}
+          canManage={canManageProject({ workspaceRole, projectRole: project.myRole })}
+        />
+      </TableCell>
+    </TableRow>
+  );
+}
 
 function ProjectRow({
   workspaceSlug,
@@ -46,19 +79,10 @@ function ProjectRow({
 }: {
   workspaceSlug: string;
   workspaceRole: WorkspaceRole | undefined;
-  project: ProjectResponseDto;
+  project: ProjectListItemResponseDto;
 }) {
   const format = useFormatter();
-  const {
-    data: members,
-    isLoading,
-    isError,
-  } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug: project.slug }));
   const toggleFavorite = useToggleProjectFavorite(workspaceSlug, project.slug);
-
-  const owners = members?.filter((member) => member.role === "OWNER") ?? [];
-  const visibleOwners = owners.slice(0, MAX_VISIBLE_OWNERS);
-  const remainingOwners = owners.length - visibleOwners.length;
 
   const canManage = canManageProject({ workspaceRole, projectRole: project.myRole });
 
@@ -76,42 +100,7 @@ function ProjectRow({
       <TableCell className="text-muted-foreground">{project.slug}</TableCell>
       <TableCell className="text-muted-foreground">{project.key}</TableCell>
       <TableCell>
-        {isError ? (
-          <span className="text-sm text-muted-foreground">—</span>
-        ) : isLoading || !members ? (
-          <Skeleton className="h-6 w-16" />
-        ) : owners.length === 0 ? (
-          <span className="text-sm text-muted-foreground">—</span>
-        ) : (
-          <AvatarGroup>
-            {visibleOwners.map((owner) => {
-              const ownerName = getFullName(owner.user.firstName, owner.user.lastName);
-              return (
-                <Tooltip key={owner.id}>
-                  <UserPopup
-                    userId={owner.user.id}
-                    render={
-                      <TooltipTrigger
-                        render={
-                          <CustomAvatar
-                            size="sm"
-                            avatarUrl={owner.user.avatarUrl}
-                            alt={ownerName}
-                            seed={owner.user.id}
-                            variant="glyphs"
-                            className="cursor-pointer ring-2 ring-background"
-                          />
-                        }
-                      />
-                    }
-                  />
-                  <TooltipContent>{ownerName}</TooltipContent>
-                </Tooltip>
-              );
-            })}
-            {remainingOwners > 0 && <AvatarGroupCount>+{remainingOwners}</AvatarGroupCount>}
-          </AvatarGroup>
-        )}
+        <OwnersCell owners={project.owners} />
       </TableCell>
       <TableCell className="text-muted-foreground">{format.dateTime(new Date(project.createdAt), "short")}</TableCell>
       <TableCell>
@@ -141,15 +130,42 @@ export default function ProjectsPage() {
     onLimitChange,
     onPageChange,
   } = useProjectsTable();
+  const { tab, onTabChange } = useTabParam(projectLifecycles, "ACTIVE");
+
+  const showingArchived = tab === "ARCHIVED";
+
+  const LIFECYCLE_TABS: { value: ProjectLifecycle; label: string; icon: Icon }[] = [
+    { value: "ACTIVE", label: t("projectsPage.lifecycle.active"), icon: ICONS.project },
+    { value: "ARCHIVED", label: t("projectsPage.lifecycle.archived"), icon: ICONS.archive },
+  ];
 
   const {
     data: projects,
     isLoading,
     isError,
   } = useQuery({
-    ...getProjectsQuery(workspaceSlug, { page, search: searchParam, limit, sort, order }),
+    ...getProjectsQuery(workspaceSlug, {
+      page,
+      search: searchParam,
+      limit,
+      sort,
+      order,
+      isArchived: showingArchived,
+    }),
     placeholderData: keepPreviousData,
   });
+
+  // Un contador por pestana, igual que en miembros, acotado por la misma busqueda que la tabla.
+  const activeCountQuery = useQuery(
+    getProjectsQuery(workspaceSlug, { page: 1, limit: 1, search: searchParam, isArchived: false }),
+  );
+  const archivedCountQuery = useQuery(
+    getProjectsQuery(workspaceSlug, { page: 1, limit: 1, search: searchParam, isArchived: true }),
+  );
+  const countQueryByTab = {
+    ACTIVE: activeCountQuery,
+    ARCHIVED: archivedCountQuery,
+  };
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("projectsPage.failedToLoad")}</p>;
@@ -174,7 +190,7 @@ export default function ProjectsPage() {
     { value: "updatedAt", label: t("projectsPage.sortOptions.updatedAt") },
   ];
 
-  const hasActiveFilters = !!search;
+  const hasActiveFilters = !!search || showingArchived;
 
   const emptyState = hasActiveFilters ? (
     <EmptyState
@@ -212,56 +228,86 @@ export default function ProjectsPage() {
         }
       />
 
-      <div className="flex items-center justify-between gap-2">
-        <SearchInput
-          value={search}
-          onChange={onSearchChange}
-          placeholder={t("projectsPage.searchPlaceholder")}
-          className="w-48"
-        />
-        <div className="flex items-center gap-1">
-          <SortControls
-            field={sort}
-            order={order}
-            options={sortOptions}
-            onFieldChange={onSortFieldChange}
-            onOrderChange={onSortOrderChange}
-          />
-          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
+      <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as ProjectLifecycle)}>
+        <div className="border-b">
+          <TabsList variant="line">
+            {LIFECYCLE_TABS.map((lifecycleTab) => {
+              const total = countQueryByTab[lifecycleTab.value].data?.pagination.total;
+              return (
+                <TabsTrigger key={lifecycleTab.value} value={lifecycleTab.value}>
+                  <lifecycleTab.icon />
+                  {lifecycleTab.label}
+                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
         </div>
-      </div>
 
-      {projects.data.length === 0 ? (
-        emptyState
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead />
-              <TableHead>{t("projectsPage.columns.project")}</TableHead>
-              <TableHead>{t("projectsPage.columns.slug")}</TableHead>
-              <TableHead>{t("projectsPage.columns.key")}</TableHead>
-              <TableHead>{t("projectsPage.columns.owners")}</TableHead>
-              <TableHead>{t("projectsPage.columns.createdAt")}</TableHead>
-              <TableHead>{t("projectsPage.columns.actions")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {projects.data.map((project) => (
-              <ProjectRow
-                key={project.id}
-                workspaceSlug={workspaceSlug}
-                workspaceRole={myWorkspaceRole}
-                project={project}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      )}
+        <div className="flex items-center justify-between gap-2">
+          <SearchInput
+            value={search}
+            onChange={onSearchChange}
+            placeholder={t("projectsPage.searchPlaceholder")}
+            className="w-48"
+          />
+          <div className="flex items-center gap-1">
+            <SortControls
+              field={sort}
+              order={order}
+              options={sortOptions}
+              onFieldChange={onSortFieldChange}
+              onOrderChange={onSortOrderChange}
+            />
+            <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
+          </div>
+        </div>
 
-      {projects.data.length > 0 && (
-        <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
-      )}
+        {LIFECYCLE_TABS.map((lifecycleTab) => (
+          <TabsContent key={lifecycleTab.value} value={lifecycleTab.value} className="flex flex-col gap-4">
+            {projects.data.length === 0 ? (
+              emptyState
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead />
+                    <TableHead>{t("projectsPage.columns.project")}</TableHead>
+                    <TableHead>{t("projectsPage.columns.slug")}</TableHead>
+                    <TableHead>{t("projectsPage.columns.key")}</TableHead>
+                    <TableHead>{t("projectsPage.columns.owners")}</TableHead>
+                    <TableHead>{t("projectsPage.columns.createdAt")}</TableHead>
+                    <TableHead>{t("projectsPage.columns.actions")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {projects.data.map((project) =>
+                    showingArchived ? (
+                      <ArchivedProjectRow
+                        key={project.id}
+                        workspaceSlug={workspaceSlug}
+                        workspaceRole={myWorkspaceRole}
+                        project={project}
+                      />
+                    ) : (
+                      <ProjectRow
+                        key={project.id}
+                        workspaceSlug={workspaceSlug}
+                        workspaceRole={myWorkspaceRole}
+                        project={project}
+                      />
+                    ),
+                  )}
+                </TableBody>
+              </Table>
+            )}
+
+            {projects.data.length > 0 && (
+              <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
 
       <CreateProjectDialog open={createOpen} workspaceSlug={workspaceSlug} onOpenChange={setCreateOpen} />
     </PageContainer>

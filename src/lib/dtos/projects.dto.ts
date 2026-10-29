@@ -1,4 +1,5 @@
 import { ProjectRole } from "./project-members.dto";
+import { UserSummaryResponseDto } from "./users.dto";
 
 export type ProjectResponseDto = {
   id: string;
@@ -19,4 +20,10 @@ export type ProjectResponseDto = {
 
   createdAt: string;
   updatedAt: string;
+};
+
+// La fila del listado de gestion, igual que en espacios: de un proyecto archivado el listado de
+// miembros responde 404, asi que sus responsables vienen con la fila.
+export type ProjectListItemResponseDto = ProjectResponseDto & {
+  owners: UserSummaryResponseDto[];
 };

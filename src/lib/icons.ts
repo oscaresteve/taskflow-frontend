@@ -1,6 +1,7 @@
 import {
   Trash2,
   Archive,
+  ArchiveRestore,
   ShieldMinus,
   ShieldCheck,
   UserX,
@@ -77,6 +78,7 @@ export const ICONS = {
   // Acciones destructivas / ciclo de vida
   delete: Trash2,
   archive: Archive,
+  unarchive: ArchiveRestore,
   deactivate: ShieldMinus,
   reactivate: ShieldCheck,
   removeMember: UserX,

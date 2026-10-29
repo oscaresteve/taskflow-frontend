@@ -1,5 +1,5 @@
 import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
-import { ProjectResponseDto } from "@/lib/dtos/projects.dto";
+import { ProjectListItemResponseDto, ProjectResponseDto } from "@/lib/dtos/projects.dto";
 import { request } from "@/lib/http/client";
 import { buildQueryString } from "@/lib/http/query-string";
 import { CreateProjectDto, UpdateProjectDto } from "@/lib/schemas/project.schema";
@@ -26,9 +26,10 @@ export function getProjects({
 }) {
   const queryString = buildQueryString({ page, limit, isArchived, isFavorite, search, sort, order });
 
-  return request<PaginatedResponseDto<ProjectResponseDto>>(`/workspaces/${workspaceSlug}/projects${queryString}`, {
-    method: "GET",
-  });
+  return request<PaginatedResponseDto<ProjectListItemResponseDto>>(
+    `/workspaces/${workspaceSlug}/projects${queryString}`,
+    { method: "GET" },
+  );
 }
 
 export function createProject({ workspaceSlug, data }: { workspaceSlug: string; data: CreateProjectDto }) {
@@ -61,6 +62,13 @@ export function updateProject({
 
 export function archiveProject({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
   return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/archive`, {
+    method: "PATCH",
+  });
+}
+
+// La unica ruta que resuelve un proyecto archivado, y exige que su espacio este activo.
+export function unarchiveProject({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/unarchive`, {
     method: "PATCH",
   });
 }

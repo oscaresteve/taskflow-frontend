@@ -16,6 +16,10 @@
     "title": "Gestionar proyectos",
     "newProject": "Nuevo proyecto",
     "searchPlaceholder": "Buscar proyectos",
+    "lifecycle": {
+      "active": "Activos",
+      "archived": "Archivados"
+    },
     "failedToLoad": "No se pudieron cargar los proyectos.",
     "noProjectsFound": "No se encontraron proyectos.",
     "noProjectsFoundDescription": "Prueba con otra búsqueda.",
@@ -42,7 +46,11 @@
     "settings": "Configuración",
     "archive": "Archivar",
     "confirmTitle": "¿Archivar <b>{projectName}</b>?",
-    "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app."
+    "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de proyectos, filtrando por archivados.",
+    "unarchive": "Desarchivar",
+    "unarchiveTitle": "¿Desarchivar <b>{projectName}</b>?",
+    "unarchiveDescription": "El proyecto y sus tareas vuelven a estar accesibles para sus miembros.",
+    "unarchivedToast": "{name} vuelve a estar disponible."
   },
   "projectNotFound": {
     "title": "Proyecto no encontrado",
@@ -77,7 +85,7 @@
     "description": "Este proyecto dejará de estar accesible para los miembros.",
     "archive": "Archivar",
     "confirmTitle": "¿Archivar <b>{projectName}</b>?",
-    "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Esta acción no se puede deshacer desde la app."
+    "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de proyectos, filtrando por archivados."
   },
   "projectColorSection": {
     "title": "Color",

@@ -16,6 +16,10 @@
     "title": "Manage projects",
     "newProject": "New project",
     "searchPlaceholder": "Search projects",
+    "lifecycle": {
+      "active": "Active",
+      "archived": "Archived"
+    },
     "failedToLoad": "Failed to load projects.",
     "noProjectsFound": "No projects found.",
     "noProjectsFoundDescription": "Try a different search.",
@@ -42,7 +46,11 @@
     "settings": "Settings",
     "archive": "Archive",
     "confirmTitle": "Archive <b>{projectName}</b>?",
-    "confirmDescription": "This will archive the project and hide it from all members. This action cannot be undone from the app."
+    "confirmDescription": "This will archive the project and hide it from all members. You can bring it back from the projects list, filtering by archived.",
+    "unarchive": "Unarchive",
+    "unarchiveTitle": "Unarchive <b>{projectName}</b>?",
+    "unarchiveDescription": "The project and its tasks become reachable again for its members.",
+    "unarchivedToast": "{name} is back."
   },
   "projectNotFound": {
     "title": "Project not found",
@@ -77,7 +85,7 @@
     "description": "This project will no longer be accessible to members.",
     "archive": "Archive",
     "confirmTitle": "Archive <b>{projectName}</b>?",
-    "confirmDescription": "This will archive the project and hide it from all members. This action cannot be undone from the app."
+    "confirmDescription": "This will archive the project and hide it from all members. You can bring it back from the projects list, filtering by archived."
   },
   "projectColorSection": {
     "title": "Color",
