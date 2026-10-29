@@ -37,7 +37,8 @@ import {
 } from "@/lib/permissions/workspace-member-permissions";
 import { Badge } from "@/components/ui/badge";
 import { EnumBadge } from "@/components/common/enum-display";
-import { roleOptions } from "@/lib/member-enums";
+import { roleOptions, workspaceMemberStatusTabs } from "@/lib/member-enums";
+import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function WorkspaceMembersPage() {
   const t = useTranslations("members");
@@ -62,7 +63,7 @@ export default function WorkspaceMembersPage() {
     member: WorkspaceMemberWithUserResponseDto;
     role: WorkspaceRole;
   } | null>(null);
-  const [statusTab, setStatusTab] = useState<WorkspaceMemberStatus>("ACTIVE");
+  const { tab: statusTab, onTabChange } = useTabParam(workspaceMemberStatusTabs, "ACTIVE");
 
   const activeCountQuery = useQuery(
     getWorkspaceMembersPageQuery({ workspaceSlug, status: ["ACTIVE"], page: 1, limit: 1 }),
@@ -214,7 +215,7 @@ export default function WorkspaceMembersPage() {
         }
       />
 
-      <Tabs value={statusTab} onValueChange={(value) => setStatusTab(value as WorkspaceMemberStatus)}>
+      <Tabs value={statusTab} onValueChange={(value) => onTabChange(value as WorkspaceMemberStatus)}>
         <div className="border-b">
           <TabsList variant="line">
             {STATUS_TABS.map((tab) => {

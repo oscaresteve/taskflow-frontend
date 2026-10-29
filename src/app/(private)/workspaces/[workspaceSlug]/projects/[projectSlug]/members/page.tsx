@@ -22,6 +22,7 @@ import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
 import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
 import { ApiError } from "@/lib/http/api-error";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
+import type { ProjectMemberStatusTab } from "@/lib/member-enums";
 import { getFullName } from "@/lib/utils";
 import {
   assignableProjectRoles,
@@ -31,13 +32,12 @@ import {
 } from "@/lib/permissions/project-member-permissions";
 import { Badge } from "@/components/ui/badge";
 import { EnumBadge } from "@/components/common/enum-display";
-import { roleOptions } from "@/lib/member-enums";
-
-type StatusTab = "ACTIVE" | "INACTIVE";
+import { projectMemberStatusTabs, roleOptions } from "@/lib/member-enums";
+import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function ProjectMembersPage() {
   const t = useTranslations("members");
-  const STATUS_TABS: { value: StatusTab; label: string; icon: Icon }[] = [
+  const STATUS_TABS: { value: ProjectMemberStatusTab; label: string; icon: Icon }[] = [
     { value: "ACTIVE", label: t("projectMembersPage.tabActive"), icon: ICONS.memberActive },
     { value: "INACTIVE", label: t("projectMembersPage.tabInactive"), icon: ICONS.memberInactive },
   ];
@@ -55,7 +55,7 @@ export default function ProjectMembersPage() {
     member: ProjectMemberWithUserResponseDto;
     role: ProjectRole;
   } | null>(null);
-  const [statusTab, setStatusTab] = useState<StatusTab>("ACTIVE");
+  const { tab: statusTab, onTabChange } = useTabParam(projectMemberStatusTabs, "ACTIVE");
 
   const activeCountQuery = useQuery(
     getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [true], page: 1, limit: 1 }),
@@ -169,7 +169,7 @@ export default function ProjectMembersPage() {
         }
       />
 
-      <Tabs value={statusTab} onValueChange={(value) => setStatusTab(value as StatusTab)}>
+      <Tabs value={statusTab} onValueChange={(value) => onTabChange(value as ProjectMemberStatusTab)}>
         <div className="border-b">
           <TabsList variant="line">
             {STATUS_TABS.map((tab) => {

@@ -38,3 +38,11 @@ export const roleFilterOptions: Record<RoleFilter, EnumOption> = {
 
 export const memberSortFields = ["joinedAt", "createdAt", "updatedAt"] as const;
 export type MemberSortField = (typeof memberSortFields)[number];
+
+// Las pestanas por estado de los dos listados de miembros. Viven aqui, y no en el DTO, porque lo que
+// necesitan las pestanas es una lista recorrible y un parser de nuqs, no solo el tipo.
+export const workspaceMemberStatusTabs = ["ACTIVE", "PENDING", "REMOVED"] as const;
+
+// En proyecto la pertenencia es un booleano, no un enum, asi que su pestana es solo activo/inactivo.
+export const projectMemberStatusTabs = ["ACTIVE", "INACTIVE"] as const;
+export type ProjectMemberStatusTab = (typeof projectMemberStatusTabs)[number];
