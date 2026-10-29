@@ -27,12 +27,14 @@ function invalidateForActivity(queryClient: QueryClient, event: ActivityNewMessa
     case "TASK_ASSIGNEE_CHANGED":
     case "TASK_DUE_DATE_CHANGED":
     case "TASK_ARCHIVED":
+    case "TASK_UNARCHIVED":
       queryClient.invalidateQueries({ queryKey: taskKeys.all });
       return;
 
     case "COMMENT_CREATED":
     case "COMMENT_EDITED":
     case "COMMENT_DELETED":
+    case "COMMENT_RESTORED":
     case "COMMENT_MENTIONED":
       queryClient.invalidateQueries({ queryKey: commentKeys.all });
       return;
@@ -40,12 +42,14 @@ function invalidateForActivity(queryClient: QueryClient, event: ActivityNewMessa
     case "PROJECT_CREATED":
     case "PROJECT_UPDATED":
     case "PROJECT_ARCHIVED":
+    case "PROJECT_UNARCHIVED":
       queryClient.invalidateQueries({ queryKey: projectKeys.all });
       return;
 
     case "PROJECT_MEMBER_ADDED":
     case "PROJECT_MEMBER_ROLE_CHANGED":
     case "PROJECT_MEMBER_DEACTIVATED":
+    case "PROJECT_MEMBER_ACTIVATED":
       queryClient.invalidateQueries({ queryKey: projectMemberKeys.all });
       return;
 

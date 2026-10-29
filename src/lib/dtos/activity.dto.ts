@@ -50,28 +50,34 @@ export type ActivityPayloadMap = {
   TASK_ASSIGNEE_CHANGED: TaskRef & { from: string | null; to: string | null };
   TASK_DUE_DATE_CHANGED: TaskRef & { from: string | null; to: string | null };
   TASK_ARCHIVED: TaskRef;
+  TASK_UNARCHIVED: TaskRef;
 
   COMMENT_CREATED: CommentRef;
   COMMENT_EDITED: CommentRef;
   COMMENT_DELETED: CommentRef;
+  COMMENT_RESTORED: CommentRef;
   COMMENT_MENTIONED: CommentRef;
 
   PROJECT_CREATED: ProjectRef;
   PROJECT_UPDATED: ProjectRef & { fields: ProjectEditedField[] };
   PROJECT_ARCHIVED: ProjectRef;
+  PROJECT_UNARCHIVED: ProjectRef;
 
   PROJECT_MEMBER_ADDED: MemberRef & { role: ProjectRole };
   PROJECT_MEMBER_ROLE_CHANGED: MemberRef & { from: ProjectRole; to: ProjectRole };
   PROJECT_MEMBER_DEACTIVATED: MemberRef;
+  PROJECT_MEMBER_ACTIVATED: MemberRef & { role: ProjectRole };
 
   WORKSPACE_CREATED: WorkspaceRef;
   WORKSPACE_UPDATED: WorkspaceRef & { fields: WorkspaceEditedField[] };
   WORKSPACE_DEACTIVATED: WorkspaceRef;
+  WORKSPACE_REACTIVATED: WorkspaceRef;
 
   WORKSPACE_MEMBER_INVITED: MemberRef & { role: WorkspaceRole };
   WORKSPACE_MEMBER_ACTIVATED: MemberRef;
   WORKSPACE_MEMBER_ROLE_CHANGED: MemberRef & { from: WorkspaceRole; to: WorkspaceRole };
   WORKSPACE_MEMBER_REMOVED: MemberRef;
+  WORKSPACE_MEMBER_RESTORED: MemberRef & { role: WorkspaceRole };
 };
 
 export type ActivityAction = keyof ActivityPayloadMap;

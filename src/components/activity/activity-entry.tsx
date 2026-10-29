@@ -22,9 +22,11 @@ export function getTaskRef(event: ActivityEventResponseDto): { taskNumber: numbe
     case "TASK_ASSIGNEE_CHANGED":
     case "TASK_DUE_DATE_CHANGED":
     case "TASK_ARCHIVED":
+    case "TASK_UNARCHIVED":
     case "COMMENT_CREATED":
     case "COMMENT_EDITED":
     case "COMMENT_DELETED":
+    case "COMMENT_RESTORED":
     case "COMMENT_MENTIONED":
       return { taskNumber: event.payload.taskNumber, taskTitle: event.payload.taskTitle };
     default:
@@ -112,6 +114,9 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
       case "TASK_ARCHIVED":
         return { text: t("actions.TASK_ARCHIVED") };
 
+      case "TASK_UNARCHIVED":
+        return { text: t("actions.TASK_UNARCHIVED") };
+
       case "COMMENT_CREATED":
         return { text: t("actions.COMMENT_CREATED") };
 
@@ -120,6 +125,9 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
 
       case "COMMENT_DELETED":
         return { text: t("actions.COMMENT_DELETED") };
+
+      case "COMMENT_RESTORED":
+        return { text: t("actions.COMMENT_RESTORED") };
 
       // El payload lleva la lista de mencionados y no un targetUserId, asi que no hay persona
       // resuelta que interpolar: la frase no nombra a nadie.
@@ -134,6 +142,9 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
 
       case "PROJECT_ARCHIVED":
         return { text: t("actions.PROJECT_ARCHIVED", { name: event.payload.projectName }) };
+
+      case "PROJECT_UNARCHIVED":
+        return { text: t("actions.PROJECT_UNARCHIVED", { name: event.payload.projectName }) };
 
       case "PROJECT_MEMBER_ADDED":
         return { text: t("actions.PROJECT_MEMBER_ADDED", { name }) };
@@ -150,6 +161,14 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
       case "PROJECT_MEMBER_DEACTIVATED":
         return { text: t("actions.PROJECT_MEMBER_DEACTIVATED", { name }) };
 
+      // Vuelve con el rol que haya elegido quien lo reactiva, asi que la insignia lo cuenta igual
+      // que en un cambio de rol.
+      case "PROJECT_MEMBER_ACTIVATED":
+        return {
+          text: t("actions.PROJECT_MEMBER_ACTIVATED", { name }),
+          detail: <EnumBadge option={roleOptions[event.payload.role]} />,
+        };
+
       case "WORKSPACE_CREATED":
         return { text: t("actions.WORKSPACE_CREATED", { name: event.payload.workspaceName }) };
 
@@ -158,6 +177,9 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
 
       case "WORKSPACE_DEACTIVATED":
         return { text: t("actions.WORKSPACE_DEACTIVATED") };
+
+      case "WORKSPACE_REACTIVATED":
+        return { text: t("actions.WORKSPACE_REACTIVATED") };
 
       case "WORKSPACE_MEMBER_INVITED":
         return { text: t("actions.WORKSPACE_MEMBER_INVITED", { name }) };
@@ -181,6 +203,12 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
         return event.target?.id === event.actor.id
           ? { text: t("actions.WORKSPACE_MEMBER_REMOVED_SELF") }
           : { text: t("actions.WORKSPACE_MEMBER_REMOVED", { name }) };
+
+      case "WORKSPACE_MEMBER_RESTORED":
+        return {
+          text: t("actions.WORKSPACE_MEMBER_RESTORED", { name }),
+          detail: <EnumBadge option={roleOptions[event.payload.role]} />,
+        };
     }
   }
 
