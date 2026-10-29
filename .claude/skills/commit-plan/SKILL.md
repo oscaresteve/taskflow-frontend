@@ -1,24 +1,55 @@
 ---
 name: commit-plan
-description: Plan how to split the current uncommitted work into commits and write each message in Conventional Commits. Use after finishing an implementation, when the user asks how to split/group commits, for a commit message, or invokes /commit-plan. Read-only — it answers with text and never runs a git write command.
+description: Split the current uncommitted work into commits, write each message in Conventional Commits, and make the commits. Use after finishing an implementation, when the user asks how to split/group commits, for a commit message, or invokes /commit-plan. Plans without committing when the user asks for the plan only.
 ---
 
 # Commit plan
 
 Read the pending work, group it into the smallest set of commits that each stand
-on their own, and answer with the file list and the finished message for each
-one. The user runs the commands; this skill only writes the plan.
+on their own, write each message, and **make the commits**. Plan without
+committing only when the user asks for that.
 
-## Hard rule: no git writes, ever
+## Make the commits, unless the user asks for the plan only
 
-Allowed: `git status`, `git diff`, `git diff --stat`, `git log`, `git show`,
-`git stash list`, `git blame`, and reading files.
+Committing is the default. Hold back and answer with the commands instead when
+the user says so in any form — "just the plan", "don't commit", "give me the
+commands", "show me first" — and when they said it earlier in the conversation,
+which still counts.
 
-Never run — not even when asked mid-task, not "just to check": `add`, `commit`,
-`restore`, `checkout`, `switch`, `reset`, `stash push/pop`, `rm`, `mv`, `apply`,
-`rebase`, `cherry-pick`, `push`, `tag`, `clean`, `branch`, or any command that
-opens a PR. If the user asks for the commit to be made, say this skill only
-plans and hand them the commands to paste.
+Stay inside staging and committing: `add`, `apply --cached`, `commit`, and
+`checkout -b` when the branch has to be created. **Never** run `push`, `tag`, or
+anything that opens a PR; never `reset`, `restore`, `checkout <path>`, `rebase`,
+`cherry-pick`, `stash`, `clean`, or any other command that can lose work the user
+has not committed yet. Those stay the user's call even when committing does not.
+
+- **Never commit on the default branch.** If `git branch --show-current` is the
+  default one, create a branch first and say which.
+- **Never amend or reword what is already committed**, in this session or before.
+- If something is already staged when you start, say so and fold it into the
+  grouping instead of committing it blind.
+- **Do not run the test suite between commits.** Ordering the commits so each one
+  could be the tip is the grouping's job, not something to re-verify a dozen
+  times.
+- A command that fails stops the run: report where it stopped, leave the index as
+  it is, and hand over the rest of the sequence. Never "fix" it with a reset.
+
+### Staging half a file
+
+`git add -p` is interactive and cannot be driven here. When a file holds two
+reasons to change, stage the half that belongs to this commit as a patch:
+
+```bash
+git diff -- path/to/file.ts > <scratch>/half.patch   # cut it down to the hunks you want
+git apply --cached --recount <scratch>/half.patch
+```
+
+Write the patch to your scratchpad directory, never into the repository.
+
+`--recount` is what lets you delete lines from the patch without fixing the hunk
+headers by hand. For an untracked file, `git add -N <file>` first so it has a diff
+to cut. If a split is too tangled to do this way, commit everything else and hand
+that one file to the user with the hunks named — never lump two reasons together
+just to finish the run.
 
 ## Gathering
 
@@ -80,9 +111,9 @@ the branch: it builds, tests pass, nothing references something that lands later
 Do not invent commits to look tidy. If the work is genuinely one change, say so
 and give one commit.
 
-**When one file holds two unrelated changes**, say so explicitly, name the
-function or line range for each side, and point the user at `git add -p` — do not
-pretend the file can only go in one commit.
+**When one file holds two unrelated changes**, split it — see "Staging half a
+file" above, or `git add -p` in the sequence you hand over when planning only.
+Never pretend the file can only go in one commit.
 
 ## Message format
 
@@ -162,12 +193,39 @@ now required — and keep it to the facts a caller has to act on.
 
 ## Answer shape
 
-For each commit, in the order they should be made: a heading with the number and
-the subject, the file list (paths, one per line, with `(new)` / `(deleted)` where
-it applies), then the full message in a fenced block ready to copy, body and
-footer included when they apply.
+**After committing**, answer with the commits that landed, newest last, one line
+each: the short hash and the subject. Then, and only when there is something, the
+few lines of what the user has to decide or do by hand — a file you could not
+split, a type that is arguable, a branch you had to create. Nothing else: no
+summary of the implementation, no diffstat, no next steps.
 
-Close with anything the user has to decide: a file that needs `git add -p`, a
-commit whose type is arguable, a change that looks unfinished. Keep it to a few
-lines. Nothing else — no summary of the implementation, no next steps, no offer
-to run the commands.
+**When planning only**, answer with **one fenced `bash` block per repository**
+holding the whole sequence ready to paste, in the order the commits should be
+made. No headings per commit, no file list beside the block, no message quoted
+twice: the paths live in the `git add` and the message lives in the `git commit`.
+
+```bash
+# 1
+git add src/foo.ts src/foo.test.ts
+git commit -m "fix(foo): stop the retry loop swallowing the last error" -m "The body, when the commit earns one, wrapped at 72 columns exactly as it
+should land."
+
+# 2 — add -p: keep only the hunk that renames the column
+git add -p src/bar.ts
+git commit -m "refactor(bar): rename the column to match the DTO"
+```
+
+- `git commit -m "<subject>" -m "<body>"` — two `-m` flags, because git puts the
+  blank line between them. One `-m` when there is no body.
+- Number each commit in a comment, and put on that same line what the user has to
+  do by hand: which hunks to keep for a `git add -p`, or `git add -e` when the
+  hunk has no interior context line to split on (an append at end of file).
+- Quote any path containing parentheses or brackets, or the shell eats it:
+  `git add "src/app/(private)/workspaces/[slug]/page.tsx"`.
+- Add a `git checkout -b <name>` first line only when the current branch is the
+  default one.
+
+Close with anything the user has to decide: a commit whose type is arguable, a
+change that looks unfinished, a trailer convention the log is split on. Keep it to
+a few lines. Nothing else — no summary of the implementation, no next steps, no
+offer to run the commands.
