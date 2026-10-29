@@ -99,6 +99,13 @@
     "deactivateMemberTitle": "¿Desactivar a <b>{name}</b>?",
     "deactivateMemberDescription": "Esto desactivará al miembro en este proyecto. Perderá el acceso de inmediato.",
     "deactivateConfirmLabel": "Desactivar",
+    "activate": "Activar",
+    "activatedToast": "{name} vuelve a estar en este proyecto.",
+    "activateMemberTitle": "¿Devolver a {name} a este proyecto?",
+    "activateMemberDescription": "Volverá a tener acceso al proyecto. Para que funcione tiene que seguir siendo miembro activo del espacio.",
+    "activateRoleLabel": "Rol en el proyecto",
+    "activateRoleDescription": "Al desactivar a un miembro se pierde su rol anterior, así que elige con cuál vuelve.",
+    "activateConfirmLabel": "Activar",
     "changeRoleTitle": "¿Cambiar el rol de <b>{name}</b>?",
     "changeRoleDescription": "Tendrá acceso de <role></role> a este proyecto.",
     "changeRoleConfirmLabel": "Cambiar"

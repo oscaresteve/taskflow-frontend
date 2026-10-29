@@ -102,6 +102,29 @@ export function canUpdateProjectMemberRole({
   return canManageProjectMember({ workspaceRole, actorRole, targetRole });
 }
 
+// La vuelta de canDeactivateProjectMember: solo se reactiva a quien esta inactivo. No se replica
+// aqui el "y sigue activo en el espacio" que exige el endpoint: el panel del proyecto no tiene ese
+// dato, y una UI mas estricta que la API esconderia una accion que si es legitima.
+export function canActivateProjectMember({
+  actorUserId,
+  workspaceRole,
+  actorRole,
+  targetUserId,
+  targetRole,
+  targetIsActive,
+}: {
+  actorUserId: string | undefined;
+  workspaceRole: WorkspaceRole | undefined;
+  actorRole: ProjectRole | undefined;
+  targetUserId: string;
+  targetRole: ProjectRole;
+  targetIsActive: boolean;
+}): boolean {
+  if (!actorUserId || actorUserId === targetUserId) return false;
+  if (targetIsActive) return false;
+  return canManageProjectMember({ workspaceRole, actorRole, targetRole });
+}
+
 // Un manager no puede desactivarse a si mismo, ni desactivar a alguien ya inactivo.
 export function canDeactivateProjectMember({
   actorUserId,

@@ -2,7 +2,11 @@ import { PaginatedResponseDto, SortOrder } from "../dtos/pagination.dto";
 import { ProjectMemberResponseDto, ProjectMemberWithUserResponseDto, ProjectRole } from "../dtos/project-members.dto";
 import { request } from "../http/client";
 import { buildQueryString } from "../http/query-string";
-import { CreateProjectMemberDto, UpdateProjectMemberDto } from "../schemas/project-member.schema";
+import {
+  ActivateProjectMemberDto,
+  CreateProjectMemberDto,
+  UpdateProjectMemberDto,
+} from "../schemas/project-member.schema";
 import { MemberSortField } from "../member-enums";
 
 export function getProjectMembers({
@@ -107,6 +111,24 @@ export function updateProjectMember({
   data: UpdateProjectMemberDto;
 }) {
   return request<ProjectMemberResponseDto>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/members/${userId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+// La vuelta de `deactivateProjectMember`.
+export function activateProjectMember({
+  workspaceSlug,
+  projectSlug,
+  userId,
+  data,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  userId: string;
+  data: ActivateProjectMemberDto;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/members/${userId}/activate`, {
     method: "PATCH",
     body: JSON.stringify(data),
   });

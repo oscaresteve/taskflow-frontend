@@ -99,6 +99,13 @@
     "deactivateMemberTitle": "Deactivate <b>{name}</b>?",
     "deactivateMemberDescription": "This will deactivate the member on this project. They'll lose access to it immediately.",
     "deactivateConfirmLabel": "Deactivate",
+    "activate": "Activate",
+    "activatedToast": "{name} is back on this project.",
+    "activateMemberTitle": "Bring {name} back to this project?",
+    "activateMemberDescription": "They'll get access to the project again. They have to be an active workspace member for this to work.",
+    "activateRoleLabel": "Role in the project",
+    "activateRoleDescription": "Deactivating a member clears their old role, so pick the one they come back with.",
+    "activateConfirmLabel": "Activate",
     "changeRoleTitle": "Change <b>{name}</b>'s role?",
     "changeRoleDescription": "They'll get <role></role> access to this project.",
     "changeRoleConfirmLabel": "Change"

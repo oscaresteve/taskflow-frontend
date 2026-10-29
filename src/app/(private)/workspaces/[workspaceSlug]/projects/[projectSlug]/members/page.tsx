@@ -20,12 +20,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProjectMembersPanel } from "./_components/project-members-panel";
 import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
 import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
+import { useActivateProjectMember } from "@/hooks/use-activate-project-member";
+import { RestoreMemberDialog } from "@/components/members/restore-member-dialog";
 import { ApiError } from "@/lib/http/api-error";
 import { ProjectMemberWithUserResponseDto, ProjectRole } from "@/lib/dtos/project-members.dto";
 import type { ProjectMemberStatusTab } from "@/lib/member-enums";
 import { getFullName } from "@/lib/utils";
 import {
   assignableProjectRoles,
+  canActivateProjectMember,
   canDeactivateProjectMember,
   canManageProject,
   canUpdateProjectMemberRole,
@@ -47,9 +50,12 @@ export default function ProjectMembersPage() {
   const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
   const updateProjectMember = useUpdateProjectMember(workspaceSlug, projectSlug);
   const deactivateProjectMember = useDeactivateProjectMember(workspaceSlug, projectSlug);
+  const activateProjectMember = useActivateProjectMember(workspaceSlug, projectSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
   const [memberToDeactivate, setMemberToDeactivate] = useState<ProjectMemberWithUserResponseDto | null>(null);
+  const [activateDialogOpen, setActivateDialogOpen] = useState(false);
+  const [memberToActivate, setMemberToActivate] = useState<ProjectMemberWithUserResponseDto | null>(null);
   const [roleChangeDialogOpen, setRoleChangeDialogOpen] = useState(false);
   const [pendingRoleChange, setPendingRoleChange] = useState<{
     member: ProjectMemberWithUserResponseDto;
@@ -105,6 +111,30 @@ export default function ProjectMembersPage() {
     );
   }
 
+  function handleRequestActivate(member: ProjectMemberWithUserResponseDto) {
+    setMemberToActivate(member);
+    setActivateDialogOpen(true);
+  }
+
+  function handleConfirmActivate(role: ProjectRole) {
+    if (!memberToActivate) return;
+    activateProjectMember.mutate(
+      { userId: memberToActivate.userId, data: { role } },
+      {
+        onSuccess: () => {
+          setActivateDialogOpen(false);
+          toast.add({
+            type: "success",
+            description: t("projectMembersPage.activatedToast", {
+              name: getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName),
+            }),
+          });
+        },
+        onError: reportError,
+      },
+    );
+  }
+
   function handleRequestDeactivate(member: ProjectMemberWithUserResponseDto) {
     setMemberToDeactivate(member);
     setDeactivateDialogOpen(true);
@@ -146,6 +176,23 @@ export default function ProjectMembersPage() {
       targetRole: member.role,
       targetIsActive: member.isActive,
     });
+    const activatable = canActivateProjectMember({
+      actorUserId: me?.id,
+      workspaceRole: myWorkspaceRole,
+      actorRole: myRole,
+      targetUserId: member.userId,
+      targetRole: member.role,
+      targetIsActive: member.isActive,
+    });
+
+    if (activatable) {
+      return (
+        <ActionsMenuItem onClick={() => handleRequestActivate(member)}>
+          <ICONS.memberActivate />
+          {t("projectMembersPage.activate")}
+        </ActionsMenuItem>
+      );
+    }
 
     return deactivatable ? (
       <ActionsMenuItem variant="destructive" onClick={() => handleRequestDeactivate(member)}>
@@ -242,6 +289,21 @@ export default function ProjectMembersPage() {
         onConfirm={handleConfirmChangeRole}
         pending={updateProjectMember.isPending}
         Icon={ICONS.memberChangeRole}
+      />
+      <RestoreMemberDialog
+        open={activateDialogOpen}
+        onOpenChange={setActivateDialogOpen}
+        title={t("projectMembersPage.activateMemberTitle", {
+          name: memberToActivate ? getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName) : "",
+        })}
+        description={t("projectMembersPage.activateMemberDescription")}
+        roleLabel={t("projectMembersPage.activateRoleLabel")}
+        roleDescription={t("projectMembersPage.activateRoleDescription")}
+        submitLabel={t("projectMembersPage.activateConfirmLabel")}
+        formId="activate-project-member-form"
+        assignableRoles={assignableRoles}
+        pending={activateProjectMember.isPending}
+        onConfirm={handleConfirmActivate}
       />
     </PageContainer>
   );
