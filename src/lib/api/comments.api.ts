@@ -85,3 +85,22 @@ export function deleteComment({
     { method: "PATCH" },
   );
 }
+
+// La vuelta del borrado. El listado filtra los borrados, asi que el unico camino a esto es el
+// "deshacer" del aviso que sale justo despues de borrar.
+export function restoreComment({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+  commentId,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+  commentId: string;
+}) {
+  return request<void>(
+    `/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/comments/${commentId}/restore`,
+    { method: "PATCH" },
+  );
+}

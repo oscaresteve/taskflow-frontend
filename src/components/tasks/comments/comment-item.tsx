@@ -15,6 +15,7 @@ import { ApiError } from "@/lib/http/api-error";
 import { CommentResponseDto } from "@/lib/dtos/comments.dto";
 import { getFullName } from "@/lib/utils";
 import { useDeleteComment } from "@/hooks/use-delete-comment";
+import { useRestoreComment } from "@/hooks/use-restore-comment";
 import { CommentForm } from "./comment-form";
 import { CommentContent } from "./comment-content";
 import { useQuery } from "@tanstack/react-query";
@@ -44,22 +45,38 @@ export function CommentItem({
   const [editing, setEditing] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const deleteComment = useDeleteComment(workspaceSlug, projectSlug, taskNumber);
+  const restoreComment = useRestoreComment(workspaceSlug, projectSlug, taskNumber);
   const { data: author } = useQuery(getProjectMemberQuery({ workspaceSlug, projectSlug, userId: authorId }));
   const authorName = author ? getFullName(author.user.firstName, author.user.lastName) : undefined;
+
+  function reportError(error: unknown) {
+    toast.add({
+      type: "error",
+      description: error instanceof ApiError ? error.message : t("errors.generic"),
+      priority: "high",
+    });
+  }
 
   function handleDelete() {
     deleteComment.mutate(comment.id, {
       onSuccess: () => {
         setDeleteOpen(false);
-        toast.add({ type: "success", description: t("comments.deleteSuccess") });
-      },
-      onError: (error) => {
+        // El listado filtra los borrados, asi que no queda nada en el hilo donde colgar un
+        // "restaurar": el deshacer del propio aviso es el unico sitio donde cabe.
         toast.add({
-          type: "error",
-          description: error instanceof ApiError ? error.message : t("errors.generic"),
-          priority: "high",
+          type: "success",
+          description: t("comments.deleteSuccess"),
+          actionProps: {
+            children: t("comments.undoDelete"),
+            onClick: () =>
+              restoreComment.mutate(comment.id, {
+                onSuccess: () => toast.add({ type: "success", description: t("comments.restoreSuccess") }),
+                onError: reportError,
+              }),
+          },
         });
       },
+      onError: reportError,
     });
   }
 

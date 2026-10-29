@@ -150,7 +150,9 @@
       "contentRequired": "Comment cannot be empty",
       "contentMaxLength": "Comment cannot exceed 5000 characters"
     },
-    "mentionListLabel": "Members you can mention"
+    "mentionListLabel": "Members you can mention",
+    "undoDelete": "Undo",
+    "restoreSuccess": "Comment restored."
   },
   "createTaskDialog": {
     "title": "Create task",

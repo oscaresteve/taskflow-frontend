@@ -150,7 +150,9 @@
       "contentRequired": "El comentario no puede estar vacío",
       "contentMaxLength": "El comentario no puede superar los 5000 caracteres"
     },
-    "mentionListLabel": "Miembros que puedes mencionar"
+    "mentionListLabel": "Miembros que puedes mencionar",
+    "undoDelete": "Deshacer",
+    "restoreSuccess": "Comentario restaurado."
   },
   "createTaskDialog": {
     "title": "Crear tarea",
