@@ -180,3 +180,9 @@ export function resolveDefaultAssignee(assigneeId: string): string | undefined {
 
 export const taskSortFields = ["rank", "title", "status", "priority", "dueDate", "createdAt", "updatedAt"] as const;
 export type TaskSortField = (typeof taskSortFields)[number];
+
+// Las tareas archivadas se consultan en su propia pestana, como los espacios inactivos y los
+// proyectos archivados: un estado a la vez, para que la lista sea homogenea.
+export const taskLifecycles = ["ACTIVE", "ARCHIVED"] as const;
+export type TaskLifecycle = (typeof taskLifecycles)[number];
+

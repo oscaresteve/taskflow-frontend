@@ -36,6 +36,7 @@ export function getTasks({
   priority,
   assigneeId,
   dueDate,
+  isArchived,
   isFavorite,
   sort,
   order,
@@ -49,6 +50,7 @@ export function getTasks({
   priority?: TaskPriority;
   assigneeId?: string;
   dueDate?: Exclude<DueDateFilter, "ALL">;
+  isArchived?: boolean;
   isFavorite?: boolean;
   sort?: TaskSortField;
   order?: SortOrder;
@@ -61,6 +63,7 @@ export function getTasks({
     priority,
     assigneeId,
     dueDate,
+    isArchived,
     isFavorite,
     sort,
     order,
@@ -130,6 +133,20 @@ export function archiveTask({
   taskNumber: string;
 }) {
   return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/archive`, {
+    method: "PATCH",
+  });
+}
+
+export function unarchiveTask({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+}: {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/projects/${projectSlug}/tasks/${taskNumber}/unarchive`, {
     method: "PATCH",
   });
 }

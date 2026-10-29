@@ -9,6 +9,7 @@ type TaskListParams = {
   assigneeId?: string;
   priority?: PriorityFilter;
   dueDate?: DueDateFilter;
+  isArchived?: boolean;
   isFavorite?: boolean;
   sort?: TaskSortField;
   order?: SortOrder;

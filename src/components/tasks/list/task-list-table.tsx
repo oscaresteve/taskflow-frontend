@@ -11,9 +11,12 @@ import { useTasksTable } from "@/hooks/use-tasks-table";
 import { useUpdateTask } from "@/hooks/use-update-task";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { ApiError } from "@/lib/http/api-error";
-import { ALL_ASSIGNEES, TaskSortField, taskSortFields } from "@/lib/task-enums";
+import { ALL_ASSIGNEES, TaskLifecycle, taskLifecycles, TaskSortField, taskSortFields } from "@/lib/task-enums";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { useTabParam } from "@/hooks/use-tab-param";
 import { cn } from "@/lib/utils";
-import { ICONS } from "@/lib/icons";
+import { ICONS, type Icon } from "@/lib/icons";
 import { toast } from "@/components/ui/toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -176,6 +179,12 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     onLimitChange,
     onPageChange,
   } = useTasksTable();
+  const { tab, onTabChange } = useTabParam(taskLifecycles, "ACTIVE");
+
+  const LIFECYCLE_TABS: { value: TaskLifecycle; label: string; icon: Icon }[] = [
+    { value: "ACTIVE", label: t("listTable.lifecycle.active"), icon: ICONS.list },
+    { value: "ARCHIVED", label: t("listTable.lifecycle.archived"), icon: ICONS.archive },
+  ];
 
   const sortOptions: { value: TaskSortField; label: string }[] = taskSortFields.map((field) => ({
     value: field,
@@ -197,12 +206,34 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
       assigneeId,
       priority,
       dueDate,
+      isArchived: tab === "ARCHIVED",
       isFavorite,
       sort,
       order,
     }),
     placeholderData: keepPreviousData,
   });
+
+  // Un contador por pestana, con los mismos filtros que la tabla para que el numero cuadre con lo
+  // que se ve debajo.
+  const countParams = {
+    workspaceSlug,
+    projectSlug: project.slug,
+    page: 1,
+    limit: 1,
+    search: debouncedSearch,
+    status,
+    assigneeId,
+    priority,
+    dueDate,
+    isFavorite,
+  };
+  const activeCountQuery = useQuery(getTasksQuery({ ...countParams, isArchived: false }));
+  const archivedCountQuery = useQuery(getTasksQuery({ ...countParams, isArchived: true }));
+  const countQueryByTab = {
+    ACTIVE: activeCountQuery,
+    ARCHIVED: archivedCountQuery,
+  };
 
   if (isError) {
     return <p className="py-4 text-sm text-muted-foreground">{t("listTable.failedToLoad")}</p>;
@@ -214,6 +245,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     assigneeId !== ALL_ASSIGNEES ||
     priority !== "ALL" ||
     dueDate !== "ALL" ||
+    tab === "ARCHIVED" ||
     isFavorite;
 
   const emptyState = hasActiveFilters ? (
@@ -238,46 +270,9 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     />
   );
 
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <KanbanFilterBar
-            workspaceSlug={workspaceSlug}
-            projectSlug={project.slug}
-            search={search}
-            onSearchChange={onSearchChange}
-            status={status}
-            onStatusChange={onStatusChange}
-            assigneeId={assigneeId}
-            onAssigneeChange={onAssigneeChange}
-            priority={priority}
-            onPriorityChange={onPriorityChange}
-            dueDate={dueDate}
-            onDueDateChange={onDueDateChange}
-          />
-          <Button
-            type="button"
-            variant={isFavorite ? "secondary" : "outline"}
-            onClick={() => onFavoriteChange(!isFavorite)}
-            aria-pressed={isFavorite}
-          >
-            <ICONS.favorite className={cn(isFavorite && "fill-current")} />
-            {t("listTable.favoritesFilter")}
-          </Button>
-        </div>
-        <div className="flex items-center gap-1">
-          <SortControls
-            field={sort}
-            order={order}
-            options={sortOptions}
-            onFieldChange={onSortFieldChange}
-            onOrderChange={onSortOrderChange}
-          />
-          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
-        </div>
-      </div>
-
+  // Lo mismo en las dos pestanas: lo que cambia es la query, no la tabla.
+  const tabContent = (
+    <>
       {isLoading || !tasks ? (
         <div className="flex flex-col gap-3">
           <Skeleton className="h-8 w-full" />
@@ -322,6 +317,69 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
       {tasks && tasks.data.length > 0 && (
         <PaginationControls page={page} totalPages={tasks.pagination.pages} onPageChange={onPageChange} />
       )}
-    </div>
+    </>
+  );
+
+  return (
+    <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as TaskLifecycle)}>
+      <div className="border-b">
+        <TabsList variant="line">
+          {LIFECYCLE_TABS.map((lifecycleTab) => {
+            const total = countQueryByTab[lifecycleTab.value].data?.pagination.total;
+            return (
+              <TabsTrigger key={lifecycleTab.value} value={lifecycleTab.value}>
+                <lifecycleTab.icon />
+                {lifecycleTab.label}
+                {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <KanbanFilterBar
+            workspaceSlug={workspaceSlug}
+            projectSlug={project.slug}
+            search={search}
+            onSearchChange={onSearchChange}
+            status={status}
+            onStatusChange={onStatusChange}
+            assigneeId={assigneeId}
+            onAssigneeChange={onAssigneeChange}
+            priority={priority}
+            onPriorityChange={onPriorityChange}
+            dueDate={dueDate}
+            onDueDateChange={onDueDateChange}
+          />
+          <Button
+            type="button"
+            variant={isFavorite ? "secondary" : "outline"}
+            onClick={() => onFavoriteChange(!isFavorite)}
+            aria-pressed={isFavorite}
+          >
+            <ICONS.favorite className={cn(isFavorite && "fill-current")} />
+            {t("listTable.favoritesFilter")}
+          </Button>
+        </div>
+        <div className="flex items-center gap-1">
+          <SortControls
+            field={sort}
+            order={order}
+            options={sortOptions}
+            onFieldChange={onSortFieldChange}
+            onOrderChange={onSortOrderChange}
+          />
+          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
+        </div>
+      </div>
+
+      {LIFECYCLE_TABS.map((lifecycleTab) => (
+        <TabsContent key={lifecycleTab.value} value={lifecycleTab.value} className="flex flex-col gap-4">
+          {tabContent}
+        </TabsContent>
+      ))}
+    </Tabs>
   );
 }

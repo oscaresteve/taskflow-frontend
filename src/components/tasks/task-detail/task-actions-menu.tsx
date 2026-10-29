@@ -11,6 +11,7 @@ import { DropdownMenu, DropdownMenuSeparator, DropdownMenuTrigger } from "@/comp
 import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
 import { toast } from "@/components/ui/toast";
 import { useArchiveTask } from "@/hooks/use-archive-task";
+import { useUnarchiveTask } from "@/hooks/use-unarchive-task";
 import { ApiError } from "@/lib/http/api-error";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
@@ -42,8 +43,18 @@ export function TaskActionsMenu({
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
   const archiveTask = useArchiveTask(workspaceSlug, projectSlug, taskNumber);
+  const unarchiveTask = useUnarchiveTask(workspaceSlug, projectSlug, taskNumber);
   const [archiveOpen, setArchiveOpen] = useState(false);
+  const [unarchiveOpen, setUnarchiveOpen] = useState(false);
   const toggleFavorite = useToggleTaskFavorite(workspaceSlug, projectSlug, taskNumber);
+
+  function reportError(error: unknown) {
+    toast.add({
+      type: "error",
+      description: error instanceof ApiError ? error.message : t("errors.generic"),
+      priority: "high",
+    });
+  }
 
   async function handleArchive() {
     try {
@@ -52,16 +63,62 @@ export function TaskActionsMenu({
       toast.add({ type: "success", description: t("taskActionsMenu.archiveSuccess") });
       onArchived?.();
     } catch (error) {
-      toast.add({
-        type: "error",
-        description: error instanceof ApiError ? error.message : t("errors.generic"),
-        priority: "high",
-      });
+      reportError(error);
     }
   }
 
+  async function handleUnarchive() {
+    try {
+      await unarchiveTask.mutateAsync();
+      setUnarchiveOpen(false);
+      toast.add({ type: "success", description: t("taskActionsMenu.unarchiveSuccess") });
+    } catch (error) {
+      reportError(error);
+    }
+  }
+
+  // Una tarea archivada sigue siendo direccionable, asi que su menu existe: solo que lo unico que
+  // ofrece es desarchivarla.
   if (task.isArchived) {
-    return null;
+    return (
+      <>
+        <Tooltip>
+          <DropdownMenu>
+            <TooltipTrigger
+              render={
+                <DropdownMenuTrigger
+                  render={
+                    triggerRender ?? (
+                      <Button aria-label={t("taskActionsMenu.ariaLabel")} variant={variant} size={size} />
+                    )
+                  }
+                />
+              }
+            >
+              <ICONS.moreActions />
+            </TooltipTrigger>
+            <TooltipContent>{t("taskActionsMenu.ariaLabel")}</TooltipContent>
+
+            <ActionsMenuContent align="end">
+              <ActionsMenuItem onClick={() => setUnarchiveOpen(true)}>
+                <ICONS.unarchive />
+                {t("taskActionsMenu.unarchive")}
+              </ActionsMenuItem>
+            </ActionsMenuContent>
+          </DropdownMenu>
+        </Tooltip>
+        <ConfirmDialog
+          open={unarchiveOpen}
+          onOpenChange={setUnarchiveOpen}
+          title={t.rich("taskActionsMenu.unarchiveConfirmTitle", { taskTitle: task.title, ...richTitleTags })}
+          description={t("taskActionsMenu.unarchiveConfirmDescription")}
+          confirmLabel={t("taskActionsMenu.unarchive")}
+          onConfirm={handleUnarchive}
+          pending={unarchiveTask.isPending}
+          Icon={ICONS.unarchive}
+        />
+      </>
+    );
   }
 
   return (

@@ -90,6 +90,10 @@
     "noTasksFiltered": "Ninguna tarea coincide con los filtros.",
     "noTasksFilteredDescription": "Prueba con otra búsqueda o filtro.",
     "favoritesFilter": "Favoritas",
+    "lifecycle": {
+      "active": "Activas",
+      "archived": "Archivadas"
+    },
     "columns": {
       "task": "Tarea",
       "status": "Estado",
@@ -117,8 +121,12 @@
     "ariaLabel": "Acciones de la tarea",
     "archive": "Archivar",
     "confirmTitle": "¿Archivar <b>{taskTitle}</b>?",
-    "confirmDescription": "Esto archivará la tarea y la ocultará de la lista de tareas. Esta acción no se puede deshacer desde la app.",
-    "archiveSuccess": "Tarea archivada."
+    "confirmDescription": "Esto archivará la tarea y la ocultará de la lista de tareas. Podrás recuperarla desde la lista, filtrando por archivadas.",
+    "archiveSuccess": "Tarea archivada.",
+    "unarchive": "Desarchivar",
+    "unarchiveConfirmTitle": "¿Desarchivar <b>{taskTitle}</b>?",
+    "unarchiveConfirmDescription": "La tarea vuelve a la lista de tareas y al tablero.",
+    "unarchiveSuccess": "Tarea desarchivada."
   },
   "comments": {
     "title": "Comentarios",
