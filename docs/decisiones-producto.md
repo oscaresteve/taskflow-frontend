@@ -54,15 +54,46 @@ Cada feed enseña su ámbito y el de justo debajo:
 
 La regla del corte y su implementación están en `../taskflow-backend/docs/eventos-de-dominio.md`.
 
-## Soft delete: espacios inactivos y proyectos archivados
+## Soft delete: cada baja tiene su vuelta, y vive en el listado
 
-El borrado es lógico: los espacios se desactivan y los proyectos se archivan. El backend responde
-404 a todo lo que cuelga de un espacio inactivo.
+El borrado sigue siendo lógico —los espacios se desactivan, los proyectos y las tareas se archivan,
+los comentarios y las membresías se marcan—, pero ya no es un camino de ida: cada acción tiene su
+inversa en la API (`/reactivate`, `/unarchive`, `/restore`, `/activate`). Las reglas de la
+reversibilidad están en `../taskflow-backend/docs/decisiones.md`.
 
-**Consecuencia para el frontend:** no se construyen pantallas ni flujos para consultar contenido de
-espacios inactivos o proyectos archivados mientras no exista el endpoint de reactivar/desarchivar.
-La UI se limita a no ofrecer esos caminos, sin código defensivo para un estado que aún no se puede
-alcanzar.
+**Lo muerto se lista, pero sigue sin ser navegable.** De un espacio inactivo o un proyecto archivado
+todo responde 404 salvo su propia ruta de reversión. Por eso:
+
+- El reverso vive en el **menú de fila del listado de gestión** (`/workspaces`,
+  `/workspaces/[slug]/projects`), no en los ajustes: los ajustes de un recurso muerto tampoco se
+  pueden abrir.
+- Esos listados **separan los estados en pestañas**, una activa a la vez (activos / inactivos,
+  activos / archivados, y activas / archivadas en la lista de tareas), con su contador, igual que
+  los dos listados de miembros. Así cada vista es homogénea y no hace falta una columna de estado
+  para distinguir filas.
+- En la vista de lo muerto la fila se queda en los campos que ya trae el listado: sin enlace, sin
+  favorito y sin la columna de responsables, porque cada uno de esos tres caminos daría 404.
+- `WorkspaceResponseDto` trae `myRole` justamente para esto: sobre un espacio desactivado
+  `/members/me` ya responde 404, así que el permiso para ofrecer "reactivar" tiene que venir en el
+  propio listado.
+
+**Volver no es una restauración completa.** La baja de un miembro borra su rol, así que el diálogo de
+vuelta pide con cuál regresa. Y readmitir en el espacio **no** devuelve las pertenencias a proyectos:
+cada proyecto decide por su cuenta a quién deja entrar.
+
+**Lo que no se lista no se restaura desde una lista.** Un comentario borrado desaparece del hilo, así
+que su vuelta es un **"deshacer" en el aviso** que sale justo después de borrarlo, no una lápida en
+la conversación.
+
+## La pestaña activa es estado de la URL, no de React
+
+Toda segmentación por pestañas de una vista —el estado de los miembros, el ciclo de vida de espacios,
+proyectos y tareas— vive en la URL (`?tab=`, vía `hooks/use-tab-param.ts`), nunca en `useState`.
+Cambiar de pestaña vuelve a la primera página, porque `page` es el mismo para todas.
+
+**Por qué:** un enlace a "los miembros eliminados" o a "los proyectos archivados" tiene que abrir
+justo ahí, y recargar no puede devolverte a la primera pestaña. Es la misma regla que ya seguían los
+filtros, la búsqueda y la paginación.
 
 ## Favoritos globales: solo espacios
 
