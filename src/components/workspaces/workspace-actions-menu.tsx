@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
+import { RowActionButton } from "@/components/common/row-action-button";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
@@ -62,6 +63,31 @@ export function WorkspaceActionsMenu({ workspace, canManage, triggerRender }: Wo
     }
   }
 
+  // De un espacio desactivado todo responde 404 menos su reactivacion, asi que no hay menu que
+  // abrir: la unica salida se pinta en la propia fila.
+  if (!workspace.isActive) {
+    if (!canManage) return null;
+
+    return (
+      <>
+        <RowActionButton onClick={() => setReactivateOpen(true)}>
+          <ICONS.reactivate />
+          {t("workspaceActionsMenu.reactivate")}
+        </RowActionButton>
+        <ConfirmDialog
+          open={reactivateOpen}
+          onOpenChange={setReactivateOpen}
+          title={t.rich("workspaceActionsMenu.reactivateTitle", { name: workspace.name, ...richTitleTags })}
+          description={t("workspaceActionsMenu.reactivateDescription")}
+          confirmLabel={t("workspaceActionsMenu.reactivateConfirmLabel")}
+          onConfirm={handleReactivate}
+          pending={reactivateWorkspace.isPending}
+          Icon={ICONS.reactivate}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -82,41 +108,30 @@ export function WorkspaceActionsMenu({ workspace, canManage, triggerRender }: Wo
           <TooltipContent>{t("workspaceActionsMenu.ariaLabel")}</TooltipContent>
         </Tooltip>
         <ActionsMenuContent align="start">
-          {workspace.isActive ? (
+          <ActionsMenuItem onClick={() => toggleFavorite.mutate(!workspace.isFavorite)}>
+            <ICONS.favorite className={cn(workspace.isFavorite && "fill-current")} />
+            {workspace.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
+          </ActionsMenuItem>
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
+            <ICONS.openExternal />
+            {t("workspaceActionsMenu.open")}
+          </ActionsMenuItem>
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/members`} />}>
+            <ICONS.members />
+            {t("workspaceActionsMenu.members")}
+          </ActionsMenuItem>
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
+            <ICONS.settings />
+            {t("workspaceActionsMenu.settings")}
+          </ActionsMenuItem>
+          {canManage && (
             <>
-              <ActionsMenuItem onClick={() => toggleFavorite.mutate(!workspace.isFavorite)}>
-                <ICONS.favorite className={cn(workspace.isFavorite && "fill-current")} />
-                {workspace.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
+              <DropdownMenuSeparator />
+              <ActionsMenuItem variant="destructive" onClick={() => setDeactivateOpen(true)}>
+                <ICONS.deactivate />
+                {t("workspaceActionsMenu.deactivate")}
               </ActionsMenuItem>
-              <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}`} />}>
-                <ICONS.openExternal />
-                {t("workspaceActionsMenu.open")}
-              </ActionsMenuItem>
-              <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/members`} />}>
-                <ICONS.members />
-                {t("workspaceActionsMenu.members")}
-              </ActionsMenuItem>
-              <ActionsMenuItem render={<Link href={`/workspaces/${workspace.slug}/settings`} />}>
-                <ICONS.settings />
-                {t("workspaceActionsMenu.settings")}
-              </ActionsMenuItem>
-              {canManage && (
-                <>
-                  <DropdownMenuSeparator />
-                  <ActionsMenuItem variant="destructive" onClick={() => setDeactivateOpen(true)}>
-                    <ICONS.deactivate />
-                    {t("workspaceActionsMenu.deactivate")}
-                  </ActionsMenuItem>
-                </>
-              )}
             </>
-          ) : (
-            // De un espacio desactivado todo responde 404 menos su reactivacion, asi que ese es el
-            // unico camino que se ofrece.
-            <ActionsMenuItem disabled={!canManage} onClick={() => setReactivateOpen(true)}>
-              <ICONS.reactivate />
-              {t("workspaceActionsMenu.reactivate")}
-            </ActionsMenuItem>
           )}
         </ActionsMenuContent>
       </DropdownMenu>
@@ -130,16 +145,6 @@ export function WorkspaceActionsMenu({ workspace, canManage, triggerRender }: Wo
         onConfirm={handleDeactivate}
         pending={deactivateWorkspace.isPending}
         Icon={ICONS.deactivate}
-      />
-      <ConfirmDialog
-        open={reactivateOpen}
-        onOpenChange={setReactivateOpen}
-        title={t.rich("workspaceActionsMenu.reactivateTitle", { name: workspace.name, ...richTitleTags })}
-        description={t("workspaceActionsMenu.reactivateDescription")}
-        confirmLabel={t("workspaceActionsMenu.reactivateConfirmLabel")}
-        onConfirm={handleReactivate}
-        pending={reactivateWorkspace.isPending}
-        Icon={ICONS.reactivate}
       />
     </>
   );

@@ -12,8 +12,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { AddWorkspaceMemberDialog } from "@/components/members/add-workspace-member-dialog";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
-import { DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { ActionsMenuItem } from "@/components/common/actions-menu";
+import { RowActionButton } from "@/components/common/row-action-button";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -220,31 +219,33 @@ export default function WorkspaceMembersPage() {
       targetStatus: member.status,
     });
 
-    if (!activatable && !restorable && !removable) return null;
+    // Cada pestana ofrece solo su propia salida: aceptar al pendiente, readmitir al eliminado y dar
+    // de baja al activo. Un pendiente tambien se puede eliminar, pero esa no es la decision que se
+    // viene a tomar en esa pestana.
+    if (member.status === "PENDING") {
+      return activatable ? (
+        <RowActionButton onClick={() => handleRequestActivate(member)}>
+          <ICONS.memberActivate />
+          {t("workspaceMembersPage.activate")}
+        </RowActionButton>
+      ) : null;
+    }
 
-    return (
-      <>
-        {activatable && (
-          <ActionsMenuItem onClick={() => handleRequestActivate(member)}>
-            <ICONS.memberActivate />
-            {t("workspaceMembersPage.activate")}
-          </ActionsMenuItem>
-        )}
-        {restorable && (
-          <ActionsMenuItem onClick={() => handleRequestRestore(member)}>
-            <ICONS.memberRestore />
-            {t("workspaceMembersPage.restore")}
-          </ActionsMenuItem>
-        )}
-        {activatable && removable && <DropdownMenuSeparator />}
-        {removable && (
-          <ActionsMenuItem variant="destructive" onClick={() => handleRequestRemove(member)}>
-            <ICONS.removeMember />
-            {t("workspaceMembersPage.remove")}
-          </ActionsMenuItem>
-        )}
-      </>
-    );
+    if (member.status === "REMOVED") {
+      return restorable ? (
+        <RowActionButton onClick={() => handleRequestRestore(member)}>
+          <ICONS.memberRestore />
+          {t("workspaceMembersPage.restore")}
+        </RowActionButton>
+      ) : null;
+    }
+
+    return removable ? (
+      <RowActionButton variant="destructive" onClick={() => handleRequestRemove(member)}>
+        <ICONS.removeMember />
+        {t("workspaceMembersPage.remove")}
+      </RowActionButton>
+    ) : null;
   }
 
   return (

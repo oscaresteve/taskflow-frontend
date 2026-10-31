@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { AddProjectMemberDialog } from "@/components/members/add-project-member-dialog";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
-import { ActionsMenuItem } from "@/components/common/actions-menu";
+import { RowActionButton } from "@/components/common/row-action-button";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -187,18 +187,18 @@ export default function ProjectMembersPage() {
 
     if (activatable) {
       return (
-        <ActionsMenuItem onClick={() => handleRequestActivate(member)}>
+        <RowActionButton onClick={() => handleRequestActivate(member)}>
           <ICONS.memberActivate />
           {t("projectMembersPage.activate")}
-        </ActionsMenuItem>
+        </RowActionButton>
       );
     }
 
     return deactivatable ? (
-      <ActionsMenuItem variant="destructive" onClick={() => handleRequestDeactivate(member)}>
+      <RowActionButton variant="destructive" onClick={() => handleRequestDeactivate(member)}>
         <ICONS.removeMember />
         {t("projectMembersPage.deactivate")}
-      </ActionsMenuItem>
+      </RowActionButton>
     ) : null;
   }
 

@@ -39,8 +39,7 @@
     "columnRole": "Rol",
     "columnActions": "Acciones",
     "youSuffix": " (Tú)",
-    "noJoinDate": "—",
-    "actionsSrOnly": "Acciones del miembro"
+    "noJoinDate": "—"
   },
   "memberPicker": {
     "defaultLabel": "Miembro",

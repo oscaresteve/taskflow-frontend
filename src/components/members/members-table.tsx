@@ -1,14 +1,10 @@
 "use client";
 
 import { ReactNode } from "react";
-import { ICONS } from "@/lib/icons";
 import { CustomAvatar } from "@/components/common/custom-avatar";
 import { UserPopup } from "@/components/common/user-popup";
-import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ActionsMenuContent } from "@/components/common/actions-menu";
 import { MemberRole } from "@/lib/dtos/members.dto";
 import { roleOptions } from "@/lib/member-enums";
 import { getFullName } from "@/lib/utils";
@@ -36,6 +32,8 @@ export function MembersTable<TMember extends MemberLike>({
   assignableRoles: MemberRole[];
   roleChangeable: (member: TMember) => boolean;
   onChangeRole: (member: TMember, role: MemberRole) => void;
+  // La accion de la fila, ya pintada: cada pestana de miembros ofrece una sola (activar, readmitir o
+  // dar de baja), asi que va directa en la celda y no detras de un desplegable.
   renderActions: (member: TMember) => ReactNode | null;
   emptyState: ReactNode;
   actorUserId?: string;
@@ -110,27 +108,7 @@ export function MembersTable<TMember extends MemberLike>({
                   <EnumBadge option={roleOptions[member.role]} />
                 )}
               </TableCell>
-              <TableCell>
-                {actions ? (
-                  <DropdownMenu>
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <DropdownMenuTrigger
-                            render={
-                              <Button variant="ghost" size="icon-sm" aria-label={t("membersTable.actionsSrOnly")} />
-                            }
-                          />
-                        }
-                      >
-                        <ICONS.moreActions />
-                      </TooltipTrigger>
-                      <TooltipContent>{t("membersTable.actionsSrOnly")}</TooltipContent>
-                    </Tooltip>
-                    <ActionsMenuContent align="end">{actions}</ActionsMenuContent>
-                  </DropdownMenu>
-                ) : null}
-              </TableCell>
+              <TableCell>{actions}</TableCell>
             </TableRow>
           );
         })}

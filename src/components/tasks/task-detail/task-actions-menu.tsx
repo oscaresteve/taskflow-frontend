@@ -15,6 +15,7 @@ import { useUnarchiveTask } from "@/hooks/use-unarchive-task";
 import { ApiError } from "@/lib/http/api-error";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
+import { RowActionButton } from "@/components/common/row-action-button";
 import { cn } from "@/lib/utils";
 
 // Prop derivada directamente con ComponentProps.
@@ -77,36 +78,15 @@ export function TaskActionsMenu({
     }
   }
 
-  // Una tarea archivada sigue siendo direccionable, asi que su menu existe: solo que lo unico que
-  // ofrece es desarchivarla.
+  // Una tarea archivada sigue siendo direccionable, pero lo unico que se puede hacer con ella es
+  // desarchivarla: esa salida se pinta directamente, sin menu de un solo elemento.
   if (task.isArchived) {
     return (
       <>
-        <Tooltip>
-          <DropdownMenu>
-            <TooltipTrigger
-              render={
-                <DropdownMenuTrigger
-                  render={
-                    triggerRender ?? (
-                      <Button aria-label={t("taskActionsMenu.ariaLabel")} variant={variant} size={size} />
-                    )
-                  }
-                />
-              }
-            >
-              <ICONS.moreActions />
-            </TooltipTrigger>
-            <TooltipContent>{t("taskActionsMenu.ariaLabel")}</TooltipContent>
-
-            <ActionsMenuContent align="end">
-              <ActionsMenuItem onClick={() => setUnarchiveOpen(true)}>
-                <ICONS.unarchive />
-                {t("taskActionsMenu.unarchive")}
-              </ActionsMenuItem>
-            </ActionsMenuContent>
-          </DropdownMenu>
-        </Tooltip>
+        <RowActionButton onClick={() => setUnarchiveOpen(true)}>
+          <ICONS.unarchive />
+          {t("taskActionsMenu.unarchive")}
+        </RowActionButton>
         <ConfirmDialog
           open={unarchiveOpen}
           onOpenChange={setUnarchiveOpen}

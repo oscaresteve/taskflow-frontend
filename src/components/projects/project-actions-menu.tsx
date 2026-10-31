@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
+import { RowActionButton } from "@/components/common/row-action-button";
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { toast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/http/api-error";
@@ -63,6 +64,31 @@ export function ProjectActionsMenu({ workspaceSlug, project, canManage, triggerR
     }
   }
 
+  // De un proyecto archivado todo responde 404 menos su desarchivado, asi que no hay menu que abrir:
+  // la unica salida se pinta en la propia fila.
+  if (project.isArchived) {
+    if (!canManage) return null;
+
+    return (
+      <>
+        <RowActionButton onClick={() => setUnarchiveOpen(true)}>
+          <ICONS.unarchive />
+          {t("projectActionsMenu.unarchive")}
+        </RowActionButton>
+        <ConfirmDialog
+          open={unarchiveOpen}
+          onOpenChange={setUnarchiveOpen}
+          title={t.rich("projectActionsMenu.unarchiveTitle", { projectName: project.name, ...richTitleTags })}
+          description={t("projectActionsMenu.unarchiveDescription")}
+          confirmLabel={t("projectActionsMenu.unarchive")}
+          onConfirm={handleUnarchive}
+          pending={unarchiveProject.isPending}
+          Icon={ICONS.unarchive}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -83,44 +109,31 @@ export function ProjectActionsMenu({ workspaceSlug, project, canManage, triggerR
           <TooltipContent>{t("projectActionsMenu.ariaLabel")}</TooltipContent>
         </Tooltip>
         <ActionsMenuContent align="start">
-          {project.isArchived ? (
-            // De un proyecto archivado todo responde 404 menos su desarchivado, asi que ese es el
-            // unico camino que se ofrece.
-            <ActionsMenuItem disabled={!canManage} onClick={() => setUnarchiveOpen(true)}>
-              <ICONS.unarchive />
-              {t("projectActionsMenu.unarchive")}
+          <ActionsMenuItem onClick={() => toggleFavorite.mutate(!project.isFavorite)}>
+            <ICONS.favorite className={cn(project.isFavorite && "fill-current")} />
+            {project.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
+          </ActionsMenuItem>
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}>
+            <ICONS.openExternal />
+            {t("projectActionsMenu.open")}
+          </ActionsMenuItem>
+          <ActionsMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/members`} />}>
+            <ICONS.members />
+            {t("projectActionsMenu.members")}
+          </ActionsMenuItem>
+          {canManage && (
+            <ActionsMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/settings`} />}>
+              <ICONS.settings />
+              {t("projectActionsMenu.settings")}
             </ActionsMenuItem>
-          ) : (
+          )}
+          {canManage && (
             <>
-              <ActionsMenuItem onClick={() => toggleFavorite.mutate(!project.isFavorite)}>
-                <ICONS.favorite className={cn(project.isFavorite && "fill-current")} />
-                {project.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
+              <DropdownMenuSeparator />
+              <ActionsMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
+                <ICONS.archive />
+                {t("projectActionsMenu.archive")}
               </ActionsMenuItem>
-              <ActionsMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}`} />}>
-                <ICONS.openExternal />
-                {t("projectActionsMenu.open")}
-              </ActionsMenuItem>
-              <ActionsMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/members`} />}>
-                <ICONS.members />
-                {t("projectActionsMenu.members")}
-              </ActionsMenuItem>
-              {canManage && (
-                <ActionsMenuItem
-                  render={<Link href={`/workspaces/${workspaceSlug}/projects/${project.slug}/settings`} />}
-                >
-                  <ICONS.settings />
-                  {t("projectActionsMenu.settings")}
-                </ActionsMenuItem>
-              )}
-              {canManage && (
-                <>
-                  <DropdownMenuSeparator />
-                  <ActionsMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
-                    <ICONS.archive />
-                    {t("projectActionsMenu.archive")}
-                  </ActionsMenuItem>
-                </>
-              )}
             </>
           )}
         </ActionsMenuContent>
@@ -135,16 +148,6 @@ export function ProjectActionsMenu({ workspaceSlug, project, canManage, triggerR
         onConfirm={handleArchive}
         pending={archiveProject.isPending}
         Icon={ICONS.archive}
-      />
-      <ConfirmDialog
-        open={unarchiveOpen}
-        onOpenChange={setUnarchiveOpen}
-        title={t.rich("projectActionsMenu.unarchiveTitle", { projectName: project.name, ...richTitleTags })}
-        description={t("projectActionsMenu.unarchiveDescription")}
-        confirmLabel={t("projectActionsMenu.unarchive")}
-        onConfirm={handleUnarchive}
-        pending={unarchiveProject.isPending}
-        Icon={ICONS.unarchive}
       />
     </>
   );
