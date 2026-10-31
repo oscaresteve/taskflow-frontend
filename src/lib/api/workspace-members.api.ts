@@ -107,6 +107,22 @@ export function updateWorkspaceMember({
   });
 }
 
+// La vuelta de una invitacion: borra la fila en vez de dejarla en REMOVED, asi que el invitado
+// vuelve a ser invitable y no aparece como eliminado alguien que nunca entro. De ahi el DELETE sobre
+// el miembro: es la unica ruta de este modulo que no cambia de estado, sino que quita la fila. Solo
+// responde sobre una invitacion pendiente.
+export function cancelWorkspaceMemberInvitation({
+  workspaceSlug,
+  userId,
+}: {
+  workspaceSlug: string;
+  userId: string;
+}) {
+  return request<void>(`/workspaces/${workspaceSlug}/members/${userId}`, {
+    method: "DELETE",
+  });
+}
+
 export function removeWorkspaceMember({ workspaceSlug, userId }: { workspaceSlug: string; userId: string }) {
   return request<void>(`/workspaces/${workspaceSlug}/members/${userId}/remove`, {
     method: "PATCH",

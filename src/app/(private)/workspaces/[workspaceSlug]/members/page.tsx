@@ -16,11 +16,13 @@ import { RowActionButton } from "@/components/common/row-action-button";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { WorkspaceMembersPanel } from "./_components/workspace-members-panel";
 import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-member";
 import { useUpdateWorkspaceMember } from "@/hooks/use-update-workspace-member";
 import { useRemoveWorkspaceMember } from "@/hooks/use-remove-workspace-member";
 import { useRestoreWorkspaceMember } from "@/hooks/use-restore-workspace-member";
+import { useCancelWorkspaceMemberInvitation } from "@/hooks/use-cancel-workspace-member-invitation";
 import { RestoreMemberDialog } from "@/components/members/restore-member-dialog";
 import { ApiError } from "@/lib/http/api-error";
 import {
@@ -32,6 +34,7 @@ import { getFullName } from "@/lib/utils";
 import {
   assignableWorkspaceRoles,
   canActivateWorkspaceMember,
+  canCancelWorkspaceMemberInvitation,
   canRemoveWorkspaceMember,
   canRestoreWorkspaceMember,
   canUpdateWorkspaceMemberRole,
@@ -56,11 +59,14 @@ export default function WorkspaceMembersPage() {
   const updateWorkspaceMember = useUpdateWorkspaceMember(workspaceSlug);
   const removeWorkspaceMember = useRemoveWorkspaceMember(workspaceSlug);
   const restoreWorkspaceMember = useRestoreWorkspaceMember(workspaceSlug);
+  const cancelInvitation = useCancelWorkspaceMemberInvitation(workspaceSlug);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [memberToRemove, setMemberToRemove] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
   const [activateDialogOpen, setActivateDialogOpen] = useState(false);
   const [memberToActivate, setMemberToActivate] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [invitationToCancel, setInvitationToCancel] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
   const [restoreDialogOpen, setRestoreDialogOpen] = useState(false);
   const [memberToRestore, setMemberToRestore] = useState<WorkspaceMemberWithUserResponseDto | null>(null);
   const [roleChangeDialogOpen, setRoleChangeDialogOpen] = useState(false);
@@ -117,6 +123,27 @@ export default function WorkspaceMembersPage() {
           type: "success",
           description: t("workspaceMembersPage.activatedToast", {
             name: getFullName(memberToActivate.user.firstName, memberToActivate.user.lastName),
+          }),
+        });
+      },
+      onError: reportError,
+    });
+  }
+
+  function handleRequestCancelInvitation(member: WorkspaceMemberWithUserResponseDto) {
+    setInvitationToCancel(member);
+    setCancelDialogOpen(true);
+  }
+
+  function handleConfirmCancelInvitation() {
+    if (!invitationToCancel) return;
+    cancelInvitation.mutate(invitationToCancel.userId, {
+      onSuccess: () => {
+        setCancelDialogOpen(false);
+        toast.add({
+          type: "success",
+          description: t("workspaceMembersPage.canceledInvitationToast", {
+            name: getFullName(invitationToCancel.user.firstName, invitationToCancel.user.lastName),
           }),
         });
       },
@@ -227,16 +254,47 @@ export default function WorkspaceMembersPage() {
       targetStatus: member.status,
     });
 
-    // Cada pestana ofrece solo su propia salida: aceptar al pendiente, readmitir al eliminado y dar
-    // de baja al activo. Un pendiente tambien se puede eliminar, pero esa no es la decision que se
-    // viene a tomar en esa pestana.
+    // Cada pestana ofrece sus propias salidas y ninguna mas: readmitir al eliminado, dar de baja al
+    // activo, y sobre una invitacion las dos que tiene: aceptarla o cancelarla. Cancelar no es dar
+    // de baja —borra la invitacion— asi que el invitado no acaba en eliminados.
     if (member.status === "PENDING") {
-      return activatable ? (
-        <RowActionButton onClick={() => handleRequestActivate(member)}>
-          <ICONS.memberActivate />
-          {t("workspaceMembersPage.activate")}
-        </RowActionButton>
-      ) : null;
+      const cancelable = canCancelWorkspaceMemberInvitation({
+        actorRole: myRole,
+        targetRole: member.role,
+        targetStatus: member.status,
+      });
+
+      if (!activatable && !cancelable) return null;
+
+      return (
+        <div className="flex items-center gap-1.5">
+          {activatable && (
+            <RowActionButton onClick={() => handleRequestActivate(member)}>
+              <ICONS.memberActivate />
+              {t("workspaceMembersPage.activate")}
+            </RowActionButton>
+          )}
+          {/* Aceptar es lo que se viene a hacer aqui y lleva etiqueta; cancelar es descartar, asi
+              que va en icono para que no compitan dos textos del mismo tamano. */}
+          {cancelable && (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <RowActionButton
+                    variant="destructive"
+                    size="icon-sm"
+                    aria-label={t("workspaceMembersPage.cancelInvitation")}
+                    onClick={() => handleRequestCancelInvitation(member)}
+                  />
+                }
+              >
+                <ICONS.cancel />
+              </TooltipTrigger>
+              <TooltipContent>{t("workspaceMembersPage.cancelInvitation")}</TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+      );
     }
 
     if (member.status === "REMOVED") {
@@ -350,6 +408,22 @@ export default function WorkspaceMembersPage() {
         onConfirm={handleConfirmActivate}
         pending={activateWorkspaceMember.isPending}
         Icon={ICONS.memberActivate}
+      />
+      <ConfirmDialog
+        open={cancelDialogOpen}
+        onOpenChange={setCancelDialogOpen}
+        title={t.rich("workspaceMembersPage.cancelInvitationTitle", {
+          name: invitationToCancel
+            ? getFullName(invitationToCancel.user.firstName, invitationToCancel.user.lastName)
+            : "",
+          ...richTitleTags,
+        })}
+        description={t("workspaceMembersPage.cancelInvitationDescription")}
+        confirmLabel={t("workspaceMembersPage.cancelInvitationConfirmLabel")}
+        variant="destructive"
+        onConfirm={handleConfirmCancelInvitation}
+        pending={cancelInvitation.isPending}
+        Icon={ICONS.cancel}
       />
       <RestoreMemberDialog
         open={restoreDialogOpen}

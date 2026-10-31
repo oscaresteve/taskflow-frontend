@@ -64,6 +64,21 @@ export function canActivateWorkspaceMember({
   return canManageWorkspaceMember({ actorRole, targetRole });
 }
 
+// Cancelar es la vuelta de invitar, asi que solo cabe mientras la invitacion siga pendiente. No se
+// comprueba que el objetivo no sea uno mismo: un manager activo nunca es su propia invitacion.
+export function canCancelWorkspaceMemberInvitation({
+  actorRole,
+  targetRole,
+  targetStatus,
+}: {
+  actorRole: WorkspaceRole | undefined;
+  targetRole: WorkspaceRole;
+  targetStatus: WorkspaceMemberStatus;
+}): boolean {
+  if (targetStatus !== "PENDING") return false;
+  return canManageWorkspaceMember({ actorRole, targetRole });
+}
+
 // Y al reves: solo se restaura a quien fue eliminado.
 export function canRestoreWorkspaceMember({
   actorUserId,
