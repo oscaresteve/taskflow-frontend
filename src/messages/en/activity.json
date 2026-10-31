@@ -41,6 +41,7 @@
     "WORKSPACE_DEACTIVATED": "deactivated the workspace",
     "WORKSPACE_REACTIVATED": "reactivated the workspace",
     "WORKSPACE_MEMBER_INVITED": "invited {name} to the workspace",
+    "WORKSPACE_MEMBER_INVITE_CANCELED": "canceled the invitation for {name}",
     "WORKSPACE_MEMBER_ACTIVATED": "activated {name}",
     "WORKSPACE_MEMBER_ROLE_CHANGED": "changed the role of {name}",
     "WORKSPACE_MEMBER_REMOVED": "removed {name} from the workspace",

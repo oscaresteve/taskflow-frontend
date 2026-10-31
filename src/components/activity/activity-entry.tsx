@@ -184,6 +184,9 @@ export function ActivityEntry({ event, taskHref, plainTaskRef }: ActivityEntryPr
       case "WORKSPACE_MEMBER_INVITED":
         return { text: t("actions.WORKSPACE_MEMBER_INVITED", { name }) };
 
+      case "WORKSPACE_MEMBER_INVITE_CANCELED":
+        return { text: t("actions.WORKSPACE_MEMBER_INVITE_CANCELED", { name }) };
+
       case "WORKSPACE_MEMBER_ACTIVATED":
         return { text: t("actions.WORKSPACE_MEMBER_ACTIVATED", { name }) };
 

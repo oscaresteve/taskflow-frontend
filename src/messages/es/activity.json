@@ -41,6 +41,7 @@
     "WORKSPACE_DEACTIVATED": "desactivó el espacio",
     "WORKSPACE_REACTIVATED": "reactivó el espacio",
     "WORKSPACE_MEMBER_INVITED": "invitó a {name} al espacio",
+    "WORKSPACE_MEMBER_INVITE_CANCELED": "canceló la invitación de {name}",
     "WORKSPACE_MEMBER_ACTIVATED": "activó a {name}",
     "WORKSPACE_MEMBER_ROLE_CHANGED": "cambió el rol de {name}",
     "WORKSPACE_MEMBER_REMOVED": "sacó a {name} del espacio",

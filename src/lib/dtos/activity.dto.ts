@@ -74,6 +74,7 @@ export type ActivityPayloadMap = {
   WORKSPACE_REACTIVATED: WorkspaceRef;
 
   WORKSPACE_MEMBER_INVITED: MemberRef & { role: WorkspaceRole };
+  WORKSPACE_MEMBER_INVITE_CANCELED: MemberRef;
   WORKSPACE_MEMBER_ACTIVATED: MemberRef;
   WORKSPACE_MEMBER_ROLE_CHANGED: MemberRef & { from: WorkspaceRole; to: WorkspaceRole };
   WORKSPACE_MEMBER_REMOVED: MemberRef;
