@@ -52,7 +52,7 @@
   "workspaceMembersPage": {
     "title": "Members",
     "addMember": "Add member",
-    "tabActive": "Active",
+    "tabMembers": "Members",
     "tabPending": "Pending",
     "tabRemoved": "Removed",
     "emptyActive": "No active members.",
@@ -86,7 +86,7 @@
   "projectMembersPage": {
     "title": "Members",
     "addMember": "Add member",
-    "tabActive": "Active",
+    "tabMembers": "Members",
     "tabInactive": "Inactive",
     "emptyActive": "No active members.",
     "emptyActiveDescription": "Members will appear here once they join the project.",

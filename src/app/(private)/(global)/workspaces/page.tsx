@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ICONS, type Icon } from "@/lib/icons";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
-import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
+import { isWorkspaceManager, workspaceManagerRoles } from "@/lib/permissions/workspace-member-permissions";
 import { CustomAvatar } from "@/components/common/custom-avatar";
 import { OwnersCell } from "@/components/members/owners-cell";
 import { Button } from "@/components/ui/button";
@@ -82,10 +82,10 @@ function InactiveWorkspaceRow({ workspace }: { workspace: WorkspaceListItemRespo
 export default function WorkspacesPage() {
   const t = useTranslations("workspaces");
   const [createOpen, setCreateOpen] = useState(false);
-  const LIFECYCLE_TABS: { value: WorkspaceLifecycle; label: string; icon: Icon }[] = [
-    { value: "ACTIVE", label: t("workspacesPage.lifecycle.active"), icon: ICONS.workspace },
-    { value: "INACTIVE", label: t("workspacesPage.lifecycle.inactive"), icon: ICONS.deactivate },
-  ];
+  const LIFECYCLE_TABS: Record<WorkspaceLifecycle, { label: string; icon: Icon }> = {
+    ACTIVE: { label: t("workspacesPage.lifecycle.workspaces"), icon: ICONS.workspace },
+    INACTIVE: { label: t("workspacesPage.lifecycle.inactive"), icon: ICONS.deactivate },
+  };
   const sortOptions: { value: WorkspaceSortField; label: string }[] = [
     { value: "name", label: t("workspacesPage.sort.name") },
     { value: "createdAt", label: t("workspacesPage.sort.createdAt") },
@@ -106,7 +106,18 @@ export default function WorkspacesPage() {
     onLimitChange,
     onPageChange,
   } = useWorkspacesTable();
-  const { tab, onTabChange } = useTabParam(workspaceLifecycles, "ACTIVE");
+
+  // Un espacio desactivado solo se ensena a quien puede reactivarlo, y la pestana solo aparece si
+  // hay alguno. Se mide sin la busqueda de la tabla: si dependiera de ella, escribir en el buscador
+  // haria desaparecer la pestana abierta.
+  const manageableInactiveQuery = useQuery(
+    getWorkspacesQuery({ page: 1, limit: 1, isActive: false, myRole: workspaceManagerRoles }),
+  );
+  const availableTabs: readonly WorkspaceLifecycle[] = manageableInactiveQuery.data?.pagination.total
+    ? workspaceLifecycles
+    : ["ACTIVE"];
+
+  const { tab, onTabChange } = useTabParam(workspaceLifecycles, "ACTIVE", availableTabs);
 
   const showingInactive = tab === "INACTIVE";
 
@@ -115,7 +126,15 @@ export default function WorkspacesPage() {
     isLoading,
     isError,
   } = useQuery({
-    ...getWorkspacesQuery({ page, search: searchParam, limit, sort, order, isActive: !showingInactive }),
+    ...getWorkspacesQuery({
+      page,
+      search: searchParam,
+      limit,
+      sort,
+      order,
+      isActive: !showingInactive,
+      myRole: showingInactive ? workspaceManagerRoles : undefined,
+    }),
     placeholderData: keepPreviousData,
   });
 
@@ -125,7 +144,7 @@ export default function WorkspacesPage() {
     getWorkspacesQuery({ page: 1, limit: 1, search: searchParam, isActive: true }),
   );
   const inactiveCountQuery = useQuery(
-    getWorkspacesQuery({ page: 1, limit: 1, search: searchParam, isActive: false }),
+    getWorkspacesQuery({ page: 1, limit: 1, search: searchParam, isActive: false, myRole: workspaceManagerRoles }),
   );
   const countQueryByTab = {
     ACTIVE: activeCountQuery,
@@ -164,12 +183,13 @@ export default function WorkspacesPage() {
       <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as WorkspaceLifecycle)}>
         <div className="border-b">
           <TabsList variant="line">
-            {LIFECYCLE_TABS.map((lifecycleTab) => {
-              const total = countQueryByTab[lifecycleTab.value].data?.pagination.total;
+            {availableTabs.map((lifecycle) => {
+              const { label, icon: TabIcon } = LIFECYCLE_TABS[lifecycle];
+              const total = countQueryByTab[lifecycle].data?.pagination.total;
               return (
-                <TabsTrigger key={lifecycleTab.value} value={lifecycleTab.value}>
-                  <lifecycleTab.icon />
-                  {lifecycleTab.label}
+                <TabsTrigger key={lifecycle} value={lifecycle}>
+                  <TabIcon />
+                  {label}
                   {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
                 </TabsTrigger>
               );
@@ -196,8 +216,8 @@ export default function WorkspacesPage() {
           </div>
         </div>
 
-        {LIFECYCLE_TABS.map((lifecycleTab) => (
-          <TabsContent key={lifecycleTab.value} value={lifecycleTab.value} className="flex flex-col gap-4">
+        {availableTabs.map((lifecycle) => (
+          <TabsContent key={lifecycle} value={lifecycle} className="flex flex-col gap-4">
             {workspaces.data.length === 0 && (
               <EmptyState
                 icon={ICONS.workspace}

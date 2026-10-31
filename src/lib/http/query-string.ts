@@ -1,5 +1,5 @@
 type QueryParamPrimitive = string | number | boolean;
-type QueryParamValue = QueryParamPrimitive | QueryParamPrimitive[] | undefined;
+type QueryParamValue = QueryParamPrimitive | readonly QueryParamPrimitive[] | undefined;
 
 export function buildQueryString(params: Record<string, QueryParamValue>): string {
   const searchParams = new URLSearchParams();

@@ -15,6 +15,7 @@ import { ALL_ASSIGNEES, TaskLifecycle, taskLifecycles, TaskSortField, taskSortFi
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useTabParam } from "@/hooks/use-tab-param";
+import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { cn } from "@/lib/utils";
 import { ICONS, type Icon } from "@/lib/icons";
 import { toast } from "@/components/ui/toast";
@@ -179,12 +180,17 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     onLimitChange,
     onPageChange,
   } = useTasksTable();
-  const { tab, onTabChange } = useTabParam(taskLifecycles, "ACTIVE");
 
-  const LIFECYCLE_TABS: { value: TaskLifecycle; label: string; icon: Icon }[] = [
-    { value: "ACTIVE", label: t("listTable.lifecycle.active"), icon: ICONS.list },
-    { value: "ARCHIVED", label: t("listTable.lifecycle.archived"), icon: ICONS.archive },
-  ];
+  // Archivar y desarchivar una tarea es cosa del mando del proyecto —y solo de el, el del espacio no
+  // alcanza aqui—, asi que a los demas la pestana de archivadas no les ofrece nada.
+  const availableTabs: readonly TaskLifecycle[] = isProjectManager(project.myRole) ? taskLifecycles : ["ACTIVE"];
+
+  const { tab, onTabChange } = useTabParam(taskLifecycles, "ACTIVE", availableTabs);
+
+  const LIFECYCLE_TABS: Record<TaskLifecycle, { label: string; icon: Icon }> = {
+    ACTIVE: { label: t("listTable.lifecycle.tasks"), icon: ICONS.list },
+    ARCHIVED: { label: t("listTable.lifecycle.archived"), icon: ICONS.archive },
+  };
 
   const sortOptions: { value: TaskSortField; label: string }[] = taskSortFields.map((field) => ({
     value: field,
@@ -229,7 +235,10 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     isFavorite,
   };
   const activeCountQuery = useQuery(getTasksQuery({ ...countParams, isArchived: false }));
-  const archivedCountQuery = useQuery(getTasksQuery({ ...countParams, isArchived: true }));
+  const archivedCountQuery = useQuery({
+    ...getTasksQuery({ ...countParams, isArchived: true }),
+    enabled: isProjectManager(project.myRole),
+  });
   const countQueryByTab = {
     ACTIVE: activeCountQuery,
     ARCHIVED: archivedCountQuery,
@@ -324,12 +333,13 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as TaskLifecycle)}>
       <div className="border-b">
         <TabsList variant="line">
-          {LIFECYCLE_TABS.map((lifecycleTab) => {
-            const total = countQueryByTab[lifecycleTab.value].data?.pagination.total;
+          {availableTabs.map((lifecycle) => {
+            const { label, icon: TabIcon } = LIFECYCLE_TABS[lifecycle];
+            const total = countQueryByTab[lifecycle].data?.pagination.total;
             return (
-              <TabsTrigger key={lifecycleTab.value} value={lifecycleTab.value}>
-                <lifecycleTab.icon />
-                {lifecycleTab.label}
+              <TabsTrigger key={lifecycle} value={lifecycle}>
+                <TabIcon />
+                {label}
                 {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
               </TabsTrigger>
             );
@@ -375,8 +385,8 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
         </div>
       </div>
 
-      {LIFECYCLE_TABS.map((lifecycleTab) => (
-        <TabsContent key={lifecycleTab.value} value={lifecycleTab.value} className="flex flex-col gap-4">
+      {availableTabs.map((lifecycle) => (
+        <TabsContent key={lifecycle} value={lifecycle} className="flex flex-col gap-4">
           {tabContent}
         </TabsContent>
       ))}

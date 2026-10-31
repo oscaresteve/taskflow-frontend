@@ -4,6 +4,7 @@ import { workspaceKeys } from "@/lib/query-keys/workspace.keys";
 import { getNextPageParam } from "@/lib/queries/pagination";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { WorkspaceSortField } from "../workspace-enums";
+import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 
 // "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
 // getNextPageParam helper can back any other list that outgrows a "load more" button later.
@@ -35,6 +36,7 @@ export const getWorkspacesQuery = ({
   search,
   isActive,
   isFavorite,
+  myRole,
   sort,
   order,
 }: {
@@ -43,12 +45,13 @@ export const getWorkspacesQuery = ({
   search?: string;
   isActive?: boolean;
   isFavorite?: boolean;
+  myRole?: readonly WorkspaceRole[];
   sort?: WorkspaceSortField;
   order?: SortOrder;
 } = {}) =>
   queryOptions({
-    queryKey: workspaceKeys.lists({ page, limit, search, isActive, isFavorite, sort, order }),
-    queryFn: () => getWorkspaces({ page, limit, search, isActive, isFavorite, sort, order }),
+    queryKey: workspaceKeys.lists({ page, limit, search, isActive, isFavorite, myRole, sort, order }),
+    queryFn: () => getWorkspaces({ page, limit, search, isActive, isFavorite, myRole, sort, order }),
   });
 
 export const getWorkspaceQuery = (workspaceSlug: string) =>

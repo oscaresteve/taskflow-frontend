@@ -13,7 +13,7 @@
     "newWorkspace": "Nuevo espacio",
     "searchPlaceholder": "Buscar espacios",
     "lifecycle": {
-      "active": "Activos",
+      "workspaces": "Espacios",
       "inactive": "Inactivos"
     },
     "failedToLoad": "No se pudieron cargar los espacios.",

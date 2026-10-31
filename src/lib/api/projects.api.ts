@@ -4,6 +4,7 @@ import { request } from "@/lib/http/client";
 import { buildQueryString } from "@/lib/http/query-string";
 import { CreateProjectDto, UpdateProjectDto } from "@/lib/schemas/project.schema";
 import { ProjectSortField } from "../project-enums";
+import { ProjectRole } from "@/lib/dtos/project-members.dto";
 
 export function getProjects({
   workspaceSlug,
@@ -11,6 +12,7 @@ export function getProjects({
   limit,
   isArchived,
   isFavorite,
+  myRole,
   search,
   sort,
   order,
@@ -20,11 +22,13 @@ export function getProjects({
   limit?: number;
   isArchived?: boolean;
   isFavorite?: boolean;
+  // Acota el listado a los proyectos en los que tengo uno de esos roles.
+  myRole?: readonly ProjectRole[];
   search?: string;
   sort?: ProjectSortField;
   order?: SortOrder;
 }) {
-  const queryString = buildQueryString({ page, limit, isArchived, isFavorite, search, sort, order });
+  const queryString = buildQueryString({ page, limit, isArchived, isFavorite, myRole, search, sort, order });
 
   return request<PaginatedResponseDto<ProjectListItemResponseDto>>(
     `/workspaces/${workspaceSlug}/projects${queryString}`,

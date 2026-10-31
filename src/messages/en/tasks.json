@@ -91,7 +91,7 @@
     "noTasksFilteredDescription": "Try a different search or filter.",
     "favoritesFilter": "Favorites",
     "lifecycle": {
-      "active": "Active",
+      "tasks": "Tasks",
       "archived": "Archived"
     },
     "columns": {

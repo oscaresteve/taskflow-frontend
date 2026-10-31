@@ -44,11 +44,11 @@ import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function WorkspaceMembersPage() {
   const t = useTranslations("members");
-  const STATUS_TABS: { value: WorkspaceMemberStatus; label: string; icon: Icon }[] = [
-    { value: "ACTIVE", label: t("workspaceMembersPage.tabActive"), icon: ICONS.memberActive },
-    { value: "PENDING", label: t("workspaceMembersPage.tabPending"), icon: ICONS.memberPending },
-    { value: "REMOVED", label: t("workspaceMembersPage.tabRemoved"), icon: ICONS.removeMember },
-  ];
+  const STATUS_TABS: Record<WorkspaceMemberStatus, { label: string; icon: Icon }> = {
+    ACTIVE: { label: t("workspaceMembersPage.tabMembers"), icon: ICONS.memberActive },
+    PENDING: { label: t("workspaceMembersPage.tabPending"), icon: ICONS.memberPending },
+    REMOVED: { label: t("workspaceMembersPage.tabRemoved"), icon: ICONS.removeMember },
+  };
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
@@ -68,17 +68,25 @@ export default function WorkspaceMembersPage() {
     member: WorkspaceMemberWithUserResponseDto;
     role: WorkspaceRole;
   } | null>(null);
-  const { tab: statusTab, onTabChange } = useTabParam(workspaceMemberStatusTabs, "ACTIVE");
+
+  // Pendientes y eliminados solo existen para quien puede aceptar y readmitir: a un miembro raso
+  // esas pestanas no le ofrecen ninguna accion, asi que no se ensenan ni se cuentan.
+  const canManageMembers = isWorkspaceManager(myRole);
+  const availableTabs: readonly WorkspaceMemberStatus[] = canManageMembers ? workspaceMemberStatusTabs : ["ACTIVE"];
+
+  const { tab: statusTab, onTabChange } = useTabParam(workspaceMemberStatusTabs, "ACTIVE", availableTabs);
 
   const activeCountQuery = useQuery(
     getWorkspaceMembersPageQuery({ workspaceSlug, status: ["ACTIVE"], page: 1, limit: 1 }),
   );
-  const pendingCountQuery = useQuery(
-    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["PENDING"], page: 1, limit: 1 }),
-  );
-  const removedCountQuery = useQuery(
-    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["REMOVED"], page: 1, limit: 1 }),
-  );
+  const pendingCountQuery = useQuery({
+    ...getWorkspaceMembersPageQuery({ workspaceSlug, status: ["PENDING"], page: 1, limit: 1 }),
+    enabled: canManageMembers,
+  });
+  const removedCountQuery = useQuery({
+    ...getWorkspaceMembersPageQuery({ workspaceSlug, status: ["REMOVED"], page: 1, limit: 1 }),
+    enabled: canManageMembers,
+  });
   const countQueryByStatus = {
     ACTIVE: activeCountQuery,
     PENDING: pendingCountQuery,
@@ -265,23 +273,24 @@ export default function WorkspaceMembersPage() {
       <Tabs value={statusTab} onValueChange={(value) => onTabChange(value as WorkspaceMemberStatus)}>
         <div className="border-b">
           <TabsList variant="line">
-            {STATUS_TABS.map((tab) => {
-              const total = countQueryByStatus[tab.value].data?.pagination.total;
+            {availableTabs.map((status) => {
+              const { label, icon: TabIcon } = STATUS_TABS[status];
+              const total = countQueryByStatus[status].data?.pagination.total;
               return (
-                <TabsTrigger key={tab.value} value={tab.value}>
-                  <tab.icon />
-                  {tab.label}
+                <TabsTrigger key={status} value={status}>
+                  <TabIcon />
+                  {label}
                   {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
                 </TabsTrigger>
               );
             })}
           </TabsList>
         </div>
-        {STATUS_TABS.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value}>
+        {availableTabs.map((status) => (
+          <TabsContent key={status} value={status}>
             <WorkspaceMembersPanel
               workspaceSlug={workspaceSlug}
-              status={tab.value}
+              status={status}
               assignableRoles={assignableRoles}
               roleChangeable={roleChangeable}
               onChangeRole={handleRequestChangeRole}

@@ -16,6 +16,8 @@ import { ApiError } from "@/lib/http/api-error";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
 import { RowActionButton } from "@/components/common/row-action-button";
+import { useProjectRole } from "@/hooks/use-project-role";
+import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { cn } from "@/lib/utils";
 
 // Prop derivada directamente con ComponentProps.
@@ -43,6 +45,10 @@ export function TaskActionsMenu({
 }: TaskActionsMenuProps) {
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
+  // Archivar y desarchivar lo exige el backend al mando del proyecto, y solo a el: el rol de espacio
+  // no alcanza a las tareas.
+  const { role: myProjectRole } = useProjectRole(workspaceSlug, projectSlug);
+  const canArchive = isProjectManager(myProjectRole);
   const archiveTask = useArchiveTask(workspaceSlug, projectSlug, taskNumber);
   const unarchiveTask = useUnarchiveTask(workspaceSlug, projectSlug, taskNumber);
   const [archiveOpen, setArchiveOpen] = useState(false);
@@ -79,8 +85,10 @@ export function TaskActionsMenu({
   }
 
   // Una tarea archivada sigue siendo direccionable, pero lo unico que se puede hacer con ella es
-  // desarchivarla: esa salida se pinta directamente, sin menu de un solo elemento.
+  // desarchivarla: esa salida se pinta directamente, sin menu, y solo para quien manda.
   if (task.isArchived) {
+    if (!canArchive) return null;
+
     return (
       <>
         <RowActionButton onClick={() => setUnarchiveOpen(true)}>
@@ -125,11 +133,15 @@ export function TaskActionsMenu({
               <ICONS.favorite className={cn(task.isFavorite && "fill-current")} />
               {task.isFavorite ? tCommon("actions.removeFromFavorites") : tCommon("actions.addToFavorites")}
             </ActionsMenuItem>
-            <DropdownMenuSeparator />
-            <ActionsMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
-              <ICONS.archive />
-              {t("taskActionsMenu.archive")}
-            </ActionsMenuItem>
+            {canArchive && (
+              <>
+                <DropdownMenuSeparator />
+                <ActionsMenuItem variant="destructive" onClick={() => setArchiveOpen(true)}>
+                  <ICONS.archive />
+                  {t("taskActionsMenu.archive")}
+                </ActionsMenuItem>
+              </>
+            )}
           </ActionsMenuContent>
         </DropdownMenu>
       </Tooltip>

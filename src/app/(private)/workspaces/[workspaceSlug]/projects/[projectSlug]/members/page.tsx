@@ -40,10 +40,10 @@ import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function ProjectMembersPage() {
   const t = useTranslations("members");
-  const STATUS_TABS: { value: ProjectMemberStatusTab; label: string; icon: Icon }[] = [
-    { value: "ACTIVE", label: t("projectMembersPage.tabActive"), icon: ICONS.memberActive },
-    { value: "INACTIVE", label: t("projectMembersPage.tabInactive"), icon: ICONS.memberInactive },
-  ];
+  const STATUS_TABS: Record<ProjectMemberStatusTab, { label: string; icon: Icon }> = {
+    ACTIVE: { label: t("projectMembersPage.tabMembers"), icon: ICONS.memberActive },
+    INACTIVE: { label: t("projectMembersPage.tabInactive"), icon: ICONS.memberInactive },
+  };
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
@@ -61,14 +61,21 @@ export default function ProjectMembersPage() {
     member: ProjectMemberWithUserResponseDto;
     role: ProjectRole;
   } | null>(null);
-  const { tab: statusTab, onTabChange } = useTabParam(projectMemberStatusTabs, "ACTIVE");
+
+  // La pestana de inactivos solo existe para quien puede reactivarlos: a un miembro raso no le
+  // ofrece ninguna accion, asi que no se ensena ni se cuenta.
+  const canManage = canManageProject({ workspaceRole: myWorkspaceRole, projectRole: myRole });
+  const availableTabs: readonly ProjectMemberStatusTab[] = canManage ? projectMemberStatusTabs : ["ACTIVE"];
+
+  const { tab: statusTab, onTabChange } = useTabParam(projectMemberStatusTabs, "ACTIVE", availableTabs);
 
   const activeCountQuery = useQuery(
     getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [true], page: 1, limit: 1 }),
   );
-  const inactiveCountQuery = useQuery(
-    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [false], page: 1, limit: 1 }),
-  );
+  const inactiveCountQuery = useQuery({
+    ...getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [false], page: 1, limit: 1 }),
+    enabled: canManage,
+  });
   const countQueryByStatus = {
     ACTIVE: activeCountQuery,
     INACTIVE: inactiveCountQuery,
@@ -207,7 +214,7 @@ export default function ProjectMembersPage() {
       <PageHeader
         title={t("projectMembersPage.title")}
         actions={
-          canManageProject({ workspaceRole: myWorkspaceRole, projectRole: myRole }) ? (
+          canManage ? (
             <Button size="sm" onClick={() => setAddMemberOpen(true)}>
               <ICONS.memberAdd />
               {t("projectMembersPage.addMember")}
@@ -219,24 +226,25 @@ export default function ProjectMembersPage() {
       <Tabs value={statusTab} onValueChange={(value) => onTabChange(value as ProjectMemberStatusTab)}>
         <div className="border-b">
           <TabsList variant="line">
-            {STATUS_TABS.map((tab) => {
-              const total = countQueryByStatus[tab.value].data?.pagination.total;
+            {availableTabs.map((status) => {
+              const { label, icon: TabIcon } = STATUS_TABS[status];
+              const total = countQueryByStatus[status].data?.pagination.total;
               return (
-                <TabsTrigger key={tab.value} value={tab.value}>
-                  <tab.icon />
-                  {tab.label}
+                <TabsTrigger key={status} value={status}>
+                  <TabIcon />
+                  {label}
                   {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
                 </TabsTrigger>
               );
             })}
           </TabsList>
         </div>
-        {STATUS_TABS.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value}>
+        {availableTabs.map((status) => (
+          <TabsContent key={status} value={status}>
             <ProjectMembersPanel
               workspaceSlug={workspaceSlug}
               projectSlug={projectSlug}
-              isActive={tab.value === "ACTIVE"}
+              isActive={status === "ACTIVE"}
               assignableRoles={assignableRoles}
               roleChangeable={roleChangeable}
               onChangeRole={handleRequestChangeRole}

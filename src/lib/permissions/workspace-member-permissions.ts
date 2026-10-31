@@ -11,7 +11,10 @@ const ASSIGNABLE_ROLES_BY_ROLE: Record<WorkspaceRole, WorkspaceRole[]> = {
   MEMBER: [],
 };
 
-// OWNER o ADMIN pueden administrar el workspace.
+// OWNER o ADMIN pueden administrar el workspace. La lista existe aparte del predicado porque los
+// listados filtran por rol en el servidor (`?myRole=`), y ahi hace falta recorrerla.
+export const workspaceManagerRoles = ["OWNER", "ADMIN"] as const satisfies readonly WorkspaceRole[];
+
 export function isWorkspaceManager(actorRole: WorkspaceRole | undefined): boolean {
   return actorRole === "OWNER" || actorRole === "ADMIN";
 }

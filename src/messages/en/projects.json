@@ -17,7 +17,7 @@
     "newProject": "New project",
     "searchPlaceholder": "Search projects",
     "lifecycle": {
-      "active": "Active",
+      "projects": "Projects",
       "archived": "Archived"
     },
     "failedToLoad": "Failed to load projects.",

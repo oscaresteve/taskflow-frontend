@@ -4,6 +4,7 @@ import { projectKeys } from "@/lib/query-keys/project.keys";
 import { getNextPageParam } from "@/lib/queries/pagination";
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectSortField } from "../project-enums";
+import { ProjectRole } from "@/lib/dtos/project-members.dto";
 
 // "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
 // getNextPageParam helper can back any other list that outgrows a "load more" button later.
@@ -42,6 +43,7 @@ export const getProjectsQuery = (
     limit?: number;
     isArchived?: boolean;
     isFavorite?: boolean;
+    myRole?: readonly ProjectRole[];
     search?: string;
     sort?: ProjectSortField;
     order?: SortOrder;

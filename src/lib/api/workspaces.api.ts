@@ -8,12 +8,14 @@ import {
 } from "@/lib/dtos/workspaces.dto";
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../schemas/workspace.schema";
 import { WorkspaceSortField } from "../workspace-enums";
+import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 
 export function getWorkspaces({
   page,
   limit,
   isActive,
   isFavorite,
+  myRole,
   search,
   sort,
   order,
@@ -22,11 +24,13 @@ export function getWorkspaces({
   limit?: number;
   isActive?: boolean | boolean[];
   isFavorite?: boolean;
+  // Acota el listado a los espacios en los que tengo uno de esos roles.
+  myRole?: readonly WorkspaceRole[];
   search?: string;
   sort?: WorkspaceSortField;
   order?: SortOrder;
 } = {}) {
-  const queryString = buildQueryString({ page, limit, isActive, isFavorite, search, sort, order });
+  const queryString = buildQueryString({ page, limit, isActive, isFavorite, myRole, search, sort, order });
 
   return request<PaginatedResponseDto<WorkspaceListItemResponseDto>>(`/workspaces${queryString}`, {
     method: "GET",

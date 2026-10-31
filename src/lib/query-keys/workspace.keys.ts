@@ -1,5 +1,6 @@
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { WorkspaceSortField } from "../workspace-enums";
+import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 
 type WorkspaceListParams = {
   page?: number;
@@ -7,6 +8,7 @@ type WorkspaceListParams = {
   search?: string;
   isActive?: boolean;
   isFavorite?: boolean;
+  myRole?: readonly WorkspaceRole[];
   sort?: WorkspaceSortField;
   order?: SortOrder;
 };

@@ -1,11 +1,13 @@
 import { SortOrder } from "@/lib/dtos/pagination.dto";
 import { ProjectSortField } from "../project-enums";
+import { ProjectRole } from "@/lib/dtos/project-members.dto";
 
 type ProjectListParams = {
   page?: number;
   limit?: number;
   isArchived?: boolean;
   isFavorite?: boolean;
+  myRole?: readonly ProjectRole[];
   search?: string;
   sort?: ProjectSortField;
   order?: SortOrder;

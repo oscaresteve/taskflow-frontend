@@ -17,7 +17,10 @@ const ASSIGNABLE_ROLES_BY_ROLE: Record<ProjectRole, ProjectRole[]> = {
   MEMBER: [],
 };
 
-// OWNER o ADMIN pueden administrar el proyecto.
+// OWNER o ADMIN pueden administrar el proyecto. La lista existe aparte del predicado porque el
+// listado de proyectos filtra por rol en el servidor (`?myRole=`), y ahi hace falta recorrerla.
+export const projectManagerRoles = ["OWNER", "ADMIN"] as const satisfies readonly ProjectRole[];
+
 export function isProjectManager(actorRole: ProjectRole | null | undefined): boolean {
   return actorRole === "OWNER" || actorRole === "ADMIN";
 }

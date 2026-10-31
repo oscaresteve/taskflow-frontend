@@ -16,7 +16,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ProjectListItemResponseDto } from "@/lib/dtos/projects.dto";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
 import { useParams } from "next/navigation";
-import { canManageProject } from "@/lib/permissions/project-member-permissions";
+import { canManageProject, projectManagerRoles } from "@/lib/permissions/project-member-permissions";
 import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissions";
 import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import Link from "next/link";
@@ -130,14 +130,29 @@ export default function ProjectsPage() {
     onLimitChange,
     onPageChange,
   } = useProjectsTable();
-  const { tab, onTabChange } = useTabParam(projectLifecycles, "ACTIVE");
+
+  // Un proyecto archivado solo se ensena a quien puede desarchivarlo. Quien manda en el espacio
+  // manda en todos sus proyectos, asi que no necesita filtro; al resto se le acota el listado a los
+  // proyectos que dirige.
+  const archivedRoles = isWorkspaceManager(myWorkspaceRole) ? undefined : projectManagerRoles;
+
+  // Y la pestana solo aparece si hay algo que desarchivar. Se mide sin la busqueda de la tabla: si
+  // dependiera de ella, escribir en el buscador haria desaparecer la pestana abierta.
+  const manageableArchivedQuery = useQuery(
+    getProjectsQuery(workspaceSlug, { page: 1, limit: 1, isArchived: true, myRole: archivedRoles }),
+  );
+  const availableTabs: readonly ProjectLifecycle[] = manageableArchivedQuery.data?.pagination.total
+    ? projectLifecycles
+    : ["ACTIVE"];
+
+  const { tab, onTabChange } = useTabParam(projectLifecycles, "ACTIVE", availableTabs);
 
   const showingArchived = tab === "ARCHIVED";
 
-  const LIFECYCLE_TABS: { value: ProjectLifecycle; label: string; icon: Icon }[] = [
-    { value: "ACTIVE", label: t("projectsPage.lifecycle.active"), icon: ICONS.project },
-    { value: "ARCHIVED", label: t("projectsPage.lifecycle.archived"), icon: ICONS.archive },
-  ];
+  const LIFECYCLE_TABS: Record<ProjectLifecycle, { label: string; icon: Icon }> = {
+    ACTIVE: { label: t("projectsPage.lifecycle.projects"), icon: ICONS.project },
+    ARCHIVED: { label: t("projectsPage.lifecycle.archived"), icon: ICONS.archive },
+  };
 
   const {
     data: projects,
@@ -151,6 +166,7 @@ export default function ProjectsPage() {
       sort,
       order,
       isArchived: showingArchived,
+      myRole: showingArchived ? archivedRoles : undefined,
     }),
     placeholderData: keepPreviousData,
   });
@@ -160,7 +176,13 @@ export default function ProjectsPage() {
     getProjectsQuery(workspaceSlug, { page: 1, limit: 1, search: searchParam, isArchived: false }),
   );
   const archivedCountQuery = useQuery(
-    getProjectsQuery(workspaceSlug, { page: 1, limit: 1, search: searchParam, isArchived: true }),
+    getProjectsQuery(workspaceSlug, {
+      page: 1,
+      limit: 1,
+      search: searchParam,
+      isArchived: true,
+      myRole: archivedRoles,
+    }),
   );
   const countQueryByTab = {
     ACTIVE: activeCountQuery,
@@ -231,12 +253,13 @@ export default function ProjectsPage() {
       <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as ProjectLifecycle)}>
         <div className="border-b">
           <TabsList variant="line">
-            {LIFECYCLE_TABS.map((lifecycleTab) => {
-              const total = countQueryByTab[lifecycleTab.value].data?.pagination.total;
+            {availableTabs.map((lifecycle) => {
+              const { label, icon: TabIcon } = LIFECYCLE_TABS[lifecycle];
+              const total = countQueryByTab[lifecycle].data?.pagination.total;
               return (
-                <TabsTrigger key={lifecycleTab.value} value={lifecycleTab.value}>
-                  <lifecycleTab.icon />
-                  {lifecycleTab.label}
+                <TabsTrigger key={lifecycle} value={lifecycle}>
+                  <TabIcon />
+                  {label}
                   {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
                 </TabsTrigger>
               );
@@ -263,8 +286,8 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {LIFECYCLE_TABS.map((lifecycleTab) => (
-          <TabsContent key={lifecycleTab.value} value={lifecycleTab.value} className="flex flex-col gap-4">
+        {availableTabs.map((lifecycle) => (
+          <TabsContent key={lifecycle} value={lifecycle} className="flex flex-col gap-4">
             {projects.data.length === 0 ? (
               emptyState
             ) : (
