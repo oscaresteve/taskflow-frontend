@@ -77,7 +77,6 @@
     }
   },
   "projectSettingsPage": {
-    "title": "Settings",
     "noPermission": "You don't have permission to view this page."
   },
   "archiveProjectSection": {

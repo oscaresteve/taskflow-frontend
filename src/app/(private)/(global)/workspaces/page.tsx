@@ -20,11 +20,10 @@ import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-
 import { WorkspaceActionsMenu } from "@/components/workspaces/workspace-actions-menu";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
+import { LifecycleFilter } from "@/components/common/lifecycle-filter";
 import { EmptyState } from "@/components/common/empty-state";
 import { WorkspaceListItemResponseDto } from "@/lib/dtos/workspaces.dto";
 import { WorkspaceLifecycle, WorkspaceSortField, workspaceLifecycles } from "@/lib/workspace-enums";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { useTabParam } from "@/hooks/use-tab-param";
 import { useWorkspacesTable } from "@/hooks/use-workspaces-table";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
@@ -82,7 +81,7 @@ function InactiveWorkspaceRow({ workspace }: { workspace: WorkspaceListItemRespo
 export default function WorkspacesPage() {
   const t = useTranslations("workspaces");
   const [createOpen, setCreateOpen] = useState(false);
-  const LIFECYCLE_TABS: Record<WorkspaceLifecycle, { label: string; icon: Icon }> = {
+  const LIFECYCLE_OPTIONS: Record<WorkspaceLifecycle, { label: string; icon: Icon }> = {
     ACTIVE: { label: t("workspacesPage.lifecycle.workspaces"), icon: ICONS.workspace },
     INACTIVE: { label: t("workspacesPage.lifecycle.inactive"), icon: ICONS.deactivate },
   };
@@ -180,30 +179,26 @@ export default function WorkspacesPage() {
         }
       />
 
-      <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as WorkspaceLifecycle)}>
-        <div className="border-b">
-          <TabsList variant="line">
-            {availableTabs.map((lifecycle) => {
-              const { label, icon: TabIcon } = LIFECYCLE_TABS[lifecycle];
-              const total = countQueryByTab[lifecycle].data?.pagination.total;
-              return (
-                <TabsTrigger key={lifecycle} value={lifecycle}>
-                  <TabIcon />
-                  {label}
-                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
-
-        <div className="flex items-center justify-between gap-2">
-          <SearchInput
-            value={search}
-            onChange={onSearchChange}
-            placeholder={t("workspacesPage.searchPlaceholder")}
-            className="w-48"
-          />
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <LifecycleFilter
+              value={tab}
+              onValueChange={onTabChange}
+              options={availableTabs.map((lifecycle) => ({
+                value: lifecycle,
+                label: LIFECYCLE_OPTIONS[lifecycle].label,
+                icon: LIFECYCLE_OPTIONS[lifecycle].icon,
+                count: countQueryByTab[lifecycle].data?.pagination.total,
+              }))}
+            />
+            <SearchInput
+              value={search}
+              onChange={onSearchChange}
+              placeholder={t("workspacesPage.searchPlaceholder")}
+              className="w-48"
+            />
+          </div>
           <div className="flex items-center gap-1">
             <SortControls
               field={sort}
@@ -216,45 +211,43 @@ export default function WorkspacesPage() {
           </div>
         </div>
 
-        {availableTabs.map((lifecycle) => (
-          <TabsContent key={lifecycle} value={lifecycle} className="flex flex-col gap-4">
-            {workspaces.data.length === 0 && (
-              <EmptyState
-                icon={ICONS.workspace}
-                title={t("workspacesPage.noWorkspacesFound")}
-                description={t("workspacesPage.noWorkspacesFoundDescription")}
-              />
-            )}
+        <div className="flex flex-col gap-4">
+          {workspaces.data.length === 0 && (
+            <EmptyState
+              icon={ICONS.workspace}
+              title={t("workspacesPage.noWorkspacesFound")}
+              description={t("workspacesPage.noWorkspacesFoundDescription")}
+            />
+          )}
 
-            {workspaces.data.length > 0 && (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead />
-                    <TableHead>{t("workspacesPage.columns.workspace")}</TableHead>
-                    <TableHead>{t("workspacesPage.columns.slug")}</TableHead>
-                    <TableHead>{t("workspacesPage.columns.owners")}</TableHead>
-                    <TableHead>{t("workspacesPage.columns.actions")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {workspaces.data.map((workspace) =>
-                    showingInactive ? (
-                      <InactiveWorkspaceRow key={workspace.id} workspace={workspace} />
-                    ) : (
-                      <ActiveWorkspaceRow key={workspace.id} workspace={workspace} />
-                    ),
-                  )}
-                </TableBody>
-              </Table>
-            )}
+          {workspaces.data.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead />
+                  <TableHead>{t("workspacesPage.columns.workspace")}</TableHead>
+                  <TableHead>{t("workspacesPage.columns.slug")}</TableHead>
+                  <TableHead>{t("workspacesPage.columns.owners")}</TableHead>
+                  <TableHead>{t("workspacesPage.columns.actions")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {workspaces.data.map((workspace) =>
+                  showingInactive ? (
+                    <InactiveWorkspaceRow key={workspace.id} workspace={workspace} />
+                  ) : (
+                    <ActiveWorkspaceRow key={workspace.id} workspace={workspace} />
+                  ),
+                )}
+              </TableBody>
+            </Table>
+          )}
 
-            {workspaces.data.length > 0 && (
-              <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
-            )}
-          </TabsContent>
-        ))}
-      </Tabs>
+          {workspaces.data.length > 0 && (
+            <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+          )}
+        </div>
+      </div>
 
       <CreateWorkspaceDialog open={createOpen} onOpenChange={setCreateOpen} />
     </PageContainer>

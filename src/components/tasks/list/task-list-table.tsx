@@ -12,8 +12,6 @@ import { useUpdateTask } from "@/hooks/use-update-task";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { ApiError } from "@/lib/http/api-error";
 import { ALL_ASSIGNEES, TaskLifecycle, taskLifecycles, TaskSortField, taskSortFields } from "@/lib/task-enums";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { useTabParam } from "@/hooks/use-tab-param";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { cn } from "@/lib/utils";
@@ -26,6 +24,7 @@ import { SortControls } from "@/components/common/sort-controls";
 import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { EmptyState } from "@/components/common/empty-state";
+import { LifecycleFilter } from "@/components/common/lifecycle-filter";
 import { KanbanFilterBar } from "@/components/tasks/kanban/kanban-filter-bar";
 import { StatusSelect } from "@/components/tasks/status-select";
 import { PrioritySelect } from "@/components/tasks/priority-select";
@@ -187,7 +186,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
 
   const { tab, onTabChange } = useTabParam(taskLifecycles, "ACTIVE", availableTabs);
 
-  const LIFECYCLE_TABS: Record<TaskLifecycle, { label: string; icon: Icon }> = {
+  const LIFECYCLE_OPTIONS: Record<TaskLifecycle, { label: string; icon: Icon }> = {
     ACTIVE: { label: t("listTable.lifecycle.tasks"), icon: ICONS.list },
     ARCHIVED: { label: t("listTable.lifecycle.archived"), icon: ICONS.archive },
   };
@@ -279,8 +278,8 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     />
   );
 
-  // Lo mismo en las dos pestanas: lo que cambia es la query, no la tabla.
-  const tabContent = (
+  // El subconjunto solo cambia la query, no la tabla: se pinta una vez.
+  const tableContent = (
     <>
       {isLoading || !tasks ? (
         <div className="flex flex-col gap-3">
@@ -330,25 +329,19 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
   );
 
   return (
-    <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as TaskLifecycle)}>
-      <div className="border-b">
-        <TabsList variant="line">
-          {availableTabs.map((lifecycle) => {
-            const { label, icon: TabIcon } = LIFECYCLE_TABS[lifecycle];
-            const total = countQueryByTab[lifecycle].data?.pagination.total;
-            return (
-              <TabsTrigger key={lifecycle} value={lifecycle}>
-                <TabIcon />
-                {label}
-                {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
-      </div>
-
+    <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
+          <LifecycleFilter
+            value={tab}
+            onValueChange={onTabChange}
+            options={availableTabs.map((lifecycle) => ({
+              value: lifecycle,
+              label: LIFECYCLE_OPTIONS[lifecycle].label,
+              icon: LIFECYCLE_OPTIONS[lifecycle].icon,
+              count: countQueryByTab[lifecycle].data?.pagination.total,
+            }))}
+          />
           <KanbanFilterBar
             workspaceSlug={workspaceSlug}
             projectSlug={project.slug}
@@ -382,14 +375,16 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
             onOrderChange={onSortOrderChange}
           />
           <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
+          {onCreateTask && (
+            <Button className="ml-1" onClick={onCreateTask}>
+              <ICONS.addNew />
+              {t("listPage.createTask")}
+            </Button>
+          )}
         </div>
       </div>
 
-      {availableTabs.map((lifecycle) => (
-        <TabsContent key={lifecycle} value={lifecycle} className="flex flex-col gap-4">
-          {tabContent}
-        </TabsContent>
-      ))}
-    </Tabs>
+      <div className="flex flex-col gap-4">{tableContent}</div>
+    </div>
   );
 }

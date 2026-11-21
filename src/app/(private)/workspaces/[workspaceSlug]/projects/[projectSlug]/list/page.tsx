@@ -6,11 +6,8 @@ import { getProjectQuery } from "@/lib/queries/project.queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TaskListTable } from "@/components/tasks/list/task-list-table";
 import { PageContainer } from "@/components/common/page-container";
-import { PageHeader } from "@/components/common/page-header";
-import { Button } from "@/components/ui/button";
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 import { useState } from "react";
-import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 
 export default function TaskListPage() {
@@ -35,16 +32,6 @@ export default function TaskListPage() {
 
   return (
     <PageContainer>
-      <PageHeader
-        title={t("listPage.title")}
-        actions={
-          <Button onClick={() => setCreateTaskOpen(true)}>
-            <ICONS.addNew />
-            {t("listPage.createTask")}
-          </Button>
-        }
-      />
-
       <TaskListTable workspaceSlug={workspaceSlug} project={project} onCreateTask={() => setCreateTaskOpen(true)} />
 
       <CreateTaskDialog workspaceSlug={workspaceSlug} project={project} open={createTaskOpen} onOpenChange={setCreateTaskOpen} />

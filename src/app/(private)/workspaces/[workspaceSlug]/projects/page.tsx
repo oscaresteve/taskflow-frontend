@@ -2,6 +2,7 @@
 
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
+import { LifecycleFilter } from "@/components/common/lifecycle-filter";
 import { PageSizeSelect } from "@/components/common/page-size-select";
 import { PaginationControls } from "@/components/common/pagination-controls";
 import { SearchInput } from "@/components/common/search-input";
@@ -28,8 +29,6 @@ import { ProjectActionsMenu } from "@/components/projects/project-actions-menu";
 import { EmptyState } from "@/components/common/empty-state";
 import { useFormatter, useTranslations } from "next-intl";
 import { ProjectLifecycle, ProjectSortField, projectLifecycles } from "@/lib/project-enums";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { useTabParam } from "@/hooks/use-tab-param";
 import useProjectsTable from "@/hooks/use-projects-table";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
@@ -149,7 +148,7 @@ export default function ProjectsPage() {
 
   const showingArchived = tab === "ARCHIVED";
 
-  const LIFECYCLE_TABS: Record<ProjectLifecycle, { label: string; icon: Icon }> = {
+  const LIFECYCLE_OPTIONS: Record<ProjectLifecycle, { label: string; icon: Icon }> = {
     ACTIVE: { label: t("projectsPage.lifecycle.projects"), icon: ICONS.project },
     ARCHIVED: { label: t("projectsPage.lifecycle.archived"), icon: ICONS.archive },
   };
@@ -250,30 +249,26 @@ export default function ProjectsPage() {
         }
       />
 
-      <Tabs className="gap-4" value={tab} onValueChange={(value) => onTabChange(value as ProjectLifecycle)}>
-        <div className="border-b">
-          <TabsList variant="line">
-            {availableTabs.map((lifecycle) => {
-              const { label, icon: TabIcon } = LIFECYCLE_TABS[lifecycle];
-              const total = countQueryByTab[lifecycle].data?.pagination.total;
-              return (
-                <TabsTrigger key={lifecycle} value={lifecycle}>
-                  <TabIcon />
-                  {label}
-                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
-
-        <div className="flex items-center justify-between gap-2">
-          <SearchInput
-            value={search}
-            onChange={onSearchChange}
-            placeholder={t("projectsPage.searchPlaceholder")}
-            className="w-48"
-          />
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <LifecycleFilter
+              value={tab}
+              onValueChange={onTabChange}
+              options={availableTabs.map((lifecycle) => ({
+                value: lifecycle,
+                label: LIFECYCLE_OPTIONS[lifecycle].label,
+                icon: LIFECYCLE_OPTIONS[lifecycle].icon,
+                count: countQueryByTab[lifecycle].data?.pagination.total,
+              }))}
+            />
+            <SearchInput
+              value={search}
+              onChange={onSearchChange}
+              placeholder={t("projectsPage.searchPlaceholder")}
+              className="w-48"
+            />
+          </div>
           <div className="flex items-center gap-1">
             <SortControls
               field={sort}
@@ -286,51 +281,49 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {availableTabs.map((lifecycle) => (
-          <TabsContent key={lifecycle} value={lifecycle} className="flex flex-col gap-4">
-            {projects.data.length === 0 ? (
-              emptyState
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead />
-                    <TableHead>{t("projectsPage.columns.project")}</TableHead>
-                    <TableHead>{t("projectsPage.columns.slug")}</TableHead>
-                    <TableHead>{t("projectsPage.columns.key")}</TableHead>
-                    <TableHead>{t("projectsPage.columns.owners")}</TableHead>
-                    <TableHead>{t("projectsPage.columns.createdAt")}</TableHead>
-                    <TableHead>{t("projectsPage.columns.actions")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {projects.data.map((project) =>
-                    showingArchived ? (
-                      <ArchivedProjectRow
-                        key={project.id}
-                        workspaceSlug={workspaceSlug}
-                        workspaceRole={myWorkspaceRole}
-                        project={project}
-                      />
-                    ) : (
-                      <ProjectRow
-                        key={project.id}
-                        workspaceSlug={workspaceSlug}
-                        workspaceRole={myWorkspaceRole}
-                        project={project}
-                      />
-                    ),
-                  )}
-                </TableBody>
-              </Table>
-            )}
+        <div className="flex flex-col gap-4">
+          {projects.data.length === 0 ? (
+            emptyState
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead />
+                  <TableHead>{t("projectsPage.columns.project")}</TableHead>
+                  <TableHead>{t("projectsPage.columns.slug")}</TableHead>
+                  <TableHead>{t("projectsPage.columns.key")}</TableHead>
+                  <TableHead>{t("projectsPage.columns.owners")}</TableHead>
+                  <TableHead>{t("projectsPage.columns.createdAt")}</TableHead>
+                  <TableHead>{t("projectsPage.columns.actions")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {projects.data.map((project) =>
+                  showingArchived ? (
+                    <ArchivedProjectRow
+                      key={project.id}
+                      workspaceSlug={workspaceSlug}
+                      workspaceRole={myWorkspaceRole}
+                      project={project}
+                    />
+                  ) : (
+                    <ProjectRow
+                      key={project.id}
+                      workspaceSlug={workspaceSlug}
+                      workspaceRole={myWorkspaceRole}
+                      project={project}
+                    />
+                  ),
+                )}
+              </TableBody>
+            </Table>
+          )}
 
-            {projects.data.length > 0 && (
-              <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
-            )}
-          </TabsContent>
-        ))}
-      </Tabs>
+          {projects.data.length > 0 && (
+            <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+          )}
+        </div>
+      </div>
 
       <CreateProjectDialog open={createOpen} workspaceSlug={workspaceSlug} onOpenChange={setCreateOpen} />
     </PageContainer>

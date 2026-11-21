@@ -15,7 +15,7 @@ import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog
 import { RowActionButton } from "@/components/common/row-action-button";
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LifecycleFilter } from "@/components/common/lifecycle-filter";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { WorkspaceMembersPanel } from "./_components/workspace-members-panel";
 import { useActivateWorkspaceMember } from "@/hooks/use-activate-workspace-member";
@@ -40,14 +40,13 @@ import {
   canUpdateWorkspaceMemberRole,
   isWorkspaceManager,
 } from "@/lib/permissions/workspace-member-permissions";
-import { Badge } from "@/components/ui/badge";
 import { EnumBadge } from "@/components/common/enum-display";
 import { roleOptions, workspaceMemberStatusTabs } from "@/lib/member-enums";
 import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function WorkspaceMembersPage() {
   const t = useTranslations("members");
-  const STATUS_TABS: Record<WorkspaceMemberStatus, { label: string; icon: Icon }> = {
+  const STATUS_OPTIONS: Record<WorkspaceMemberStatus, { label: string; icon: Icon }> = {
     ACTIVE: { label: t("workspaceMembersPage.tabMembers"), icon: ICONS.memberActive },
     PENDING: { label: t("workspaceMembersPage.tabPending"), icon: ICONS.memberPending },
     REMOVED: { label: t("workspaceMembersPage.tabRemoved"), icon: ICONS.removeMember },
@@ -328,37 +327,28 @@ export default function WorkspaceMembersPage() {
         }
       />
 
-      <Tabs value={statusTab} onValueChange={(value) => onTabChange(value as WorkspaceMemberStatus)}>
-        <div className="border-b">
-          <TabsList variant="line">
-            {availableTabs.map((status) => {
-              const { label, icon: TabIcon } = STATUS_TABS[status];
-              const total = countQueryByStatus[status].data?.pagination.total;
-              return (
-                <TabsTrigger key={status} value={status}>
-                  <TabIcon />
-                  {label}
-                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
-        {availableTabs.map((status) => (
-          <TabsContent key={status} value={status}>
-            <WorkspaceMembersPanel
-              workspaceSlug={workspaceSlug}
-              status={status}
-              assignableRoles={assignableRoles}
-              roleChangeable={roleChangeable}
-              onChangeRole={handleRequestChangeRole}
-              renderActions={renderActions}
-              onAddMember={isWorkspaceManager(myRole) ? () => setAddMemberOpen(true) : undefined}
-              actorUserId={me?.id}
-            />
-          </TabsContent>
-        ))}
-      </Tabs>
+      <WorkspaceMembersPanel
+        workspaceSlug={workspaceSlug}
+        status={statusTab}
+        assignableRoles={assignableRoles}
+        roleChangeable={roleChangeable}
+        onChangeRole={handleRequestChangeRole}
+        renderActions={renderActions}
+        onAddMember={isWorkspaceManager(myRole) ? () => setAddMemberOpen(true) : undefined}
+        actorUserId={me?.id}
+        lifecycleFilter={
+          <LifecycleFilter
+            value={statusTab}
+            onValueChange={onTabChange}
+            options={availableTabs.map((status) => ({
+              value: status,
+              label: STATUS_OPTIONS[status].label,
+              icon: STATUS_OPTIONS[status].icon,
+              count: countQueryByStatus[status].data?.pagination.total,
+            }))}
+          />
+        }
+      />
 
       <AddWorkspaceMemberDialog workspaceSlug={workspaceSlug} open={addMemberOpen} onOpenChange={setAddMemberOpen} />
       <ConfirmDialog

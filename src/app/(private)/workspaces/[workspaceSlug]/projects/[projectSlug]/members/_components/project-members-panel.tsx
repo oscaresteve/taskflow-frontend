@@ -25,6 +25,12 @@ interface ProjectMembersPanelProps {
   onChangeRole: (member: ProjectMemberWithUserResponseDto, role: ProjectRole) => void;
   renderActions: (member: ProjectMemberWithUserResponseDto) => ReactNode | null;
   actorUserId?: string;
+  // El subconjunto del ciclo de vida se pinta con los demas filtros, pero lo arma la pagina: es
+  // quien sabe que subconjuntos puede ver este usuario y cuantos hay en cada uno.
+  lifecycleFilter?: ReactNode;
+  // La vista no tiene encabezado propio —el nombre lo da la pestana del proyecto—, asi que su
+  // accion primaria cierra la barra de herramientas.
+  actions?: ReactNode;
 }
 
 export function ProjectMembersPanel({
@@ -36,6 +42,8 @@ export function ProjectMembersPanel({
   onChangeRole,
   renderActions,
   actorUserId,
+  lifecycleFilter,
+  actions,
 }: ProjectMembersPanelProps) {
   const t = useTranslations("members");
   const SORT_OPTIONS: { value: MemberSortField; label: string }[] = [
@@ -115,12 +123,15 @@ export function ProjectMembersPanel({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <MembersFilterBar
-          search={search}
-          onSearchChange={onSearchChange}
-          roleFilter={roleFilter}
-          onRoleFilterChange={onRoleFilterChange}
-        />
+        <div className="flex flex-wrap items-center gap-2">
+          {lifecycleFilter}
+          <MembersFilterBar
+            search={search}
+            onSearchChange={onSearchChange}
+            roleFilter={roleFilter}
+            onRoleFilterChange={onRoleFilterChange}
+          />
+        </div>
         <div className="flex items-center gap-2">
           <SortControls
             field={sort}
@@ -130,6 +141,7 @@ export function ProjectMembersPanel({
             onOrderChange={onSortOrderChange}
           />
           <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
+          {actions}
         </div>
       </div>
 

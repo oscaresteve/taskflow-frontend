@@ -15,8 +15,7 @@ import { AddProjectMemberDialog } from "@/components/members/add-project-member-
 import { ConfirmDialog, richTitleTags } from "@/components/common/confirm-dialog";
 import { RowActionButton } from "@/components/common/row-action-button";
 import { PageContainer } from "@/components/common/page-container";
-import { PageHeader } from "@/components/common/page-header";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LifecycleFilter } from "@/components/common/lifecycle-filter";
 import { ProjectMembersPanel } from "./_components/project-members-panel";
 import { useUpdateProjectMember } from "@/hooks/use-update-project-member";
 import { useDeactivateProjectMember } from "@/hooks/use-deactivate-project-member";
@@ -33,14 +32,13 @@ import {
   canManageProject,
   canUpdateProjectMemberRole,
 } from "@/lib/permissions/project-member-permissions";
-import { Badge } from "@/components/ui/badge";
 import { EnumBadge } from "@/components/common/enum-display";
 import { projectMemberStatusTabs, roleOptions } from "@/lib/member-enums";
 import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function ProjectMembersPage() {
   const t = useTranslations("members");
-  const STATUS_TABS: Record<ProjectMemberStatusTab, { label: string; icon: Icon }> = {
+  const STATUS_OPTIONS: Record<ProjectMemberStatusTab, { label: string; icon: Icon }> = {
     ACTIVE: { label: t("projectMembersPage.tabMembers"), icon: ICONS.memberActive },
     INACTIVE: { label: t("projectMembersPage.tabInactive"), icon: ICONS.memberInactive },
   };
@@ -211,8 +209,27 @@ export default function ProjectMembersPage() {
 
   return (
     <PageContainer>
-      <PageHeader
-        title={t("projectMembersPage.title")}
+      <ProjectMembersPanel
+        workspaceSlug={workspaceSlug}
+        projectSlug={projectSlug}
+        isActive={statusTab === "ACTIVE"}
+        assignableRoles={assignableRoles}
+        roleChangeable={roleChangeable}
+        onChangeRole={handleRequestChangeRole}
+        renderActions={renderActions}
+        actorUserId={me?.id}
+        lifecycleFilter={
+          <LifecycleFilter
+            value={statusTab}
+            onValueChange={onTabChange}
+            options={availableTabs.map((status) => ({
+              value: status,
+              label: STATUS_OPTIONS[status].label,
+              icon: STATUS_OPTIONS[status].icon,
+              count: countQueryByStatus[status].data?.pagination.total,
+            }))}
+          />
+        }
         actions={
           canManage ? (
             <Button size="sm" onClick={() => setAddMemberOpen(true)}>
@@ -222,38 +239,6 @@ export default function ProjectMembersPage() {
           ) : null
         }
       />
-
-      <Tabs value={statusTab} onValueChange={(value) => onTabChange(value as ProjectMemberStatusTab)}>
-        <div className="border-b">
-          <TabsList variant="line">
-            {availableTabs.map((status) => {
-              const { label, icon: TabIcon } = STATUS_TABS[status];
-              const total = countQueryByStatus[status].data?.pagination.total;
-              return (
-                <TabsTrigger key={status} value={status}>
-                  <TabIcon />
-                  {label}
-                  {typeof total === "number" && <Badge variant="secondary">{total}</Badge>}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
-        {availableTabs.map((status) => (
-          <TabsContent key={status} value={status}>
-            <ProjectMembersPanel
-              workspaceSlug={workspaceSlug}
-              projectSlug={projectSlug}
-              isActive={status === "ACTIVE"}
-              assignableRoles={assignableRoles}
-              roleChangeable={roleChangeable}
-              onChangeRole={handleRequestChangeRole}
-              renderActions={renderActions}
-              actorUserId={me?.id}
-            />
-          </TabsContent>
-        ))}
-      </Tabs>
 
       <AddProjectMemberDialog
         workspaceSlug={workspaceSlug}

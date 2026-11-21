@@ -7,7 +7,6 @@ import { ProjectNameSection } from "./_components/project-name-section";
 import { ProjectDescriptionSection } from "./_components/project-description-section";
 import { ProjectColorSection } from "./_components/project-color-section";
 import { PageContainer } from "@/components/common/page-container";
-import { PageHeader } from "@/components/common/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProjectRole } from "@/hooks/use-project-role";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -34,7 +33,6 @@ export default function ProjectSettingsPage() {
 
   return (
     <PageContainer className="max-w-5xl">
-      <PageHeader title={t("projectSettingsPage.title")} />
       <ProjectNameSection />
       <ProjectDescriptionSection />
       <ProjectColorSection />

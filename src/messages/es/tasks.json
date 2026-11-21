@@ -79,7 +79,6 @@
   },
   "listPage": {
     "failedToLoadProject": "No se pudo cargar el proyecto.",
-    "title": "Lista",
     "createTask": "Crear tarea"
   },
   "listTable": {

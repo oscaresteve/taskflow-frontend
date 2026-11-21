@@ -79,7 +79,6 @@
   },
   "listPage": {
     "failedToLoadProject": "Failed to load project.",
-    "title": "List",
     "createTask": "Create task"
   },
   "listTable": {

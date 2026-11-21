@@ -89,7 +89,6 @@
     "restoreConfirmLabel": "Restore"
   },
   "projectMembersPage": {
-    "title": "Members",
     "addMember": "Add member",
     "tabMembers": "Members",
     "tabInactive": "Inactive",
