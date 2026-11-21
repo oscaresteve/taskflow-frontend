@@ -132,7 +132,10 @@ export function SortableKanbanCard({ href, ...props }: KanbanCardProps & { href:
       href={href}
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={cn("touch-none", isDragging && "opacity-40")}
+      className={cn(
+        "touch-none rounded-xl focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
+        isDragging && "opacity-40",
+      )}
       {...listeners}
       {...attributes}
     >
