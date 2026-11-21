@@ -1,6 +1,6 @@
 "use client";
 
-import { FocusEvent, KeyboardEvent, useState } from "react";
+import { FocusEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -32,8 +32,18 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
   const [editing, setEditing] = useState(false);
+  const formCardRef = useRef<HTMLDivElement>(null);
   const createTask = useCreateTask(workspaceSlug, projectSlug);
   const { priority, assigneeId } = useKanbanFilters();
+
+  // Abierto, esto mide bastante mas que el boton: al pie de una columna con scroll se quedaba
+  // cortado por el overflow. `nearest` hace el scroll justo para que entre entero y no mueve nada
+  // si ya se veia. El autoFocus del input solo garantiza el input, no la fila de botones.
+  useEffect(() => {
+    if (editing) {
+      formCardRef.current?.scrollIntoView({ block: "nearest" });
+    }
+  }, [editing]);
 
   const form = useForm<CreateTaskDto>({
     resolver: zodResolver(createTaskSchema(t)),
@@ -101,7 +111,7 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
   }
 
   return (
-    <Card size="sm" className="gap-2">
+    <Card ref={formCardRef} size="sm" className="gap-2">
       <form onSubmit={form.handleSubmit(onSubmit)} onBlur={handleBlur} className="contents">
         <div className="px-(--card-spacing)">
           <Field data-invalid={!!form.formState.errors.title}>

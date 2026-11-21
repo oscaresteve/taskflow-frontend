@@ -9,6 +9,8 @@ import { useKanbanDrag } from "@/hooks/use-kanban-drag";
 import { useKanbanFilters } from "@/hooks/use-kanban-filters";
 import { filterBoardTasks } from "@/lib/kanban";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { ICONS } from "@/lib/icons";
 import { KanbanCard } from "./kanban-card";
 import { KanbanColumn } from "./kanban-column";
 import { KanbanFilterBar } from "./kanban-filter-bar";
@@ -17,9 +19,10 @@ import { useTranslations } from "next-intl";
 interface KanbanBoardProps {
   workspaceSlug: string;
   project: ProjectResponseDto;
+  onCreateTask?: () => void;
 }
 
-export function KanbanBoard({ workspaceSlug, project }: KanbanBoardProps) {
+export function KanbanBoard({ workspaceSlug, project, onCreateTask }: KanbanBoardProps) {
   const { data: tasks, isLoading, isError } = useQuery(getTasksBoardQuery(workspaceSlug, project.slug));
 
   const {
@@ -52,31 +55,41 @@ export function KanbanBoard({ workspaceSlug, project }: KanbanBoardProps) {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid min-h-0 flex-1 grid-cols-4 grid-rows-[minmax(0,1fr)] gap-3">
         {taskStatuses.map((status) => (
-          <Skeleton key={status} className="h-64" />
+          <Skeleton key={status} className="h-full" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <KanbanFilterBar
-        workspaceSlug={workspaceSlug}
-        projectSlug={project.slug}
-        search={search}
-        onSearchChange={onSearchChange}
-        assigneeId={assigneeId}
-        onAssigneeChange={onAssigneeChange}
-        priority={priority}
-        onPriorityChange={onPriorityChange}
-        dueDate={dueDate}
-        onDueDateChange={onDueDateChange}
-      />
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
+      {/* La accion de la vista comparte fila con los filtros: la cabecera del proyecto ya dice en
+          que vista estas, asi que un titulo "Kanban" encima solo repetia la pestana activa. */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <KanbanFilterBar
+          workspaceSlug={workspaceSlug}
+          projectSlug={project.slug}
+          search={search}
+          onSearchChange={onSearchChange}
+          assigneeId={assigneeId}
+          onAssigneeChange={onAssigneeChange}
+          priority={priority}
+          onPriorityChange={onPriorityChange}
+          dueDate={dueDate}
+          onDueDateChange={onDueDateChange}
+        />
+        {onCreateTask && (
+          <Button onClick={onCreateTask}>
+            <ICONS.addNew />
+            {t("kanbanPage.createTask")}
+          </Button>
+        )}
+      </div>
 
       <DndContext sensors={sensors} collisionDetection={collisionDetection} {...handlers}>
-        <div className="grid grid-cols-4 items-start gap-3">
+        <div className="grid min-h-0 flex-1 grid-cols-4 grid-rows-[minmax(0,1fr)] gap-3">
           {taskStatuses.map((status) => (
             <KanbanColumn
               key={status}

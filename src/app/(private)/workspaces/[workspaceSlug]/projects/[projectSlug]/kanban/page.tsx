@@ -6,11 +6,8 @@ import { getProjectQuery } from "@/lib/queries/project.queries";
 import { Skeleton } from "@/components/ui/skeleton";
 import { KanbanBoard } from "@/components/tasks/kanban/kanban-board";
 import { PageContainer } from "@/components/common/page-container";
-import { PageHeader } from "@/components/common/page-header";
-import { Button } from "@/components/ui/button";
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 import { useState } from "react";
-import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
 
 export default function KanbanPage() {
@@ -34,18 +31,10 @@ export default function KanbanPage() {
   }
 
   return (
-    <PageContainer>
-      <PageHeader
-        title={t("kanbanPage.title")}
-        actions={
-          <Button onClick={() => setCreateTaskOpen(true)}>
-            <ICONS.addNew />
-            {t("kanbanPage.createTask")}
-          </Button>
-        }
-      />
-
-      <KanbanBoard workspaceSlug={workspaceSlug} project={project} />
+    // El tablero ocupa el alto que sobra y hace scroll por columna, asi que es la pagina la que no
+    // crece: min-h-0 deja que el contenedor flex se encoja hasta el alto real disponible.
+    <PageContainer className="min-h-0 flex-1">
+      <KanbanBoard workspaceSlug={workspaceSlug} project={project} onCreateTask={() => setCreateTaskOpen(true)} />
 
       <CreateTaskDialog workspaceSlug={workspaceSlug} project={project} open={createTaskOpen} onOpenChange={setCreateTaskOpen} />
     </PageContainer>

@@ -44,39 +44,55 @@ export function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={cn("flex flex-col gap-3 rounded-lg bg-muted/30 p-2", isDropTarget && "bg-muted/60")}
+      className={cn("flex min-h-0 flex-col gap-3 rounded-lg bg-muted/30 p-2", isDropTarget && "bg-muted/60")}
     >
-      <div className="flex items-center gap-2 px-1 text-sm font-medium jus">
+      {/* La cabecera no entra en el scroll: es lo que dice de que columna son las tarjetas que
+          quedan a la vista, y bajando se perdia junto con el resto de la pagina. */}
+      <div className="flex shrink-0 items-center gap-2 px-1 text-sm font-medium">
         <EnumIconLabel option={statusOptions[status]} className="text-muted-foreground" />
         <Badge variant="outline" className="ml-auto">
           {tasks.length}
         </Badge>
       </div>
 
-      {tasks.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
-            {tasks.map((task) => (
-              <SortableKanbanCard
-                key={task.id}
-                href={buildTaskModalHref({
-                  pathname,
-                  searchParams,
-                  workspaceSlug,
-                  projectSlug,
-                  taskNumber: task.taskNumber,
-                })}
-                taskKey={`${projectKey}-${task.taskNumber}`}
-                task={task}
-                workspaceSlug={workspaceSlug}
-                projectSlug={projectSlug}
-              />
-            ))}
-          </SortableContext>
-        </div>
-      )}
+      {/* `relative` no es decorativo: los sr-only de los botones de las tarjetas son absolutos y,
+          sin un contenedor posicionado aqui, se colocaban contra el <main> y escapaban a este
+          recorte, de modo que la pagina entera volvia a tener scroll pese al alto fijo. */}
+      {/* p-1: esto recorta por los cuatro lados —`overflow-y-auto` obliga a `overflow-x` a valer
+          `auto` tambien—, y tanto el ring de las tarjetas como el anillo de foco se pintan por
+          fuera del borde. Sin estos 4px se cercenaban: de lado siempre, y arriba y abajo en la
+          primera y la ultima. De paso alinea las tarjetas con el `px-1` de la cabecera. */}
+      <div className="relative flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto rounded-xl p-1">
+        {tasks.length > 0 && (
+          <div className="flex shrink-0 flex-col gap-2">
+            <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
+              {tasks.map((task) => (
+                <SortableKanbanCard
+                  key={task.id}
+                  href={buildTaskModalHref({
+                    pathname,
+                    searchParams,
+                    workspaceSlug,
+                    projectSlug,
+                    taskNumber: task.taskNumber,
+                  })}
+                  taskKey={`${projectKey}-${task.taskNumber}`}
+                  task={task}
+                  workspaceSlug={workspaceSlug}
+                  projectSlug={projectSlug}
+                />
+              ))}
+            </SortableContext>
+          </div>
+        )}
 
-      <KanbanInlineCreateTask workspaceSlug={workspaceSlug} projectSlug={projectSlug} status={status} />
+        {/* shrink-0: son items de un flex con el alto acotado, asi que al abrirse el formulario
+            —una Card con overflow-hidden, que por eso puede encogerse por debajo de su contenido—
+            se aplastaba en vez de empujar el scroll. */}
+        <div className="shrink-0">
+          <KanbanInlineCreateTask workspaceSlug={workspaceSlug} projectSlug={projectSlug} status={status} />
+        </div>
+      </div>
     </div>
   );
 }
