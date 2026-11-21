@@ -13,7 +13,7 @@
     "atLeastOneField": "At least one field must be provided"
   },
   "projectsPage": {
-    "title": "Manage projects",
+    "title": "Projects",
     "newProject": "New project",
     "searchPlaceholder": "Search projects",
     "lifecycle": {

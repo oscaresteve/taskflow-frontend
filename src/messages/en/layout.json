@@ -39,28 +39,18 @@
     "favorites": "Favorite projects",
     "noFavorites": "No favorites yet",
     "newProject": "New project",
-    "moreOptions": "More options",
-    "manageProjects": "Manage projects",
-    "searchPlaceholder": "Search projects",
     "failedToLoad": "Failed to load projects",
-    "noneFound": "No projects found",
     "noneYet": "No projects yet",
-    "loading": "Loading…",
-    "remaining": "{count} more"
+    "toggleList": "Toggle list"
   },
   "workspacesNav": {
     "title": "Workspaces",
     "favorites": "Favorite workspaces",
     "noFavorites": "No favorites yet",
     "newWorkspace": "New workspace",
-    "moreOptions": "More options",
-    "manageWorkspaces": "Manage workspaces",
-    "searchPlaceholder": "Search workspaces",
     "failedToLoad": "Failed to load workspaces",
-    "noneFound": "No workspaces found",
     "noneYet": "No workspaces yet",
-    "loading": "Loading…",
-    "remaining": "{count} more"
+    "toggleList": "Toggle list"
   },
   "workspaceSwitch": {
     "workspaces": "Workspaces",
@@ -70,7 +60,7 @@
     "loading": "Loading…",
     "remaining": "{count} more",
     "createWorkspace": "Create workspace",
-    "manageWorkspaces": "Manage workspaces"
+    "viewAllWorkspaces": "View all workspaces"
   },
   "userNav": {
     "profile": "Profile",

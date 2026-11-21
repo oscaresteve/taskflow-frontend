@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import type { MouseEvent } from "react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import type { BaseUIEvent } from "@base-ui/react/types";
 import { ICONS } from "@/lib/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getProjectsInfiniteQuery } from "@/lib/queries/project.queries";
 import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 import { canManageProject } from "@/lib/permissions/project-member-permissions";
@@ -19,7 +16,6 @@ import { CreateProjectDialog } from "@/components/projects/create-project-dialog
 import { ProjectActionsMenu } from "@/components/projects/project-actions-menu";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { Button } from "@/components/ui/button";
-import { SearchInput } from "@/components/common/search-input";
 import {
   SidebarMenuAction,
   SidebarMenu,
@@ -28,7 +24,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -38,7 +33,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
-import { ActionsMenuContent, ActionsMenuItem, ActionsMenuLabel } from "@/components/common/actions-menu";
 import { EmptyInline } from "@/components/common/empty-inline";
 import { ColorDot } from "../ui/color-dot";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -46,7 +40,6 @@ import { isWorkspaceManager } from "@/lib/permissions/workspace-member-permissio
 import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
 import { useTranslations } from "next-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 
 const NAV_PAGE_SIZE = 5;
 
@@ -158,18 +151,15 @@ function ProjectsFavoritesNav({ workspaceSlug }: { workspaceSlug: string }) {
 export default function ProjectsNav() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebouncedValue(search);
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    getProjectsInfiniteQuery({ workspaceSlug, limit: NAV_PAGE_SIZE, search: debouncedSearch }),
+  const { data, isLoading, isError } = useInfiniteQuery(
+    getProjectsInfiniteQuery({ workspaceSlug, limit: NAV_PAGE_SIZE }),
   );
   const [createOpen, setCreateOpen] = useState(false);
   const projects = data?.pages.flatMap((page) => page.data) ?? [];
-  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - projects.length : 0;
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
   const t = useTranslations("layout");
-  const { state, isMobile, toggleSidebar } = useSidebar();
-  const isIconMode = state === "collapsed" && !isMobile;
+  // Exacta: /workspaces/<slug>/projects/<slug> es un proyecto concreto, no el directorio.
+  const isDirectoryActive = pathname === `/workspaces/${workspaceSlug}/projects`;
 
   return (
     <>
@@ -177,32 +167,19 @@ export default function ProjectsNav() {
 
       <SidebarMenu>
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
-          <CollapsibleTrigger
-            render={<SidebarMenuButton className="group/folder" tooltip={t("projectsNav.title")} />}
-            onClick={(event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
-              // In icon mode the submenu is force-hidden (group-data-[collapsible=icon]:hidden), so
-              // toggling it open/closed has no visible effect. Expand the sidebar instead.
-              if (isIconMode) {
-                event.preventBaseUIHandler();
-                toggleSidebar();
-              }
-            }}
+          {/* La fila es el enlace al indice, igual que en el rail de espacios: el rail da un
+              acceso corto y la lista completa vive en la pagina, con su busqueda y sus filtros. */}
+          <SidebarMenuButton
+            render={<Link href={`/workspaces/${workspaceSlug}/projects`} />}
+            isActive={isDirectoryActive}
+            tooltip={t("projectsNav.title")}
           >
-            <span className="relative size-4 shrink-0">
-              <ICONS.project
-                className={cn(
-                  "absolute inset-0 size-4 opacity-100 transition-opacity",
-                  !isIconMode && "group-hover/folder:opacity-0",
-                )}
-              />
-              <ICONS.expand
-                className={cn(
-                  "absolute inset-0 size-4 opacity-0 transition-all",
-                  !isIconMode && "group-hover/folder:opacity-100 group-data-open/collapsible:rotate-180",
-                )}
-              />
-            </span>
+            <ICONS.project />
             {t("projectsNav.title")}
+          </SidebarMenuButton>
+
+          <CollapsibleTrigger render={<SidebarMenuAction aria-label={t("projectsNav.toggleList")} />}>
+            <ICONS.expand className="transition-transform group-data-open/collapsible:rotate-180" />
           </CollapsibleTrigger>
 
           {isWorkspaceManager(myRole) && (
@@ -222,36 +199,8 @@ export default function ProjectsNav() {
             </Tooltip>
           )}
 
-          <DropdownMenu>
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <DropdownMenuTrigger render={<SidebarMenuAction aria-label={t("projectsNav.moreOptions")} />} />
-                }
-              >
-                <ICONS.moreOptions />
-              </TooltipTrigger>
-              <TooltipContent>{t("projectsNav.moreOptions")}</TooltipContent>
-            </Tooltip>
-            <ActionsMenuContent align="start">
-              <DropdownMenuGroup>
-                <ActionsMenuLabel>{t("projectsNav.title")}</ActionsMenuLabel>
-                <ActionsMenuItem render={<Link href={`/workspaces/${workspaceSlug}/projects`} />}>
-                  <ICONS.settings />
-                  {t("projectsNav.manageProjects")}
-                </ActionsMenuItem>
-              </DropdownMenuGroup>
-            </ActionsMenuContent>
-          </DropdownMenu>
-
           <CollapsibleContent>
             <SidebarMenuSub>
-              <SearchInput
-                value={search}
-                onChange={setSearch}
-                placeholder={t("projectsNav.searchPlaceholder")}
-                size="sm"
-              />
               {isError ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
@@ -271,7 +220,7 @@ export default function ProjectsNav() {
                 <SidebarMenuSubItem>
                   <EmptyInline
                     icon={ICONS.project}
-                    label={debouncedSearch ? t("projectsNav.noneFound") : t("projectsNav.noneYet")}
+                    label={t("projectsNav.noneYet")}
                     className="h-7 px-2"
                   />
                 </SidebarMenuSubItem>
@@ -289,19 +238,6 @@ export default function ProjectsNav() {
                       />
                     );
                   })}
-                  {hasNextPage && (
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton
-                        onClick={() => !isFetchingNextPage && fetchNextPage()}
-                        aria-disabled={isFetchingNextPage}
-                        className="text-muted-foreground cursor-pointer"
-                      >
-                        {isFetchingNextPage
-                          ? t("projectsNav.loading")
-                          : t("projectsNav.remaining", { count: remaining })}
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  )}
                 </>
               )}
             </SidebarMenuSub>

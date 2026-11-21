@@ -39,28 +39,18 @@
     "favorites": "Proyectos favoritos",
     "noFavorites": "Todavía no hay favoritos",
     "newProject": "Nuevo proyecto",
-    "moreOptions": "Más opciones",
-    "manageProjects": "Gestionar proyectos",
-    "searchPlaceholder": "Buscar proyectos",
     "failedToLoad": "No se pudieron cargar los proyectos",
-    "noneFound": "No se encontraron proyectos",
     "noneYet": "Todavía no hay proyectos",
-    "loading": "Cargando…",
-    "remaining": "{count} más"
+    "toggleList": "Mostrar u ocultar la lista"
   },
   "workspacesNav": {
     "title": "Espacios",
     "favorites": "Espacios favoritos",
     "noFavorites": "Todavía no hay favoritos",
     "newWorkspace": "Nuevo espacio",
-    "moreOptions": "Más opciones",
-    "manageWorkspaces": "Gestionar espacios",
-    "searchPlaceholder": "Buscar espacios",
     "failedToLoad": "No se pudieron cargar los espacios",
-    "noneFound": "No se encontraron espacios",
     "noneYet": "Todavía no hay espacios",
-    "loading": "Cargando…",
-    "remaining": "{count} más"
+    "toggleList": "Mostrar u ocultar la lista"
   },
   "workspaceSwitch": {
     "workspaces": "Espacios",
@@ -70,7 +60,7 @@
     "loading": "Cargando…",
     "remaining": "{count} más",
     "createWorkspace": "Crear espacio",
-    "manageWorkspaces": "Gestionar espacios"
+    "viewAllWorkspaces": "Ver todos los espacios"
   },
   "userNav": {
     "profile": "Perfil",

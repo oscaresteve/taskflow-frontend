@@ -9,7 +9,7 @@
     "atLeastOneField": "At least one field must be provided"
   },
   "workspacesPage": {
-    "title": "Manage workspaces",
+    "title": "Workspaces",
     "newWorkspace": "New workspace",
     "searchPlaceholder": "Search workspaces",
     "lifecycle": {

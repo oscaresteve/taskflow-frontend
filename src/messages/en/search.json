@@ -17,7 +17,7 @@
   },
   "commands": {
     "mySpace": "My space",
-    "manageWorkspaces": "Manage workspaces",
+    "viewAllWorkspaces": "View all workspaces",
     "profile": "Profile",
     "preferences": "Preferences"
   }

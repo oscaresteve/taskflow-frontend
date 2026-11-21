@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import type { MouseEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import type { BaseUIEvent } from "@base-ui/react/types";
+import { usePathname, useRouter } from "next/navigation";
 import { ICONS } from "@/lib/icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getWorkspacesInfiniteQuery } from "@/lib/queries/workspace.queries";
 import { useToggleWorkspaceFavorite } from "@/hooks/use-toggle-workspace-favorite";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -28,7 +25,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -38,12 +34,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
-import { ActionsMenuContent, ActionsMenuItem, ActionsMenuLabel } from "@/components/common/actions-menu";
 import { EmptyInline } from "@/components/common/empty-inline";
-import { SearchInput } from "../common/search-input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
 
 const NAV_PAGE_SIZE = 5;
 
@@ -138,17 +131,12 @@ function WorkspacesFavoritesNav() {
 }
 
 export function WorkspacesNav() {
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebouncedValue(search);
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
-    getWorkspacesInfiniteQuery({ limit: NAV_PAGE_SIZE, search: debouncedSearch }),
-  );
+  const { data, isLoading, isError } = useInfiniteQuery(getWorkspacesInfiniteQuery({ limit: NAV_PAGE_SIZE }));
   const [createOpen, setCreateOpen] = useState(false);
   const activeWorkspaces = data?.pages.flatMap((page) => page.data) ?? [];
-  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - activeWorkspaces.length : 0;
   const t = useTranslations("layout");
-  const { state, isMobile, toggleSidebar } = useSidebar();
-  const isIconMode = state === "collapsed" && !isMobile;
+  // Exacta: /workspaces/<slug> es un espacio concreto, no el directorio.
+  const isDirectoryActive = usePathname() === "/workspaces";
 
   return (
     <>
@@ -156,32 +144,22 @@ export function WorkspacesNav() {
 
       <SidebarMenu>
         <Collapsible defaultOpen className="group/collapsible" render={<SidebarMenuItem />}>
-          <CollapsibleTrigger
-            render={<SidebarMenuButton className="group/orbit" tooltip={t("workspacesNav.title")} />}
-            onClick={(event: BaseUIEvent<MouseEvent<HTMLButtonElement>>) => {
-              // In icon mode the submenu is force-hidden (group-data-[collapsible=icon]:hidden), so
-              // toggling it open/closed has no visible effect. Expand the sidebar instead.
-              if (isIconMode) {
-                event.preventBaseUIHandler();
-                toggleSidebar();
-              }
-            }}
+          {/* La fila es el enlace al indice, no el desplegable: el rail ensena un acceso corto y
+              la lista completa, con su busqueda y sus filtros, vive en la pagina. Plegado el rail
+              queda solo este boton, que sigue llevando al indice. */}
+          <SidebarMenuButton
+            render={<Link href="/workspaces" />}
+            isActive={isDirectoryActive}
+            tooltip={t("workspacesNav.title")}
           >
-            <span className="relative size-4 shrink-0">
-              <ICONS.workspace
-                className={cn(
-                  "absolute inset-0 size-4 opacity-100 transition-opacity",
-                  !isIconMode && "group-hover/orbit:opacity-0",
-                )}
-              />
-              <ICONS.expand
-                className={cn(
-                  "absolute inset-0 size-4 opacity-0 transition-all",
-                  !isIconMode && "group-hover/orbit:opacity-100 group-data-open/collapsible:rotate-180",
-                )}
-              />
-            </span>
+            <ICONS.workspace />
             {t("workspacesNav.title")}
+          </SidebarMenuButton>
+
+          <CollapsibleTrigger
+            render={<SidebarMenuAction aria-label={t("workspacesNav.toggleList")} />}
+          >
+            <ICONS.expand className="transition-transform group-data-open/collapsible:rotate-180" />
           </CollapsibleTrigger>
 
           <Tooltip>
@@ -199,36 +177,8 @@ export function WorkspacesNav() {
             <TooltipContent>{t("workspacesNav.newWorkspace")}</TooltipContent>
           </Tooltip>
 
-          <DropdownMenu>
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <DropdownMenuTrigger render={<SidebarMenuAction aria-label={t("workspacesNav.moreOptions")} />} />
-                }
-              >
-                <ICONS.moreOptions />
-              </TooltipTrigger>
-              <TooltipContent>{t("workspacesNav.moreOptions")}</TooltipContent>
-            </Tooltip>
-            <ActionsMenuContent align="start">
-              <DropdownMenuGroup>
-                <ActionsMenuLabel>{t("workspacesNav.title")}</ActionsMenuLabel>
-                <ActionsMenuItem render={<Link href="/workspaces" />}>
-                  <ICONS.settings />
-                  {t("workspacesNav.manageWorkspaces")}
-                </ActionsMenuItem>
-              </DropdownMenuGroup>
-            </ActionsMenuContent>
-          </DropdownMenu>
-
           <CollapsibleContent>
             <SidebarMenuSub>
-              <SearchInput
-                value={search}
-                onChange={setSearch}
-                placeholder={t("workspacesNav.searchPlaceholder")}
-                size="sm"
-              />
               {isError ? (
                 <SidebarMenuSubItem>
                   <div className="flex h-7 items-center px-2 text-muted-foreground text-sm">
@@ -248,29 +198,12 @@ export function WorkspacesNav() {
                 <SidebarMenuSubItem>
                   <EmptyInline
                     icon={ICONS.workspace}
-                    label={debouncedSearch ? t("workspacesNav.noneFound") : t("workspacesNav.noneYet")}
+                    label={t("workspacesNav.noneYet")}
                     className="h-7 px-2"
                   />
                 </SidebarMenuSubItem>
               ) : (
-                <>
-                  {activeWorkspaces.map((workspace) => (
-                    <WorkspaceNavItem key={workspace.id} workspace={workspace} />
-                  ))}
-                  {hasNextPage && (
-                    <SidebarMenuSubItem>
-                      <SidebarMenuSubButton
-                        onClick={() => !isFetchingNextPage && fetchNextPage()}
-                        aria-disabled={isFetchingNextPage}
-                        className="text-muted-foreground cursor-pointer"
-                      >
-                        {isFetchingNextPage
-                          ? t("workspacesNav.loading")
-                          : t("workspacesNav.remaining", { count: remaining })}
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  )}
-                </>
+                activeWorkspaces.map((workspace) => <WorkspaceNavItem key={workspace.id} workspace={workspace} />)
               )}
             </SidebarMenuSub>
           </CollapsibleContent>

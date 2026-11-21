@@ -126,9 +126,9 @@ export default function WorkspaceSwitch() {
             </DropdownMenuItem>
             <DropdownMenuItem render={<Link href="/workspaces" />} className="gap-2 p-2">
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                <ICONS.settings className="size-4" />
+                <ICONS.directory className="size-4" />
               </div>
-              {t("workspaceSwitch.manageWorkspaces")}
+              {t("workspaceSwitch.viewAllWorkspaces")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

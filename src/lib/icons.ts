@@ -127,6 +127,9 @@ export const ICONS = {
   chevronUpDown: ChevronsUpDown,
   settings: Settings,
   preferences: Settings2,
+  // El directorio completo de espacios/proyectos. Mismo glifo que `list` —es un listado— pero clave
+  // propia por significado, y nunca `settings`: no es Configuracion, aunque desde el se archive.
+  directory: List,
   profile: UserRound,
   members: Users,
   overview: LayoutDashboard,

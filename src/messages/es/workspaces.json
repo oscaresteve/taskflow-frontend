@@ -9,7 +9,7 @@
     "atLeastOneField": "Debe proporcionarse al menos un campo"
   },
   "workspacesPage": {
-    "title": "Gestionar espacios",
+    "title": "Espacios",
     "newWorkspace": "Nuevo espacio",
     "searchPlaceholder": "Buscar espacios",
     "lifecycle": {

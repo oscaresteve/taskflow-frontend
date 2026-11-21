@@ -13,7 +13,7 @@
     "atLeastOneField": "Debe proporcionarse al menos un campo"
   },
   "projectsPage": {
-    "title": "Gestionar proyectos",
+    "title": "Proyectos",
     "newProject": "Nuevo proyecto",
     "searchPlaceholder": "Buscar proyectos",
     "lifecycle": {
