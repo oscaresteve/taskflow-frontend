@@ -15,14 +15,21 @@ export default async function ProjectLayout({
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="border-b">
-        <PageContainer className="pb-0">
-          <ProjectHeader workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
+    // min-h-full para que una vista pueda pedir el alto que sobra (el tablero lo hace) sin impedir
+    // que las demas crezcan y hagan scroll en el SidebarInset, que es el contenedor de scroll.
+    <div className="flex min-h-full flex-col">
+      <PageContainer className="pb-0">
+        <ProjectHeader workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
+      </PageContainer>
+      {/* Las pestanas se quedan pegadas arriba al hacer scroll: son el unico modo de cambiar de
+          vista, y antes desaparecian junto con el nombre del proyecto. El fondo y el borde viajan
+          con ellas, de ancho completo, para que el contenido no se transparente por los lados. */}
+      <div className="sticky top-0 z-10 border-b bg-background">
+        <PageContainer className="py-0 pt-4">
           <ProjectNavTabs />
         </PageContainer>
       </div>
-      {children}
+      <div className="flex min-h-0 flex-1 flex-col">{children}</div>
     </div>
   );
 }
