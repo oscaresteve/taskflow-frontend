@@ -9,9 +9,11 @@
     "mySpace": "My space",
     "profile": "Profile",
     "preferences": "Preferences",
-    "manageWorkspaces": "Manage workspaces",
+    "workspaces": "Workspaces",
     "settings": "Settings",
-    "members": "Members"
+    "members": "Members",
+    "kanban": "Kanban",
+    "list": "List"
   },
   "globalSidebar": {
     "global": "Global",

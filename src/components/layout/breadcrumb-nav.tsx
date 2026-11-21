@@ -31,7 +31,7 @@ export function BreadcrumbNav() {
       pathname === "/my-space" ? t("breadcrumb.mySpace")
       : pathname.startsWith("/profile") ? t("breadcrumb.profile")
       : pathname.startsWith("/preferences") ? t("breadcrumb.preferences")
-      : pathname === "/workspaces" ? t("breadcrumb.manageWorkspaces")
+      : pathname === "/workspaces" ? t("breadcrumb.workspaces")
       : null;
 
     if (!globalLabel) {
@@ -49,9 +49,15 @@ export function BreadcrumbNav() {
     );
   }
 
-  const isSettings = pathname.endsWith("/settings");
-  const isMembers = pathname.endsWith("/members");
-  const hasMoreCrumbs = isSettings || isMembers || Boolean(projectSlug);
+  // La ultima miga es la vista abierta. Antes solo la ponian ajustes y miembros, asi que el tablero
+  // y la lista se quedaban en el nombre del proyecto y la miga no decia donde estabas.
+  const leafLabel =
+    pathname.endsWith("/settings") ? t("breadcrumb.settings")
+    : pathname.endsWith("/members") ? t("breadcrumb.members")
+    : pathname.endsWith("/kanban") ? t("breadcrumb.kanban")
+    : pathname.endsWith("/list") ? t("breadcrumb.list")
+    : null;
+  const hasMoreCrumbs = Boolean(leafLabel) || Boolean(projectSlug);
 
   return (
     <Breadcrumb className="mx-4">
@@ -69,7 +75,7 @@ export function BreadcrumbNav() {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              {isSettings || isMembers ? (
+              {leafLabel ? (
                 <BreadcrumbLink render={<Link href={`/workspaces/${workspaceSlug}/projects/${projectSlug}`} />}>
                   {project?.name ?? projectSlug}
                 </BreadcrumbLink>
@@ -79,19 +85,11 @@ export function BreadcrumbNav() {
             </BreadcrumbItem>
           </>
         )}
-        {isSettings && (
+        {leafLabel && (
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{t("breadcrumb.settings")}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </>
-        )}
-        {isMembers && (
-          <>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{t("breadcrumb.members")}</BreadcrumbPage>
+              <BreadcrumbPage>{leafLabel}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
