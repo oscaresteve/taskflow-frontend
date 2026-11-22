@@ -15,7 +15,7 @@
     "kanban": "Kanban",
     "list": "List"
   },
-  "workspaceSidebar": {
+  "workspaceNav": {
     "overview": "Overview",
     "members": "Members",
     "settings": "Settings"
@@ -53,7 +53,8 @@
     "loading": "Loading…",
     "remaining": "{count} more",
     "createWorkspace": "Create workspace",
-    "viewAllWorkspaces": "View all workspaces"
+    "viewAllWorkspaces": "View all workspaces",
+    "allWorkspaces": "All workspaces"
   },
   "userNav": {
     "profile": "Profile",

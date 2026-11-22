@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
-import { WorkspaceSidebar } from "@/components/layout/workspace-sidebar";
+import { AppSidebar } from "@/components/layout/app-sidebar";
 import { getWorkspaceServer, requireWorkspaces } from "@/lib/api/workspaces.server";
 
 // Routing rule: anything scoped to a single workspace (projects, settings, members, tasks)
@@ -14,5 +14,5 @@ export default async function WorkspaceLayout({ children, params }: LayoutProps<
     notFound();
   }
 
-  return <AppShell sidebar={<WorkspaceSidebar />}>{children}</AppShell>;
+  return <AppShell sidebar={<AppSidebar />}>{children}</AppShell>;
 }

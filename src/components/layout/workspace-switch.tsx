@@ -29,8 +29,8 @@ const SWITCHER_PAGE_SIZE = 5;
 export default function WorkspaceSwitch() {
   const router = useRouter();
   const { isMobile } = useSidebar();
-  const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data: activeWorkspace, isLoading } = useQuery(getWorkspaceQuery(workspaceSlug));
+  const { workspaceSlug } = useParams<{ workspaceSlug?: string }>();
+  const { data: activeWorkspace, isLoading } = useQuery(getWorkspaceQuery(workspaceSlug ?? ""));
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
@@ -41,7 +41,7 @@ export default function WorkspaceSwitch() {
   const remaining = data ? data.pages[data.pages.length - 1].pagination.total - workspaces.length : 0;
   const t = useTranslations("layout");
 
-  if (isLoading || !activeWorkspace) {
+  if (workspaceSlug && (isLoading || !activeWorkspace)) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -66,14 +66,25 @@ export default function WorkspaceSwitch() {
               <SidebarMenuButton
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                tooltip={activeWorkspace.name}
+                tooltip={activeWorkspace?.name ?? t("workspaceSwitch.allWorkspaces")}
               />
             }
           >
-            <CustomAvatar avatarUrl={activeWorkspace.avatarUrl} alt={activeWorkspace.name} seed={activeWorkspace.id} />
+            {/* Dos estados, un solo componente: el conmutador ocupa la cabecera tambien fuera de
+                un espacio, que es donde antes vivia la marca. Asi cruzar la frontera no cambia el
+                rail de cabecera, y desde cualquier pantalla se ve en que ambito estas. */}
+            {activeWorkspace ? (
+              <CustomAvatar avatarUrl={activeWorkspace.avatarUrl} alt={activeWorkspace.name} seed={activeWorkspace.id} />
+            ) : (
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <ICONS.logo className="size-4" />
+              </div>
+            )}
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{activeWorkspace.name}</span>
-              <span className="truncate text-muted-foreground text-xs">{activeWorkspace.slug}</span>
+              <span className="truncate font-medium">{activeWorkspace?.name ?? "TaskFlow"}</span>
+              <span className="truncate text-muted-foreground text-xs">
+                {activeWorkspace?.slug ?? t("workspaceSwitch.allWorkspaces")}
+              </span>
             </div>
             <ICONS.chevronUpDown className="ml-auto size-4" />
           </DropdownMenuTrigger>
