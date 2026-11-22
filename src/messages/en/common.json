@@ -11,6 +11,12 @@
     "clear": "Clear search"
   },
   "pageSize": "{size} / page",
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "goToPrevious": "Go to previous page",
+    "goToNext": "Go to next page"
+  },
   "sort": {
     "ascending": "Sort ascending",
     "descending": "Sort descending"

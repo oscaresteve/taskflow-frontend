@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Pagination,
   PaginationContent,
@@ -20,12 +21,17 @@ export function PaginationControls({
   totalPages: number;
   onPageChange: (page: number) => void;
 }) {
+  // Las etiquetas del primitivo son literales en ingles y no se tocan ahi: se pasan desde aqui.
+  const t = useTranslations("common");
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
             href="#"
+            text={t("pagination.previous")}
+            aria-label={t("pagination.goToPrevious")}
             aria-disabled={page <= 1}
             className={page <= 1 ? "pointer-events-none opacity-50" : undefined}
             onClick={(e) => {
@@ -57,6 +63,8 @@ export function PaginationControls({
         <PaginationItem>
           <PaginationNext
             href="#"
+            text={t("pagination.next")}
+            aria-label={t("pagination.goToNext")}
             aria-disabled={page >= totalPages}
             className={page >= totalPages ? "pointer-events-none opacity-50" : undefined}
             onClick={(e) => {
