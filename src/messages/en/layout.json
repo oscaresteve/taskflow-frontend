@@ -17,8 +17,8 @@
   },
   "workspaceNav": {
     "overview": "Overview",
-    "members": "Members",
-    "settings": "Settings"
+    "members": "Workspace members",
+    "settings": "Workspace settings"
   },
   "projectNavTabs": {
     "overview": "Overview",
