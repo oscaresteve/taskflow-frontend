@@ -15,14 +15,7 @@
     "kanban": "Kanban",
     "list": "Lista"
   },
-  "globalSidebar": {
-    "global": "Global",
-    "app": "Aplicación"
-  },
   "workspaceSidebar": {
-    "global": "Global",
-    "workspace": "Espacio",
-    "app": "Aplicación",
     "overview": "Resumen",
     "members": "Miembros",
     "settings": "Configuración"

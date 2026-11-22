@@ -6,7 +6,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -39,26 +38,9 @@ export function GlobalSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
-            {t("globalSidebar.global")}
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <GlobalNav />
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <Separator />
-        {/* No SidebarGroupLabel: WorkspacesNav's own collapsible trigger already reads "Workspaces". */}
-        <SidebarGroup>
-          <SidebarGroupContent>
             <WorkspacesNav />
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <Separator />
-        <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
-            {t("globalSidebar.app")}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
             <AppNav />
           </SidebarGroupContent>
         </SidebarGroup>

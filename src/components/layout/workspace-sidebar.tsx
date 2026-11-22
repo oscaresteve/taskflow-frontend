@@ -6,7 +6,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -39,19 +38,8 @@ export function WorkspaceSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
-            {t("workspaceSidebar.global")}
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <GlobalNav />
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <Separator />
-        <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
-            {t("workspaceSidebar.workspace")}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 {/* Exact match, not isNavActive: every workspace subpage's pathname starts
@@ -66,7 +54,6 @@ export function WorkspaceSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
-            {/* Own SidebarGroup (a div), so it sits between the two <ul>s instead of nesting inside one. */}
             <ProjectsNav />
             <SidebarMenu>
               <SidebarMenuItem>
@@ -92,14 +79,6 @@ export function WorkspaceSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <Separator />
-        <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:pointer-events-none">
-            {t("workspaceSidebar.app")}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
             <AppNav />
           </SidebarGroupContent>
         </SidebarGroup>
