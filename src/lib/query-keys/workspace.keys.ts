@@ -16,7 +16,11 @@ type WorkspaceListParams = {
 export const workspaceKeys = {
   all: ["workspaces"] as const,
   lists: (params: WorkspaceListParams = {}) => [...workspaceKeys.all, "list", params] as const,
-  infiniteList: (params: { limit?: number; search?: string; isFavorite?: boolean } = {}) =>
+  // `sort`/`order` entran en la clave: el rail pide los recientes y el conmutador el orden por
+  // nombre con los mismos limit/search, y sin esto compartirian cache.
+  infiniteList: (
+    params: { limit?: number; search?: string; isFavorite?: boolean; sort?: string; order?: string } = {},
+  ) =>
     [...workspaceKeys.all, "infinite-list", params] as const,
   detail: (workspaceSlug: string) => [...workspaceKeys.all, "detail", workspaceSlug] as const,
 };

@@ -151,11 +151,15 @@ function ProjectsFavoritesNav({ workspaceSlug }: { workspaceSlug: string }) {
 export default function ProjectsNav() {
   const pathname = usePathname();
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
-  const { data, isLoading, isError } = useInfiniteQuery(
-    getProjectsInfiniteQuery({ workspaceSlug, limit: NAV_PAGE_SIZE }),
+  // Por `updatedAt` y no por nombre: los primeros del alfabeto no significan nada. Ojo con el
+  // criterio: `updatedAt` solo se mueve al editar el proyecto o al crear una tarea (incrementa
+  // nextTaskNumber), no con el trabajo diario. Es lo mas cercano a "reciente" sin tocar backend.
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    getProjectsInfiniteQuery({ workspaceSlug, limit: NAV_PAGE_SIZE, sort: "updatedAt", order: "desc" }),
   );
   const [createOpen, setCreateOpen] = useState(false);
   const projects = data?.pages.flatMap((page) => page.data) ?? [];
+  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - projects.length : 0;
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
   const t = useTranslations("layout");
   // Exacta: /workspaces/<slug>/projects/<slug> es un proyecto concreto, no el directorio.
@@ -238,6 +242,22 @@ export default function ProjectsNav() {
                       />
                     );
                   })}
+
+                  {/* Cuantos quedan y la forma de traerlos, sin buscador: la busqueda vive en el
+                      indice, al que lleva la fila de la seccion. */}
+                  {hasNextPage && (
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        onClick={() => !isFetchingNextPage && fetchNextPage()}
+                        aria-disabled={isFetchingNextPage}
+                        className="cursor-pointer text-muted-foreground"
+                      >
+                        {isFetchingNextPage
+                          ? t("projectsNav.loading")
+                          : t("projectsNav.remaining", { count: remaining })}
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )}
                 </>
               )}
             </SidebarMenuSub>

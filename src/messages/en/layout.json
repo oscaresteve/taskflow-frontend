@@ -34,7 +34,9 @@
     "newProject": "New project",
     "failedToLoad": "Failed to load projects",
     "noneYet": "No projects yet",
-    "toggleList": "Toggle list"
+    "toggleList": "Toggle list",
+    "loading": "Loading…",
+    "remaining": "{count} more"
   },
   "workspacesNav": {
     "title": "Workspaces",
@@ -43,7 +45,9 @@
     "newWorkspace": "New workspace",
     "failedToLoad": "Failed to load workspaces",
     "noneYet": "No workspaces yet",
-    "toggleList": "Toggle list"
+    "toggleList": "Toggle list",
+    "loading": "Loading…",
+    "remaining": "{count} more"
   },
   "workspaceSwitch": {
     "workspaces": "Workspaces",

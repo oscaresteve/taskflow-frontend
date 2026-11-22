@@ -13,21 +13,25 @@ export const getProjectsInfiniteQuery = ({
   limit,
   search,
   isFavorite,
+  sort = "name",
+  order = "asc",
 }: {
   workspaceSlug: string;
   limit: number;
   search?: string;
   isFavorite?: boolean;
+  sort?: ProjectSortField;
+  order?: SortOrder;
 }) =>
   infiniteQueryOptions({
-    queryKey: projectKeys.infiniteList(workspaceSlug, { limit, search, isFavorite }),
+    queryKey: projectKeys.infiniteList(workspaceSlug, { limit, search, isFavorite, sort, order }),
     queryFn: ({ pageParam }) =>
       getProjects({
         workspaceSlug,
         page: pageParam,
         limit,
-        sort: "name",
-        order: "asc",
+        sort,
+        order,
         search: search || undefined,
         isFavorite,
       }),

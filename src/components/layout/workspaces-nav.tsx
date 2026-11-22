@@ -131,9 +131,15 @@ function WorkspacesFavoritesNav() {
 }
 
 export function WorkspacesNav() {
-  const { data, isLoading, isError } = useInfiniteQuery(getWorkspacesInfiniteQuery({ limit: NAV_PAGE_SIZE }));
+  // Por `updatedAt` y no por nombre: los primeros del alfabeto no significan nada. Ojo con el
+  // criterio: `updatedAt` solo se mueve al editar el proyecto o al crear una tarea (incrementa
+  // nextTaskNumber), no con el trabajo diario. Es lo mas cercano a "reciente" sin tocar backend.
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
+    getWorkspacesInfiniteQuery({ limit: NAV_PAGE_SIZE, sort: "updatedAt", order: "desc" }),
+  );
   const [createOpen, setCreateOpen] = useState(false);
   const activeWorkspaces = data?.pages.flatMap((page) => page.data) ?? [];
+  const remaining = data ? data.pages[data.pages.length - 1].pagination.total - activeWorkspaces.length : 0;
   const t = useTranslations("layout");
   // Exacta: /workspaces/<slug> es un espacio concreto, no el directorio.
   const isDirectoryActive = usePathname() === "/workspaces";
@@ -203,7 +209,27 @@ export function WorkspacesNav() {
                   />
                 </SidebarMenuSubItem>
               ) : (
-                activeWorkspaces.map((workspace) => <WorkspaceNavItem key={workspace.id} workspace={workspace} />)
+                <>
+                  {activeWorkspaces.map((workspace) => (
+                    <WorkspaceNavItem key={workspace.id} workspace={workspace} />
+                  ))}
+
+                  {/* Cuantos quedan y la forma de traerlos, sin buscador: la busqueda vive en el
+                      indice, al que lleva la fila de la seccion. */}
+                  {hasNextPage && (
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        onClick={() => !isFetchingNextPage && fetchNextPage()}
+                        aria-disabled={isFetchingNextPage}
+                        className="cursor-pointer text-muted-foreground"
+                      >
+                        {isFetchingNextPage
+                          ? t("workspacesNav.loading")
+                          : t("workspacesNav.remaining", { count: remaining })}
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )}
+                </>
               )}
             </SidebarMenuSub>
           </CollapsibleContent>

@@ -20,7 +20,12 @@ export const projectKeys = {
   // partial-matching query keys).
   lists: (workspaceSlug: string, params: ProjectListParams = {}) =>
     [...projectKeys.all, "list", workspaceSlug, params] as const,
-  infiniteList: (workspaceSlug: string, params: { limit?: number; search?: string; isFavorite?: boolean } = {}) =>
+  // `sort`/`order` entran en la clave: el rail pide los recientes y el resto el orden por nombre,
+  // y sin esto compartirian cache y se pisarian el uno al otro.
+  infiniteList: (
+    workspaceSlug: string,
+    params: { limit?: number; search?: string; isFavorite?: boolean; sort?: string; order?: string } = {},
+  ) =>
     [...projectKeys.all, "infinite-list", workspaceSlug, params] as const,
   detail: (workspaceSlug: string, projectSlug: string) =>
     [...projectKeys.all, "detail", workspaceSlug, projectSlug] as const,

@@ -34,7 +34,9 @@
     "newProject": "Nuevo proyecto",
     "failedToLoad": "No se pudieron cargar los proyectos",
     "noneYet": "Todavía no hay proyectos",
-    "toggleList": "Mostrar u ocultar la lista"
+    "toggleList": "Mostrar u ocultar la lista",
+    "loading": "Cargando…",
+    "remaining": "{count} más"
   },
   "workspacesNav": {
     "title": "Espacios",
@@ -43,7 +45,9 @@
     "newWorkspace": "Nuevo espacio",
     "failedToLoad": "No se pudieron cargar los espacios",
     "noneYet": "Todavía no hay espacios",
-    "toggleList": "Mostrar u ocultar la lista"
+    "toggleList": "Mostrar u ocultar la lista",
+    "loading": "Cargando…",
+    "remaining": "{count} más"
   },
   "workspaceSwitch": {
     "workspaces": "Espacios",

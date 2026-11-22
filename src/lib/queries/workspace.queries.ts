@@ -12,15 +12,19 @@ export const getWorkspacesInfiniteQuery = ({
   limit,
   search,
   isFavorite,
+  sort = "name",
+  order = "asc",
 }: {
   limit: number;
   search?: string;
   isFavorite?: boolean;
+  sort?: WorkspaceSortField;
+  order?: SortOrder;
 }) =>
   infiniteQueryOptions({
-    queryKey: workspaceKeys.infiniteList({ limit, search, isFavorite }),
+    queryKey: workspaceKeys.infiniteList({ limit, search, isFavorite, sort, order }),
     queryFn: ({ pageParam }) =>
-      getWorkspaces({ page: pageParam, limit, sort: "name", order: "asc", search: search || undefined, isFavorite }),
+      getWorkspaces({ page: pageParam, limit, sort, order, search: search || undefined, isFavorite }),
     initialPageParam: 1,
     getNextPageParam,
   });
