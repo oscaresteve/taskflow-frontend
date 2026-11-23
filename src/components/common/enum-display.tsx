@@ -99,8 +99,8 @@ export function EnumControl({
       variant={variant}
       size={size}
       className={cn(
-        option.colors.border,
-        option.colors.bgSoft,
+        // En ghost el color solo aparece al pasar por encima: sin borde ni relleno no pesa como un campo.
+        variant !== "ghost" && cn(option.colors.border, option.colors.bgSoft),
         option.colors.text,
         option.colors.bgSoftHover,
         className,

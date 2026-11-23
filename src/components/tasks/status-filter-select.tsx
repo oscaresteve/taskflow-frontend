@@ -19,7 +19,14 @@ export function StatusFilterSelect({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<EnumControl option={statusFilterOptions[value]} />} />
+      <DropdownMenuTrigger
+        render={
+          <EnumControl
+            option={statusFilterOptions[value]}
+            variant={value === "ALL" ? "ghost" : "outline"}
+          />
+        }
+      />
       <DropdownMenuContent className="min-w-max">
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as StatusFilter)}>
           {statusFilters.map((filter) => (

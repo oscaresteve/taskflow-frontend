@@ -19,7 +19,14 @@ export function DueDateFilterSelect({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<EnumControl option={dueDateFilterOptions[value]} />} />
+      <DropdownMenuTrigger
+        render={
+          <EnumControl
+            option={dueDateFilterOptions[value]}
+            variant={value === "ALL" ? "ghost" : "outline"}
+          />
+        }
+      />
       <DropdownMenuContent className="min-w-max">
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as DueDateFilter)}>
           {dueDateFilters.map((filter) => (

@@ -88,7 +88,15 @@ export function PriorityFilterSelect({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<EnumControl option={priorityFilterOptions[value]} />} />
+      <DropdownMenuTrigger
+        render={
+          <EnumControl
+            option={priorityFilterOptions[value]}
+            // Sin filtrar no tiene nada que anunciar; en cuanto hay prioridad elegida se enmarca para que se vea.
+            variant={value === "ALL" ? "ghost" : "outline"}
+          />
+        }
+      />
       <DropdownMenuContent className="min-w-max">
         <DropdownMenuRadioGroup value={value} onValueChange={(next) => onValueChange(next as PriorityFilter)}>
           {priorityFilters.map((priority) => (
