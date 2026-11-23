@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 // en las pestanas de bajas (archivados, inactivos, pendientes, eliminados) solo hay un camino, y
 // esconderlo obliga a abrir un desplegable para descubrir que no habia nada que elegir.
 //
-// `variant="destructive"` para la accion que da de baja, que es tinte suave, no un boton rojo.
-export function RowActionButton({ className, ...props }: ComponentProps<typeof Button>) {
-  return <Button variant="outline" size="sm" className={className} {...props} />;
+// Va en ghost y sin excepcion, tampoco para dar de baja o cancelar: una tabla repite la misma accion
+// en todas sus filas, y un rojo —o un borde— que sale en cada una se lee como el estilo de la tabla
+// y deja de avisar. El aviso lo da el dialogo de confirmacion, que es donde se decide.
+export function RowActionButton({ className, ...props }: Omit<ComponentProps<typeof Button>, "variant">) {
+  return <Button variant="ghost" size="sm" className={className} {...props} />;
 }

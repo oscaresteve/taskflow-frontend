@@ -200,7 +200,7 @@ export default function ProjectMembersPage() {
     }
 
     return deactivatable ? (
-      <RowActionButton variant="destructive" onClick={() => handleRequestDeactivate(member)}>
+      <RowActionButton onClick={() => handleRequestDeactivate(member)}>
         <ICONS.removeMember />
         {t("projectMembersPage.deactivate")}
       </RowActionButton>

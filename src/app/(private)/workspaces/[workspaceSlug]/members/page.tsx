@@ -280,7 +280,6 @@ export default function WorkspaceMembersPage() {
               <TooltipTrigger
                 render={
                   <RowActionButton
-                    variant="destructive"
                     size="icon-sm"
                     aria-label={t("workspaceMembersPage.cancelInvitation")}
                     onClick={() => handleRequestCancelInvitation(member)}
@@ -306,7 +305,7 @@ export default function WorkspaceMembersPage() {
     }
 
     return removable ? (
-      <RowActionButton variant="destructive" onClick={() => handleRequestRemove(member)}>
+      <RowActionButton onClick={() => handleRequestRemove(member)}>
         <ICONS.removeMember />
         {t("workspaceMembersPage.remove")}
       </RowActionButton>
