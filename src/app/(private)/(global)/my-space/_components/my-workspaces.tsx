@@ -67,7 +67,11 @@ function WorkspaceCard({ workspace }: { workspace: OverviewWorkspaceDto }) {
               isFavorite={workspace.isFavorite}
               onToggle={() => toggleFavorite.mutate(!workspace.isFavorite)}
               disabled={toggleFavorite.isPending}
-              className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
+              className={cn(
+                "transition-opacity text-muted-foreground",
+                !workspace.isFavorite &&
+                  "opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100",
+              )}
             />
           </div>
         </CardContent>

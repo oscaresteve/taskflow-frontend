@@ -22,7 +22,7 @@ import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queri
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { getTasksQuery } from "@/lib/queries/task.queries";
 import { getDueDateOption, priorityOptions, statusOptions } from "@/lib/task-enums";
-import { getFullName, isOverdue, parseDueDate } from "@/lib/utils";
+import { cn, getFullName, isOverdue, parseDueDate } from "@/lib/utils";
 
 const PAGE_SIZE = 8;
 
@@ -66,7 +66,11 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
                 isFavorite={task.isFavorite}
                 onToggle={() => toggleFavorite.mutate(!task.isFavorite)}
                 disabled={toggleFavorite.isPending}
-                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
+                className={cn(
+                  "transition-opacity text-muted-foreground",
+                  !task.isFavorite &&
+                    "opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100",
+                )}
               />
             </span>
           </div>

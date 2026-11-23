@@ -14,6 +14,7 @@ import { useToggleProjectFavorite } from "@/hooks/use-toggle-project-favorite";
 import { OverviewProjectDto } from "@/lib/dtos/overview.dto";
 import { ICONS } from "@/lib/icons";
 import { getWorkspaceOverviewProjectsQuery } from "@/lib/queries/overview.queries";
+import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 6;
 
@@ -49,7 +50,12 @@ function ProjectCard({ workspaceSlug, project }: { workspaceSlug: string; projec
                 isFavorite={project.isFavorite}
                 onToggle={() => toggleFavorite.mutate(!project.isFavorite)}
                 disabled={toggleFavorite.isPending}
-                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100 transition-opacity text-muted-foreground"
+                className={cn(
+                  "transition-opacity text-muted-foreground",
+                  // La favorita tiene que verse en reposo: el relleno de la estrella es lo unico que lo anuncia.
+                  !project.isFavorite &&
+                    "opacity-0 group-hover:opacity-100 focus-visible:opacity-100 data-popup-open:opacity-100",
+                )}
               />
             </div>
           </div>
