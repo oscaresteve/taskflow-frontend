@@ -73,7 +73,7 @@ export function TaskDetailContent({ workspaceSlug, projectSlug, taskNumber, onCl
         closeLabel={tCommon("actions.close")}
         actions={
           <>
-            <FavoriteToggle variant="outline" isFavorite={task.isFavorite} onToggle={() => toggleFavorite.mutate(!task.isFavorite)} />
+            <FavoriteToggle isFavorite={task.isFavorite} onToggle={() => toggleFavorite.mutate(!task.isFavorite)} />
             <TaskActionsMenu
               task={task}
               workspaceSlug={workspaceSlug}

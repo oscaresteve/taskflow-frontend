@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ComponentProps } from "react";
 
-interface FavoriteToggleProps extends Pick<ComponentProps<typeof Button>, "size" | "variant"> {
+interface FavoriteToggleProps extends Pick<ComponentProps<typeof Button>, "size"> {
   isFavorite: boolean;
   onToggle: () => void;
   disabled?: boolean;
@@ -19,7 +19,6 @@ export function FavoriteToggle({
   onToggle,
   disabled,
   className,
-  variant = "ghost",
   size = "icon-sm",
 }: FavoriteToggleProps) {
   const t = useTranslations("common");
@@ -30,7 +29,7 @@ export function FavoriteToggle({
       <TooltipTrigger
         render={
           <Button
-            variant={variant}
+            variant="ghost"
             size={size}
             onClick={onToggle}
             disabled={disabled}

@@ -358,7 +358,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
           />
           <Button
             type="button"
-            variant={isFavorite ? "secondary" : "outline"}
+            variant="ghost"
             onClick={() => onFavoriteChange(!isFavorite)}
             aria-pressed={isFavorite}
           >
