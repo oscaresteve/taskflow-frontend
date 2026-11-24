@@ -6,9 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { MembersFilterBar } from "@/components/members/members-filter-bar";
 import { MembersTable } from "@/components/members/members-table";
-import { PageSizeSelect } from "@/components/common/page-size-select";
-import { PaginationControls } from "@/components/common/pagination-controls";
-import { SortControls } from "@/components/common/sort-controls";
+import { ListFooter } from "@/components/common/list-footer";
+import { SortControl } from "@/components/common/sort-control";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/common/empty-state";
@@ -58,6 +57,7 @@ export function WorkspaceMembersPanel({
     roleFilter,
     sort,
     order,
+    sortIsDefault,
     limit,
     page,
     role,
@@ -119,7 +119,7 @@ export function WorkspaceMembersPanel({
       description={t("workspaceMembersPage.emptyPendingDescription")}
       action={
         onAddMember ? (
-          <Button size="sm" onClick={onAddMember}>
+          <Button onClick={onAddMember}>
             <ICONS.memberAdd />
             {t("workspaceMembersPage.addMember")}
           </Button>
@@ -136,26 +136,22 @@ export function WorkspaceMembersPanel({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2">
-          {lifecycleFilter}
-          <MembersFilterBar
-            search={search}
-            onSearchChange={onSearchChange}
-            roleFilter={roleFilter}
-            onRoleFilterChange={onRoleFilterChange}
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <SortControls
-            field={sort}
-            order={order}
-            options={SORT_OPTIONS}
-            onFieldChange={onSortFieldChange}
-            onOrderChange={onSortOrderChange}
-          />
-          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
-        </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <MembersFilterBar
+          search={search}
+          onSearchChange={onSearchChange}
+          roleFilter={roleFilter}
+          onRoleFilterChange={onRoleFilterChange}
+        />
+        {lifecycleFilter}
+        <SortControl
+          field={sort}
+          order={order}
+          options={SORT_OPTIONS}
+          isDefault={sortIsDefault}
+          onFieldChange={onSortFieldChange}
+          onOrderChange={onSortOrderChange}
+        />
       </div>
 
       <MembersTable
@@ -168,7 +164,14 @@ export function WorkspaceMembersPanel({
         actorUserId={actorUserId}
       />
       {membersQuery.data.data.length > 0 && (
-        <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={onPageChange} />
+        <ListFooter
+          limit={limit}
+          pageSizeOptions={pageSizeOptions}
+          onLimitChange={onLimitChange}
+          page={page}
+          totalPages={membersQuery.data.pagination.pages}
+          onPageChange={onPageChange}
+        />
       )}
     </div>
   );

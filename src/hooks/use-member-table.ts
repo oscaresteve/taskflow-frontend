@@ -4,13 +4,15 @@ import { SortOrder, sortOrders } from "@/lib/dtos/pagination.dto";
 import { MemberSortField, RoleFilter, memberSortFields, roleFilters } from "@/lib/member-enums";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
+const DEFAULT_SORT = "joinedAt";
+const DEFAULT_ORDER = "asc";
 
 export function useMemberTable() {
   const [{ search, role: roleFilter, sort, order, limit, page }, setQuery] = useQueryStates({
     search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
     role: parseAsStringLiteral(roleFilters).withDefault("ALL"),
-    sort: parseAsStringLiteral(memberSortFields).withDefault("joinedAt"),
-    order: parseAsStringLiteral(sortOrders).withDefault("asc"),
+    sort: parseAsStringLiteral(memberSortFields).withDefault(DEFAULT_SORT),
+    order: parseAsStringLiteral(sortOrders).withDefault(DEFAULT_ORDER),
     limit: parseAsInteger.withDefault(PAGE_SIZE_OPTIONS[0]),
     page: parseAsInteger.withDefault(1),
   });
@@ -47,6 +49,7 @@ export function useMemberTable() {
     roleFilter,
     sort,
     order,
+    sortIsDefault: sort === DEFAULT_SORT && order === DEFAULT_ORDER,
     limit,
     page,
     role,

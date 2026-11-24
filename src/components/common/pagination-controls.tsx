@@ -4,14 +4,14 @@ import { useTranslations } from "next-intl";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getPageNumbers } from "@/lib/pagination";
 
+// Solo anterior y siguiente: la lista de numeros ocupaba el ancho del pie para una navegacion que
+// casi nadie hace pagina a pagina. El contador del medio es entonces lo unico que dice donde estas
+// y cuantas paginas hay.
 export function PaginationControls({
   page,
   totalPages,
@@ -25,7 +25,8 @@ export function PaginationControls({
   const t = useTranslations("common");
 
   return (
-    <Pagination>
+    // El primitivo se centra con mx-auto y w-full, que aqui empujaria el selector.
+    <Pagination className="mx-0 w-auto">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
@@ -40,26 +41,12 @@ export function PaginationControls({
             }}
           />
         </PaginationItem>
-        {getPageNumbers(page, totalPages).map((pageNumber, index) =>
-          pageNumber === "ellipsis" ? (
-            <PaginationItem key={`ellipsis-${index}`}>
-              <PaginationEllipsis />
-            </PaginationItem>
-          ) : (
-            <PaginationItem key={pageNumber}>
-              <PaginationLink
-                href="#"
-                isActive={pageNumber === page}
-                onClick={(e) => {
-                  e.preventDefault();
-                  onPageChange(pageNumber);
-                }}
-              >
-                {pageNumber}
-              </PaginationLink>
-            </PaginationItem>
-          ),
-        )}
+        <PaginationItem>
+          <span className="px-2 text-sm tabular-nums">
+            <span aria-hidden="true">{`${page} / ${Math.max(totalPages, 1)}`}</span>
+            <span className="sr-only">{t("pagination.position", { page, total: Math.max(totalPages, 1) })}</span>
+          </span>
+        </PaginationItem>
         <PaginationItem>
           <PaginationNext
             href="#"

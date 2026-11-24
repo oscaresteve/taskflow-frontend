@@ -15,14 +15,13 @@ import { ALL_ASSIGNEES, TaskLifecycle, taskLifecycles, TaskSortField, taskSortFi
 import { useTabParam } from "@/hooks/use-tab-param";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
 import { cn } from "@/lib/utils";
-import { ICONS, type Icon } from "@/lib/icons";
+import { ICONS } from "@/lib/icons";
 import { toast } from "@/components/ui/toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { SortControls } from "@/components/common/sort-controls";
-import { PageSizeSelect } from "@/components/common/page-size-select";
-import { PaginationControls } from "@/components/common/pagination-controls";
+import { SortControl } from "@/components/common/sort-control";
+import { ListFooter } from "@/components/common/list-footer";
 import { EmptyState } from "@/components/common/empty-state";
 import { LifecycleFilter } from "@/components/common/lifecycle-filter";
 import { KanbanFilterBar } from "@/components/tasks/kanban/kanban-filter-bar";
@@ -164,6 +163,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     isFavorite,
     sort,
     order,
+    sortIsDefault,
     limit,
     page,
     debouncedSearch,
@@ -185,11 +185,6 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
   const availableTabs: readonly TaskLifecycle[] = isProjectManager(project.myRole) ? taskLifecycles : ["ACTIVE"];
 
   const { tab, onTabChange } = useTabParam(taskLifecycles, "ACTIVE", availableTabs);
-
-  const LIFECYCLE_OPTIONS: Record<TaskLifecycle, { label: string; icon: Icon }> = {
-    ACTIVE: { label: t("listTable.lifecycle.tasks"), icon: ICONS.list },
-    ARCHIVED: { label: t("listTable.lifecycle.archived"), icon: ICONS.archive },
-  };
 
   const sortOptions: { value: TaskSortField; label: string }[] = taskSortFields.map((field) => ({
     value: field,
@@ -219,29 +214,35 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
     placeholderData: keepPreviousData,
   });
 
-  // Un contador por pestana, con los mismos filtros que la tabla para que el numero cuadre con lo
-  // que se ve debajo.
-  const countParams = {
-    workspaceSlug,
-    projectSlug: project.slug,
-    page: 1,
-    limit: 1,
-    search: debouncedSearch,
-    status,
-    assigneeId,
-    priority,
-    dueDate,
-    isFavorite,
-  };
-  const activeCountQuery = useQuery(getTasksQuery({ ...countParams, isArchived: false }));
+  // El contador de archivadas lleva los mismos filtros que la tabla, para que el numero cuadre con
+  // lo que se ve al pulsar el chip. Los vivos no lo necesitan: son lo que ya estas mirando.
   const archivedCountQuery = useQuery({
-    ...getTasksQuery({ ...countParams, isArchived: true }),
+    ...getTasksQuery({
+      workspaceSlug,
+      projectSlug: project.slug,
+      page: 1,
+      limit: 1,
+      search: debouncedSearch,
+      status,
+      assigneeId,
+      priority,
+      dueDate,
+      isFavorite,
+      isArchived: true,
+    }),
     enabled: isProjectManager(project.myRole),
   });
-  const countQueryByTab = {
-    ACTIVE: activeCountQuery,
-    ARCHIVED: archivedCountQuery,
-  };
+
+  const lifecycleOptions = availableTabs.includes("ARCHIVED")
+    ? [
+        {
+          value: "ARCHIVED" as const,
+          label: t("listTable.lifecycle.archived"),
+          icon: ICONS.archive,
+          count: archivedCountQuery.data?.pagination.total,
+        },
+      ]
+    : [];
 
   if (isError) {
     return <p className="py-4 text-sm text-muted-foreground">{t("listTable.failedToLoad")}</p>;
@@ -269,7 +270,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
       description={t("listTable.noTasksDescription")}
       action={
         onCreateTask ? (
-          <Button size="sm" onClick={onCreateTask}>
+          <Button onClick={onCreateTask}>
             <ICONS.addNew />
             {t("listPage.createTask")}
           </Button>
@@ -323,25 +324,25 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
       )}
 
       {tasks && tasks.data.length > 0 && (
-        <PaginationControls page={page} totalPages={tasks.pagination.pages} onPageChange={onPageChange} />
+        <ListFooter
+          limit={limit}
+          pageSizeOptions={pageSizeOptions}
+          onLimitChange={onLimitChange}
+          page={page}
+          totalPages={tasks.pagination.pages}
+          onPageChange={onPageChange}
+        />
       )}
     </>
   );
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      {/* Rejilla y no flex: con justify-between la accion se iba a una segunda linea en cuanto
+          los filtros llenaban la primera, y ahi ademas caia a la izquierda. Con una columna
+          propia se queda en su esquina y los filtros envuelven debajo de si mismos. */}
+      <div className="grid grid-cols-[1fr_auto] items-start gap-2">
         <div className="flex flex-wrap items-center gap-2">
-          <LifecycleFilter
-            value={tab}
-            onValueChange={onTabChange}
-            options={availableTabs.map((lifecycle) => ({
-              value: lifecycle,
-              label: LIFECYCLE_OPTIONS[lifecycle].label,
-              icon: LIFECYCLE_OPTIONS[lifecycle].icon,
-              count: countQueryByTab[lifecycle].data?.pagination.total,
-            }))}
-          />
           <KanbanFilterBar
             workspaceSlug={workspaceSlug}
             projectSlug={project.slug}
@@ -356,6 +357,12 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
             dueDate={dueDate}
             onDueDateChange={onDueDateChange}
           />
+          <LifecycleFilter
+            value={tab}
+            activeValue="ACTIVE"
+            onValueChange={onTabChange}
+            options={lifecycleOptions}
+          />
           <Button
             type="button"
             variant="ghost"
@@ -365,23 +372,21 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
             <ICONS.favorite className={cn(isFavorite && "fill-current")} />
             {t("listTable.favoritesFilter")}
           </Button>
-        </div>
-        <div className="flex items-center gap-1">
-          <SortControls
+          <SortControl
             field={sort}
             order={order}
             options={sortOptions}
+            isDefault={sortIsDefault}
             onFieldChange={onSortFieldChange}
             onOrderChange={onSortOrderChange}
           />
-          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
-          {onCreateTask && (
-            <Button className="ml-1" onClick={onCreateTask}>
-              <ICONS.addNew />
-              {t("listPage.createTask")}
-            </Button>
-          )}
         </div>
+        {onCreateTask && (
+          <Button onClick={onCreateTask}>
+            <ICONS.addNew />
+            {t("listPage.createTask")}
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-col gap-4">{tableContent}</div>

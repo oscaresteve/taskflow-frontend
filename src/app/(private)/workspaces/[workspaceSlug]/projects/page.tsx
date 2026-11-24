@@ -3,13 +3,12 @@
 import { PageContainer } from "@/components/common/page-container";
 import { PageHeader } from "@/components/common/page-header";
 import { LifecycleFilter } from "@/components/common/lifecycle-filter";
-import { PageSizeSelect } from "@/components/common/page-size-select";
-import { PaginationControls } from "@/components/common/pagination-controls";
+import { ListFooter } from "@/components/common/list-footer";
 import { SearchInput } from "@/components/common/search-input";
-import { SortControls } from "@/components/common/sort-controls";
+import { SortControl } from "@/components/common/sort-control";
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table";
 
-import { ICONS, type Icon } from "@/lib/icons";
+import { ICONS } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -119,6 +118,7 @@ export default function ProjectsPage() {
     search,
     sort,
     order,
+    sortIsDefault,
     limit,
     page,
     searchParam,
@@ -148,11 +148,6 @@ export default function ProjectsPage() {
 
   const showingArchived = tab === "ARCHIVED";
 
-  const LIFECYCLE_OPTIONS: Record<ProjectLifecycle, { label: string; icon: Icon }> = {
-    ACTIVE: { label: t("projectsPage.lifecycle.projects"), icon: ICONS.project },
-    ARCHIVED: { label: t("projectsPage.lifecycle.archived"), icon: ICONS.archive },
-  };
-
   const {
     data: projects,
     isLoading,
@@ -170,10 +165,8 @@ export default function ProjectsPage() {
     placeholderData: keepPreviousData,
   });
 
-  // Un contador por pestana, igual que en miembros, acotado por la misma busqueda que la tabla.
-  const activeCountQuery = useQuery(
-    getProjectsQuery(workspaceSlug, { page: 1, limit: 1, search: searchParam, isArchived: false }),
-  );
+  // El contador del chip, acotado por la misma busqueda que la tabla para que el numero cuadre con
+  // lo que se ve al pulsarlo. Los activos no lo necesitan: son lo que ya estas mirando.
   const archivedCountQuery = useQuery(
     getProjectsQuery(workspaceSlug, {
       page: 1,
@@ -183,10 +176,17 @@ export default function ProjectsPage() {
       myRole: archivedRoles,
     }),
   );
-  const countQueryByTab = {
-    ACTIVE: activeCountQuery,
-    ARCHIVED: archivedCountQuery,
-  };
+
+  const lifecycleOptions = availableTabs.includes("ARCHIVED")
+    ? [
+        {
+          value: "ARCHIVED" as const,
+          label: t("projectsPage.lifecycle.archived"),
+          icon: ICONS.archive,
+          count: archivedCountQuery.data?.pagination.total,
+        },
+      ]
+    : [];
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("projectsPage.failedToLoad")}</p>;
@@ -226,7 +226,7 @@ export default function ProjectsPage() {
       description={t("projectsPage.noProjectsYetDescription")}
       action={
         isWorkspaceManager(myWorkspaceRole) ? (
-          <Button size="sm" onClick={() => setCreateOpen(true)}>
+          <Button onClick={() => setCreateOpen(true)}>
             <ICONS.addNew />
             {t("projectsPage.newProject")}
           </Button>
@@ -241,7 +241,7 @@ export default function ProjectsPage() {
         title={t("projectsPage.title")}
         actions={
           isWorkspaceManager(myWorkspaceRole) ? (
-            <Button size="sm" onClick={() => setCreateOpen(true)}>
+            <Button onClick={() => setCreateOpen(true)}>
               <ICONS.addNew />
               {t("projectsPage.newProject")}
             </Button>
@@ -250,35 +250,27 @@ export default function ProjectsPage() {
       />
 
       <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <LifecycleFilter
-              value={tab}
-              onValueChange={onTabChange}
-              options={availableTabs.map((lifecycle) => ({
-                value: lifecycle,
-                label: LIFECYCLE_OPTIONS[lifecycle].label,
-                icon: LIFECYCLE_OPTIONS[lifecycle].icon,
-                count: countQueryByTab[lifecycle].data?.pagination.total,
-              }))}
-            />
-            <SearchInput
-              value={search}
-              onChange={onSearchChange}
-              placeholder={t("projectsPage.searchPlaceholder")}
-              className="w-48"
-            />
-          </div>
-          <div className="flex items-center gap-1">
-            <SortControls
-              field={sort}
-              order={order}
-              options={sortOptions}
-              onFieldChange={onSortFieldChange}
-              onOrderChange={onSortOrderChange}
-            />
-            <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <SearchInput
+            value={search}
+            onChange={onSearchChange}
+            placeholder={t("projectsPage.searchPlaceholder")}
+            className="w-48"
+          />
+          <LifecycleFilter
+            value={tab}
+            activeValue="ACTIVE"
+            onValueChange={onTabChange}
+            options={lifecycleOptions}
+          />
+          <SortControl
+            field={sort}
+            order={order}
+            options={sortOptions}
+            isDefault={sortIsDefault}
+            onFieldChange={onSortFieldChange}
+            onOrderChange={onSortOrderChange}
+          />
         </div>
 
         <div className="flex flex-col gap-4">
@@ -320,7 +312,14 @@ export default function ProjectsPage() {
           )}
 
           {projects.data.length > 0 && (
-            <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+            <ListFooter
+              limit={limit}
+              pageSizeOptions={pageSizeOptions}
+              onLimitChange={onLimitChange}
+              page={page}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+            />
           )}
         </div>
       </div>

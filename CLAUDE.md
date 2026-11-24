@@ -183,6 +183,27 @@ token — never a hardcoded hex in a component.
   `Write`, so treat the directory as read-only regardless of what the permission prompt allows.
   Adjust behaviour at the call site with `className` or a wrapper component instead.
 
+## The toolbar of a listing
+
+Every listing (both members pages, the task list, the kanban, the projects and workspaces tables)
+has the same two rows, and a new one should not invent its own:
+
+- **One row above the listing**: search first, then the selects (the enum filters), then the toggles
+  (`LifecycleFilter`'s chips, the favourites one), and `SortControl` last — everything before it says
+  *which* rows, it says in *what order*. The **primary action is the only thing on the right**,
+  alone — it is not a way of looking at the list — and it sits in its own grid column
+  (`grid-cols-[1fr_auto]`), so the filters wrap under themselves instead of pushing it off the row.
+- **A footer below it** (`components/common/list-footer.tsx`), only when there are rows:
+  rows-per-page at one end and the pager at the other.
+- **At rest a control is a plain ghost button**, with no palette of its own; when it is actually
+  filtering it gets the frame and the tint, via `filteringClasses()` in `lib/enum-colors.ts`. That
+  is what makes an active filter legible at a glance, so don't paint a control in its enum colour
+  while it sits at its default value.
+- **The live subset has no control.** Seeing it is the resting state of the screen, so
+  `LifecycleFilter` only takes the dead subsets and releasing the pressed chip is what goes back.
+- `font-mono uppercase` is for an enum rendered **as data** (`EnumBadge`), not for the controls that
+  pick it.
+
 ## Conventions
 
 - Comments explain **why**, not what, and match the language of the surrounding file (this codebase

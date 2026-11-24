@@ -17,7 +17,6 @@
     "newProject": "Nuevo proyecto",
     "searchPlaceholder": "Buscar proyectos",
     "lifecycle": {
-      "projects": "Proyectos",
       "archived": "Archivados"
     },
     "failedToLoad": "No se pudieron cargar los proyectos.",

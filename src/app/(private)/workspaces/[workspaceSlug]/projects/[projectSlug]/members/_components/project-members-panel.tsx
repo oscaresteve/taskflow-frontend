@@ -6,9 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { MembersFilterBar } from "@/components/members/members-filter-bar";
 import { MembersTable } from "@/components/members/members-table";
-import { PageSizeSelect } from "@/components/common/page-size-select";
-import { PaginationControls } from "@/components/common/pagination-controls";
-import { SortControls } from "@/components/common/sort-controls";
+import { ListFooter } from "@/components/common/list-footer";
+import { SortControl } from "@/components/common/sort-control";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
 import { ICONS } from "@/lib/icons";
@@ -57,6 +56,7 @@ export function ProjectMembersPanel({
     roleFilter,
     sort,
     order,
+    sortIsDefault,
     limit,
     page,
     role,
@@ -122,27 +122,25 @@ export function ProjectMembersPanel({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="grid grid-cols-[1fr_auto] items-start gap-2">
         <div className="flex flex-wrap items-center gap-2">
-          {lifecycleFilter}
           <MembersFilterBar
             search={search}
             onSearchChange={onSearchChange}
             roleFilter={roleFilter}
             onRoleFilterChange={onRoleFilterChange}
           />
-        </div>
-        <div className="flex items-center gap-2">
-          <SortControls
+          {lifecycleFilter}
+          <SortControl
             field={sort}
             order={order}
             options={SORT_OPTIONS}
+            isDefault={sortIsDefault}
             onFieldChange={onSortFieldChange}
             onOrderChange={onSortOrderChange}
           />
-          <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
-          {actions}
         </div>
+        {actions}
       </div>
 
       <MembersTable
@@ -155,7 +153,14 @@ export function ProjectMembersPanel({
         actorUserId={actorUserId}
       />
       {membersQuery.data.data.length > 0 && (
-        <PaginationControls page={page} totalPages={membersQuery.data.pagination.pages} onPageChange={onPageChange} />
+        <ListFooter
+          limit={limit}
+          pageSizeOptions={pageSizeOptions}
+          onLimitChange={onLimitChange}
+          page={page}
+          totalPages={membersQuery.data.pagination.pages}
+          onPageChange={onPageChange}
+        />
       )}
     </div>
   );

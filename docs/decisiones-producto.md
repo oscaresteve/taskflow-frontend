@@ -67,13 +67,15 @@ todo responde 404 salvo su propia ruta de reversión. Por eso:
 - El reverso vive en el **menú de fila del listado de gestión** (`/workspaces`,
   `/workspaces/[slug]/projects`), no en los ajustes: los ajustes de un recurso muerto tampoco se
   pueden abrir.
-- Esos listados **separan los estados en pestañas**, una activa a la vez, con su contador, igual que
-  los dos listados de miembros. Así cada vista es homogénea y no hace falta una columna de estado
-  para distinguir filas.
-- **La primera pestaña se llama como lo que lista, no "activos"**: *Espacios* / Inactivos,
-  *Proyectos* / Archivados, *Tareas* / Archivadas, *Miembros* / Pendientes / Eliminados. Lo primero
-  que se viene a ver es la cosa; "activos" no añade nada, y el nombre del estado solo hace falta en
-  la pestaña que se sale de lo normal.
+- Esos listados **separan los estados en subconjuntos**, uno a la vez, con su contador, igual que los
+  dos listados de miembros. Así cada vista es homogénea y no hace falta una columna de estado para
+  distinguir filas.
+- **Lo vivo no tiene control**: el subconjunto se pide con un chip en la barra de filtros
+  (*Inactivos*, *Archivados*, *Archivadas*, *Pendientes*, *Eliminados*) y soltarlo es lo que vuelve a
+  lo vivo. Verlo es el reposo de la pantalla, no algo que se pida, igual que los demás filtros no
+  tienen un botón para su "todas"; y así tampoco se gasta un hueco fijo de la fila. Empezó siendo
+  pestañas, con una primera pestaña llamada como lo que lista, y de ahí quedan dos cosas: que el
+  nombre del estado solo aparece cuando se sale de lo normal, y que lo primero que ves son los vivos.
 - En la vista de lo muerto la fila se queda en los campos que ya trae el listado: sin enlace, sin
   favorito y sin la columna de responsables, porque cada uno de esos tres caminos daría 404.
 - `WorkspaceResponseDto` trae `myRole` justamente para esto: sobre un espacio desactivado

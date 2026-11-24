@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { ICONS, type Icon } from "@/lib/icons";
+import { ICONS } from "@/lib/icons";
 import { getProjectMembersPageQuery } from "@/lib/queries/project-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useProjectRole } from "@/hooks/use-project-role";
@@ -38,10 +38,6 @@ import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function ProjectMembersPage() {
   const t = useTranslations("members");
-  const STATUS_OPTIONS: Record<ProjectMemberStatusTab, { label: string; icon: Icon }> = {
-    ACTIVE: { label: t("projectMembersPage.tabMembers"), icon: ICONS.memberActive },
-    INACTIVE: { label: t("projectMembersPage.tabInactive"), icon: ICONS.memberInactive },
-  };
   const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
   const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
@@ -67,17 +63,21 @@ export default function ProjectMembersPage() {
 
   const { tab: statusTab, onTabChange } = useTabParam(projectMemberStatusTabs, "ACTIVE", availableTabs);
 
-  const activeCountQuery = useQuery(
-    getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [true], page: 1, limit: 1 }),
-  );
   const inactiveCountQuery = useQuery({
     ...getProjectMembersPageQuery({ workspaceSlug, projectSlug, isActive: [false], page: 1, limit: 1 }),
     enabled: canManage,
   });
-  const countQueryByStatus = {
-    ACTIVE: activeCountQuery,
-    INACTIVE: inactiveCountQuery,
-  };
+
+  const lifecycleOptions = availableTabs.includes("INACTIVE")
+    ? [
+        {
+          value: "INACTIVE" as const,
+          label: t("projectMembersPage.tabInactive"),
+          icon: ICONS.memberInactive,
+          count: inactiveCountQuery.data?.pagination.total,
+        },
+      ]
+    : [];
 
   const assignableRoles = assignableProjectRoles({ workspaceRole: myWorkspaceRole, actorRole: myRole });
 
@@ -221,18 +221,14 @@ export default function ProjectMembersPage() {
         lifecycleFilter={
           <LifecycleFilter
             value={statusTab}
+            activeValue="ACTIVE"
             onValueChange={onTabChange}
-            options={availableTabs.map((status) => ({
-              value: status,
-              label: STATUS_OPTIONS[status].label,
-              icon: STATUS_OPTIONS[status].icon,
-              count: countQueryByStatus[status].data?.pagination.total,
-            }))}
+            options={lifecycleOptions}
           />
         }
         actions={
           canManage ? (
-            <Button size="sm" onClick={() => setAddMemberOpen(true)}>
+            <Button onClick={() => setAddMemberOpen(true)}>
               <ICONS.memberAdd />
               {t("projectMembersPage.addMember")}
             </Button>

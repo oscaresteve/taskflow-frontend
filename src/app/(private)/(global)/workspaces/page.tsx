@@ -4,16 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ICONS, type Icon } from "@/lib/icons";
+import { ICONS } from "@/lib/icons";
 import { getWorkspacesQuery } from "@/lib/queries/workspace.queries";
 import { isWorkspaceManager, workspaceManagerRoles } from "@/lib/permissions/workspace-member-permissions";
 import { CustomAvatar } from "@/components/common/custom-avatar";
 import { OwnersCell } from "@/components/members/owners-cell";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/common/search-input";
-import { PageSizeSelect } from "@/components/common/page-size-select";
-import { PaginationControls } from "@/components/common/pagination-controls";
-import { SortControls } from "@/components/common/sort-controls";
+import { ListFooter } from "@/components/common/list-footer";
+import { SortControl } from "@/components/common/sort-control";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CreateWorkspaceDialog } from "@/components/workspaces/create-workspace-dialog";
@@ -81,10 +80,6 @@ function InactiveWorkspaceRow({ workspace }: { workspace: WorkspaceListItemRespo
 export default function WorkspacesPage() {
   const t = useTranslations("workspaces");
   const [createOpen, setCreateOpen] = useState(false);
-  const LIFECYCLE_OPTIONS: Record<WorkspaceLifecycle, { label: string; icon: Icon }> = {
-    ACTIVE: { label: t("workspacesPage.lifecycle.workspaces"), icon: ICONS.workspace },
-    INACTIVE: { label: t("workspacesPage.lifecycle.inactive"), icon: ICONS.deactivate },
-  };
   const sortOptions: { value: WorkspaceSortField; label: string }[] = [
     { value: "name", label: t("workspacesPage.sort.name") },
     { value: "createdAt", label: t("workspacesPage.sort.createdAt") },
@@ -95,6 +90,7 @@ export default function WorkspacesPage() {
     search,
     sort,
     order,
+    sortIsDefault,
     limit,
     page,
     searchParam,
@@ -137,18 +133,22 @@ export default function WorkspacesPage() {
     placeholderData: keepPreviousData,
   });
 
-  // Un contador por pestana, igual que en miembros: la propia busqueda los acota, para que el numero
-  // cuadre con lo que la tabla ensena debajo.
-  const activeCountQuery = useQuery(
-    getWorkspacesQuery({ page: 1, limit: 1, search: searchParam, isActive: true }),
-  );
+  // El contador del chip: la propia busqueda lo acota, para que el numero cuadre con lo que la tabla
+  // ensena al pulsarlo. Los activos no lo necesitan: son lo que ya estas mirando.
   const inactiveCountQuery = useQuery(
     getWorkspacesQuery({ page: 1, limit: 1, search: searchParam, isActive: false, myRole: workspaceManagerRoles }),
   );
-  const countQueryByTab = {
-    ACTIVE: activeCountQuery,
-    INACTIVE: inactiveCountQuery,
-  };
+
+  const lifecycleOptions = availableTabs.includes("INACTIVE")
+    ? [
+        {
+          value: "INACTIVE" as const,
+          label: t("workspacesPage.lifecycle.inactive"),
+          icon: ICONS.deactivate,
+          count: inactiveCountQuery.data?.pagination.total,
+        },
+      ]
+    : [];
 
   if (isError) {
     return <p className="p-6 text-sm text-muted-foreground">{t("workspacesPage.failedToLoad")}</p>;
@@ -172,7 +172,7 @@ export default function WorkspacesPage() {
       <PageHeader
         title={t("workspacesPage.title")}
         actions={
-          <Button size="sm" onClick={() => setCreateOpen(true)}>
+          <Button onClick={() => setCreateOpen(true)}>
             <ICONS.addNew />
             {t("workspacesPage.newWorkspace")}
           </Button>
@@ -180,35 +180,27 @@ export default function WorkspacesPage() {
       />
 
       <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <LifecycleFilter
-              value={tab}
-              onValueChange={onTabChange}
-              options={availableTabs.map((lifecycle) => ({
-                value: lifecycle,
-                label: LIFECYCLE_OPTIONS[lifecycle].label,
-                icon: LIFECYCLE_OPTIONS[lifecycle].icon,
-                count: countQueryByTab[lifecycle].data?.pagination.total,
-              }))}
-            />
-            <SearchInput
-              value={search}
-              onChange={onSearchChange}
-              placeholder={t("workspacesPage.searchPlaceholder")}
-              className="w-48"
-            />
-          </div>
-          <div className="flex items-center gap-1">
-            <SortControls
-              field={sort}
-              order={order}
-              options={sortOptions}
-              onFieldChange={onSortFieldChange}
-              onOrderChange={onSortOrderChange}
-            />
-            <PageSizeSelect value={limit} options={pageSizeOptions} onChange={onLimitChange} />
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <SearchInput
+            value={search}
+            onChange={onSearchChange}
+            placeholder={t("workspacesPage.searchPlaceholder")}
+            className="w-48"
+          />
+          <LifecycleFilter
+            value={tab}
+            activeValue="ACTIVE"
+            onValueChange={onTabChange}
+            options={lifecycleOptions}
+          />
+          <SortControl
+            field={sort}
+            order={order}
+            options={sortOptions}
+            isDefault={sortIsDefault}
+            onFieldChange={onSortFieldChange}
+            onOrderChange={onSortOrderChange}
+          />
         </div>
 
         <div className="flex flex-col gap-4">
@@ -244,7 +236,14 @@ export default function WorkspacesPage() {
           )}
 
           {workspaces.data.length > 0 && (
-            <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
+            <ListFooter
+              limit={limit}
+              pageSizeOptions={pageSizeOptions}
+              onLimitChange={onLimitChange}
+              page={page}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+            />
           )}
         </div>
       </div>

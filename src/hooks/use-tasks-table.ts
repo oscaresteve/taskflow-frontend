@@ -14,6 +14,8 @@ import {
 } from "@/lib/task-enums";
 
 const PAGE_SIZE_OPTIONS = [10, 15, 20];
+const DEFAULT_SORT = "rank";
+const DEFAULT_ORDER = "asc";
 
 export function useTasksTable() {
   const [{ search, status, assigneeId, priority, dueDate, isFavorite, sort, order, limit, page }, setQuery] =
@@ -24,8 +26,8 @@ export function useTasksTable() {
       priority: parseAsStringLiteral(priorityFilters).withDefault("ALL"),
       dueDate: parseAsStringLiteral(dueDateFilters).withDefault("ALL"),
       isFavorite: parseAsBoolean.withDefault(false),
-      sort: parseAsStringLiteral(taskSortFields).withDefault("rank"),
-      order: parseAsStringLiteral(sortOrders).withDefault("asc"),
+      sort: parseAsStringLiteral(taskSortFields).withDefault(DEFAULT_SORT),
+      order: parseAsStringLiteral(sortOrders).withDefault(DEFAULT_ORDER),
       limit: parseAsInteger.withDefault(PAGE_SIZE_OPTIONS[0]),
       page: parseAsInteger.withDefault(1),
     });
@@ -81,6 +83,7 @@ export function useTasksTable() {
     isFavorite,
     sort,
     order,
+    sortIsDefault: sort === DEFAULT_SORT && order === DEFAULT_ORDER,
     limit,
     page,
     debouncedSearch,

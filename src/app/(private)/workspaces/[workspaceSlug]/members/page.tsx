@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { ICONS, type Icon } from "@/lib/icons";
+import { ICONS } from "@/lib/icons";
 import { getWorkspaceMembersPageQuery } from "@/lib/queries/workspace-member.queries";
 import { getMeQuery } from "@/lib/queries/auth.queries";
 import { useWorkspaceRole } from "@/hooks/use-workspace-role";
@@ -46,11 +46,6 @@ import { useTabParam } from "@/hooks/use-tab-param";
 
 export default function WorkspaceMembersPage() {
   const t = useTranslations("members");
-  const STATUS_OPTIONS: Record<WorkspaceMemberStatus, { label: string; icon: Icon }> = {
-    ACTIVE: { label: t("workspaceMembersPage.tabMembers"), icon: ICONS.memberActive },
-    PENDING: { label: t("workspaceMembersPage.tabPending"), icon: ICONS.memberPending },
-    REMOVED: { label: t("workspaceMembersPage.tabRemoved"), icon: ICONS.removeMember },
-  };
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { data: me } = useQuery(getMeQuery());
   const { role: myRole } = useWorkspaceRole(workspaceSlug);
@@ -81,9 +76,6 @@ export default function WorkspaceMembersPage() {
 
   const { tab: statusTab, onTabChange } = useTabParam(workspaceMemberStatusTabs, "ACTIVE", availableTabs);
 
-  const activeCountQuery = useQuery(
-    getWorkspaceMembersPageQuery({ workspaceSlug, status: ["ACTIVE"], page: 1, limit: 1 }),
-  );
   const pendingCountQuery = useQuery({
     ...getWorkspaceMembersPageQuery({ workspaceSlug, status: ["PENDING"], page: 1, limit: 1 }),
     enabled: canManageMembers,
@@ -92,11 +84,22 @@ export default function WorkspaceMembersPage() {
     ...getWorkspaceMembersPageQuery({ workspaceSlug, status: ["REMOVED"], page: 1, limit: 1 }),
     enabled: canManageMembers,
   });
-  const countQueryByStatus = {
-    ACTIVE: activeCountQuery,
-    PENDING: pendingCountQuery,
-    REMOVED: removedCountQuery,
-  };
+  const lifecycleOptions = canManageMembers
+    ? [
+        {
+          value: "PENDING" as const,
+          label: t("workspaceMembersPage.tabPending"),
+          icon: ICONS.memberPending,
+          count: pendingCountQuery.data?.pagination.total,
+        },
+        {
+          value: "REMOVED" as const,
+          label: t("workspaceMembersPage.tabRemoved"),
+          icon: ICONS.removeMember,
+          count: removedCountQuery.data?.pagination.total,
+        },
+      ]
+    : [];
 
   const assignableRoles = assignableWorkspaceRoles(myRole);
 
@@ -318,7 +321,7 @@ export default function WorkspaceMembersPage() {
         title={t("workspaceMembersPage.title")}
         actions={
           isWorkspaceManager(myRole) ? (
-            <Button size="sm" onClick={() => setAddMemberOpen(true)}>
+            <Button onClick={() => setAddMemberOpen(true)}>
               <ICONS.memberAdd />
               {t("workspaceMembersPage.addMember")}
             </Button>
@@ -338,13 +341,9 @@ export default function WorkspaceMembersPage() {
         lifecycleFilter={
           <LifecycleFilter
             value={statusTab}
+            activeValue="ACTIVE"
             onValueChange={onTabChange}
-            options={availableTabs.map((status) => ({
-              value: status,
-              label: STATUS_OPTIONS[status].label,
-              icon: STATUS_OPTIONS[status].icon,
-              count: countQueryByStatus[status].data?.pagination.total,
-            }))}
+            options={lifecycleOptions}
           />
         }
       />

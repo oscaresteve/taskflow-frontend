@@ -13,7 +13,6 @@
     "newWorkspace": "New workspace",
     "searchPlaceholder": "Search workspaces",
     "lifecycle": {
-      "workspaces": "Workspaces",
       "inactive": "Inactive"
     },
     "failedToLoad": "Failed to load workspaces.",

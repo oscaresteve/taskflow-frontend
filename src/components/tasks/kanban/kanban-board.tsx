@@ -67,7 +67,7 @@ export function KanbanBoard({ workspaceSlug, project, onCreateTask }: KanbanBoar
     <div className="flex min-h-0 flex-1 flex-col gap-4">
       {/* La accion de la vista comparte fila con los filtros: la cabecera del proyecto ya dice en
           que vista estas, asi que un titulo "Kanban" encima solo repetia la pestana activa. */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="grid grid-cols-[1fr_auto] items-start gap-2">
         <KanbanFilterBar
           workspaceSlug={workspaceSlug}
           projectSlug={project.slug}

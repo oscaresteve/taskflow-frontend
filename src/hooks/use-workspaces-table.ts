@@ -4,12 +4,14 @@ import { useDebouncedValue } from "./use-debounced-value";
 import { WorkspaceSortField, workspaceSortFields } from "@/lib/workspace-enums";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 15];
+const DEFAULT_SORT = "name";
+const DEFAULT_ORDER = "asc";
 
 export function useWorkspacesTable() {
   const [{ search, sort, order, limit, page }, setQuery] = useQueryStates({
     search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
-    sort: parseAsStringLiteral(workspaceSortFields).withDefault("name"),
-    order: parseAsStringLiteral(sortOrders).withDefault("asc"),
+    sort: parseAsStringLiteral(workspaceSortFields).withDefault(DEFAULT_SORT),
+    order: parseAsStringLiteral(sortOrders).withDefault(DEFAULT_ORDER),
     limit: parseAsInteger.withDefault(PAGE_SIZE_OPTIONS[0]),
     page: parseAsInteger.withDefault(1),
   });
@@ -40,6 +42,7 @@ export function useWorkspacesTable() {
     search,
     sort,
     order,
+    sortIsDefault: sort === DEFAULT_SORT && order === DEFAULT_ORDER,
     limit,
     page,
     searchParam,

@@ -10,14 +10,16 @@
   "search": {
     "clear": "Borrar búsqueda"
   },
-  "pageSize": "{size} / página",
+  "rowsPerPage": "Filas por página",
   "pagination": {
     "previous": "Anterior",
     "next": "Siguiente",
     "goToPrevious": "Ir a la página anterior",
-    "goToNext": "Ir a la página siguiente"
+    "goToNext": "Ir a la página siguiente",
+    "position": "Página {page} de {total}"
   },
   "sort": {
+    "label": "Ordenar por",
     "ascending": "Orden ascendente",
     "descending": "Orden descendente"
   },
