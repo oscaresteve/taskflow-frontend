@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react";
 import { ICONS } from "@/lib/icons";
 import { useTranslations } from "next-intl";
+import { filteringClasses } from "@/lib/enum-colors";
 import type { EnumOption } from "@/lib/enum-option";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -80,7 +81,7 @@ export function EnumIconLabel({ option, className }: { option: EnumOption; class
   const Icon = option.icon;
 
   return (
-    <span className={cn("flex items-center gap-1.5 font-mono uppercase", option.colors.text, className)}>
+    <span className={cn("flex items-center gap-1.5", option.colors.text, className)}>
       <Icon className="size-4" />
       {t(option.labelKey)}
     </span>
@@ -98,13 +99,7 @@ export function EnumControl({
     <Button
       variant={variant}
       size={size}
-      className={cn(
-        // En ghost el color solo aparece al pasar por encima: sin borde ni relleno no pesa como un campo.
-        variant !== "ghost" && cn(option.colors.border, option.colors.bgSoft),
-        option.colors.text,
-        option.colors.bgSoftHover,
-        className,
-      )}
+      className={cn(variant !== "ghost" && filteringClasses(option.colors), className)}
       {...props}
     >
       <EnumIconLabel option={option} />

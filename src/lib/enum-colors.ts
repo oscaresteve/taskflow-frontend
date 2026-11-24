@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 export interface EnumColors {
   text: string;
   bg: string;
@@ -126,3 +128,10 @@ export const roleMemberColors: EnumColors = {
   menuHighlight:
     "focus:bg-role-member/15! focus:text-role-member-foreground! focus:**:text-role-member-foreground! text-role-member-foreground!",
 };
+
+// Un control de la barra esta en reposo mientras no filtra, y en reposo es el ghost del boton sin
+// mas: nada de paleta. Estas son las clases del otro estado, el de "si, estoy filtrando" —el marco
+// y el tinte del enum—, y las comparten los filtros, el orden y los chips del ciclo de vida.
+export function filteringClasses(colors: EnumColors) {
+  return cn("border", colors.border, colors.bgSoft, colors.text, colors.bgSoftHover);
+}
