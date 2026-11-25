@@ -19,11 +19,9 @@ export function UsernameSection() {
 
   if (isLoading || !user) {
     return (
-      <SettingCard
-        title={t("usernameSection.title")}
-        description={t("usernameSection.description")}
-        action={<Skeleton className="h-8 w-40" />}
-      />
+      <SettingCard title={t("usernameSection.title")} description={t("usernameSection.description")}>
+        <Skeleton className="h-8 w-full" />
+      </SettingCard>
     );
   }
 
@@ -63,7 +61,6 @@ function UsernameEditor({ savedUsername }: { savedUsername: string }) {
           {tCommon("actions.save")}
         </Button>
       }
-      orientation="horizontal"
     >
       <InputGroup>
         <InputGroupAddon>@</InputGroupAddon>
@@ -73,7 +70,7 @@ function UsernameEditor({ savedUsername }: { savedUsername: string }) {
           onChange={(event) => setUsername(event.target.value)}
           disabled={updateUsername.isPending}
           autoComplete="username"
-          className="w-56"
+          aria-label={t("usernameSection.title")}
         />
       </InputGroup>
     </SettingCard>

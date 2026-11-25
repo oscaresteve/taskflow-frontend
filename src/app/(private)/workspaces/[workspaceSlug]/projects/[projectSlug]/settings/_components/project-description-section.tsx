@@ -66,7 +66,6 @@ export function ProjectDescriptionSection() {
       <SettingCard
         title={t("projectDescriptionSection.title")}
         description={t("projectDescriptionSection.description")}
-        footerHint={t("projectDescriptionSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateProject.isPending || !form.formState.isDirty}>
             {updateProject.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}

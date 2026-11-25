@@ -59,8 +59,8 @@ export function WorkspaceNameSection() {
 
   if (isLoading || !workspace) {
     return (
-      <SettingCard title={t("workspaceNameSection.loadingTitle")} description={t("workspaceNameSection.description")}>
-        <Skeleton className="h-9 w-full" />
+      <SettingCard title={t("workspaceNameSection.title")} description={t("workspaceNameSection.description")}>
+        <Skeleton className="h-8 w-full" />
       </SettingCard>
     );
   }
@@ -70,7 +70,6 @@ export function WorkspaceNameSection() {
       <SettingCard
         title={t("workspaceNameSection.title")}
         description={t("workspaceNameSection.description")}
-        footerHint={t("workspaceNameSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateWorkspace.isPending || !form.formState.isDirty}>
             {updateWorkspace.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}

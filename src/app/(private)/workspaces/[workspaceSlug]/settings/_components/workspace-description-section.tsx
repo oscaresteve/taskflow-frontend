@@ -69,7 +69,6 @@ export function WorkspaceDescriptionSection() {
       <SettingCard
         title={t("workspaceDescriptionSection.title")}
         description={t("workspaceDescriptionSection.description")}
-        footerHint={t("workspaceDescriptionSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateWorkspace.isPending || !form.formState.isDirty}>
             {updateWorkspace.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}

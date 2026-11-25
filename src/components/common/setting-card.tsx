@@ -8,17 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
 interface SettingCardProps {
   title: ReactNode;
   description: ReactNode;
+  /** Control con tamaño propio (avatar, color, select, segmentado): a la derecha del nombre. */
   action?: ReactNode;
+  /** Campo de texto: debajo del nombre y a lo ancho de la tarjeta. */
   children?: ReactNode;
   footerAction?: ReactNode;
   footerHint?: ReactNode;
   className?: string;
-  orientation?: "vertical" | "horizontal";
 }
 
 export function SettingCard({
@@ -29,20 +29,18 @@ export function SettingCard({
   footerAction,
   footerHint,
   className,
-  orientation = "vertical",
 }: SettingCardProps) {
-  const isHorizontal = orientation === "horizontal";
-
   return (
     <Card className={className}>
-      <div className={cn("flex flex-col gap-(--card-spacing)", isHorizontal && "flex-row items-start")}>
-        <CardHeader className={cn(isHorizontal && "min-w-0 flex-1")}>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-          {action && <CardAction>{action}</CardAction>}
-        </CardHeader>
-        {children && <CardContent className={cn(isHorizontal && "shrink-0")}>{children}</CardContent>}
-      </div>
+      {/* Dos sitios, segun lo que sea el control: un campo de texto quiere todo el ancho y va debajo
+          del nombre; uno que ya trae su tamano (el avatar, el color, el idioma, el tema) va en la
+          misma fila que el nombre, pegado a la derecha, en vez de estirarse sin motivo. */}
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+        {action && <CardAction>{action}</CardAction>}
+      </CardHeader>
+      {children && <CardContent>{children}</CardContent>}
       {/* Sin el tinte del primitivo: el borde ya separa el pie, y el relleno sumaba una superficie
           dentro de una superficie. */}
       {(footerAction || footerHint) && (

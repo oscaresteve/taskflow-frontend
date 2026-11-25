@@ -60,57 +60,61 @@ export function WorkspaceAvatarSection() {
 
   if (isLoading || !workspace) {
     return (
-      <SettingCard title={t("workspaceAvatarSection.title")} description={t("workspaceAvatarSection.description")}>
-        <Skeleton className="size-16 rounded-full" />
-      </SettingCard>
+      <SettingCard
+        title={t("workspaceAvatarSection.title")}
+        description={t("workspaceAvatarSection.description")}
+        action={<Skeleton className="size-16 rounded-full" />}
+      />
     );
   }
 
   return (
-    <SettingCard
-      title={t("workspaceAvatarSection.title")}
-      description={t("workspaceAvatarSection.description")}
-      footerHint={t("workspaceAvatarSection.footerHint")}
-      orientation="horizontal"
-      footerAction={
-        <DropdownMenu>
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <DropdownMenuTrigger
-                  render={
-                    <Button
-                      aria-label={t("workspaceAvatarSection.actionsLabel")}
-                      variant="ghost"
-                      size="icon-sm"
-                      disabled={deleteAvatar.isPending}
-                    />
-                  }
-                />
-              }
-            >
-              <ICONS.moreActions />
-            </TooltipTrigger>
-            <TooltipContent>{t("workspaceAvatarSection.actionsLabel")}</TooltipContent>
-          </Tooltip>
+    <>
+      <SettingCard
+        title={t("workspaceAvatarSection.title")}
+        description={t("workspaceAvatarSection.description")}
+        action={
+          <AvatarPicker
+            imageUrl={workspace.avatarUrl}
+            seed={workspace.id}
+            alt={workspace.name}
+            acceptedMimeTypes={AVATAR_ACCEPTED_MIME_TYPES}
+            maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
+            isUploading={uploadAvatar.isPending}
+            onFileSelect={handleFileSelect}
+          />
+        }
+        footerHint={t("workspaceAvatarSection.footerHint")}
+        footerAction={
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        aria-label={t("workspaceAvatarSection.actionsLabel")}
+                        variant="ghost"
+                        size="icon-sm"
+                        disabled={deleteAvatar.isPending}
+                      />
+                    }
+                  />
+                }
+              >
+                <ICONS.moreActions />
+              </TooltipTrigger>
+              <TooltipContent>{t("workspaceAvatarSection.actionsLabel")}</TooltipContent>
+            </Tooltip>
 
-          <ActionsMenuContent align="end">
-            <ActionsMenuItem variant="destructive" disabled={!hasAvatar} onClick={() => setRemoveOpen(true)}>
-              <ICONS.delete />
-              {t("workspaceAvatarSection.removeAction")}
-            </ActionsMenuItem>
-          </ActionsMenuContent>
-        </DropdownMenu>
-      }
-    >
-      <AvatarPicker
-        imageUrl={workspace.avatarUrl}
-        seed={workspace.id}
-        alt={workspace.name}
-        acceptedMimeTypes={AVATAR_ACCEPTED_MIME_TYPES}
-        maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
-        isUploading={uploadAvatar.isPending}
-        onFileSelect={handleFileSelect}
+            <ActionsMenuContent align="end">
+              <ActionsMenuItem variant="destructive" disabled={!hasAvatar} onClick={() => setRemoveOpen(true)}>
+                <ICONS.delete />
+                {t("workspaceAvatarSection.removeAction")}
+              </ActionsMenuItem>
+            </ActionsMenuContent>
+          </DropdownMenu>
+        }
       />
       <ConfirmDialog
         open={removeOpen}
@@ -123,6 +127,6 @@ export function WorkspaceAvatarSection() {
         pending={deleteAvatar.isPending}
         Icon={ICONS.delete}
       />
-    </SettingCard>
+    </>
   );
 }

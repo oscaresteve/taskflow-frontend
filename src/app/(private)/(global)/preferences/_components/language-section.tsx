@@ -34,7 +34,7 @@ export function LanguageSection() {
       <SettingCard
         title={t("languageSection.title")}
         description={t("languageSection.description")}
-        action={<Skeleton className="h-8 w-40" />}
+        action={<Skeleton className="h-8 w-32" />}
       />
     );
   }
@@ -73,38 +73,38 @@ function LanguagePicker({ savedLocale }: { savedLocale: Locale }) {
     <SettingCard
       title={t("languageSection.title")}
       description={t("languageSection.description")}
+      action={
+        <Select
+          value={locale}
+          onValueChange={(value) => value && setLocale(value as Locale)}
+          disabled={updateLocale.isPending}
+        >
+          <SelectTrigger>
+            <SelectValue>
+              {() => (
+                <>
+                  <span aria-hidden="true">{LOCALE_OPTIONS.find((option) => option.value === locale)?.flag}</span>
+                  {localeLabels[locale]}
+                </>
+              )}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {LOCALE_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                <span aria-hidden="true">{option.flag}</span>
+                {localeLabels[option.value]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      }
       footerAction={
         <Button onClick={handleSave} disabled={updateLocale.isPending || locale === savedLocale}>
           {updateLocale.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
           {tCommon("actions.save")}
         </Button>
       }
-      orientation="horizontal"
-    >
-      <Select
-        value={locale}
-        onValueChange={(value) => value && setLocale(value as Locale)}
-        disabled={updateLocale.isPending}
-      >
-        <SelectTrigger className="w-40">
-          <SelectValue>
-            {() => (
-              <>
-                <span aria-hidden="true">{LOCALE_OPTIONS.find((option) => option.value === locale)?.flag}</span>
-                {localeLabels[locale]}
-              </>
-            )}
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {LOCALE_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              <span aria-hidden="true">{option.flag}</span>
-              {localeLabels[option.value]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </SettingCard>
+    />
   );
 }

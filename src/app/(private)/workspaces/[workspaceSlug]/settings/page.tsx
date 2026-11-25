@@ -20,8 +20,9 @@ export default function WorkspaceSettingsPage() {
 
   if (isLoading) {
     return (
-      <PageContainer className="max-w-5xl">
-        <Skeleton className="h-8 w-64" />
+      <PageContainer className="max-w-4xl">
+        {/* El titulo no se espera a nada, asi que no se finge con un esqueleto. */}
+        <PageHeader title={t("workspaceSettingsPage.title")} />
         <Skeleton className="h-40 w-full" />
       </PageContainer>
     );
@@ -32,7 +33,7 @@ export default function WorkspaceSettingsPage() {
   const canManage = isWorkspaceManager(myRole);
 
   return (
-    <PageContainer className="max-w-5xl">
+    <PageContainer className="max-w-4xl">
       <PageHeader title={t("workspaceSettingsPage.title")} />
       {canManage && (
         <>

@@ -60,7 +60,7 @@ export function ProjectNameSection() {
   if (isLoading || !project) {
     return (
       <SettingCard title={t("projectNameSection.title")} description={t("projectNameSection.description")}>
-        <Skeleton className="h-9 w-full" />
+        <Skeleton className="h-8 w-full" />
       </SettingCard>
     );
   }
@@ -70,7 +70,6 @@ export function ProjectNameSection() {
       <SettingCard
         title={t("projectNameSection.title")}
         description={t("projectNameSection.description")}
-        footerHint={t("projectNameSection.footerHint")}
         footerAction={
           <Button type="submit" disabled={updateProject.isPending || !form.formState.isDirty}>
             {updateProject.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}

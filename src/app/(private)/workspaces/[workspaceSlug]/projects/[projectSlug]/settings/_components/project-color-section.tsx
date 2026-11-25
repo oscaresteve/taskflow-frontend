@@ -57,7 +57,7 @@ export function ProjectColorSection() {
       <SettingCard
         title={t("projectColorSection.title")}
         description={t("projectColorSection.description")}
-        action={<Skeleton className="size-16 rounded-full" />}
+        action={<Skeleton className="size-9 rounded-full" />}
       />
     );
   }
@@ -67,21 +67,20 @@ export function ProjectColorSection() {
       <SettingCard
         title={t("projectColorSection.title")}
         description={t("projectColorSection.description")}
-        footerHint={t("projectColorSection.footerHint")}
+        action={
+          <Controller
+            name="color"
+            control={form.control}
+            render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
+          />
+        }
         footerAction={
           <Button type="submit" disabled={updateProject.isPending || !form.formState.isDirty}>
             {updateProject.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
             {tCommon("actions.save")}
           </Button>
         }
-        orientation="horizontal"
-      >
-        <Controller
-          name="color"
-          control={form.control}
-          render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
-        />
-      </SettingCard>
+      />
     </form>
   );
 }

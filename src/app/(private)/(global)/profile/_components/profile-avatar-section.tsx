@@ -59,58 +59,62 @@ export function ProfileAvatarSection() {
 
   if (isLoading || !user) {
     return (
-      <SettingCard title={t("avatarSection.title")} description={t("avatarSection.description")}>
-        <Skeleton className="size-16 rounded-full" />
-      </SettingCard>
+      <SettingCard
+        title={t("avatarSection.title")}
+        description={t("avatarSection.description")}
+        action={<Skeleton className="size-16 rounded-full" />}
+      />
     );
   }
 
   return (
-    <SettingCard
-      title={t("avatarSection.title")}
-      description={t("avatarSection.description")}
-      footerHint={t("avatarSection.footerHint")}
-      orientation="horizontal"
-      footerAction={
-        <DropdownMenu>
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <DropdownMenuTrigger
-                  render={
-                    <Button
-                      aria-label={t("avatarSection.actionsLabel")}
-                      variant="ghost"
-                      size="icon-sm"
-                      disabled={deleteAvatar.isPending}
-                    />
-                  }
-                />
-              }
-            >
-              <ICONS.moreActions />
-            </TooltipTrigger>
-            <TooltipContent>{t("avatarSection.actionsLabel")}</TooltipContent>
-          </Tooltip>
+    <>
+      <SettingCard
+        title={t("avatarSection.title")}
+        description={t("avatarSection.description")}
+        action={
+          <AvatarPicker
+            imageUrl={user.avatarUrl}
+            seed={user.id}
+            alt={getFullName(user.firstName, user.lastName)}
+            variant="glyphs"
+            acceptedMimeTypes={AVATAR_ACCEPTED_MIME_TYPES}
+            maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
+            isUploading={uploadAvatar.isPending}
+            onFileSelect={handleFileSelect}
+          />
+        }
+        footerHint={t("avatarSection.footerHint")}
+        footerAction={
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        aria-label={t("avatarSection.actionsLabel")}
+                        variant="ghost"
+                        size="icon-sm"
+                        disabled={deleteAvatar.isPending}
+                      />
+                    }
+                  />
+                }
+              >
+                <ICONS.moreActions />
+              </TooltipTrigger>
+              <TooltipContent>{t("avatarSection.actionsLabel")}</TooltipContent>
+            </Tooltip>
 
-          <ActionsMenuContent align="end">
-            <ActionsMenuItem variant="destructive" disabled={!hasAvatar} onClick={() => setRemoveOpen(true)}>
-              <ICONS.delete />
-              {t("avatarSection.removeAction")}
-            </ActionsMenuItem>
-          </ActionsMenuContent>
-        </DropdownMenu>
-      }
-    >
-      <AvatarPicker
-        imageUrl={user.avatarUrl}
-        seed={user.id}
-        alt={getFullName(user.firstName, user.lastName)}
-        variant="glyphs"
-        acceptedMimeTypes={AVATAR_ACCEPTED_MIME_TYPES}
-        maxSizeBytes={MAX_AVATAR_SIZE_BYTES}
-        isUploading={uploadAvatar.isPending}
-        onFileSelect={handleFileSelect}
+            <ActionsMenuContent align="end">
+              <ActionsMenuItem variant="destructive" disabled={!hasAvatar} onClick={() => setRemoveOpen(true)}>
+                <ICONS.delete />
+                {t("avatarSection.removeAction")}
+              </ActionsMenuItem>
+            </ActionsMenuContent>
+          </DropdownMenu>
+        }
       />
       <ConfirmDialog
         open={removeOpen}
@@ -123,6 +127,6 @@ export function ProfileAvatarSection() {
         pending={deleteAvatar.isPending}
         Icon={ICONS.delete}
       />
-    </SettingCard>
+    </>
   );
 }

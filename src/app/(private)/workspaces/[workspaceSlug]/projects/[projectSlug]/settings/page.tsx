@@ -20,8 +20,8 @@ export default function ProjectSettingsPage() {
 
   if (isLoading || isLoadingWorkspaceRole) {
     return (
-      <PageContainer className="max-w-5xl">
-        <Skeleton className="h-8 w-64" />
+      <PageContainer className="max-w-4xl">
+        {/* Aqui no hay cabecera propia: la pestana del proyecto ya dice donde estas. */}
         <Skeleton className="h-40 w-full" />
       </PageContainer>
     );
@@ -32,7 +32,7 @@ export default function ProjectSettingsPage() {
   }
 
   return (
-    <PageContainer className="max-w-5xl">
+    <PageContainer className="max-w-4xl">
       <ProjectNameSection />
       <ProjectDescriptionSection />
       <ProjectColorSection />

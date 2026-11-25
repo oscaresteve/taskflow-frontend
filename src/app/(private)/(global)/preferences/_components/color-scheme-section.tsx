@@ -17,13 +17,12 @@ export function ColorSchemeSection() {
     <SettingCard
       title={t("colorSchemeSection.title")}
       description={t("colorSchemeSection.description")}
-      footerHint={t("colorSchemeSection.footerHint")}
-      orientation="horizontal"
-    >
-      {mounted ? (
+      action={
+        // El esquema solo se sabe en el cliente, asi que hasta montar no hay nada marcado: es lo
+        // mismo que pinta el servidor, y asi el grupo no se duplica para decir solo eso.
         <ToggleGroup
           variant="outline"
-          value={colorScheme ? [colorScheme] : []}
+          value={mounted && colorScheme ? [colorScheme] : []}
           onValueChange={([next]) => next && setColorScheme(next)}
         >
           <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.light")} value="light">
@@ -39,22 +38,7 @@ export function ColorSchemeSection() {
             {tCommon("colorSchemeToggle.system")}
           </ToggleGroupItem>
         </ToggleGroup>
-      ) : (
-        <ToggleGroup variant="outline" value={[]}>
-          <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.light")} value="light">
-            <ICONS.themeLight />
-            {tCommon("colorSchemeToggle.light")}
-          </ToggleGroupItem>
-          <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.dark")} value="dark">
-            <ICONS.themeDark />
-            {tCommon("colorSchemeToggle.dark")}
-          </ToggleGroupItem>
-          <ToggleGroupItem aria-label={tCommon("colorSchemeToggle.system")} value="system">
-            <ICONS.themeSystem />
-            {tCommon("colorSchemeToggle.system")}
-          </ToggleGroupItem>
-        </ToggleGroup>
-      )}
-    </SettingCard>
+      }
+    />
   );
 }
