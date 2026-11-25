@@ -2,30 +2,26 @@
   "profilePage": {
     "title": "Profile"
   },
-  "avatarSection": {
-    "title": "Avatar",
-    "description": "An avatar is optional but strongly recommended.",
-    "footerHint": "PNG, JPEG or WebP. Max 5MB.",
-    "failedToLoad": "Failed to load your profile.",
-    "actionsLabel": "Avatar actions",
-    "removeAction": "Remove avatar",
-    "removeDialogTitle": "Remove avatar?",
-    "removeDialogDescription": "This will remove your current avatar. You can upload a new one anytime."
-  },
-  "firstNameSection": {
-    "title": "First name",
-    "description": "Your given name, shown next to your activity across TaskFlow.",
-    "saved": "First name updated"
-  },
-  "lastNameSection": {
-    "title": "Last name",
-    "description": "Your family name, shown right after your first name.",
-    "saved": "Last name updated"
+  "nameSection": {
+    "title": "Name",
+    "description": "How you show up across TaskFlow, next to your activity and comments.",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "saved": "Name updated"
   },
   "usernameSection": {
     "title": "Username",
     "description": "This is how people mention you in comments. Changing it does not break existing mentions.",
     "saved": "Username updated"
+  },
+  "avatarSection": {
+    "title": "Photo",
+    "description": "Identifies you in your comments, in activity and in member lists.",
+    "footerHint": "PNG, JPEG or WebP. Max 5MB.",
+    "failedToLoad": "Failed to load your profile.",
+    "removeAction": "Remove photo",
+    "removeDialogTitle": "Remove photo?",
+    "removeDialogDescription": "You'll go back to the avatar generated from your account. You can upload another photo anytime."
   },
   "errors": {
     "generic": "Something went wrong"

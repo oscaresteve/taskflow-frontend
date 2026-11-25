@@ -6,7 +6,7 @@ export function useUpdateName() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { firstName: string } | { lastName: string }) => updateMe(data),
+    mutationFn: (data: { firstName: string; lastName: string }) => updateMe(data),
     onSuccess: (updatedUser) => {
       queryClient.setQueryData(authKeys.me(), updatedUser);
     },

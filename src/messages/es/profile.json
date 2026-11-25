@@ -2,30 +2,26 @@
   "profilePage": {
     "title": "Perfil"
   },
-  "avatarSection": {
-    "title": "Avatar",
-    "description": "El avatar es opcional, pero muy recomendable.",
-    "footerHint": "PNG, JPEG o WebP. Máximo 5MB.",
-    "failedToLoad": "No se pudo cargar tu perfil.",
-    "actionsLabel": "Acciones del avatar",
-    "removeAction": "Quitar el avatar",
-    "removeDialogTitle": "¿Quitar el avatar?",
-    "removeDialogDescription": "Esto quitará tu avatar actual. Puedes subir uno nuevo cuando quieras."
-  },
-  "firstNameSection": {
+  "nameSection": {
     "title": "Nombre",
-    "description": "Tu nombre de pila, el que aparece junto a tu actividad en TaskFlow.",
+    "description": "Como apareces en TaskFlow, junto a tu actividad y tus comentarios.",
+    "firstNameLabel": "Nombre",
+    "lastNameLabel": "Apellidos",
     "saved": "Nombre actualizado"
   },
-  "lastNameSection": {
-    "title": "Apellidos",
-    "description": "Tus apellidos, que aparecen justo después de tu nombre.",
-    "saved": "Apellidos actualizados"
-  },
   "usernameSection": {
-    "title": "Nombre de usuario",
+    "title": "Usuario",
     "description": "Con este nombre te mencionan en los comentarios. Cambiarlo no rompe las menciones que ya existen.",
-    "saved": "Nombre de usuario actualizado"
+    "saved": "Usuario actualizado"
+  },
+  "avatarSection": {
+    "title": "Foto",
+    "description": "Te identifica en tus comentarios, en la actividad y en la lista de miembros.",
+    "footerHint": "PNG, JPEG o WebP. Máximo 5MB.",
+    "failedToLoad": "No se pudo cargar tu perfil.",
+    "removeAction": "Quitar la foto",
+    "removeDialogTitle": "¿Quitar la foto?",
+    "removeDialogDescription": "Volverás al avatar generado a partir de tu cuenta. Puedes subir otra foto cuando quieras."
   },
   "errors": {
     "generic": "Algo salió mal"
