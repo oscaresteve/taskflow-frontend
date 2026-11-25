@@ -87,7 +87,6 @@
     "noTasksDescription": "Create a task to get started.",
     "noTasksFiltered": "No tasks match your filters.",
     "noTasksFilteredDescription": "Try a different search or filter.",
-    "favoritesFilter": "Favorites",
     "lifecycle": {
       "archived": "Archived"
     },

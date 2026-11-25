@@ -14,7 +14,6 @@ import { ApiError } from "@/lib/http/api-error";
 import { ALL_ASSIGNEES, TaskLifecycle, taskLifecycles, TaskSortField, taskSortFields } from "@/lib/task-enums";
 import { useTabParam } from "@/hooks/use-tab-param";
 import { isProjectManager } from "@/lib/permissions/project-member-permissions";
-import { cn } from "@/lib/utils";
 import { ICONS } from "@/lib/icons";
 import { toast } from "@/components/ui/toast";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,6 +22,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { SortControl } from "@/components/common/sort-control";
 import { ListFooter } from "@/components/common/list-footer";
 import { EmptyState } from "@/components/common/empty-state";
+import { FavoritesFilter } from "@/components/common/favorites-filter";
 import { LifecycleFilter } from "@/components/common/lifecycle-filter";
 import { KanbanFilterBar } from "@/components/tasks/kanban/kanban-filter-bar";
 import { StatusSelect } from "@/components/tasks/status-select";
@@ -363,15 +363,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
             onValueChange={onTabChange}
             options={lifecycleOptions}
           />
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => onFavoriteChange(!isFavorite)}
-            aria-pressed={isFavorite}
-          >
-            <ICONS.favorite className={cn(isFavorite && "fill-current")} />
-            {t("listTable.favoritesFilter")}
-          </Button>
+          <FavoritesFilter value={isFavorite} onValueChange={onFavoriteChange} />
           <SortControl
             field={sort}
             order={order}

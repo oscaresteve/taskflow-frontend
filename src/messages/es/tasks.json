@@ -87,7 +87,6 @@
     "noTasksDescription": "Crea una tarea para empezar.",
     "noTasksFiltered": "Ninguna tarea coincide con los filtros.",
     "noTasksFilteredDescription": "Prueba con otra búsqueda o filtro.",
-    "favoritesFilter": "Favoritas",
     "lifecycle": {
       "archived": "Archivadas"
     },
