@@ -135,7 +135,8 @@ export function WorkspaceMembersPanel({
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    // flex-1 para que el vacio de la tabla llene el alto que queda, no una franja bajo los filtros.
+    <div className="flex flex-1 flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <MembersFilterBar
           search={search}

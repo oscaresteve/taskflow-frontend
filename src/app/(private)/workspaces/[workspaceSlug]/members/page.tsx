@@ -316,7 +316,7 @@ export default function WorkspaceMembersPage() {
   }
 
   return (
-    <PageContainer>
+    <PageContainer className="flex-1">
       <PageHeader
         title={t("workspaceMembersPage.title")}
         actions={

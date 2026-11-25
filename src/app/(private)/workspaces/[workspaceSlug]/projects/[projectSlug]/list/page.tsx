@@ -31,7 +31,9 @@ export default function TaskListPage() {
   }
 
   return (
-    <PageContainer>
+    // flex-1 para que el vacio de la tabla llene el alto que queda en vez de ser una franja
+    // estrecha arriba; con filas el contenedor crece con ellas y el scroll sigue siendo del shell.
+    <PageContainer className="flex-1">
       <TaskListTable workspaceSlug={workspaceSlug} project={project} onCreateTask={() => setCreateTaskOpen(true)} />
 
       <CreateTaskDialog workspaceSlug={workspaceSlug} project={project} open={createTaskOpen} onOpenChange={setCreateTaskOpen} />

@@ -208,7 +208,7 @@ export default function ProjectMembersPage() {
   }
 
   return (
-    <PageContainer>
+    <PageContainer className="flex-1">
       <ProjectMembersPanel
         workspaceSlug={workspaceSlug}
         projectSlug={projectSlug}

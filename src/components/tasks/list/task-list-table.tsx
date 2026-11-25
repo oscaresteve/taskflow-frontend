@@ -337,7 +337,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
   );
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-1 flex-col gap-4">
       {/* Rejilla y no flex: con justify-between la accion se iba a una segunda linea en cuanto
           los filtros llenaban la primera, y ahi ademas caia a la izquierda. Con una columna
           propia se queda en su esquina y los filtros envuelven debajo de si mismos. */}
@@ -381,7 +381,7 @@ export function TaskListTable({ workspaceSlug, project, onCreateTask }: TaskList
         )}
       </div>
 
-      <div className="flex flex-col gap-4">{tableContent}</div>
+      <div className="flex flex-1 flex-col gap-4">{tableContent}</div>
     </div>
   );
 }

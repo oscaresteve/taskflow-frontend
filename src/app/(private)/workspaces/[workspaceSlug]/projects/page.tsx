@@ -236,7 +236,7 @@ export default function ProjectsPage() {
   );
 
   return (
-    <PageContainer>
+    <PageContainer className="flex-1">
       <PageHeader
         title={t("projectsPage.title")}
         actions={
@@ -249,7 +249,9 @@ export default function ProjectsPage() {
         }
       />
 
-      <div className="flex flex-col gap-4">
+      {/* flex-1 hasta el vacio: cuando no hay filas, el EmptyState llena el alto que queda en vez
+          de quedarse en una franja arriba. */}
+      <div className="flex flex-1 flex-col gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <SearchInput
             value={search}
@@ -273,7 +275,7 @@ export default function ProjectsPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-1 flex-col gap-4">
           {projects.data.length === 0 ? (
             emptyState
           ) : (

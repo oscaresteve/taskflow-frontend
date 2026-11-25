@@ -168,7 +168,7 @@ export default function WorkspacesPage() {
   const { pages: totalPages } = workspaces.pagination;
 
   return (
-    <PageContainer>
+    <PageContainer className="flex-1">
       <PageHeader
         title={t("workspacesPage.title")}
         actions={
@@ -179,7 +179,9 @@ export default function WorkspacesPage() {
         }
       />
 
-      <div className="flex flex-col gap-4">
+      {/* flex-1 hasta el vacio: cuando no hay filas, el EmptyState llena el alto que queda en vez
+          de quedarse en una franja arriba. */}
+      <div className="flex flex-1 flex-col gap-4">
         <div className="flex flex-wrap items-center gap-2">
           <SearchInput
             value={search}
@@ -203,7 +205,7 @@ export default function WorkspacesPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-1 flex-col gap-4">
           {workspaces.data.length === 0 && (
             <EmptyState
               icon={ICONS.workspace}
