@@ -10,32 +10,28 @@ import { EmptyState } from "@/components/common/empty-state";
 import { EnumIconBadge } from "@/components/common/enum-display";
 import { FavoriteToggle } from "@/components/common/favorite-toggle";
 import { SearchableGrid } from "@/components/common/searchable-grid";
-import { CustomAvatar } from "@/components/common/custom-avatar";
-import { UserPopup } from "@/components/common/user-popup";
 import { useSearchableGrid } from "@/hooks/use-searchable-grid";
 import { buildTaskModalHref } from "@/hooks/use-task-modal-href";
 import { useToggleTaskFavorite } from "@/hooks/use-toggle-task-favorite";
-import { UserResponseDto } from "@/lib/dtos/auth.dto";
 import { TaskResponseDto } from "@/lib/dtos/tasks.dto";
 import { ICONS } from "@/lib/icons";
-import { getActiveProjectMembersQuery } from "@/lib/queries/project-member.queries";
+import { getMeQuery } from "@/lib/queries/auth.queries";
 import { getProjectQuery } from "@/lib/queries/project.queries";
 import { getTasksQuery } from "@/lib/queries/task.queries";
 import { getDueDateOption, priorityOptions, statusOptions } from "@/lib/task-enums";
-import { cn, getFullName, isOverdue, parseDueDate } from "@/lib/utils";
+import { cn, isOverdue, parseDueDate } from "@/lib/utils";
 
 const PAGE_SIZE = 8;
 
-interface FavoriteTaskCardProps {
+interface MyTaskCardProps {
   workspaceSlug: string;
   projectSlug: string;
   taskKey: string;
   task: TaskResponseDto;
-  assignee?: UserResponseDto;
   href: string;
 }
 
-function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee, href }: FavoriteTaskCardProps) {
+function MyTaskCard({ workspaceSlug, projectSlug, taskKey, task, href }: MyTaskCardProps) {
   const t = useTranslations("tasks");
   const tEnum = useTranslations();
   const format = useFormatter();
@@ -46,8 +42,6 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
 
   const taskIsOverdue = !!task.dueDate && task.status !== "DONE" && isOverdue(task.dueDate);
   const dueDateOption = getDueDateOption(taskIsOverdue);
-
-  const assigneeName = assignee ? getFullName(assignee.firstName, assignee.lastName) : null;
 
   return (
     <Link href={href}>
@@ -77,70 +71,44 @@ function FavoriteTaskCard({ workspaceSlug, projectSlug, taskKey, task, assignee,
 
           <p className="line-clamp-2 flex flex-1 text-sm font-medium">{task.title}</p>
 
-          <div className="flex items-center justify-between gap-2">
-            <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger render={<span className="flex" />}>
+                <EnumIconBadge option={statusOption} />
+              </TooltipTrigger>
+              <TooltipContent>{`${t("fields.status")}: ${tEnum(statusOption.labelKey)}`}</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger render={<span className="flex" />}>
+                <EnumIconBadge option={priorityOption} />
+              </TooltipTrigger>
+              <TooltipContent>{`${t("fields.priority")}: ${tEnum(priorityOption.labelKey)}`}</TooltipContent>
+            </Tooltip>
+
+            {task.dueDate && (
               <Tooltip>
                 <TooltipTrigger render={<span className="flex" />}>
-                  <EnumIconBadge option={statusOption} />
+                  <EnumIconBadge option={dueDateOption} />
                 </TooltipTrigger>
-                <TooltipContent>{`${t("fields.status")}: ${tEnum(statusOption.labelKey)}`}</TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger render={<span className="flex" />}>
-                  <EnumIconBadge option={priorityOption} />
-                </TooltipTrigger>
-                <TooltipContent>{`${t("fields.priority")}: ${tEnum(priorityOption.labelKey)}`}</TooltipContent>
-              </Tooltip>
-
-              {task.dueDate && (
-                <Tooltip>
-                  <TooltipTrigger render={<span className="flex" />}>
-                    <EnumIconBadge option={dueDateOption} />
-                  </TooltipTrigger>
-                  <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(parseDueDate(task.dueDate), "short")}`}</TooltipContent>
-                </Tooltip>
-              )}
-            </span>
-
-            {assignee && assigneeName && (
-              <Tooltip>
-                <UserPopup
-                  userId={assignee.id}
-                  align="end"
-                  render={
-                    <TooltipTrigger
-                      render={
-                        <CustomAvatar
-                          size="sm"
-                          avatarUrl={assignee.avatarUrl}
-                          alt={assigneeName}
-                          seed={assignee.id}
-                          variant="glyphs"
-                          className="cursor-pointer"
-                        />
-                      }
-                    />
-                  }
-                />
-                <TooltipContent>{`${t("fields.assignee")}: ${assigneeName}`}</TooltipContent>
+                <TooltipContent>{`${t("fields.dueDate")}: ${format.dateTime(parseDueDate(task.dueDate), "short")}`}</TooltipContent>
               </Tooltip>
             )}
-          </div>
+          </span>
         </CardContent>
       </Card>
     </Link>
   );
 }
 
-export function FavoriteTasks({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
+export function MyTasks({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) {
   const t = useTranslations("projects");
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const state = useSearchableGrid();
 
+  const { data: me } = useQuery(getMeQuery());
   const { data: project } = useQuery(getProjectQuery({ workspaceSlug, projectSlug }));
-  const { data: members } = useQuery(getActiveProjectMembersQuery({ workspaceSlug, projectSlug }));
 
   const { data: tasks, isError } = useQuery({
     ...getTasksQuery({
@@ -149,32 +117,38 @@ export function FavoriteTasks({ workspaceSlug, projectSlug }: { workspaceSlug: s
       page: state.page,
       limit: PAGE_SIZE,
       search: state.searchParam,
-      isFavorite: true,
-      sort: "updatedAt",
-      order: "desc",
+      isFavorite: state.isFavorite,
+      assigneeId: me?.id,
+      // La misma cola que los resumenes de arriba: lo vivo asignado a mi, y lo que vence antes
+      // primero (sin fecha al final, que es como ordena Postgres los nulos en ascendente).
+      status: "OPEN",
+      sort: "dueDate",
+      order: "asc",
     }),
+    // Sin `me` no hay a quien filtrar, y pedirlo sin assigneeId traeria el proyecto entero.
+    enabled: !!workspaceSlug && !!projectSlug && !!me,
     placeholderData: keepPreviousData,
   });
 
   const emptyState = state.searchParam ? (
     <EmptyState
-      icon={ICONS.favorite}
-      title={t("projectOverviewPage.favorites.noFavoritesFound")}
-      description={t("projectOverviewPage.favorites.noFavoritesFoundDescription")}
+      icon={ICONS.task}
+      title={t("projectOverviewPage.myTasks.noneFound")}
+      description={t("projectOverviewPage.myTasks.noneFoundDescription")}
     />
   ) : (
     <EmptyState
-      icon={ICONS.favorite}
-      title={t("projectOverviewPage.favorites.noFavoritesYet")}
-      description={t("projectOverviewPage.favorites.noFavoritesYetDescription")}
+      icon={ICONS.task}
+      title={t("projectOverviewPage.myTasks.noneYet")}
+      description={t("projectOverviewPage.myTasks.noneYetDescription")}
     />
   );
 
   return (
     <SearchableGrid
-      title={t("projectOverviewPage.favorites.title")}
-      searchPlaceholder={t("projectOverviewPage.favorites.searchPlaceholder")}
-      errorLabel={t("projectOverviewPage.favorites.failedToLoad")}
+      title={t("projectOverviewPage.myTasks.title")}
+      searchPlaceholder={t("projectOverviewPage.myTasks.searchPlaceholder")}
+      errorLabel={t("projectOverviewPage.myTasks.failedToLoad")}
       emptyState={emptyState}
       columns="grid-cols-4"
       skeletonClassName="h-16"
@@ -184,11 +158,10 @@ export function FavoriteTasks({ workspaceSlug, projectSlug }: { workspaceSlug: s
       isError={isError}
     >
       {(task) => (
-        <FavoriteTaskCard
+        <MyTaskCard
           workspaceSlug={workspaceSlug}
           projectSlug={projectSlug}
           taskKey={`${project?.key}-${task.taskNumber}`}
-          assignee={members?.find((member) => member.userId === task.assigneeId)?.user}
           task={task}
           href={buildTaskModalHref({
             pathname,

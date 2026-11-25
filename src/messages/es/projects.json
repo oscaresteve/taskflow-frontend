@@ -65,14 +65,14 @@
       "unassigned": "Sin asignar",
       "completedThisWeek": "Completadas esta semana"
     },
-    "favorites": {
-      "title": "Tareas favoritas",
+    "myTasks": {
+      "title": "Tus tareas",
       "searchPlaceholder": "Buscar tareas",
-      "noFavoritesFound": "No se encontraron tareas favoritas.",
-      "noFavoritesFoundDescription": "Prueba con otra búsqueda.",
-      "noFavoritesYet": "Todavía no hay tareas favoritas.",
-      "noFavoritesYetDescription": "Marca una tarea con la estrella para tenerla a mano aquí.",
-      "failedToLoad": "No se pudieron cargar las tareas favoritas."
+      "noneFound": "No se encontraron tareas.",
+      "noneFoundDescription": "Prueba con otra búsqueda.",
+      "noneYet": "No tienes nada asignado aquí.",
+      "noneYetDescription": "Las tareas abiertas que tengas asignadas en este proyecto aparecerán aquí.",
+      "failedToLoad": "No se pudieron cargar tus tareas."
     }
   },
   "projectSettingsPage": {

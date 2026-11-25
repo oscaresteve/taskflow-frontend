@@ -9,7 +9,7 @@ import { StatCard, StatCardSkeleton } from "@/components/overview/stat-card";
 import { TasksByDueDateCard } from "@/components/overview/tasks-by-due-date-card";
 import { TasksByPriorityCard } from "@/components/overview/tasks-by-priority-card";
 import { TasksByStatusCard } from "@/components/overview/tasks-by-status-card";
-import { FavoriteTasks } from "./_components/favorite-tasks";
+import { MyTasks } from "./_components/my-tasks";
 import { ProjectActivityCard } from "@/components/activity/project-activity-card";
 import { getProjectOverviewQuery } from "@/lib/queries/overview.queries";
 
@@ -63,7 +63,7 @@ export default function ProjectPage() {
         </div>
       )}
 
-      <FavoriteTasks workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
+      <MyTasks workspaceSlug={workspaceSlug} projectSlug={projectSlug} />
 
       {!isError && (
         <>

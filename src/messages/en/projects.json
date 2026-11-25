@@ -65,14 +65,14 @@
       "unassigned": "Unassigned",
       "completedThisWeek": "Completed this week"
     },
-    "favorites": {
-      "title": "Favorite tasks",
+    "myTasks": {
+      "title": "Your tasks",
       "searchPlaceholder": "Search tasks",
-      "noFavoritesFound": "No favorite tasks found.",
-      "noFavoritesFoundDescription": "Try a different search.",
-      "noFavoritesYet": "No favorite tasks yet.",
-      "noFavoritesYetDescription": "Star a task to keep it within reach here.",
-      "failedToLoad": "Failed to load favorite tasks."
+      "noneFound": "No tasks found.",
+      "noneFoundDescription": "Try a different search.",
+      "noneYet": "Nothing assigned to you here.",
+      "noneYetDescription": "The open tasks assigned to you in this project will show up here.",
+      "failedToLoad": "Could not load your tasks."
     }
   },
   "projectSettingsPage": {
