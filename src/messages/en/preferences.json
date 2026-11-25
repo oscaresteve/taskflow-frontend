@@ -3,13 +3,12 @@
     "title": "Preferences"
   },
   "colorSchemeSection": {
-    "title": "Color scheme",
-    "description": "Choose how TaskFlow looks on this device.",
-    "footerHint": "Changes are applied immediately."
+    "title": "Appearance",
+    "description": "Light, dark or whatever the system says. This device only."
   },
   "languageSection": {
     "title": "Language",
-    "description": "Choose the language used across TaskFlow.",
+    "description": "Saved on your account, so it follows you to any device.",
     "en": "English",
     "es": "Español"
   },

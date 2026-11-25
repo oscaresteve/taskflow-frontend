@@ -80,22 +80,20 @@
   },
   "archiveProjectSection": {
     "title": "Archive project",
-    "description": "This project will no longer be accessible to members.",
+    "description": "It will no longer be accessible to its members. You can bring it back from the projects list.",
     "archive": "Archive",
     "confirmTitle": "Archive <b>{projectName}</b>?",
     "confirmDescription": "This will archive the project and hide it from all members. You can bring it back from the projects list, filtering by archived."
   },
   "projectColorSection": {
     "title": "Color",
-    "description": "Used to tell this project apart at a glance.",
-    "footerHint": "Choose no color to leave it unset.",
+    "description": "Tells the project apart at a glance in lists and cards. It can stay without one.",
     "failedToLoad": "Failed to load project.",
     "updated": "Project color updated."
   },
   "projectDescriptionSection": {
     "title": "Description",
-    "description": "A short description of your project.",
-    "footerHint": "Max 500 characters",
+    "description": "A line about what this project is for. Shown under its name and in the projects list.",
     "fieldLabel": "Description",
     "placeholder": "Redesign of the marketing site",
     "failedToLoad": "Failed to load project.",
@@ -103,8 +101,7 @@
   },
   "projectNameSection": {
     "title": "Name",
-    "description": "This is your project's visible name.",
-    "footerHint": "Max 100 characters",
+    "description": "Shown in the project header and across the workspace. Changing it also changes its URL.",
     "fieldLabel": "Project name",
     "placeholder": "Website Redesign",
     "failedToLoad": "Failed to load project.",

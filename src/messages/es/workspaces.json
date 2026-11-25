@@ -77,7 +77,7 @@
   },
   "leaveWorkspaceSection": {
     "title": "Salir del espacio",
-    "description": "Perderás el acceso a este espacio y a sus proyectos.",
+    "description": "Perderás el acceso al espacio y a sus proyectos. Un gestor puede volver a invitarte.",
     "actionLabel": "Salir",
     "dialogTitle": "¿Salir de <b>{name}</b>?",
     "dialogDescription": "Esto te sacará del espacio y de sus proyectos. Perderás el acceso de inmediato.",
@@ -86,37 +86,33 @@
     "confirmLabel": "Salir"
   },
   "deactivateWorkspaceSection": {
-    "title": "Desactivar espacio",
-    "description": "Este espacio dejará de estar accesible para los miembros.",
+    "title": "Desactivar el espacio",
+    "description": "Dejará de estar accesible para sus miembros. Podrás recuperarlo desde la lista de espacios.",
     "actionLabel": "Desactivar",
     "dialogTitle": "¿Desactivar <b>{name}</b>?",
     "dialogDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de espacios, filtrando por inactivos.",
     "confirmLabel": "Desactivar"
   },
   "workspaceAvatarSection": {
-    "title": "Avatar",
-    "description": "El avatar es opcional, pero muy recomendable.",
+    "title": "Imagen",
+    "description": "Distingue el espacio en el selector, en los listados y en el buscador.",
     "footerHint": "PNG, JPEG o WebP. Máximo 5MB.",
     "failedToLoad": "No se pudo cargar el espacio.",
-    "actionsLabel": "Acciones del avatar",
-    "removeAction": "Quitar el avatar",
-    "removeDialogTitle": "¿Quitar el avatar?",
-    "removeDialogDescription": "Esto quitará el avatar actual del espacio. Puedes subir uno nuevo cuando quieras."
+    "removeAction": "Quitar la imagen",
+    "removeDialogTitle": "¿Quitar la imagen?",
+    "removeDialogDescription": "El espacio volverá a la imagen generada a partir de su nombre. Puedes subir otra cuando quieras."
   },
   "workspaceDescriptionSection": {
     "title": "Descripción",
-    "description": "Una breve descripción de tu espacio.",
-    "footerHint": "Máximo 500 caracteres",
+    "description": "Una línea sobre para qué es este espacio. Se ve bajo su nombre y en Mi espacio.",
     "failedToLoad": "No se pudo cargar el espacio.",
     "descriptionLabel": "Descripción",
     "descriptionPlaceholder": "Espacio principal de Acme Inc",
     "successMessage": "Descripción del espacio actualizada."
   },
   "workspaceNameSection": {
-    "loadingTitle": "Nombre del espacio",
     "title": "Nombre",
-    "description": "Este es el nombre visible de tu espacio.",
-    "footerHint": "Máximo 100 caracteres",
+    "description": "Se ve en la cabecera del espacio. Cambiarlo también cambia su URL.",
     "failedToLoad": "No se pudo cargar el espacio.",
     "nameLabel": "Nombre del espacio",
     "namePlaceholder": "Acme Inc",

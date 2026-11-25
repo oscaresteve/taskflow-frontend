@@ -77,7 +77,7 @@
   },
   "leaveWorkspaceSection": {
     "title": "Leave workspace",
-    "description": "You'll lose access to this workspace and to its projects.",
+    "description": "You'll lose access to the workspace and its projects. A manager can invite you back.",
     "actionLabel": "Leave",
     "dialogTitle": "Leave <b>{name}</b>?",
     "dialogDescription": "This will remove you from the workspace and its projects. You'll lose access immediately.",
@@ -87,36 +87,32 @@
   },
   "deactivateWorkspaceSection": {
     "title": "Deactivate workspace",
-    "description": "This workspace will no longer be accessible to members.",
+    "description": "It will no longer be accessible to its members. You can bring it back from the workspaces list.",
     "actionLabel": "Deactivate",
     "dialogTitle": "Deactivate <b>{name}</b>?",
     "dialogDescription": "This will deactivate the workspace and hide it from all members. You can bring it back from the workspaces list, filtering by inactive.",
     "confirmLabel": "Deactivate"
   },
   "workspaceAvatarSection": {
-    "title": "Avatar",
-    "description": "An avatar is optional but strongly recommended.",
+    "title": "Image",
+    "description": "Tells the workspace apart in the switcher, in listings and in search.",
     "footerHint": "PNG, JPEG or WebP. Max 5MB.",
     "failedToLoad": "Failed to load workspace.",
-    "actionsLabel": "Avatar actions",
-    "removeAction": "Remove avatar",
-    "removeDialogTitle": "Remove avatar?",
-    "removeDialogDescription": "This will remove the workspace's current avatar. You can upload a new one anytime."
+    "removeAction": "Remove image",
+    "removeDialogTitle": "Remove image?",
+    "removeDialogDescription": "The workspace will go back to the image generated from its name. You can upload another one anytime."
   },
   "workspaceDescriptionSection": {
     "title": "Description",
-    "description": "A short description of your workspace.",
-    "footerHint": "Max 500 characters",
+    "description": "A line about what this workspace is for. Shown under its name and in My space.",
     "failedToLoad": "Failed to load workspace.",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Acme Inc's main workspace",
     "successMessage": "Workspace description updated."
   },
   "workspaceNameSection": {
-    "loadingTitle": "Workspace name",
     "title": "Name",
-    "description": "This is your workspace's visible name.",
-    "footerHint": "Max 100 characters",
+    "description": "Shown in the workspace header. Changing it also changes its URL.",
     "failedToLoad": "Failed to load workspace.",
     "nameLabel": "Workspace name",
     "namePlaceholder": "Acme Inc",

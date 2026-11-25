@@ -3,13 +3,12 @@
     "title": "Preferencias"
   },
   "colorSchemeSection": {
-    "title": "Tema de color",
-    "description": "Elige cómo se ve TaskFlow en este dispositivo.",
-    "footerHint": "Los cambios se aplican de inmediato."
+    "title": "Apariencia",
+    "description": "Claro, oscuro o lo que diga el sistema. Solo en este dispositivo."
   },
   "languageSection": {
     "title": "Idioma",
-    "description": "Elige el idioma que se usa en TaskFlow.",
+    "description": "Se guarda en tu cuenta, así que te sigue a cualquier dispositivo.",
     "en": "English",
     "es": "Español"
   },

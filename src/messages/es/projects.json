@@ -79,23 +79,21 @@
     "noPermission": "No tienes permiso para ver esta página."
   },
   "archiveProjectSection": {
-    "title": "Archivar proyecto",
-    "description": "Este proyecto dejará de estar accesible para los miembros.",
+    "title": "Archivar el proyecto",
+    "description": "Dejará de estar accesible para sus miembros. Podrás recuperarlo desde la lista de proyectos.",
     "archive": "Archivar",
     "confirmTitle": "¿Archivar <b>{projectName}</b>?",
     "confirmDescription": "Esto archivará el proyecto y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de proyectos, filtrando por archivados."
   },
   "projectColorSection": {
     "title": "Color",
-    "description": "Se usa para distinguir este proyecto de un vistazo.",
-    "footerHint": "Elige sin color para dejarlo sin definir.",
+    "description": "Distingue el proyecto de un vistazo en las listas y en las tarjetas. Puede quedarse sin color.",
     "failedToLoad": "No se pudo cargar el proyecto.",
     "updated": "Color del proyecto actualizado."
   },
   "projectDescriptionSection": {
     "title": "Descripción",
-    "description": "Una breve descripción de tu proyecto.",
-    "footerHint": "Máximo 500 caracteres",
+    "description": "Una línea sobre para qué es este proyecto. Se ve bajo su nombre y en la lista de proyectos.",
     "fieldLabel": "Descripción",
     "placeholder": "Rediseño del sitio web de marketing",
     "failedToLoad": "No se pudo cargar el proyecto.",
@@ -103,8 +101,7 @@
   },
   "projectNameSection": {
     "title": "Nombre",
-    "description": "Este es el nombre visible de tu proyecto.",
-    "footerHint": "Máximo 100 caracteres",
+    "description": "Se ve en la cabecera del proyecto y en el espacio. Cambiarlo también cambia su URL.",
     "fieldLabel": "Nombre del proyecto",
     "placeholder": "Rediseño del sitio web",
     "failedToLoad": "No se pudo cargar el proyecto.",
