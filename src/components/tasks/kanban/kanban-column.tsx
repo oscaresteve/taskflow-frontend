@@ -44,7 +44,10 @@ export function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={cn("flex min-h-0 flex-col gap-3 rounded-lg bg-muted/30 p-2", isDropTarget && "bg-muted/60")}
+      // En reposo la columna no se pinta: la agrupan su cabecera y el hueco con la de al lado, y
+      // cuatro bloques de color seguidos eran lo que mas pesaba de la pantalla. El tinte queda
+      // reservado a decir donde va a caer la tarjeta.
+      className={cn("flex min-h-0 flex-col gap-3 rounded-lg p-2", isDropTarget && "bg-muted/60")}
     >
       {/* La cabecera no entra en el scroll: es lo que dice de que columna son las tarjetas que
           quedan a la vista, y bajando se perdia junto con el resto de la pagina. */}

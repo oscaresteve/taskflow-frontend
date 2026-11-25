@@ -43,8 +43,10 @@ export function SettingCard({
         </CardHeader>
         {children && <CardContent className={cn(isHorizontal && "shrink-0")}>{children}</CardContent>}
       </div>
+      {/* Sin el tinte del primitivo: el borde ya separa el pie, y el relleno sumaba una superficie
+          dentro de una superficie. */}
       {(footerAction || footerHint) && (
-        <CardFooter>
+        <CardFooter className="bg-transparent">
           {footerHint && <span className="text-sm text-muted-foreground">{footerHint}</span>}
           {footerAction && <div className="ml-auto">{footerAction}</div>}
         </CardFooter>
