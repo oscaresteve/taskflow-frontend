@@ -30,7 +30,7 @@ export function TaskDetailHeader({
       </div>
       <div className="flex items-center gap-1">
         {actions}
-        <DialogClose render={<Button variant="outline" size="icon-sm" />}>
+        <DialogClose render={<Button variant="ghost" size="icon-sm" />}>
           <ICONS.close />
           <span className="sr-only">{closeLabel}</span>
         </DialogClose>

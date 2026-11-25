@@ -18,7 +18,7 @@ export function ColorSchemeToggle() {
         <TooltipTrigger
           render={
             <DropdownMenuTrigger
-              render={<Button variant="outline" size="icon" aria-label={t("colorSchemeToggle.toggleTheme")} />}
+              render={<Button variant="ghost" size="icon" aria-label={t("colorSchemeToggle.toggleTheme")} />}
             />
           }
         >

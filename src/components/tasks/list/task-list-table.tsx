@@ -142,7 +142,6 @@ function TaskListRow({
           workspaceSlug={workspaceSlug}
           projectSlug={projectSlug}
           taskNumber={taskNumber}
-          variant="ghost"
         />
       </TableCell>
     </TableRow>

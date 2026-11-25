@@ -167,7 +167,7 @@ export function KanbanInlineCreateTask({ workspaceSlug, projectSlug, status }: K
                 render={
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     size="icon-sm"
                     onClick={cancel}
                     disabled={form.formState.isSubmitting}

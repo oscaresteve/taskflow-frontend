@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 // Asi nos aseguramos que se le pasa exactamente lo que el componente pide
 type TriggerRenderProp = ComponentProps<typeof DropdownMenuTrigger>["render"];
 
-interface TaskActionsMenuProps extends Pick<ComponentProps<typeof Button>, "size" | "variant"> {
+interface TaskActionsMenuProps extends Pick<ComponentProps<typeof Button>, "size"> {
   task: TaskResponseDto;
   workspaceSlug: string;
   projectSlug: string;
@@ -41,7 +41,6 @@ export function TaskActionsMenu({
   onArchived,
   triggerRender,
   size = "icon-sm",
-  variant = "outline"
 }: TaskActionsMenuProps) {
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
@@ -118,7 +117,7 @@ export function TaskActionsMenu({
               <DropdownMenuTrigger
                 render={
                   triggerRender ?? (
-                    <Button aria-label={t("taskActionsMenu.ariaLabel")} variant={variant} size={size} />
+                    <Button aria-label={t("taskActionsMenu.ariaLabel")} variant="ghost" size={size} />
                   )
                 }
               />
