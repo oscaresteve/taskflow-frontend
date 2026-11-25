@@ -6,8 +6,6 @@ import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { SettingCard } from "@/components/common/setting-card";
 import { AvatarPicker } from "@/components/common/avatar-picker";
@@ -18,7 +16,6 @@ import { ApiError } from "@/lib/http/api-error";
 import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
 import { AVATAR_ACCEPTED_MIME_TYPES, MAX_AVATAR_SIZE_BYTES } from "@/lib/schemas/common.schema";
 import { ICONS } from "@/lib/icons";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 export function WorkspaceAvatarSection() {
   const t = useTranslations("workspaces");
@@ -27,7 +24,6 @@ export function WorkspaceAvatarSection() {
   const uploadAvatar = useUploadWorkspaceAvatar(workspaceSlug);
   const deleteAvatar = useDeleteWorkspaceAvatar(workspaceSlug);
   const [removeOpen, setRemoveOpen] = useState(false);
-  const hasAvatar = workspace?.avatarUrl ? true : undefined;
 
   function handleFileSelect(file: File) {
     uploadAvatar.mutate(file, {
@@ -85,35 +81,13 @@ export function WorkspaceAvatarSection() {
           />
         }
         footerHint={t("workspaceAvatarSection.footerHint")}
+        // Quitar solo existe cuando hay algo que quitar, igual que en el perfil.
         footerAction={
-          <DropdownMenu>
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <DropdownMenuTrigger
-                    render={
-                      <Button
-                        aria-label={t("workspaceAvatarSection.actionsLabel")}
-                        variant="ghost"
-                        size="icon-sm"
-                        disabled={deleteAvatar.isPending}
-                      />
-                    }
-                  />
-                }
-              >
-                <ICONS.moreActions />
-              </TooltipTrigger>
-              <TooltipContent>{t("workspaceAvatarSection.actionsLabel")}</TooltipContent>
-            </Tooltip>
-
-            <ActionsMenuContent align="end">
-              <ActionsMenuItem variant="destructive" disabled={!hasAvatar} onClick={() => setRemoveOpen(true)}>
-                <ICONS.delete />
-                {t("workspaceAvatarSection.removeAction")}
-              </ActionsMenuItem>
-            </ActionsMenuContent>
-          </DropdownMenu>
+          workspace.avatarUrl && (
+            <Button variant="destructive" onClick={() => setRemoveOpen(true)} disabled={deleteAvatar.isPending}>
+              {t("workspaceAvatarSection.removeAction")}
+            </Button>
+          )
         }
       />
       <ConfirmDialog
