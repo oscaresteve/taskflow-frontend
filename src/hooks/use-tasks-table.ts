@@ -1,6 +1,7 @@
 import { debounce, parseAsBoolean, parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { sortOrders, SortOrder } from "@/lib/dtos/pagination.dto";
+import { PAGE_SIZE_OPTIONS } from "@/lib/pagination";
 import {
   ALL_ASSIGNEES,
   DueDateFilter,
@@ -13,7 +14,6 @@ import {
   taskSortFields,
 } from "@/lib/task-enums";
 
-const PAGE_SIZE_OPTIONS = [10, 15, 20];
 const DEFAULT_SORT = "rank";
 const DEFAULT_ORDER = "asc";
 

@@ -1,9 +1,9 @@
 import { debounce, parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { SortOrder, sortOrders } from "@/lib/dtos/pagination.dto";
+import { PAGE_SIZE_OPTIONS } from "@/lib/pagination";
 import { MemberSortField, RoleFilter, memberSortFields, roleFilters } from "@/lib/member-enums";
 
-const PAGE_SIZE_OPTIONS = [5, 10, 15];
 const DEFAULT_SORT = "joinedAt";
 const DEFAULT_ORDER = "asc";
 

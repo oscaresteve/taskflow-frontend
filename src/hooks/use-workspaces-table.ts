@@ -1,9 +1,9 @@
 import { SortOrder, sortOrders } from "@/lib/dtos/pagination.dto";
+import { PAGE_SIZE_OPTIONS } from "@/lib/pagination";
 import { debounce, parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { useDebouncedValue } from "./use-debounced-value";
 import { WorkspaceSortField, workspaceSortFields } from "@/lib/workspace-enums";
 
-const PAGE_SIZE_OPTIONS = [5, 10, 15];
 const DEFAULT_SORT = "name";
 const DEFAULT_ORDER = "asc";
 
