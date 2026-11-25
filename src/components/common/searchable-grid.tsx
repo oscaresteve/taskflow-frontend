@@ -3,6 +3,7 @@
 import { Fragment, type ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginationControls } from "@/components/common/pagination-controls";
+import { FavoritesFilter } from "@/components/common/favorites-filter";
 import { SearchInput } from "@/components/common/search-input";
 import type { useSearchableGrid } from "@/hooks/use-searchable-grid";
 import { cn } from "@/lib/utils";
@@ -26,8 +27,9 @@ interface SearchableGridProps<T> {
   children: (item: T) => ReactNode;
 }
 
-// El armazon que comparten las tres rejillas de overview: cabecera con buscador, los cuatro estados
-// (error, cargando, vacio, con datos) y la paginacion. Solo cambian las tarjetas y el texto.
+// El armazon que comparten las tres rejillas de overview: cabecera con buscador y filtro de
+// favoritos, los cuatro estados (error, cargando, vacio, con datos) y la paginacion. Solo cambian
+// las tarjetas y el texto.
 export function SearchableGrid<T extends { id: string }>({
   title,
   searchPlaceholder,
@@ -48,12 +50,15 @@ export function SearchableGrid<T extends { id: string }>({
     <section className={cn("flex flex-col gap-3", className)}>
       <div className="flex items-center justify-between gap-2">
         <h2 className="font-heading text-base leading-snug font-medium">{title}</h2>
-        <SearchInput
-          value={state.search}
-          onChange={state.onSearchChange}
-          placeholder={searchPlaceholder}
-          className="w-48"
-        />
+        <div className="flex items-center gap-2">
+          <FavoritesFilter value={state.isFavorite} onValueChange={state.onFavoriteChange} />
+          <SearchInput
+            value={state.search}
+            onChange={state.onSearchChange}
+            placeholder={searchPlaceholder}
+            className="w-48"
+          />
+        </div>
       </div>
 
       {isError ? (

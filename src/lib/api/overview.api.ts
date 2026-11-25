@@ -19,12 +19,14 @@ export function getMyOverviewWorkspaces({
   page,
   limit,
   search,
+  isFavorite,
 }: {
   page?: number;
   limit?: number;
   search?: string;
+  isFavorite?: boolean;
 }) {
-  const queryString = buildQueryString({ page, limit, search });
+  const queryString = buildQueryString({ page, limit, search, isFavorite });
 
   return request<PaginatedResponseDto<OverviewWorkspaceDto>>(`/me/overview/workspaces${queryString}`, {
     method: "GET",
@@ -42,13 +44,15 @@ export function getWorkspaceOverviewProjects({
   page,
   limit,
   search,
+  isFavorite,
 }: {
   workspaceSlug: string;
   page?: number;
   limit?: number;
   search?: string;
+  isFavorite?: boolean;
 }) {
-  const queryString = buildQueryString({ page, limit, search });
+  const queryString = buildQueryString({ page, limit, search, isFavorite });
 
   return request<PaginatedResponseDto<OverviewProjectDto>>(
     `/workspaces/${workspaceSlug}/overview/projects${queryString}`,

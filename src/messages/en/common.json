@@ -58,5 +58,8 @@
   },
   "lifecycleFilter": {
     "label": "View"
+  },
+  "favoritesFilter": {
+    "label": "Favorites"
   }
 }

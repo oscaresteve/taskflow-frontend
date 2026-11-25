@@ -92,6 +92,7 @@ export function WorkspaceProjects({ workspaceSlug }: { workspaceSlug: string }) 
       page: state.page,
       limit: PAGE_SIZE,
       search: state.searchParam,
+      isFavorite: state.isFavorite,
     }),
     placeholderData: keepPreviousData,
   });

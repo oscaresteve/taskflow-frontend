@@ -85,7 +85,12 @@ export function MyWorkspaces() {
   const state = useSearchableGrid();
 
   const { data: workspaces, isError } = useQuery({
-    ...getMyOverviewWorkspacesQuery({ page: state.page, limit: PAGE_SIZE, search: state.searchParam }),
+    ...getMyOverviewWorkspacesQuery({
+      page: state.page,
+      limit: PAGE_SIZE,
+      search: state.searchParam,
+      isFavorite: state.isFavorite,
+    }),
     placeholderData: keepPreviousData,
   });
 

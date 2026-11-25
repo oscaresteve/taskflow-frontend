@@ -14,10 +14,14 @@ export const getMyOverviewQuery = () =>
     queryFn: () => getMyOverview(),
   });
 
-export const getMyOverviewWorkspacesQuery = (params: { page?: number; limit?: number; search?: string } = {}) =>
+export const getMyOverviewWorkspacesQuery = (
+  params: { page?: number; limit?: number; search?: string; isFavorite?: boolean } = {},
+) =>
   queryOptions({
     queryKey: overviewKeys.myWorkspaces(params),
-    queryFn: () => getMyOverviewWorkspaces(params),
+    // Solo favoritos es un si o no: en `false` el parametro no viaja, o el backend devolveria
+    // justo los que no lo son.
+    queryFn: () => getMyOverviewWorkspaces({ ...params, isFavorite: params.isFavorite || undefined }),
   });
 
 export const getWorkspaceOverviewQuery = (workspaceSlug: string) =>
@@ -29,11 +33,12 @@ export const getWorkspaceOverviewQuery = (workspaceSlug: string) =>
 
 export const getWorkspaceOverviewProjectsQuery = (
   workspaceSlug: string,
-  params: { page?: number; limit?: number; search?: string } = {},
+  params: { page?: number; limit?: number; search?: string; isFavorite?: boolean } = {},
 ) =>
   queryOptions({
     queryKey: overviewKeys.workspaceProjects(workspaceSlug, params),
-    queryFn: () => getWorkspaceOverviewProjects({ workspaceSlug, ...params }),
+    queryFn: () =>
+      getWorkspaceOverviewProjects({ workspaceSlug, ...params, isFavorite: params.isFavorite || undefined }),
     enabled: !!workspaceSlug,
   });
 
