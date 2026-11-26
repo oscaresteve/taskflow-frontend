@@ -1,0 +1,130 @@
+{
+  "genericError": "Algo salió mal",
+  "roleLabel": {
+    "OWNER": "Propietario",
+    "ADMIN": "Administrador",
+    "MEMBER": "Miembro"
+  },
+  "roleDescription": {
+    "OWNER": "Control total: gestiona a todos los miembros, incluidos otros propietarios, y puede asignar cualquier rol.",
+    "ADMIN": "Gestiona miembros y configuración, pero no puede gestionar propietarios ni asignar el rol de propietario.",
+    "MEMBER": "Puede acceder y contribuir, sin acceso de gestión."
+  },
+  "roleFilter": {
+    "all": "Todos los roles"
+  },
+  "workspaceMembersPanel": {
+    "failedToLoad": "No se pudieron cargar los miembros.",
+    "emptyMessage": "No se encontraron miembros.",
+    "emptyMessageDescription": "Prueba con otra búsqueda o filtro de rol.",
+    "sortJoined": "Incorporación",
+    "sortCreated": "Creado",
+    "sortUpdated": "Actualizado"
+  },
+  "projectMembersPanel": {
+    "failedToLoad": "No se pudieron cargar los miembros.",
+    "emptyMessage": "No se encontraron miembros.",
+    "emptyMessageDescription": "Prueba con otra búsqueda o filtro de rol.",
+    "sortJoined": "Incorporación",
+    "sortCreated": "Creado",
+    "sortUpdated": "Actualizado"
+  },
+  "membersFilterBar": {
+    "searchPlaceholder": "Buscar miembros"
+  },
+  "membersTable": {
+    "columnName": "Nombre",
+    "columnEmail": "Correo electrónico",
+    "columnJoined": "Incorporación",
+    "columnRole": "Rol",
+    "columnActions": "Acciones",
+    "youSuffix": " (Tú)",
+    "noJoinDate": "—"
+  },
+  "memberPicker": {
+    "defaultLabel": "Miembro",
+    "searchPlaceholder": "Buscar personas",
+    "loadingMore": "Cargando…",
+    "moreCandidates": "{count} más",
+    "selectPersonError": "Selecciona una persona para añadir",
+    "clearSelection": "Quitar selección"
+  },
+  "workspaceMembersPage": {
+    "title": "Miembros",
+    "addMember": "Añadir miembro",
+    "tabPending": "Pendientes",
+    "tabRemoved": "Inactivos",
+    "emptyActive": "No hay miembros activos.",
+    "emptyActiveDescription": "Los miembros aparecerán aquí en cuanto se unan al espacio.",
+    "emptyPending": "Todavía no hay invitaciones pendientes.",
+    "emptyPendingDescription": "Los miembros que invites aparecerán aquí.",
+    "emptyRemoved": "No hay miembros inactivos.",
+    "emptyRemovedDescription": "Los miembros desactivados aparecerán aquí.",
+    "activate": "Activar",
+    "remove": "Desactivar",
+    "activatedToast": "{name} activado.",
+    "removedToast": "{name} desactivado en el espacio.",
+    "roleChangedToast": "El rol de {name} se cambió a {role}.",
+    "removeMemberTitle": "¿Desactivar a <b>{name}</b>?",
+    "removeMemberDescription": "Esto desactivará al miembro en el espacio. Perderá el acceso de inmediato.",
+    "removeConfirmLabel": "Desactivar",
+    "changeRoleTitle": "¿Cambiar el rol de <b>{name}</b>?",
+    "changeRoleDescription": "Tendrá acceso de <role></role> a este espacio.",
+    "changeRoleConfirmLabel": "Cambiar",
+    "activateMemberTitle": "¿Activar a <b>{name}</b>?",
+    "activateMemberDescription": "Esto activará al miembro. Tendrá acceso inmediato al espacio.",
+    "activateConfirmLabel": "Activar",
+    "cancelInvitation": "Cancelar invitación",
+    "cancelInvitationTitle": "¿Cancelar la invitación de <b>{name}</b>?",
+    "cancelInvitationDescription": "La invitación desaparece y no entrará en el espacio. Puedes volver a invitarle más adelante.",
+    "cancelInvitationConfirmLabel": "Cancelar invitación",
+    "canceledInvitationToast": "Invitación de {name} cancelada.",
+    "restore": "Activar",
+    "restoredToast": "{name} vuelve a estar en el espacio.",
+    "restoreMemberTitle": "¿Readmitir a {name}?",
+    "restoreMemberDescription": "Volverá a tener acceso al espacio. Sus pertenencias a proyectos se quedan como están, así que cada proyecto tiene que volver a darle acceso por su cuenta.",
+    "restoreRoleLabel": "Rol en el espacio",
+    "restoreRoleDescription": "Al desactivar a un miembro se pierde su rol anterior, así que elige con cuál vuelve.",
+    "restoreConfirmLabel": "Activar"
+  },
+  "projectMembersPage": {
+    "addMember": "Añadir miembro",
+    "tabInactive": "Inactivos",
+    "emptyActive": "No hay miembros activos.",
+    "emptyActiveDescription": "Los miembros aparecerán aquí en cuanto se unan al proyecto.",
+    "emptyInactive": "No hay miembros inactivos.",
+    "emptyInactiveDescription": "Los miembros desactivados aparecerán aquí.",
+    "deactivate": "Desactivar",
+    "roleChangedToast": "El rol de {name} se cambió a {role}.",
+    "deactivatedToast": "{name} desactivado en este proyecto.",
+    "deactivateMemberTitle": "¿Desactivar a <b>{name}</b>?",
+    "deactivateMemberDescription": "Esto desactivará al miembro en este proyecto. Perderá el acceso de inmediato.",
+    "deactivateConfirmLabel": "Desactivar",
+    "activate": "Activar",
+    "activatedToast": "{name} vuelve a estar en este proyecto.",
+    "activateMemberTitle": "¿Devolver a {name} a este proyecto?",
+    "activateMemberDescription": "Volverá a tener acceso al proyecto. Para que funcione tiene que seguir siendo miembro activo del espacio.",
+    "activateRoleLabel": "Rol en el proyecto",
+    "activateRoleDescription": "Al desactivar a un miembro se pierde su rol anterior, así que elige con cuál vuelve.",
+    "activateConfirmLabel": "Activar",
+    "changeRoleTitle": "¿Cambiar el rol de <b>{name}</b>?",
+    "changeRoleDescription": "Tendrá acceso de <role></role> a este proyecto.",
+    "changeRoleConfirmLabel": "Cambiar"
+  },
+  "addWorkspaceMemberDialog": {
+    "title": "Añadir miembro",
+    "description": "Busca a una persona. Se añadirá como pendiente hasta que un propietario o administrador la active.",
+    "submitLabel": "Añadir miembro",
+    "roleLabel": "Rol",
+    "emptyMessage": "No se encontraron personas coincidentes.",
+    "addedToast": "{name} añadido, pendiente de activación."
+  },
+  "addProjectMemberDialog": {
+    "title": "Añadir miembro",
+    "description": "Añade un miembro del espacio a este proyecto.",
+    "submitLabel": "Añadir miembro",
+    "roleLabel": "Rol",
+    "emptyMessage": "No se encontraron miembros del espacio coincidentes.",
+    "addedToast": "{name} añadido al proyecto."
+  }
+}

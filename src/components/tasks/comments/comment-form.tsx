@@ -1,0 +1,134 @@
+"use client";
+
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { ICONS } from "@/lib/icons";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/toast";
+import { ApiError } from "@/lib/http/api-error";
+import { useCreateComment } from "@/hooks/use-create-comment";
+import { useUpdateComment } from "@/hooks/use-update-comment";
+import { CreateCommentDto, createCommentSchema, updateCommentSchema } from "@/lib/schemas/comment.schema";
+import { getFullName } from "@/lib/utils";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { CustomAvatar } from "@/components/common/custom-avatar";
+import { useQuery } from "@tanstack/react-query";
+import { getMeQuery } from "@/lib/queries/auth.queries";
+import { useProjectMentionDirectory } from "@/hooks/use-project-mention-directory";
+import { toDisplayText, toStoredText } from "@/lib/mentions";
+import { MentionTextarea } from "./mention-textarea";
+
+const MAX_LENGTH = 5000;
+
+interface CommentFormProps {
+  workspaceSlug: string;
+  projectSlug: string;
+  taskNumber: string;
+  commentId?: string;
+  initialContent?: string;
+  onDone?: () => void;
+  onCancel?: () => void;
+}
+
+export function CommentForm({
+  workspaceSlug,
+  projectSlug,
+  taskNumber,
+  commentId,
+  initialContent,
+  onDone,
+  onCancel,
+}: CommentFormProps) {
+  const t = useTranslations("tasks");
+  const tCommon = useTranslations("common");
+  const createComment = useCreateComment(workspaceSlug, projectSlug, taskNumber);
+  const updateComment = useUpdateComment(workspaceSlug, projectSlug, taskNumber);
+  const isEditing = !!commentId;
+  const { data: author } = useQuery(getMeQuery());
+  const authorName = author ? getFullName(author.firstName, author.lastName) : undefined;
+
+  // Las menciones se guardan como token con el id dentro, pero el editor trabaja en "@username":
+  // se traducen al cargar el comentario y al enviarlo.
+  const { usernameById, idByUsername } = useProjectMentionDirectory(workspaceSlug, projectSlug);
+
+  const form = useForm<CreateCommentDto>({
+    resolver: zodResolver(isEditing ? updateCommentSchema(t) : createCommentSchema(t)),
+    defaultValues: { content: initialContent ?? "" },
+  });
+
+  async function onSubmit(data: CreateCommentDto) {
+    if (isEditing && !form.formState.isDirty) {
+      onDone?.();
+      return;
+    }
+
+    const stored = { content: toStoredText(data.content, idByUsername) };
+
+    try {
+      if (isEditing) {
+        await updateComment.mutateAsync({ commentId, data: stored });
+        toast.add({ type: "success", description: t("comments.updateSuccess") });
+      } else {
+        await createComment.mutateAsync(stored);
+        form.reset({ content: "" });
+        toast.add({ type: "success", description: t("comments.createSuccess") });
+      }
+      onDone?.();
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
+        priority: "high",
+      });
+    }
+  }
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
+      <div className="flex gap-2">
+        {author ? (
+          <CustomAvatar size="sm" avatarUrl={author.avatarUrl} alt={authorName} seed={author.id} variant="glyphs" />
+        ) : (
+          <Avatar size="sm">
+            <AvatarFallback>?</AvatarFallback>
+          </Avatar>
+        )}
+        <Controller
+          name="content"
+          control={form.control}
+          render={({ field }) => (
+            <MentionTextarea
+              value={toDisplayText(field.value, usernameById)}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              workspaceSlug={workspaceSlug}
+              projectSlug={projectSlug}
+              aria-label={t("comments.title")}
+              placeholder={t("comments.composerPlaceholder")}
+              maxLength={MAX_LENGTH}
+              disabled={form.formState.isSubmitting}
+              autoFocus={isEditing}
+              onEscape={onCancel}
+            />
+          )}
+        />
+      </div>
+      <div className="flex justify-end gap-2">
+        {isEditing && (
+          <Button type="button" variant="outline" size="sm" onClick={onDone} disabled={form.formState.isSubmitting}>
+            {tCommon("actions.cancel")}
+          </Button>
+        )}
+        <Button
+          type="submit"
+          size="sm"
+          disabled={form.formState.isSubmitting || (isEditing && !form.formState.isDirty)}
+        >
+          {form.formState.isSubmitting && <ICONS.loading className="animate-spin" aria-hidden="true" />}
+          {isEditing ? tCommon("actions.save") : t("comments.submit")}
+        </Button>
+      </div>
+    </form>
+  );
+}

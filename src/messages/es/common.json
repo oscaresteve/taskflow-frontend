@@ -1,0 +1,65 @@
+{
+  "actions": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "addToFavorites": "Añadir a favoritos",
+    "removeFromFavorites": "Quitar de favoritos"
+  },
+  "search": {
+    "clear": "Borrar búsqueda"
+  },
+  "rowsPerPage": "Filas por página",
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "goToPrevious": "Ir a la página anterior",
+    "goToNext": "Ir a la página siguiente",
+    "position": "Página {page} de {total}"
+  },
+  "sort": {
+    "label": "Ordenar por",
+    "ascending": "Orden ascendente",
+    "descending": "Orden descendente"
+  },
+  "colorPicker": {
+    "noColor": "Sin color"
+  },
+  "colorSchemeToggle": {
+    "toggleTheme": "Cambiar tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "passwordInput": {
+    "show": "Mantén pulsado para mostrar la contraseña",
+    "hide": "Suelta para ocultar la contraseña"
+  },
+  "avatarPicker": {
+    "changeAction": "Cambiar avatar",
+    "invalidType": "Elige una imagen PNG, JPEG o WebP.",
+    "tooLarge": "La imagen debe pesar 5MB o menos."
+  },
+  "userStatus": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "userPopup": {
+    "joined": "Se unió",
+    "lastLogin": "Última sesión",
+    "neverLoggedIn": "Nunca"
+  },
+  "errors": {
+    "generic": "Algo salió mal",
+    "title": "No pudimos cargar esta página",
+    "description": "El servidor puede estar reiniciándose. Vuelve a intentarlo en un momento.",
+    "retry": "Reintentar"
+  },
+  "lifecycleFilter": {
+    "label": "Ver"
+  },
+  "favoritesFilter": {
+    "label": "Favoritos"
+  }
+}

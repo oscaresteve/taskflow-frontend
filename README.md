@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskFlow — Frontend
 
-## Getting Started
+Cliente web de **TaskFlow**, una aplicación de gestión de proyectos y tareas organizada en workspaces: workspaces → proyectos → tareas, con miembros y roles en los dos niveles.
 
-First, run the development server:
+Es el frontend de la API que vive en el repositorio de al lado, [`taskflow-backend`](https://github.com/oscaresteve/taskflow-backend), que es la fuente de verdad de los datos, la autorización y la validación.
+
+## Demo
+
+**[taskflow.oscaresteve.dev](https://taskflow.oscaresteve.dev)** — `demo@taskflow.dev` / `Password123`, o directamente el botón **"Entrar como demo"** de la pantalla de login.
+
+## Stack
+
+- **Next.js 16** (App Router) + **React 19**
+- **Tailwind v4** + **shadcn/ui** sobre Base UI
+- **TanStack React Query** para el estado de servidor
+- **React Hook Form** + **Zod** para los formularios
+- **@dnd-kit** para el tablero kanban
+- **next-intl** para el español y el inglés, **next-themes** para el tema oscuro
+- **nuqs** para los filtros, la búsqueda y la paginación en la URL
+- **socket.io-client** para el tiempo real
+- **recharts** para los gráficos de los resúmenes
+
+Gestor de paquetes: **pnpm** (es el único soportado, no uses `npm` ni `yarn`).
+
+## Puesta en marcha
+
+Este frontend no funciona solo: necesita el backend levantado. Son dos terminales.
+
+En el repositorio del backend, que deja la API en el puerto 4000 con los datos de ejemplo cargados:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm demo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Y aquí:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+En `http://localhost:3000`. Para entrar, el botón **"Entrar como demo"** de la pantalla de login.
 
-## Learn More
+### Variables de entorno
 
-To learn more about Next.js, take a look at the following resources:
+Solo hay una, y tiene valor por defecto, así que en local no hace falta ningún `.env`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable              | Por defecto                  | Qué es                                      |
+| --------------------- | ---------------------------- | ------------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:4000/api`  | La URL de la API, con el sufijo `/api`      |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+El socket no tiene variable propia: `src/lib/config/env.ts` deriva el origen de esa misma URL, porque la ruta por defecto del socket (`/socket.io`) queda fuera de `/api`.
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Script           | Qué hace                                    |
+| ---------------- | ------------------------------------------- |
+| `pnpm dev`       | Servidor de desarrollo                      |
+| `pnpm build`     | Build de producción                         |
+| `pnpm start`     | Sirve el build de producción                |
+| `pnpm typecheck` | `tsc --noEmit`                              |
+| `pnpm lint`      | eslint                                      |
+| `pnpm verify`    | typecheck + lint, lo que hay que pasar      |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Documentación
+
+- [`CLAUDE.md`](./CLAUDE.md) — la arquitectura en detalle: el flujo de datos por capas, el routing y sus dos capas de protección, i18n, estado en la URL, tiempo real y permisos.
+- [`docs/decisiones-producto.md`](./docs/decisiones-producto.md) — decisiones de producto y UX: para qué sirve cada pantalla, qué cuentan los contadores, qué no está hecho a propósito.
+- [`../taskflow-backend/docs/decisiones.md`](https://github.com/oscaresteve/taskflow-backend/blob/master/docs/decisiones.md) — por qué este stack, en los dos repositorios.
+- [`../taskflow-backend/docs/despliegue.md`](https://github.com/oscaresteve/taskflow-backend/blob/master/docs/despliegue.md) — el despliegue de los dos, incluido lo que hay que configurar en Vercel.

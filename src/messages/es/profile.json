@@ -1,0 +1,29 @@
+{
+  "profilePage": {
+    "title": "Perfil"
+  },
+  "nameSection": {
+    "title": "Nombre",
+    "description": "Como apareces en TaskFlow, junto a tu actividad y tus comentarios.",
+    "firstNameLabel": "Nombre",
+    "lastNameLabel": "Apellidos",
+    "saved": "Nombre actualizado"
+  },
+  "usernameSection": {
+    "title": "Usuario",
+    "description": "Con este nombre te mencionan en los comentarios. Cambiarlo no rompe las menciones que ya existen.",
+    "saved": "Usuario actualizado"
+  },
+  "avatarSection": {
+    "title": "Foto",
+    "description": "Te identifica en tus comentarios, en la actividad y en la lista de miembros.",
+    "footerHint": "PNG, JPEG o WebP. Máximo 5MB.",
+    "failedToLoad": "No se pudo cargar tu perfil.",
+    "removeAction": "Quitar la foto",
+    "removeDialogTitle": "¿Quitar la foto?",
+    "removeDialogDescription": "Volverás al avatar generado a partir de tu cuenta. Puedes subir otra foto cuando quieras."
+  },
+  "errors": {
+    "generic": "Algo salió mal"
+  }
+}

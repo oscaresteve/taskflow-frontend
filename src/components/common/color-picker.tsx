@@ -1,0 +1,62 @@
+"use client";
+
+import { useState } from "react";
+import { ICONS } from "@/lib/icons";
+import { cn } from "@/lib/utils";
+import { ColorDot } from "@/components/ui/color-dot";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { COLORS } from "@/lib/colors";
+import { useTranslations } from "next-intl";
+
+interface ColorPickerProps {
+  value: string | null;
+  onChange: (value: string | null) => void;
+}
+
+const colorButtonClassName =
+  "flex size-9 outline-2 outline-offset-2 outline-transparent transition-[outline-color,transform] hover:scale-105 cursor-pointer border";
+
+export function ColorPicker({ value, onChange }: ColorPickerProps) {
+  const [open, setOpen] = useState(false);
+  const t = useTranslations("common");
+
+  function handleSelect(color: string | null) {
+    onChange(color);
+    setOpen(false);
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger render={<button type="button" />}>
+        <ColorDot color={value} className="flex size-9 border cursor-pointer transition-opacity hover:opacity-80">
+          {!value && <ICONS.colorSwatch className="size-4 text-muted-foreground" />}
+        </ColorDot>
+      </PopoverTrigger>
+      <PopoverContent className="p-2 w-fit" align="end">
+        <div className="grid grid-cols-4 gap-x-3 gap-y-2">
+          <button
+            type="button"
+            aria-label={t("colorPicker.noColor")}
+            aria-pressed={value === null}
+            onClick={() => handleSelect(null)}
+          >
+            <ColorDot className={cn(colorButtonClassName, value === null && "outline-ring")}>
+              <ICONS.clear className="size-4" />
+            </ColorDot>
+          </button>
+          {COLORS.map((color) => (
+            <button
+              key={color}
+              type="button"
+              aria-label={color}
+              aria-pressed={value === color}
+              onClick={() => handleSelect(color)}
+            >
+              <ColorDot color={color} className={cn(colorButtonClassName, value === color && "outline-ring")} />
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}

@@ -1,0 +1,56 @@
+import { sortOrders, SortOrder } from "@/lib/dtos/pagination.dto";
+import { PAGE_SIZE_OPTIONS } from "@/lib/pagination";
+import { workspaceSortFields, WorkspaceSortField } from "@/lib/workspace-enums";
+import { useQueryStates, parseAsString, debounce, parseAsStringLiteral, parseAsInteger } from "nuqs";
+import { useDebouncedValue } from "./use-debounced-value";
+
+const DEFAULT_SORT = "name";
+const DEFAULT_ORDER = "asc";
+
+export default function useProjectsTable() {
+  const [{ search, sort, order, limit, page }, setQuery] = useQueryStates({
+    search: parseAsString.withDefault("").withOptions({ limitUrlUpdates: debounce(300) }),
+    sort: parseAsStringLiteral(workspaceSortFields).withDefault(DEFAULT_SORT),
+    order: parseAsStringLiteral(sortOrders).withDefault(DEFAULT_ORDER),
+    limit: parseAsInteger.withDefault(PAGE_SIZE_OPTIONS[0]),
+    page: parseAsInteger.withDefault(1),
+  });
+
+  const searchParam = useDebouncedValue(search) || undefined;
+
+  function onSearchChange(value: string) {
+    setQuery({ search: value, page: 1 });
+  }
+
+  function onSortFieldChange(value: WorkspaceSortField) {
+    setQuery({ sort: value, page: 1 });
+  }
+
+  function onSortOrderChange(value: SortOrder) {
+    setQuery({ order: value, page: 1 });
+  }
+
+  function onLimitChange(value: number) {
+    setQuery({ limit: value, page: 1 });
+  }
+
+  function onPageChange(value: number) {
+    setQuery({ page: value });
+  }
+
+  return {
+    search,
+    sort,
+    order,
+    sortIsDefault: sort === DEFAULT_SORT && order === DEFAULT_ORDER,
+    limit,
+    page,
+    searchParam,
+    pageSizeOptions: PAGE_SIZE_OPTIONS,
+    onSearchChange,
+    onSortFieldChange,
+    onSortOrderChange,
+    onLimitChange,
+    onPageChange,
+  };
+}

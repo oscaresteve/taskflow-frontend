@@ -1,0 +1,135 @@
+{
+  "errors": {
+    "generic": "Algo salió mal"
+  },
+  "validation": {
+    "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "nameMaxLength": "El nombre no puede superar los 100 caracteres",
+    "descriptionMaxLength": "La descripción no puede superar los 500 caracteres",
+    "atLeastOneField": "Debe proporcionarse al menos un campo"
+  },
+  "workspacesPage": {
+    "title": "Espacios",
+    "newWorkspace": "Nuevo espacio",
+    "searchPlaceholder": "Buscar espacios",
+    "lifecycle": {
+      "inactive": "Inactivos"
+    },
+    "failedToLoad": "No se pudieron cargar los espacios.",
+    "noWorkspacesFound": "No se encontraron espacios.",
+    "noWorkspacesFoundDescription": "Nada coincide con esta pestaña y esta búsqueda.",
+    "columns": {
+      "workspace": "Espacio",
+      "slug": "Slug",
+      "owners": "Propietarios",
+      "actions": "Acciones"
+    },
+    "sort": {
+      "name": "Nombre",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado"
+    }
+  },
+  "workspaceActionsMenu": {
+    "ariaLabel": "Acciones del espacio",
+    "open": "Abrir",
+    "members": "Miembros",
+    "settings": "Configuración",
+    "deactivate": "Desactivar",
+    "deactivateTitle": "¿Desactivar <b>{name}</b>?",
+    "deactivateDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de espacios, filtrando por inactivos.",
+    "deactivateConfirmLabel": "Desactivar",
+    "reactivate": "Reactivar",
+    "reactivateTitle": "¿Reactivar <b>{name}</b>?",
+    "reactivateDescription": "El espacio y todo lo que contiene vuelven a estar accesibles para sus miembros. Sus proyectos vuelven tal y como estaban, incluidos los archivados.",
+    "reactivateConfirmLabel": "Reactivar",
+    "reactivatedToast": "{name} vuelve a estar activo."
+  },
+  "workspacePage": {
+    "failedToLoad": "No se pudo cargar el resumen del espacio.",
+    "stats": {
+      "openTasks": "Tareas abiertas",
+      "overdue": "Vencidas",
+      "completedThisWeek": "Completadas esta semana",
+      "projects": "Proyectos",
+      "unassigned": "Sin asignar"
+    },
+    "projects": {
+      "title": "Tus proyectos",
+      "searchPlaceholder": "Buscar proyectos",
+      "openTasks": "{count, plural, one {# abierta} other {# abiertas}}",
+      "overdue": "{count, plural, one {# vencida} other {# vencidas}}",
+      "noneFound": "No se encontraron proyectos.",
+      "noneFoundDescription": "Prueba con otra búsqueda.",
+      "noneYet": "Todavía no hay proyectos.",
+      "noneYetDescription": "Los proyectos de este espacio aparecerán aquí.",
+      "failedToLoad": "No se pudieron cargar los proyectos."
+    },
+    "myTasks": {
+      "title": "Mi trabajo en este espacio",
+      "empty": "No tienes tareas abiertas aquí."
+    }
+  },
+  "workspaceSettingsPage": {
+    "title": "Configuración",
+    "leftToast": "Has salido de {name}.",
+    "noPermission": "No tienes permiso para ver esta página."
+  },
+  "leaveWorkspaceSection": {
+    "title": "Salir del espacio",
+    "description": "Perderás el acceso al espacio y a sus proyectos. Un gestor puede volver a invitarte.",
+    "actionLabel": "Salir",
+    "dialogTitle": "¿Salir de <b>{name}</b>?",
+    "dialogDescription": "Esto te sacará del espacio y de sus proyectos. Perderás el acceso de inmediato.",
+    "descriptionLastOwner": "Eres el último propietario de este espacio. Asigna el rol de propietario a otra persona para poder salir.",
+    "transferOwnershipLabel": "Asignar propietario",
+    "confirmLabel": "Salir"
+  },
+  "deactivateWorkspaceSection": {
+    "title": "Desactivar el espacio",
+    "description": "Dejará de estar accesible para sus miembros. Podrás recuperarlo desde la lista de espacios.",
+    "actionLabel": "Desactivar",
+    "dialogTitle": "¿Desactivar <b>{name}</b>?",
+    "dialogDescription": "Esto desactivará el espacio y lo ocultará de todos los miembros. Podrás recuperarlo desde la lista de espacios, filtrando por inactivos.",
+    "confirmLabel": "Desactivar"
+  },
+  "workspaceAvatarSection": {
+    "title": "Imagen",
+    "description": "Distingue el espacio en el selector, en los listados y en el buscador.",
+    "footerHint": "PNG, JPEG o WebP. Máximo 5MB.",
+    "failedToLoad": "No se pudo cargar el espacio.",
+    "removeAction": "Quitar la imagen",
+    "removeDialogTitle": "¿Quitar la imagen?",
+    "removeDialogDescription": "El espacio volverá a la imagen generada a partir de su nombre. Puedes subir otra cuando quieras."
+  },
+  "workspaceDescriptionSection": {
+    "title": "Descripción",
+    "description": "Una línea sobre para qué es este espacio. Se ve bajo su nombre y en Mi espacio.",
+    "failedToLoad": "No se pudo cargar el espacio.",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Espacio principal de Acme Inc",
+    "successMessage": "Descripción del espacio actualizada."
+  },
+  "workspaceNameSection": {
+    "title": "Nombre",
+    "description": "Se ve en la cabecera del espacio. Cambiarlo también cambia su URL.",
+    "failedToLoad": "No se pudo cargar el espacio.",
+    "nameLabel": "Nombre del espacio",
+    "namePlaceholder": "Acme Inc",
+    "successMessage": "Nombre del espacio actualizado."
+  },
+  "notFound": {
+    "title": "Espacio no encontrado",
+    "description": "Este espacio no existe o no tienes acceso a él.",
+    "goToMySpace": "Ir a mi espacio"
+  },
+  "createWorkspaceDialog": {
+    "title": "Crear espacio",
+    "description": "Configura un nuevo espacio para organizar proyectos y tareas.",
+    "submitLabel": "Crear espacio",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Acme Inc",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Espacio principal de Acme Inc"
+  }
+}

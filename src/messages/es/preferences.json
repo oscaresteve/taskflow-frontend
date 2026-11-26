@@ -1,0 +1,18 @@
+{
+  "preferencesPage": {
+    "title": "Preferencias"
+  },
+  "colorSchemeSection": {
+    "title": "Apariencia",
+    "description": "Claro, oscuro o lo que diga el sistema. Solo en este dispositivo."
+  },
+  "languageSection": {
+    "title": "Idioma",
+    "description": "Se guarda en tu cuenta, así que te sigue a cualquier dispositivo.",
+    "en": "English",
+    "es": "Español"
+  },
+  "errors": {
+    "generic": "Algo salió mal"
+  }
+}

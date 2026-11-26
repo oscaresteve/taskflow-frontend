@@ -1,0 +1,18 @@
+{
+  "preferencesPage": {
+    "title": "Preferences"
+  },
+  "colorSchemeSection": {
+    "title": "Appearance",
+    "description": "Light, dark or whatever the system says. This device only."
+  },
+  "languageSection": {
+    "title": "Language",
+    "description": "Saved on your account, so it follows you to any device.",
+    "en": "English",
+    "es": "Español"
+  },
+  "errors": {
+    "generic": "Something went wrong"
+  }
+}

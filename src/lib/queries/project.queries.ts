@@ -1,0 +1,67 @@
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { getProject, getProjects } from "@/lib/api/projects.api";
+import { projectKeys } from "@/lib/query-keys/project.keys";
+import { getNextPageParam } from "@/lib/queries/pagination";
+import { SortOrder } from "@/lib/dtos/pagination.dto";
+import { ProjectSortField } from "../project-enums";
+import { ProjectRole } from "@/lib/dtos/project-members.dto";
+
+// "Load more" for the sidebar nav — pages accumulate instead of replacing each other. Same
+// getNextPageParam helper can back any other list that outgrows a "load more" button later.
+export const getProjectsInfiniteQuery = ({
+  workspaceSlug,
+  limit,
+  search,
+  isFavorite,
+  sort = "name",
+  order = "asc",
+}: {
+  workspaceSlug: string;
+  limit: number;
+  search?: string;
+  isFavorite?: boolean;
+  sort?: ProjectSortField;
+  order?: SortOrder;
+}) =>
+  infiniteQueryOptions({
+    queryKey: projectKeys.infiniteList(workspaceSlug, { limit, search, isFavorite, sort, order }),
+    queryFn: ({ pageParam }) =>
+      getProjects({
+        workspaceSlug,
+        page: pageParam,
+        limit,
+        sort,
+        order,
+        search: search || undefined,
+        isFavorite,
+      }),
+    initialPageParam: 1,
+    getNextPageParam,
+    enabled: !!workspaceSlug,
+  });
+
+export const getProjectsQuery = (
+  workspaceSlug: string,
+  params: {
+    page?: number;
+    limit?: number;
+    isArchived?: boolean;
+    isFavorite?: boolean;
+    myRole?: readonly ProjectRole[];
+    search?: string;
+    sort?: ProjectSortField;
+    order?: SortOrder;
+  } = {},
+) =>
+  queryOptions({
+    queryKey: projectKeys.lists(workspaceSlug, params),
+    queryFn: () => getProjects({ workspaceSlug, ...params }),
+    enabled: !!workspaceSlug,
+  });
+
+export const getProjectQuery = ({ workspaceSlug, projectSlug }: { workspaceSlug: string; projectSlug: string }) =>
+  queryOptions({
+    queryKey: projectKeys.detail(workspaceSlug, projectSlug),
+    queryFn: () => getProject({ workspaceSlug, projectSlug }),
+    enabled: !!workspaceSlug && !!projectSlug,
+  });

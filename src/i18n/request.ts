@@ -1,0 +1,95 @@
+import { getRequestConfig } from "next-intl/server";
+import { getCurrentUser } from "@/lib/api/auth.server";
+import { normalizeLocale, type Locale } from "@/lib/locale";
+
+import commonEn from "@/messages/en/common.json";
+import layoutEn from "@/messages/en/layout.json";
+import authEn from "@/messages/en/auth.json";
+import onboardingEn from "@/messages/en/onboarding.json";
+import mySpaceEn from "@/messages/en/my-space.json";
+import profileEn from "@/messages/en/profile.json";
+import preferencesEn from "@/messages/en/preferences.json";
+import workspacesEn from "@/messages/en/workspaces.json";
+import projectsEn from "@/messages/en/projects.json";
+import overviewEn from "@/messages/en/overview.json";
+import membersEn from "@/messages/en/members.json";
+import tasksEn from "@/messages/en/tasks.json";
+import searchEn from "@/messages/en/search.json";
+import activityEn from "@/messages/en/activity.json";
+import notificationsEn from "@/messages/en/notifications.json";
+
+import commonEs from "@/messages/es/common.json";
+import layoutEs from "@/messages/es/layout.json";
+import authEs from "@/messages/es/auth.json";
+import onboardingEs from "@/messages/es/onboarding.json";
+import mySpaceEs from "@/messages/es/my-space.json";
+import profileEs from "@/messages/es/profile.json";
+import preferencesEs from "@/messages/es/preferences.json";
+import workspacesEs from "@/messages/es/workspaces.json";
+import projectsEs from "@/messages/es/projects.json";
+import overviewEs from "@/messages/es/overview.json";
+import membersEs from "@/messages/es/members.json";
+import tasksEs from "@/messages/es/tasks.json";
+import searchEs from "@/messages/es/search.json";
+import activityEs from "@/messages/es/activity.json";
+import notificationsEs from "@/messages/es/notifications.json";
+
+const messagesByLocale = {
+  en: {
+    common: commonEn,
+    layout: layoutEn,
+    auth: authEn,
+    onboarding: onboardingEn,
+    mySpace: mySpaceEn,
+    profile: profileEn,
+    preferences: preferencesEn,
+    workspaces: workspacesEn,
+    projects: projectsEn,
+    members: membersEn,
+    overview: overviewEn,
+    tasks: tasksEn,
+    search: searchEn,
+    activity: activityEn,
+    notifications: notificationsEn,
+  },
+  es: {
+    common: commonEs,
+    layout: layoutEs,
+    auth: authEs,
+    onboarding: onboardingEs,
+    mySpace: mySpaceEs,
+    profile: profileEs,
+    preferences: preferencesEs,
+    workspaces: workspacesEs,
+    projects: projectsEs,
+    members: membersEs,
+    overview: overviewEs,
+    tasks: tasksEs,
+    search: searchEs,
+    activity: activityEs,
+    notifications: notificationsEs,
+  },
+} satisfies Record<Locale, unknown>;
+
+export default getRequestConfig(async () => {
+  // El locale persiste en el modelo de usuario (no en cookie), asi que hay que resolver
+  // al usuario autenticado en cada request; sin sesion (paginas publicas) cae al default.
+  const user = await getCurrentUser();
+  const locale: Locale = normalizeLocale(user?.locale);
+
+  return {
+    locale,
+    messages: messagesByLocale[locale],
+    // Preset compartido para no repetir las mismas opciones de Intl.DateTimeFormat en
+    // cada sitio que muestra una fecha (tabla de miembros, tarjetas de tarea, etc.).
+    formats: {
+      dateTime: {
+        short: {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        },
+      },
+    },
+  };
+});

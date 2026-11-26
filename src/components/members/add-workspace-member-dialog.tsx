@@ -1,0 +1,150 @@
+"use client";
+
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useInfiniteQuery } from "@tanstack/react-query";
+
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { toast } from "@/components/ui/toast";
+import { FormDialog } from "@/components/common/form-dialog";
+import { MemberCandidate, MemberPicker } from "@/components/members/member-picker";
+import { useCreateWorkspaceMember } from "@/hooks/use-create-workspace-member";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
+import { getUsersInfiniteQuery } from "@/lib/queries/user.queries";
+import { ApiError } from "@/lib/http/api-error";
+import { CreateWorkspaceMemberDto, createWorkspaceMemberSchema } from "@/lib/schemas/workspace-member.schema";
+import { assignableWorkspaceRoles } from "@/lib/permissions/workspace-member-permissions";
+import { getFullName } from "@/lib/utils";
+import { RoleSelect } from "@/components/members/role-select";
+import { useTranslations } from "next-intl";
+
+const PICKER_PAGE_SIZE = 10;
+
+interface AddWorkspaceMemberDialogProps {
+  workspaceSlug: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function AddWorkspaceMemberDialog({ workspaceSlug, open, onOpenChange }: AddWorkspaceMemberDialogProps) {
+  const t = useTranslations("members");
+  const createWorkspaceMember = useCreateWorkspaceMember(workspaceSlug);
+  const { role: myRole } = useWorkspaceRole(workspaceSlug);
+  const assignableRoles = assignableWorkspaceRoles(myRole);
+
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
+  const [selected, setSelected] = useState<MemberCandidate | null>(null);
+
+  const form = useForm<CreateWorkspaceMemberDto>({
+    resolver: zodResolver(createWorkspaceMemberSchema),
+    defaultValues: {
+      userId: "",
+      role: "MEMBER",
+    },
+  });
+
+  function handleOpenChange(next: boolean) {
+    if (!next) {
+      form.reset();
+      setSearch("");
+      setSelected(null);
+    }
+    onOpenChange(next);
+  }
+
+  const {
+    data: users,
+    isLoading: isUsersLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({ ...getUsersInfiniteQuery(debouncedSearch, workspaceSlug, PICKER_PAGE_SIZE), enabled: open });
+  const candidates: MemberCandidate[] = (users?.pages.flatMap((page) => page.data) ?? []).map((user) => ({
+    id: user.id,
+    userId: user.id,
+    name: getFullName(user.firstName, user.lastName),
+    email: user.email,
+    avatarUrl: user.avatarUrl,
+  }));
+  const remaining = users ? users.pages[users.pages.length - 1].pagination.total - candidates.length : 0;
+
+  function handleSelect(candidate: MemberCandidate) {
+    setSelected(candidate);
+    form.setValue("userId", candidate.userId, { shouldValidate: true });
+  }
+
+  function handleClear() {
+    setSelected(null);
+    form.setValue("userId", "", { shouldValidate: true });
+  }
+
+  async function onSubmit(data: CreateWorkspaceMemberDto) {
+    try {
+      const addedName = selected?.name;
+      await createWorkspaceMember.mutateAsync(data);
+      handleOpenChange(false);
+      toast.add({
+        type: "success",
+        description: t("addWorkspaceMemberDialog.addedToast", { name: addedName ?? "" }),
+      });
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : t("genericError"),
+        priority: "high",
+      });
+    }
+  }
+
+  return (
+    <FormDialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      title={t("addWorkspaceMemberDialog.title")}
+      description={t("addWorkspaceMemberDialog.description")}
+      formId="add-member-form"
+      submitLabel={t("addWorkspaceMemberDialog.submitLabel")}
+      pending={createWorkspaceMember.isPending}
+    >
+      <form id="add-member-form" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+        <FieldGroup>
+          <MemberPicker
+            id="member"
+            search={search}
+            onSearchChange={setSearch}
+            candidates={candidates}
+            isLoading={isUsersLoading}
+            emptyMessage={t("addWorkspaceMemberDialog.emptyMessage")}
+            selected={selected}
+            onSelect={handleSelect}
+            onClear={handleClear}
+            error={!!form.formState.errors.userId}
+            hasMore={hasNextPage}
+            isLoadingMore={isFetchingNextPage}
+            remaining={remaining}
+            onLoadMore={() => fetchNextPage()}
+          />
+          <Controller
+            name="role"
+            control={form.control}
+            render={({ field }) => (
+              <Field>
+                <FieldLabel htmlFor="member-role">{t("addWorkspaceMemberDialog.roleLabel")}</FieldLabel>
+                <RoleSelect
+                  id="member-role"
+                  className="justify-between"
+                  value={field.value}
+                  values={assignableRoles}
+                  onValueChange={field.onChange}
+                />
+              </Field>
+            )}
+          />
+        </FieldGroup>
+      </form>
+    </FormDialog>
+  );
+}

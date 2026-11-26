@@ -1,0 +1,20 @@
+{
+  "byStatus": {
+    "title": "Tasks by status",
+    "completed": "{done} of {total, plural, one {# task completed} other {# tasks completed}}",
+    "centerLabel": "Complete",
+    "empty": "No tasks yet."
+  },
+  "byPriority": {
+    "title": "Tasks by priority",
+    "total": "{count, plural, one {# task} other {# tasks}} in total",
+    "empty": "No tasks yet.",
+    "valueLabel": "Tasks"
+  },
+  "byDueDate": {
+    "title": "Tasks by due date",
+    "total": "{count, plural, one {# open task} other {# open tasks}} in total",
+    "empty": "No open tasks.",
+    "valueLabel": "Open tasks"
+  }
+}

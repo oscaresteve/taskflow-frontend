@@ -1,0 +1,111 @@
+import { request } from "@/lib/http/client";
+import { buildQueryString } from "@/lib/http/query-string";
+import { PaginatedResponseDto, SortOrder } from "@/lib/dtos/pagination.dto";
+import {
+  WorkspaceAvatarUploadUrlResponseDto,
+  WorkspaceListItemResponseDto,
+  WorkspaceResponseDto,
+} from "@/lib/dtos/workspaces.dto";
+import { CreateWorkspaceDto, UpdateWorkspaceDto } from "../schemas/workspace.schema";
+import { WorkspaceSortField } from "../workspace-enums";
+import { WorkspaceRole } from "@/lib/dtos/workspace-members.dto";
+
+export function getWorkspaces({
+  page,
+  limit,
+  isActive,
+  isFavorite,
+  myRole,
+  search,
+  sort,
+  order,
+}: {
+  page?: number;
+  limit?: number;
+  isActive?: boolean | boolean[];
+  isFavorite?: boolean;
+  // Acota el listado a los espacios en los que tengo uno de esos roles.
+  myRole?: readonly WorkspaceRole[];
+  search?: string;
+  sort?: WorkspaceSortField;
+  order?: SortOrder;
+} = {}) {
+  const queryString = buildQueryString({ page, limit, isActive, isFavorite, myRole, search, sort, order });
+
+  return request<PaginatedResponseDto<WorkspaceListItemResponseDto>>(`/workspaces${queryString}`, {
+    method: "GET",
+  });
+}
+
+export function createWorkspace(data: CreateWorkspaceDto) {
+  return request<WorkspaceResponseDto>("/workspaces", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export function getWorkspace(workspaceSlug: string) {
+  return request<WorkspaceResponseDto>(`/workspaces/${workspaceSlug}`, {
+    method: "GET",
+  });
+}
+
+export function updateWorkspace({ workspaceSlug, data }: { workspaceSlug: string; data: UpdateWorkspaceDto }) {
+  return request<WorkspaceResponseDto>(`/workspaces/${workspaceSlug}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export function deactivateWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/deactivate`, {
+    method: "PATCH",
+  });
+}
+
+// La unica ruta que resuelve un espacio desactivado: el resto sigue respondiendo 404 mientras lo este.
+export function reactivateWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/reactivate`, {
+    method: "PATCH",
+  });
+}
+
+export function getWorkspaceAvatarUploadUrl({
+  workspaceSlug,
+  contentType,
+  fileSize,
+}: {
+  workspaceSlug: string;
+  contentType: string;
+  fileSize: number;
+}) {
+  return request<WorkspaceAvatarUploadUrlResponseDto>(`/workspaces/${workspaceSlug}/avatar/upload-url`, {
+    method: "POST",
+    body: JSON.stringify({ contentType, fileSize }),
+  });
+}
+
+export function confirmWorkspaceAvatar({ workspaceSlug, key }: { workspaceSlug: string; key: string }) {
+  return request<WorkspaceResponseDto>(`/workspaces/${workspaceSlug}/avatar`, {
+    method: "PUT",
+    body: JSON.stringify({ key }),
+  });
+}
+
+export function deleteWorkspaceAvatar(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/avatar`, {
+    method: "DELETE",
+  });
+}
+
+export function favoriteWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/favorite`, {
+    method: "POST",
+  });
+}
+
+export function unfavoriteWorkspace(workspaceSlug: string) {
+  return request<void>(`/workspaces/${workspaceSlug}/favorite`, {
+    method: "DELETE",
+  });
+}

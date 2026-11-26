@@ -1,0 +1,165 @@
+{
+  "errors": {
+    "generic": "Algo salió mal"
+  },
+  "updateSuccess": "Tarea actualizada.",
+  "statusUpdated": "Estado cambiado a {status}.",
+  "priorityUpdated": "Prioridad cambiada a {priority}.",
+  "assigneeUpdated": "Asignación actualizada.",
+  "dueDateUpdated": "Fecha límite actualizada.",
+  "titleUpdated": "Título actualizado.",
+  "descriptionUpdated": "Descripción actualizada.",
+  "fields": {
+    "title": "Título",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Opcional",
+    "addDescription": "Añadir una descripción...",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "assignee": "Asignado a",
+    "unassigned": "Sin asignar",
+    "addAssignee": "Añadir asignación",
+    "dueDate": "Fecha límite",
+    "dueDatePlaceholder": "Elegir fecha",
+    "addDueDate": "Añadir fecha límite",
+    "noDueDate": "Sin fecha"
+  },
+  "status": {
+    "TODO": "Por hacer",
+    "IN_PROGRESS": "En progreso",
+    "IN_REVIEW": "En revisión",
+    "DONE": "Hecho"
+  },
+  "statusFilter": {
+    "all": "Cualquier estado",
+    "open": "Abiertas"
+  },
+  "priority": {
+    "LOW": "Baja",
+    "MEDIUM": "Media",
+    "HIGH": "Alta",
+    "URGENT": "Urgente"
+  },
+  "priorityFilter": {
+    "all": "Toda prioridad"
+  },
+  "dueDateFilter": {
+    "all": "Toda fecha",
+    "overdue": "Vencidas",
+    "thisWeek": "Vence esta semana",
+    "none": "Sin fecha"
+  },
+  "dueDateBucket": {
+    "overdue": "Vencidas",
+    "dueSoon": "Esta semana",
+    "scheduled": "Programadas",
+    "noDueDate": "Sin fecha"
+  },
+  "assigneeFilter": {
+    "all": "Todos"
+  },
+  "validation": {
+    "titleMinLength": "El título debe tener al menos 2 caracteres",
+    "titleMaxLength": "El título no puede superar los 100 caracteres",
+    "descriptionMaxLength": "La descripción no puede superar los 500 caracteres",
+    "atLeastOneField": "Debe proporcionarse al menos un campo"
+  },
+  "kanbanPage": {
+    "failedToLoadProject": "No se pudo cargar el proyecto.",
+    "createTask": "Crear tarea"
+  },
+  "kanbanBoard": {
+    "failedToLoad": "No se pudieron cargar las tareas."
+  },
+  "kanbanFilterBar": {
+    "searchPlaceholder": "Buscar tareas"
+  },
+  "kanbanColumn": {
+    "addTask": "Añadir tarea"
+  },
+  "listPage": {
+    "failedToLoadProject": "No se pudo cargar el proyecto.",
+    "createTask": "Crear tarea"
+  },
+  "listTable": {
+    "failedToLoad": "No se pudieron cargar las tareas.",
+    "noTasks": "Todavía no hay tareas.",
+    "noTasksDescription": "Crea una tarea para empezar.",
+    "noTasksFiltered": "Ninguna tarea coincide con los filtros.",
+    "noTasksFilteredDescription": "Prueba con otra búsqueda o filtro.",
+    "lifecycle": {
+      "archived": "Archivadas"
+    },
+    "columns": {
+      "task": "Tarea",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "assignee": "Asignado a",
+      "dueDate": "Fecha límite",
+      "actions": "Acciones"
+    },
+    "sortOptions": {
+      "rank": "Orden del tablero",
+      "title": "Título",
+      "status": "Estado",
+      "priority": "Prioridad",
+      "dueDate": "Fecha límite",
+      "createdAt": "Creación",
+      "updatedAt": "Actualización"
+    }
+  },
+  "taskPage": {
+    "failedToLoadTask": "No se pudo cargar la tarea.",
+    "archived": "Archivada",
+    "details": "Detalles"
+  },
+  "taskActionsMenu": {
+    "ariaLabel": "Acciones de la tarea",
+    "archive": "Archivar",
+    "confirmTitle": "¿Archivar <b>{taskTitle}</b>?",
+    "confirmDescription": "Esto archivará la tarea y la ocultará de la lista de tareas. Podrás recuperarla desde la lista, filtrando por archivadas.",
+    "archiveSuccess": "Tarea archivada.",
+    "unarchive": "Desarchivar",
+    "unarchiveConfirmTitle": "¿Desarchivar <b>{taskTitle}</b>?",
+    "unarchiveConfirmDescription": "La tarea vuelve a la lista de tareas y al tablero.",
+    "unarchiveSuccess": "Tarea desarchivada."
+  },
+  "comments": {
+    "title": "Comentarios",
+    "composerPlaceholder": "Escribe un comentario… usa @ para mencionar",
+    "submit": "Publicar",
+    "empty": "Todavía no hay comentarios.",
+    "failedToLoad": "No se pudieron cargar los comentarios.",
+    "loading": "Cargando…",
+    "remaining": "{count} más",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleteConfirmTitle": "¿Eliminar comentario?",
+    "deleteConfirmDescription": "Esto eliminará el comentario de forma permanente. Esta acción no se puede deshacer.",
+    "edited": "(editado)",
+    "unknownAuthor": "Desconocido",
+    "actionsSrOnly": "Acciones del comentario",
+    "createSuccess": "Comentario publicado.",
+    "updateSuccess": "Comentario actualizado.",
+    "deleteSuccess": "Comentario eliminado.",
+    "validation": {
+      "contentRequired": "El comentario no puede estar vacío",
+      "contentMaxLength": "El comentario no puede superar los 5000 caracteres"
+    },
+    "mentionListLabel": "Miembros que puedes mencionar",
+    "undoDelete": "Deshacer",
+    "restoreSuccess": "Comentario restaurado."
+  },
+  "createTaskDialog": {
+    "title": "Crear tarea",
+    "description": "Añade una nueva tarea a este proyecto.",
+    "submit": "Crear tarea",
+    "titlePlaceholder": "Configurar el entorno de staging"
+  },
+  "assigneeSelect": {
+    "searchPlaceholder": "Buscar miembros",
+    "emptyMessage": "No se encontraron miembros coincidentes.",
+    "loadingMore": "Cargando…",
+    "moreCandidates": "{count} más"
+  }
+}

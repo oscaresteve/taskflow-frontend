@@ -1,0 +1,130 @@
+{
+  "genericError": "Something went wrong",
+  "roleLabel": {
+    "OWNER": "Owner",
+    "ADMIN": "Admin",
+    "MEMBER": "Member"
+  },
+  "roleDescription": {
+    "OWNER": "Full control — manages every member, including other owners, and can assign any role.",
+    "ADMIN": "Manages members and settings, but can't manage owners or assign the owner role.",
+    "MEMBER": "Can access and contribute, without management access."
+  },
+  "roleFilter": {
+    "all": "All roles"
+  },
+  "workspaceMembersPanel": {
+    "failedToLoad": "Failed to load members.",
+    "emptyMessage": "No members found.",
+    "emptyMessageDescription": "Try a different search or role filter.",
+    "sortJoined": "Joined",
+    "sortCreated": "Created",
+    "sortUpdated": "Updated"
+  },
+  "projectMembersPanel": {
+    "failedToLoad": "Failed to load members.",
+    "emptyMessage": "No members found.",
+    "emptyMessageDescription": "Try a different search or role filter.",
+    "sortJoined": "Joined",
+    "sortCreated": "Created",
+    "sortUpdated": "Updated"
+  },
+  "membersFilterBar": {
+    "searchPlaceholder": "Search members"
+  },
+  "membersTable": {
+    "columnName": "Name",
+    "columnEmail": "Email",
+    "columnJoined": "Joined",
+    "columnRole": "Role",
+    "columnActions": "Actions",
+    "youSuffix": " (You)",
+    "noJoinDate": "—"
+  },
+  "memberPicker": {
+    "defaultLabel": "Member",
+    "searchPlaceholder": "Search people",
+    "loadingMore": "Loading…",
+    "moreCandidates": "{count} more",
+    "selectPersonError": "Select a person to add",
+    "clearSelection": "Clear selection"
+  },
+  "workspaceMembersPage": {
+    "title": "Members",
+    "addMember": "Add member",
+    "tabPending": "Pending",
+    "tabRemoved": "Inactive",
+    "emptyActive": "No active members.",
+    "emptyActiveDescription": "Members will appear here once they join the workspace.",
+    "emptyPending": "No pending invites yet.",
+    "emptyPendingDescription": "Members you invite will show up here.",
+    "emptyRemoved": "No inactive members.",
+    "emptyRemovedDescription": "Deactivated members will show up here.",
+    "activate": "Activate",
+    "remove": "Deactivate",
+    "activatedToast": "{name} activated.",
+    "removedToast": "{name} deactivated in the workspace.",
+    "roleChangedToast": "{name}'s role changed to {role}.",
+    "removeMemberTitle": "Deactivate <b>{name}</b>?",
+    "removeMemberDescription": "This will deactivate the member in the workspace. They'll lose access immediately.",
+    "removeConfirmLabel": "Deactivate",
+    "changeRoleTitle": "Change <b>{name}</b>'s role?",
+    "changeRoleDescription": "They'll get <role></role> access to this workspace.",
+    "changeRoleConfirmLabel": "Change",
+    "activateMemberTitle": "Activate <b>{name}</b>?",
+    "activateMemberDescription": "This will activate the member. They'll get immediate access to the workspace.",
+    "activateConfirmLabel": "Activate",
+    "cancelInvitation": "Cancel invitation",
+    "cancelInvitationTitle": "Cancel the invitation for <b>{name}</b>?",
+    "cancelInvitationDescription": "The invitation disappears and they will not join the workspace. You can invite them again later.",
+    "cancelInvitationConfirmLabel": "Cancel invitation",
+    "canceledInvitationToast": "Invitation for {name} canceled.",
+    "restore": "Activate",
+    "restoredToast": "{name} is back in the workspace.",
+    "restoreMemberTitle": "Bring {name} back?",
+    "restoreMemberDescription": "They'll get access to the workspace again. Their project memberships stay as they are, so each project has to add them back on its own.",
+    "restoreRoleLabel": "Role in the workspace",
+    "restoreRoleDescription": "Deactivating a member clears their old role, so pick the one they come back with.",
+    "restoreConfirmLabel": "Activate"
+  },
+  "projectMembersPage": {
+    "addMember": "Add member",
+    "tabInactive": "Inactive",
+    "emptyActive": "No active members.",
+    "emptyActiveDescription": "Members will appear here once they join the project.",
+    "emptyInactive": "No inactive members.",
+    "emptyInactiveDescription": "Deactivated members will show up here.",
+    "deactivate": "Deactivate",
+    "roleChangedToast": "{name}'s role changed to {role}.",
+    "deactivatedToast": "{name} deactivated on this project.",
+    "deactivateMemberTitle": "Deactivate <b>{name}</b>?",
+    "deactivateMemberDescription": "This will deactivate the member on this project. They'll lose access to it immediately.",
+    "deactivateConfirmLabel": "Deactivate",
+    "activate": "Activate",
+    "activatedToast": "{name} is back on this project.",
+    "activateMemberTitle": "Bring {name} back to this project?",
+    "activateMemberDescription": "They'll get access to the project again. They have to be an active workspace member for this to work.",
+    "activateRoleLabel": "Role in the project",
+    "activateRoleDescription": "Deactivating a member clears their old role, so pick the one they come back with.",
+    "activateConfirmLabel": "Activate",
+    "changeRoleTitle": "Change <b>{name}</b>'s role?",
+    "changeRoleDescription": "They'll get <role></role> access to this project.",
+    "changeRoleConfirmLabel": "Change"
+  },
+  "addWorkspaceMemberDialog": {
+    "title": "Add member",
+    "description": "Search for a person. They'll be added as pending until an owner or admin activates them.",
+    "submitLabel": "Add member",
+    "roleLabel": "Role",
+    "emptyMessage": "No matching people found.",
+    "addedToast": "{name} added, pending activation."
+  },
+  "addProjectMemberDialog": {
+    "title": "Add member",
+    "description": "Add a workspace member to this project.",
+    "submitLabel": "Add member",
+    "roleLabel": "Role",
+    "emptyMessage": "No matching workspace members found.",
+    "addedToast": "{name} added to the project."
+  }
+}

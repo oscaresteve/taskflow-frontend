@@ -1,0 +1,126 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { ICONS } from "@/lib/icons";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu";
+import { ActionsMenuContent, ActionsMenuItem } from "@/components/common/actions-menu";
+import { CustomAvatar } from "@/components/common/custom-avatar";
+import { toast } from "@/components/ui/toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getMeQuery } from "@/lib/queries/auth.queries";
+import { signOut } from "@/lib/api/auth.api";
+import { ApiError } from "@/lib/http/api-error";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
+import { getFullName } from "@/lib/utils";
+import { useTranslations } from "next-intl";
+
+export default function UserNav() {
+  const router = useRouter();
+  const { isMobile } = useSidebar();
+  const queryClient = useQueryClient();
+  const { data: user, isLoading } = useQuery(getMeQuery());
+  const t = useTranslations("layout");
+  const userName = user ? getFullName(user.firstName, user.lastName) : undefined;
+  const [logOutOpen, setLogOutOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogOut() {
+    setLoggingOut(true);
+    try {
+      await signOut();
+      queryClient.clear();
+      router.push("/auth/sign-in");
+      router.refresh();
+    } catch (error) {
+      setLoggingOut(false);
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : t("userNav.logOutError"),
+        priority: "high",
+      });
+    }
+  }
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        {isLoading || !user ? (
+          <SidebarMenuButton size="lg" disabled className="cursor-default">
+            <Skeleton className="h-8 w-8 shrink-0 rounded-lg" />
+            <div className="grid flex-1 gap-1">
+              <Skeleton className="h-3.5 w-24" />
+              <Skeleton className="h-3 w-32" />
+            </div>
+          </SidebarMenuButton>
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  tooltip={userName}
+                />
+              }
+            >
+              <CustomAvatar avatarUrl={user.avatarUrl} alt={userName} seed={user.id} variant="glyphs" />
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">{userName}</span>
+                <span className="truncate text-xs">{user.email}</span>
+              </div>
+              <ICONS.chevronUpDown className="ml-auto size-4" />
+            </DropdownMenuTrigger>
+            <ActionsMenuContent
+              side={isMobile ? "bottom" : "right"}
+              align="end"
+              sideOffset={4}
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-2 px-3 py-1.5 text-left text-sm">
+                    <CustomAvatar avatarUrl={user.avatarUrl} alt={userName} seed={user.id} variant="glyphs" />
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-medium">{userName}</span>
+                      <span className="truncate text-xs">{user.email}</span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <ActionsMenuItem render={<Link href="/profile" />}>
+                <ICONS.profile />
+                {t("userNav.profile")}
+              </ActionsMenuItem>
+              <DropdownMenuSeparator />
+              <ActionsMenuItem onClick={() => setLogOutOpen(true)}>
+                <ICONS.logOut />
+                {t("userNav.logOut")}
+              </ActionsMenuItem>
+            </ActionsMenuContent>
+          </DropdownMenu>
+        )}
+      </SidebarMenuItem>
+      <ConfirmDialog
+        open={logOutOpen}
+        onOpenChange={setLogOutOpen}
+        title={t("userNav.logOutConfirmTitle")}
+        description={t("userNav.logOutConfirmDescription")}
+        confirmLabel={t("userNav.logOut")}
+        variant="destructive"
+        onConfirm={handleLogOut}
+        pending={loggingOut}
+        Icon={ICONS.logOut}
+      />
+    </SidebarMenu>
+  );
+}

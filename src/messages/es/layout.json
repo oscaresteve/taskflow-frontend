@@ -1,0 +1,70 @@
+{
+  "globalNav": {
+    "mySpace": "Mi espacio"
+  },
+  "appNav": {
+    "preferences": "Preferencias"
+  },
+  "breadcrumb": {
+    "mySpace": "Mi espacio",
+    "profile": "Perfil",
+    "preferences": "Preferencias",
+    "workspaces": "Espacios",
+    "settings": "Configuración",
+    "members": "Miembros",
+    "kanban": "Kanban",
+    "list": "Lista"
+  },
+  "workspaceNav": {
+    "overview": "Resumen",
+    "members": "Miembros del espacio",
+    "settings": "Configuración del espacio"
+  },
+  "projectNavTabs": {
+    "overview": "Resumen",
+    "kanban": "Kanban",
+    "list": "Lista",
+    "members": "Miembros",
+    "settings": "Configuración"
+  },
+  "projectsNav": {
+    "title": "Proyectos",
+    "favorites": "Proyectos favoritos",
+    "noFavorites": "Todavía no hay favoritos",
+    "newProject": "Nuevo proyecto",
+    "failedToLoad": "No se pudieron cargar los proyectos",
+    "noneYet": "Todavía no hay proyectos",
+    "toggleList": "Mostrar u ocultar la lista",
+    "loading": "Cargando…",
+    "remaining": "{count} más"
+  },
+  "workspacesNav": {
+    "title": "Espacios",
+    "favorites": "Espacios favoritos",
+    "noFavorites": "Todavía no hay favoritos",
+    "newWorkspace": "Nuevo espacio",
+    "failedToLoad": "No se pudieron cargar los espacios",
+    "noneYet": "Todavía no hay espacios",
+    "toggleList": "Mostrar u ocultar la lista",
+    "loading": "Cargando…",
+    "remaining": "{count} más"
+  },
+  "workspaceSwitch": {
+    "workspaces": "Espacios",
+    "searchPlaceholder": "Buscar espacios",
+    "noneFound": "No se encontraron espacios",
+    "noneYet": "Todavía no hay espacios",
+    "loading": "Cargando…",
+    "remaining": "{count} más",
+    "createWorkspace": "Crear espacio",
+    "viewAllWorkspaces": "Ver todos los espacios",
+    "allWorkspaces": "Todos los espacios"
+  },
+  "userNav": {
+    "profile": "Perfil",
+    "logOut": "Cerrar sesión",
+    "logOutConfirmTitle": "Cerrar sesión",
+    "logOutConfirmDescription": "¿Seguro que quieres cerrar sesión? Tendrás que volver a iniciar sesión para acceder a tu cuenta.",
+    "logOutError": "Algo salió mal"
+  }
+}

@@ -1,0 +1,101 @@
+"use client";
+
+import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SettingCard } from "@/components/common/setting-card";
+import { toast } from "@/components/ui/toast";
+import { useUpdateWorkspace } from "@/hooks/use-update-workspace";
+import { ApiError } from "@/lib/http/api-error";
+import { getWorkspaceQuery } from "@/lib/queries/workspace.queries";
+import { UpdateWorkspaceNameDto, updateWorkspaceNameSchema } from "@/lib/schemas/workspace.schema";
+import { ICONS } from "@/lib/icons";
+
+export function WorkspaceNameSection() {
+  const t = useTranslations("workspaces");
+  const commonT = useTranslations("common");
+  const router = useRouter();
+  const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
+  const { data: workspace, isLoading, isError } = useQuery(getWorkspaceQuery(workspaceSlug));
+  const updateWorkspace = useUpdateWorkspace(workspaceSlug);
+
+  const form = useForm<UpdateWorkspaceNameDto>({
+    resolver: zodResolver(updateWorkspaceNameSchema(t)),
+    defaultValues: { name: "" },
+  });
+
+  useEffect(() => {
+    if (workspace) {
+      form.reset({ name: workspace.name });
+    }
+  }, [workspace, form]);
+
+  async function onSubmit(data: UpdateWorkspaceNameDto) {
+    try {
+      const updatedWorkspace = await updateWorkspace.mutateAsync(data);
+      toast.add({ type: "success", description: t("workspaceNameSection.successMessage") });
+      if (updatedWorkspace.slug !== workspaceSlug) {
+        router.replace(`/workspaces/${updatedWorkspace.slug}/settings`);
+      }
+    } catch (error) {
+      toast.add({
+        type: "error",
+        description: error instanceof ApiError ? error.message : t("errors.generic"),
+        priority: "high",
+      });
+    }
+  }
+
+  if (isError) {
+    return <p className="text-sm text-muted-foreground">{t("workspaceNameSection.failedToLoad")}</p>;
+  }
+
+  if (isLoading || !workspace) {
+    return (
+      <SettingCard title={t("workspaceNameSection.title")} description={t("workspaceNameSection.description")}>
+        <Skeleton className="h-8 w-full" />
+      </SettingCard>
+    );
+  }
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
+      <SettingCard
+        title={t("workspaceNameSection.title")}
+        description={t("workspaceNameSection.description")}
+        footerAction={
+          <Button type="submit" disabled={updateWorkspace.isPending || !form.formState.isDirty}>
+            {updateWorkspace.isPending && <ICONS.loading className="animate-spin" aria-hidden="true" />}
+            {commonT("actions.save")}
+          </Button>
+        }
+      >
+        <Controller
+          name="name"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <Input
+                {...field}
+                aria-invalid={fieldState.invalid}
+                aria-label={t("workspaceNameSection.nameLabel")}
+                disabled={updateWorkspace.isPending}
+                id="name"
+                type="text"
+                placeholder={t("workspaceNameSection.namePlaceholder")}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+      </SettingCard>
+    </form>
+  );
+}

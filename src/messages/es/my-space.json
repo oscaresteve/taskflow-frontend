@@ -1,0 +1,27 @@
+{
+  "mySpacePage": {
+    "title": "Mi espacio",
+    "failedToLoad": "No se pudo cargar tu resumen.",
+    "focus": {
+      "title": "Foco",
+      "openTasks": "Abiertas",
+      "completedThisWeek": "{count, plural, one {# completada} other {# completadas}} en los últimos 7 días",
+      "empty": "Ahora mismo no tienes nada asignado."
+    },
+    "queue": {
+      "title": "Mi cola",
+      "empty": "Estás al día."
+    },
+    "workspaces": {
+      "title": "Tus espacios",
+      "searchPlaceholder": "Buscar espacios",
+      "assignedTasks": "{count, plural, one {# asignada} other {# asignadas}}",
+      "overdue": "{count, plural, one {# vencida} other {# vencidas}}",
+      "noneFound": "No se encontraron espacios.",
+      "noneFoundDescription": "Prueba con otra búsqueda.",
+      "noneYet": "Todavía no perteneces a ningún espacio.",
+      "noneYetDescription": "Cuando te añadan a uno aparecerá aquí.",
+      "failedToLoad": "No se pudieron cargar los espacios."
+    }
+  }
+}

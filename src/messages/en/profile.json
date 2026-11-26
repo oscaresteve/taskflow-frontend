@@ -1,0 +1,29 @@
+{
+  "profilePage": {
+    "title": "Profile"
+  },
+  "nameSection": {
+    "title": "Name",
+    "description": "How you show up across TaskFlow, next to your activity and comments.",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "saved": "Name updated"
+  },
+  "usernameSection": {
+    "title": "Username",
+    "description": "This is how people mention you in comments. Changing it does not break existing mentions.",
+    "saved": "Username updated"
+  },
+  "avatarSection": {
+    "title": "Photo",
+    "description": "Identifies you in your comments, in activity and in member lists.",
+    "footerHint": "PNG, JPEG or WebP. Max 5MB.",
+    "failedToLoad": "Failed to load your profile.",
+    "removeAction": "Remove photo",
+    "removeDialogTitle": "Remove photo?",
+    "removeDialogDescription": "You'll go back to the avatar generated from your account. You can upload another photo anytime."
+  },
+  "errors": {
+    "generic": "Something went wrong"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "byStatus": {
+    "title": "Tareas por estado",
+    "completed": "{done} de {total, plural, one {# tarea completada} other {# tareas completadas}}",
+    "centerLabel": "Completado",
+    "empty": "Todavía no hay tareas."
+  },
+  "byPriority": {
+    "title": "Tareas por prioridad",
+    "total": "{count, plural, one {# tarea} other {# tareas}} en total",
+    "empty": "Todavía no hay tareas.",
+    "valueLabel": "Tareas"
+  },
+  "byDueDate": {
+    "title": "Tareas por fecha límite",
+    "total": "{count, plural, one {# tarea abierta} other {# tareas abiertas}} en total",
+    "empty": "No hay tareas abiertas.",
+    "valueLabel": "Tareas abiertas"
+  }
+}

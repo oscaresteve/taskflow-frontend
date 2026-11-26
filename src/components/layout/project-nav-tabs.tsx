@@ -1,0 +1,47 @@
+"use client";
+
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
+import { ICONS } from "@/lib/icons";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useProjectRole } from "@/hooks/use-project-role";
+import { useWorkspaceRole } from "@/hooks/use-workspace-role";
+import { canManageProject } from "@/lib/permissions/project-member-permissions";
+import { useTranslations } from "next-intl";
+
+export function ProjectNavTabs() {
+  const pathname = usePathname();
+  const { workspaceSlug, projectSlug } = useParams<{ workspaceSlug: string; projectSlug: string }>();
+  const { role: myRole } = useProjectRole(workspaceSlug, projectSlug);
+  const { role: myWorkspaceRole } = useWorkspaceRole(workspaceSlug);
+  const t = useTranslations("layout");
+
+  const projectTabs = [
+    { label: t("projectNavTabs.overview"), segment: "", Icon: ICONS.overview },
+    { label: t("projectNavTabs.kanban"), segment: "/kanban", Icon: ICONS.kanban },
+    { label: t("projectNavTabs.list"), segment: "/list", Icon: ICONS.list },
+    { label: t("projectNavTabs.members"), segment: "/members", Icon: ICONS.members },
+    { label: t("projectNavTabs.settings"), segment: "/settings", Icon: ICONS.settings },
+  ];
+  const base = `/workspaces/${workspaceSlug}/projects/${projectSlug}`;
+
+  const canManage = canManageProject({ workspaceRole: myWorkspaceRole, projectRole: myRole });
+  const tabs = canManage ? projectTabs : projectTabs.filter((tab) => tab.segment !== "/settings");
+  const activeTab = [...tabs].reverse().find((tab) => pathname.startsWith(`${base}${tab.segment}`))?.segment;
+
+  return (
+    <Tabs value={activeTab}>
+      <TabsList variant="line">
+        {tabs.map((tab) => {
+          const href = `${base}${tab.segment}`;
+          return (
+            <TabsTrigger key={tab.segment} value={tab.segment} nativeButton={false} render={<Link href={href} />}>
+              <tab.Icon />
+              {tab.label}
+            </TabsTrigger>
+          );
+        })}
+      </TabsList>
+    </Tabs>
+  );
+}

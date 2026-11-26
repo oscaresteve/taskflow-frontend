@@ -1,0 +1,135 @@
+{
+  "errors": {
+    "generic": "Something went wrong"
+  },
+  "validation": {
+    "nameMinLength": "Name must be at least 2 characters long",
+    "nameMaxLength": "Name cannot exceed 100 characters",
+    "descriptionMaxLength": "Description cannot exceed 500 characters",
+    "atLeastOneField": "At least one field must be provided"
+  },
+  "workspacesPage": {
+    "title": "Workspaces",
+    "newWorkspace": "New workspace",
+    "searchPlaceholder": "Search workspaces",
+    "lifecycle": {
+      "inactive": "Inactive"
+    },
+    "failedToLoad": "Failed to load workspaces.",
+    "noWorkspacesFound": "No workspaces found.",
+    "noWorkspacesFoundDescription": "Nothing matches this tab and search.",
+    "columns": {
+      "workspace": "Workspace",
+      "slug": "Slug",
+      "owners": "Owners",
+      "actions": "Actions"
+    },
+    "sort": {
+      "name": "Name",
+      "createdAt": "Created",
+      "updatedAt": "Updated"
+    }
+  },
+  "workspaceActionsMenu": {
+    "ariaLabel": "Workspace actions",
+    "open": "Open",
+    "members": "Members",
+    "settings": "Settings",
+    "deactivate": "Deactivate",
+    "deactivateTitle": "Deactivate <b>{name}</b>?",
+    "deactivateDescription": "This will deactivate the workspace and hide it from all members. You can bring it back from the workspaces list, filtering by inactive.",
+    "deactivateConfirmLabel": "Deactivate",
+    "reactivate": "Reactivate",
+    "reactivateTitle": "Reactivate <b>{name}</b>?",
+    "reactivateDescription": "The workspace and everything in it become reachable again for its members. Its projects come back exactly as they were, archived ones included.",
+    "reactivateConfirmLabel": "Reactivate",
+    "reactivatedToast": "{name} is active again."
+  },
+  "workspacePage": {
+    "failedToLoad": "Failed to load the workspace overview.",
+    "stats": {
+      "openTasks": "Open tasks",
+      "overdue": "Overdue",
+      "completedThisWeek": "Completed this week",
+      "projects": "Projects",
+      "unassigned": "Unassigned"
+    },
+    "projects": {
+      "title": "Your projects",
+      "searchPlaceholder": "Search projects",
+      "openTasks": "{count, plural, one {# open} other {# open}}",
+      "overdue": "{count, plural, one {# overdue} other {# overdue}}",
+      "noneFound": "No projects found.",
+      "noneFoundDescription": "Try a different search.",
+      "noneYet": "No projects yet.",
+      "noneYetDescription": "The projects in this space will show up here.",
+      "failedToLoad": "Could not load the projects."
+    },
+    "myTasks": {
+      "title": "My work in this space",
+      "empty": "You have no open tasks here."
+    }
+  },
+  "workspaceSettingsPage": {
+    "title": "Settings",
+    "leftToast": "You left {name}.",
+    "noPermission": "You don't have permission to view this page."
+  },
+  "leaveWorkspaceSection": {
+    "title": "Leave workspace",
+    "description": "You'll lose access to the workspace and its projects. A manager can invite you back.",
+    "actionLabel": "Leave",
+    "dialogTitle": "Leave <b>{name}</b>?",
+    "dialogDescription": "This will remove you from the workspace and its projects. You'll lose access immediately.",
+    "descriptionLastOwner": "You're the last owner of this workspace. Assign the owner role to someone else to be able to leave.",
+    "transferOwnershipLabel": "Assign owner",
+    "confirmLabel": "Leave"
+  },
+  "deactivateWorkspaceSection": {
+    "title": "Deactivate workspace",
+    "description": "It will no longer be accessible to its members. You can bring it back from the workspaces list.",
+    "actionLabel": "Deactivate",
+    "dialogTitle": "Deactivate <b>{name}</b>?",
+    "dialogDescription": "This will deactivate the workspace and hide it from all members. You can bring it back from the workspaces list, filtering by inactive.",
+    "confirmLabel": "Deactivate"
+  },
+  "workspaceAvatarSection": {
+    "title": "Image",
+    "description": "Tells the workspace apart in the switcher, in listings and in search.",
+    "footerHint": "PNG, JPEG or WebP. Max 5MB.",
+    "failedToLoad": "Failed to load workspace.",
+    "removeAction": "Remove image",
+    "removeDialogTitle": "Remove image?",
+    "removeDialogDescription": "The workspace will go back to the image generated from its name. You can upload another one anytime."
+  },
+  "workspaceDescriptionSection": {
+    "title": "Description",
+    "description": "A line about what this workspace is for. Shown under its name and in My space.",
+    "failedToLoad": "Failed to load workspace.",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Acme Inc's main workspace",
+    "successMessage": "Workspace description updated."
+  },
+  "workspaceNameSection": {
+    "title": "Name",
+    "description": "Shown in the workspace header. Changing it also changes its URL.",
+    "failedToLoad": "Failed to load workspace.",
+    "nameLabel": "Workspace name",
+    "namePlaceholder": "Acme Inc",
+    "successMessage": "Workspace name updated."
+  },
+  "notFound": {
+    "title": "Workspace not found",
+    "description": "This workspace doesn't exist or you don't have access to it.",
+    "goToMySpace": "Go to my space"
+  },
+  "createWorkspaceDialog": {
+    "title": "Create workspace",
+    "description": "Set up a new workspace to organize projects and tasks.",
+    "submitLabel": "Create workspace",
+    "nameLabel": "Name",
+    "namePlaceholder": "Acme Inc",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Acme Inc's main workspace"
+  }
+}

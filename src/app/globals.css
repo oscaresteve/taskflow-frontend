@@ -1,26 +1,146 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "./palette.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --font-heading: var(--font-sans);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Tema propio: gris frio de hue 258 en vez del neutro puro de shadcn, y ningun extremo absoluto
+   —ni blanco 1.0 ni negro 0— para que el papel tenga temperatura y el texto no vibre.
+   Una sola superficie por nivel: el rail y la cabecera son el fondo de la pagina, y lo que flota
+   (card, popover) se separa por un salto de luminosidad minimo mas su filo, no por un bloque de
+   color. Si se cambian estos valores hay que rehacer los contrastes de palette.css. */
+
+:root {
+  --background: oklch(0.985 0.002 258);
+  --foreground: oklch(0.215 0.012 262);
+  --card: oklch(0.996 0.001 258);
+  --popover: oklch(0.996 0.001 258);
+  --primary: oklch(0.24 0.015 262);
+  --primary-foreground: oklch(0.985 0.002 258);
+  --secondary: oklch(0.965 0.003 258);
+  --secondary-foreground: oklch(0.26 0.013 262);
+  --muted: oklch(0.967 0.003 258);
+  --muted-foreground: oklch(0.515 0.013 258);
+  --accent: oklch(0.955 0.004 258);
+  --accent-foreground: oklch(0.24 0.015 262);
+  --destructive: oklch(0.552 0.206 26);
+  --border: oklch(0.935 0.004 258);
+  --input: oklch(0.912 0.005 258);
+  --ring: oklch(0.62 0.02 258);
+  --chart-1: oklch(0.84 0.012 258);
+  --chart-2: oklch(0.7 0.02 258);
+  --chart-3: oklch(0.55 0.03 258);
+  --chart-4: oklch(0.42 0.03 260);
+  --chart-5: oklch(0.3 0.025 262);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: oklch(0.155 0.006 262);
+  --foreground: oklch(0.955 0.002 258);
+  --card: oklch(0.178 0.007 262);
+  --popover: oklch(0.198 0.008 262);
+  --primary: oklch(0.93 0.004 258);
+  --primary-foreground: oklch(0.185 0.012 262);
+  --secondary: oklch(0.235 0.008 262);
+  --secondary-foreground: oklch(0.95 0.002 258);
+  --muted: oklch(0.235 0.008 262);
+  --muted-foreground: oklch(0.7 0.014 258);
+  --accent: oklch(0.255 0.009 262);
+  --accent-foreground: oklch(0.96 0.002 258);
+  --destructive: oklch(0.665 0.19 24);
+  --border: oklch(1 0 0 / 6%);
+  --input: oklch(1 0 0 / 13%);
+  --ring: oklch(0.5 0.02 258);
+  /* Rampa propia en oscuro: la de claro acaba en 0.269 y una barra asi no se ve sobre el fondo. */
+  --chart-1: oklch(0.82 0.014 258);
+  --chart-2: oklch(0.68 0.022 258);
+  --chart-3: oklch(0.58 0.03 258);
+  --chart-4: oklch(0.47 0.03 260);
+  --chart-5: oklch(0.37 0.028 262);
+}
+
+/* Lo que no tiene color propio. Va en una regla aparte —y no en cada tema— porque un var() se
+   resuelve en el elemento donde esta declarado: aqui el selector cubre el que lleve .dark, asi que
+   cada alias toma el valor del tema que este puesto en ese elemento. */
+:root,
+.dark {
+  --card-foreground: var(--foreground);
+  --popover-foreground: var(--foreground);
+  /* El rail no es una superficie aparte: es la misma pagina, separada solo por su filo. */
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* El filo de las cards. El primitivo lo pinta con `ring-foreground/10`, que con la tinta de este
+   tema pesa mas que los bordes, y `ui/` no se toca. La regla va **sin capa** a proposito: eso es lo
+   que la hace ganar al utility de Tailwind sin inventarse especificidad. Y `--tw-ring-color` esta
+   registrada con `inherits: false`, asi que no se filtra a lo que lleve ring dentro de la card.
+   Los popover, dialogos y menus se quedan con el filo del primitivo: flotan sobre el contenido, y
+   ahi el filo —con su sombra— es lo que los despega. */
+[data-slot="card"] {
+  --tw-ring-color: var(--border);
 }

@@ -1,0 +1,101 @@
+"use client";
+
+import { useState } from "react";
+import { useFormatter, useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ICONS } from "@/lib/icons";
+import { cn, isOverdue, parseDueDate, toDueDate } from "@/lib/utils";
+import { LocalizedCalendar } from "@/components/common/localized-calendar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+interface DueDatePickerProps {
+  value: string | null;
+  onChange: (value: string | null) => void;
+  id?: string;
+  className?: string;
+  variant?: "icon" | "icon-label" | "default";
+}
+
+export function DueDatePicker({ value, onChange, id, className, variant = "default" }: DueDatePickerProps) {
+  const t = useTranslations("tasks");
+  const format = useFormatter();
+  const [open, setOpen] = useState(false);
+
+  // El calendario trabaja en hora local, asi que el dia guardado se rearma como medianoche local
+  // para seleccionarlo y pintarlo, y al revertir vuelve a medianoche UTC.
+  const date = value ? parseDueDate(value) : undefined;
+  const overdue = !!value && isOverdue(value);
+
+  function handleSelect(next: Date | undefined) {
+    onChange(next ? toDueDate(next) : null);
+    setOpen(false);
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      {variant === "icon" ? (
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <PopoverTrigger
+                id={id}
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className={cn("text-muted-foreground", overdue && "text-severity-critical-foreground", className)}
+                  />
+                }
+              />
+            }
+          >
+            {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
+          </TooltipTrigger>
+          <TooltipContent>
+            {date ? `${t("fields.dueDate")}: ${format.dateTime(date, "short")}` : t("fields.addDueDate")}
+          </TooltipContent>
+        </Tooltip>
+      ) : variant === "icon-label" ? (
+        <PopoverTrigger
+          id={id}
+          render={
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "font-normal text-muted-foreground hover:text-foreground",
+                overdue && "text-severity-critical-foreground",
+                className,
+              )}
+            />
+          }
+        >
+          {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
+          {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
+        </PopoverTrigger>
+      ) : (
+        <PopoverTrigger
+          id={id}
+          render={
+            <Button
+              variant="outline"
+              className={cn(
+                "justify-start font-normal",
+                overdue && "text-severity-critical-foreground",
+                date ?? "text-muted-foreground hover:text-foreground focus-within:text-foreground",
+                className,
+              )}
+            />
+          }
+        >
+          {overdue ? <ICONS.overdue /> : !date ? <ICONS.dueDateEmpty /> : <ICONS.dueDate />}
+          {date ? format.dateTime(date, "short") : t("fields.dueDatePlaceholder")}
+        </PopoverTrigger>
+      )}
+      <PopoverContent align="start" className="w-auto p-0">
+        <LocalizedCalendar mode="single" selected={date} onSelect={handleSelect} />
+      </PopoverContent>
+    </Popover>
+  );
+}
